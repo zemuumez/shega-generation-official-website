@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FAF7F0;
+  color: #201D1A;
+}
+
+/* Visible keyboard focus everywhere, never suppressed */
+:focus-visible {
+  outline: 2px solid #A9792C;
+  outline-offset: 3px;
+}
+
+/* Horizontal rail: native scroll-snap, not a hijacked scroll listener.
+   This keeps it usable on cheap Android touch drivers where custom
+   wheel/touch handlers frequently drop events. */
+.rail {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #A9792C transparent;
+}
+
+.rail::-webkit-scrollbar {
+  height: 6px;
+}
+.rail::-webkit-scrollbar-thumb {
+  background-color: #A9792C;
+  border-radius: 999px;
+}
+
+.rail-item {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* Respect reduced motion: kill decorative animation, keep function */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

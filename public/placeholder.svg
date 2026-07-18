@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400">
+  <rect width="640" height="400" fill="#F2EEE3"/>
+  <path d="M0 200 L120 80 L240 200 L120 320 Z" fill="none" stroke="#A9792C" stroke-width="2" opacity="0.4"/>
+  <path d="M240 200 L360 80 L480 200 L360 320 Z" fill="none" stroke="#2B3A5C" stroke-width="2" opacity="0.4"/>
+  <path d="M480 200 L600 80 L720 200 L600 320 Z" fill="none" stroke="#8C3A2B" stroke-width="2" opacity="0.4"/>
+  <text x="320" y="205" font-family="monospace" font-size="14" fill="#4A453E" text-anchor="middle" opacity="0.6">
+    image pending &mdash; add in Sanity Studio
+  </text>
+</svg>
