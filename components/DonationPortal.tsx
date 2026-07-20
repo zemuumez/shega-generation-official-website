@@ -25,8 +25,8 @@ export default function DonationPortal() {
   const symbol = mode === "local" ? "ETB" : "$";
 
   return (
-    <div className="mx-auto max-w-xl rounded-2xl border border-zinc-200/60 bg-white p-8 shadow-lg">
-      <div className="flex rounded-xl border border-zinc-200/40 bg-zinc-50 p-1" role="tablist" aria-label="Currency region">
+    <div className="mx-auto max-w-xl rounded-[32px] border border-zinc-200 bg-white p-8 shadow-lg">
+      <div className="flex rounded-full border border-zinc-200 bg-zinc-50 p-1" role="tablist" aria-label="Currency region">
         {(["local", "global"] as const).map((m) => (
           <button
             key={m}
@@ -36,8 +36,8 @@ export default function DonationPortal() {
               setMode(m);
               setAmount(null);
             }}
-            className={`flex-1 rounded-lg py-2.5 text-sm font-mono uppercase tracking-widest transition-all duration-300 ${
-              mode === m ? "bg-ochre text-white shadow-md font-semibold" : "text-ink-soft hover:text-ink"
+            className={`flex-1 rounded-full py-2.5 text-xs font-mono uppercase tracking-widest transition-all duration-300 ${
+              mode === m ? "bg-ochre text-white shadow-sm font-bold" : "text-ink-soft hover:text-ink"
             }`}
           >
             {m === "local" ? "Ethiopia (ETB)" : "Global (USD)"}
@@ -60,9 +60,9 @@ export default function DonationPortal() {
               <button
                 key={preset}
                 onClick={() => setAmount(preset)}
-                className={`rounded-xl border py-3 text-sm font-mono transition-all duration-300 ${
+                className={`rounded-full border py-3.5 text-xs font-mono transition-all duration-300 ${
                   amount === preset
-                    ? "border-ochre bg-ochre/10 text-ochre font-bold shadow-sm"
+                    ? "border-ochre bg-ochre/10 text-ink font-bold shadow-sm"
                     : "border-zinc-200 bg-zinc-50/50 text-ink-soft hover:border-zinc-300 hover:text-ink"
                 }`}
               >
@@ -74,12 +74,12 @@ export default function DonationPortal() {
           <p className="mt-8 font-mono text-xs uppercase tracking-widest text-ink-soft/60">Choose a channel</p>
           <div className="mt-3 space-y-2.5">
             {channels.map((channel) => (
-              <div key={channel.name} className="flex items-center justify-between rounded-xl border border-zinc-200 bg-zinc-50/30 p-4 transition-all duration-300 hover:border-ochre/30 hover:bg-white shadow-sm">
+              <div key={channel.name} className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-zinc-50/30 p-4 transition-all duration-300 hover:border-ochre/30 hover:bg-white shadow-sm">
                 <div>
-                  <p className="font-display text-base font-bold text-ink">{channel.name}</p>
+                  <p className="font-display text-base font-bold text-ink uppercase tracking-wide">{channel.name}</p>
                   <p className="text-xs text-ink-soft mt-0.5">{channel.note}</p>
                 </div>
-                <span className="rounded-lg bg-white border border-zinc-200 px-3 py-1 text-[9px] font-mono uppercase tracking-widest text-ink-soft/60">
+                <span className="rounded-full bg-white border border-zinc-200 px-3 py-1 text-[8px] font-mono uppercase tracking-widest text-ink-soft/60 font-bold">
                   Pending setup
                 </span>
               </div>
@@ -89,7 +89,7 @@ export default function DonationPortal() {
           <button
             disabled
             title="Provider integration required before this can go live"
-            className="mt-8 w-full cursor-not-allowed rounded-xl bg-zinc-100 border border-zinc-200 px-6 py-4 text-sm font-mono uppercase tracking-widest text-ink-soft/40 transition-all duration-300"
+            className="mt-8 w-full cursor-not-allowed rounded-full bg-zinc-100 border border-zinc-200 px-6 py-4 text-xs font-mono uppercase tracking-widest text-ink-soft/40 transition-all duration-300 font-bold"
           >
             {amount ? `Pledge ${symbol} ${amount}` : "Select an amount"}
           </button>

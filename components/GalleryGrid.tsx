@@ -26,8 +26,8 @@ export default function GalleryGrid({ items }: { items: any[] }) {
             onClick={() => setActive(tag)}
             className={`px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 ${
               active === tag
-                ? "bg-ochre text-white shadow-md border border-ochre/25"
-                : "border border-zinc-200 bg-zinc-50 text-ink-soft hover:border-zinc-300 hover:text-ink"
+                ? "bg-ochre text-white shadow-sm border border-ochre/25 font-bold"
+                : "border border-zinc-200 bg-zinc-50 text-ink-soft hover:border-zinc-300 hover:text-ink font-semibold"
             }`}
           >
             {tag}
@@ -45,7 +45,7 @@ export default function GalleryGrid({ items }: { items: any[] }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35, delay: i * 0.04, ease: "easeOut" }}
-              className="overflow-hidden rounded-xl border border-zinc-200/60 bg-white group hover:border-ochre/30 transition-all duration-300 hover:shadow-md"
+              className="overflow-hidden rounded-[32px] border border-zinc-200 bg-white group hover:border-ochre/30 transition-all duration-300 hover:shadow-md"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/20 via-transparent to-transparent z-10 opacity-40" />
@@ -57,8 +57,8 @@ export default function GalleryGrid({ items }: { items: any[] }) {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <figcaption className="p-5 relative z-20">
-                <span className="inline-block px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-widest bg-ochre/10 text-ochre border border-ochre/20">
+              <figcaption className="p-6 relative z-20">
+                <span className="inline-block px-3.5 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-ink/5 text-ink border border-zinc-200 font-bold">
                   {item.categoryTag}
                 </span>
                 <p className="mt-3 text-sm text-ink-soft leading-relaxed">{item.caption}</p>

@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "project",
-  title: "Project",
+  title: "Student Journey",
   type: "document",
   fields: [
     defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
@@ -13,7 +13,7 @@ export default defineType({
       title: "Category",
       type: "string",
       options: {
-        list: ["Project", "Venture-Backed Startup", "Open-Source Tool"],
+        list: ["Student Project", "Alumni Startup", "Employment Placement", "Social Venture"],
         layout: "dropdown",
       },
       validation: (Rule) => Rule.required(),

@@ -11,38 +11,50 @@
 }
 
 body {
-  background-color: #FBFBF9;
-  color: #1B221E;
+  background-color: #F4F3EE;
+  color: #1C1E1B;
 }
 
 /* Visible keyboard focus everywhere, never suppressed */
 :focus-visible {
-  outline: 2px solid #1E5D3A;
+  outline: 2px solid #27AE60;
   outline-offset: 3px;
 }
 
-/* Clean cards styled as structured modules */
+/* Editorial capsule cards */
 .glass-card {
   background: #FFFFFF;
-  border: 1px solid #F0EFEA;
-  box-shadow: 0 1px 3px rgba(27, 34, 30, 0.03), 0 1px 2px rgba(27, 34, 30, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #E4E3DD;
+  box-shadow: 0 1px 3px rgba(28, 30, 27, 0.02);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(30, 93, 58, 0.15);
-  box-shadow: 0 10px 25px -5px rgba(27, 34, 30, 0.04), 0 8px 10px -6px rgba(27, 34, 30, 0.04);
+  border-color: rgba(39, 174, 96, 0.2);
+  box-shadow: 0 12px 30px -10px rgba(28, 30, 27, 0.05);
 }
 
-/* Ambient glow bubble helper */
+/* Background ambient blur helpers (turned off for clean editorial feel, or kept low) */
 .glow-bubble {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.05;
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: multiply;
+  display: none; /* Removed for clean editorial paper feel */
+}
+
+/* Bold Image Text Mask */
+.text-masked-bg {
+  background-image: url('/images/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+/* Text Outline Stroke */
+.stroke-text {
+  -webkit-text-stroke: 1.5px #FFFFFF;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* Horizontal rail: native scroll-snap, not a hijacked scroll listener.
@@ -55,14 +67,14 @@ body {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: #1E5D3A transparent;
+  scrollbar-color: #27AE60 transparent;
 }
 
 .rail::-webkit-scrollbar {
   height: 6px;
 }
 .rail::-webkit-scrollbar-thumb {
-  background-color: #1E5D3A;
+  background-color: #27AE60;
   border-radius: 999px;
 }
 
@@ -81,4 +93,11 @@ body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Vertical Text for Inactive Expanding Capsules */
+.vertical-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
 }

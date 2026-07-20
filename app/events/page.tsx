@@ -13,14 +13,11 @@ export default async function EventsPage() {
 
   return (
     <div className="pb-28 pt-20 relative">
-      <div className="glow-bubble top-[10%] right-[10%] w-[35vw] h-[35vw] bg-ochre/5" />
-      <div className="glow-bubble bottom-[20%] left-[5%] w-[40vw] h-[40vw] bg-brick/5" />
-
       <div className="mx-auto max-w-5xl px-6 sm:px-10 relative z-20">
-        <span className="inline-block px-3 py-1 rounded-full font-mono text-xs uppercase tracking-[0.2em] bg-ochre/10 text-ochre border border-ochre/20">
+        <span className="inline-block px-3.5 py-1 rounded-full font-mono text-xs uppercase tracking-[0.2em] bg-ink/5 text-ink border border-zinc-200 font-bold">
           Directory
         </span>
-        <h1 className="mt-6 font-display text-display-lg font-bold text-ink leading-tight">Every meetup, drive, and expedition</h1>
+        <h1 className="mt-6 font-display text-display-lg font-bold text-ink leading-tight uppercase">Every meetup, drive, and expedition</h1>
         <p className="mt-4 max-w-xl text-lg text-ink-soft">
           CTFs, hackathons, hiking trips, tech trainings, and charity drives, across every region we operate in.
         </p>
@@ -28,8 +25,8 @@ export default async function EventsPage() {
 
       <div className="mt-20 relative z-20">
         <div className="mx-auto mb-6 max-w-5xl px-6 sm:px-10">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre font-bold block mb-1">&bull; Live Schedule</span>
-          <h2 className="font-display text-display-md font-bold text-ink">Upcoming Gathering</h2>
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">&bull; Live Schedule</span>
+          <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Upcoming Gathering</h2>
         </div>
         {upcoming.length > 0 ? (
           <HorizontalRail ariaLabel="Upcoming events">
@@ -44,8 +41,8 @@ export default async function EventsPage() {
 
       <div className="mt-20 relative z-20">
         <div className="mx-auto mb-6 max-w-5xl px-6 sm:px-10">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-brick font-bold block mb-1">&bull; History</span>
-          <h2 className="font-display text-display-md font-bold text-ink">Past Gatherings</h2>
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">&bull; History</span>
+          <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Past Gatherings</h2>
         </div>
         <HorizontalRail ariaLabel="Past events">
           {past.map((event: any) => (

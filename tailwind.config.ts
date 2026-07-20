@@ -10,33 +10,33 @@ const config: Config = {
     extend: {
       colors: {
         ivory: {
-          DEFAULT: "#FBFBF9", // Soft clean warm white background
-          dim: "#FFFFFF",    // Solid white for cards
-          light: "#F0EFEA",  // Soft border gray-sand
+          DEFAULT: "#F4F3EE", // Editorial sand background
+          dim: "#FFFFFF",    // Solid card white
+          light: "#E4E3DD",  // Sand border
         },
         ink: {
-          DEFAULT: "#1B221E", // Deep Pine charcoal main text
-          soft: "#55625B",    // Muted slate-green text
+          DEFAULT: "#1C1E1B", // Dark pine charcoal text
+          soft: "#5A5E5B",    // Muted slate text
         },
         ochre: {
-          DEFAULT: "#1E5D3A", // Organic forest green (primary accent)
-          light: "#3E8E5E",   // Sage green
-          dark: "#103F25",    // Deep pine green
+          DEFAULT: "#27AE60", // Vibrant light green accent
+          light: "#2ECC71",   // Bright minty green
+          dark: "#1E824C",    // Rich emerald green
         },
         indigo: {
-          DEFAULT: "#2A6F6B", // Secondary accent green/teal
-          light: "#4A9F9A",   // Sage teal
+          DEFAULT: "#2A6F6B", // Secondary slate green/teal
+          light: "#4A9F9A",
         },
         brick: {
-          DEFAULT: "#B2533E", // Earthy clay terracotta highlight
+          DEFAULT: "#B2533E", // Supporting earthy terracotta
           light: "#D78370",
         },
         moss: {
-          DEFAULT: "#1E5D3A", // Forest green
+          DEFAULT: "#27AE60", // Match light green
         },
       },
       fontFamily: {
-        display: ["var(--font-outfit)", "sans-serif"],
+        display: ["var(--font-oswald)", "sans-serif"],
         body: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-plex-mono)", "monospace"],
       },
