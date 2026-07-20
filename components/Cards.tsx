@@ -7,9 +7,10 @@ export function CourseCard({ course }: { course: any }) {
       href={course.externalLmsUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="rail-item group block w-72 overflow-hidden rounded-sm border border-ink/10 bg-white transition-shadow hover:shadow-lg"
+      className="rail-item group block w-72 overflow-hidden rounded-xl border border-zinc-200/60 bg-white transition-all duration-300 hover:border-ochre/40 hover:shadow-md hover:-translate-y-1"
     >
-      <div className="relative aspect-[16/10]">
+      <div className="relative aspect-[16/10] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/20 via-transparent to-transparent z-10" />
         <Image
           src={safeImageUrl(course.bannerImage)}
           alt={course.title}
@@ -18,11 +19,15 @@ export function CourseCard({ course }: { course: any }) {
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
-      <div className="p-5">
-        <p className="font-mono text-[11px] uppercase tracking-widest text-ochre">{course.badgeCategory}</p>
-        <h4 className="mt-1.5 font-display text-lg leading-snug">{course.title}</h4>
-        <p className="mt-1.5 text-sm text-ink-soft">{course.snippet}</p>
-        <p className="mt-3 text-xs font-mono text-ink-soft/70">with {course.instructor}</p>
+      <div className="p-5 relative z-20">
+        <span className="inline-block px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-widest bg-ochre/10 text-ochre border border-ochre/20">
+          {course.badgeCategory}
+        </span>
+        <h4 className="mt-3 font-display text-lg leading-snug font-semibold text-ink group-hover:text-ochre transition-colors duration-300">
+          {course.title}
+        </h4>
+        <p className="mt-2 text-sm text-ink-soft line-clamp-2 leading-relaxed">{course.snippet}</p>
+        <p className="mt-4 text-xs font-mono text-ink-soft/60">with {course.instructor}</p>
       </div>
     </a>
   );
@@ -34,9 +39,10 @@ export function ProjectCard({ project }: { project: any }) {
       href={project.projectUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="rail-item group block w-72 overflow-hidden rounded-sm border border-ink/10 bg-white transition-shadow hover:shadow-lg"
+      className="rail-item group block w-72 overflow-hidden rounded-xl border border-zinc-200/60 bg-white transition-all duration-300 hover:border-indigo/40 hover:shadow-md hover:-translate-y-1"
     >
-      <div className="relative aspect-[16/10]">
+      <div className="relative aspect-[16/10] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/20 via-transparent to-transparent z-10" />
         <Image
           src={safeImageUrl(project.image)}
           alt={project.title}
@@ -45,11 +51,15 @@ export function ProjectCard({ project }: { project: any }) {
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
-      <div className="p-5">
-        <p className="font-mono text-[11px] uppercase tracking-widest text-indigo">{project.category}</p>
-        <h4 className="mt-1.5 font-display text-lg leading-snug">{project.title}</h4>
-        <p className="mt-1.5 text-sm text-ink-soft">{project.description}</p>
-        <p className="mt-3 text-xs font-mono text-ink-soft/70">by {project.creatorName}</p>
+      <div className="p-5 relative z-20">
+        <span className="inline-block px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-widest bg-indigo/10 text-indigo border border-indigo/20">
+          {project.category}
+        </span>
+        <h4 className="mt-3 font-display text-lg leading-snug font-semibold text-ink group-hover:text-indigo transition-colors duration-300">
+          {project.title}
+        </h4>
+        <p className="mt-2 text-sm text-ink-soft line-clamp-2 leading-relaxed">{project.description}</p>
+        <p className="mt-4 text-xs font-mono text-ink-soft/60">by {project.creatorName}</p>
       </div>
     </a>
   );
@@ -58,8 +68,8 @@ export function ProjectCard({ project }: { project: any }) {
 export function EventCard({ event }: { event: any }) {
   const date = new Date(event.eventDate);
   return (
-    <div className="rail-item w-80 overflow-hidden rounded-sm border border-ink/10 bg-white">
-      <div className="relative aspect-[16/10]">
+    <div className="rail-item w-80 overflow-hidden rounded-xl border border-zinc-200/60 bg-white transition-all duration-300 hover:border-brick/40 hover:shadow-md">
+      <div className="relative aspect-[16/10] overflow-hidden">
         <Image
           src={safeImageUrl(event.coverImage)}
           alt={event.title}
@@ -68,16 +78,18 @@ export function EventCard({ event }: { event: any }) {
           className="object-cover"
         />
         {!event.isUpcoming && (
-          <span className="absolute left-3 top-3 bg-ink/80 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-ivory">
+          <span className="absolute left-3 top-3 z-20 bg-ink/80 px-2.5 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-widest text-ivory border border-zinc-700">
             Past
           </span>
         )}
       </div>
-      <div className="p-5">
-        <p className="font-mono text-[11px] uppercase tracking-widest text-brick">{event.type}</p>
-        <h4 className="mt-1.5 font-display text-lg leading-snug">{event.title}</h4>
-        <p className="mt-1.5 text-sm text-ink-soft">{event.location}</p>
-        <p className="mt-3 text-xs font-mono text-ink-soft/70">
+      <div className="p-5 relative z-20">
+        <span className="inline-block px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-widest bg-brick/10 text-brick border border-brick/20">
+          {event.type}
+        </span>
+        <h4 className="mt-3 font-display text-lg leading-snug font-semibold text-ink">{event.title}</h4>
+        <p className="mt-2 text-sm text-ink-soft">{event.location}</p>
+        <p className="mt-4 text-xs font-mono text-ink-soft/60">
           {date.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
         </p>
       </div>

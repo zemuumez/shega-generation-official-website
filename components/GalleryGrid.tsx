@@ -17,17 +17,17 @@ export default function GalleryGrid({ items }: { items: any[] }) {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter gallery by category">
+      <div className="flex flex-wrap gap-2.5" role="tablist" aria-label="Filter gallery by category">
         {TAGS.map((tag) => (
           <button
             key={tag}
             role="tab"
             aria-selected={active === tag}
             onClick={() => setActive(tag)}
-            className={`px-4 py-2 text-sm font-mono uppercase tracking-wide transition-colors ${
+            className={`px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 ${
               active === tag
-                ? "bg-ink text-ivory"
-                : "border border-ink/20 text-ink-soft hover:border-ink"
+                ? "bg-ochre text-white shadow-md border border-ochre/25"
+                : "border border-zinc-200 bg-zinc-50 text-ink-soft hover:border-zinc-300 hover:text-ink"
             }`}
           >
             {tag}
@@ -35,7 +35,7 @@ export default function GalleryGrid({ items }: { items: any[] }) {
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
           {filtered.map((item, i) => (
             <motion.figure
@@ -45,20 +45,23 @@ export default function GalleryGrid({ items }: { items: any[] }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35, delay: i * 0.04, ease: "easeOut" }}
-              className="overflow-hidden rounded-sm border border-ink/10 bg-white"
+              className="overflow-hidden rounded-xl border border-zinc-200/60 bg-white group hover:border-ochre/30 transition-all duration-300 hover:shadow-md"
             >
-              <div className="relative aspect-[4/3]">
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/20 via-transparent to-transparent z-10 opacity-40" />
                 <Image
                   src={safeImageUrl(item.image)}
                   alt={item.caption}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <figcaption className="p-4">
-                <p className="font-mono text-[11px] uppercase tracking-widest text-ochre">{item.categoryTag}</p>
-                <p className="mt-1 text-sm text-ink-soft">{item.caption}</p>
+              <figcaption className="p-5 relative z-20">
+                <span className="inline-block px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-widest bg-ochre/10 text-ochre border border-ochre/20">
+                  {item.categoryTag}
+                </span>
+                <p className="mt-3 text-sm text-ink-soft leading-relaxed">{item.caption}</p>
               </figcaption>
             </motion.figure>
           ))}

@@ -22,9 +22,9 @@ type TibebPatternProps = {
 };
 
 const toneMap = {
-  ochre: "#A9792C",
-  indigo: "#2B3A5C",
-  brick: "#8C3A2B",
+  ochre: "#F39C12",
+  indigo: "#5B6BF9",
+  brick: "#E74C3C",
 };
 
 export default function TibebPattern({
@@ -49,8 +49,9 @@ export default function TibebPattern({
       >
         <defs>
           <pattern id={patternId} width="24" height="24" patternUnits="userSpaceOnUse">
-            <path d="M0 12 L12 0 L24 12 L12 24 Z" fill="none" stroke={color} strokeWidth="1.4" />
-            <path d="M12 4 L20 12 L12 20 L4 12 Z" fill={color} opacity="0.15" />
+            {/* Clean vector pattern */}
+            <path d="M0 12 L12 0 L24 12 L12 24 Z" fill="none" stroke={color} strokeWidth="1.2" opacity="0.8" />
+            <path d="M12 4 L20 12 L12 20 L4 12 Z" fill={color} opacity="0.12" />
           </pattern>
         </defs>
         <rect width="240" height="24" fill={`url(#${patternId})`} />
@@ -70,11 +71,11 @@ export default function TibebPattern({
     >
       <defs>
         <pattern id={patternId} width="60" height="60" patternUnits="userSpaceOnUse">
-          <path d="M0 30 L30 0 L60 30 L30 60 Z" fill="none" stroke={color} strokeWidth="1" opacity="0.5" />
-          <circle cx="30" cy="30" r="3" fill={color} opacity="0.35" />
+          <path d="M0 30 L30 0 L60 30 L30 60 Z" fill="none" stroke={color} strokeWidth="1" opacity="0.15" />
+          <circle cx="30" cy="30" r="3" fill={color} opacity="0.1" />
         </pattern>
       </defs>
-      <rect width="480" height="480" fill={`url(#${patternId})`} />
+      <rect width="480" height="480" fill={`url(#${patternId})`} opacity="0.08" />
     </svg>
   );
 }

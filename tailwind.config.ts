@@ -10,32 +10,33 @@ const config: Config = {
     extend: {
       colors: {
         ivory: {
-          DEFAULT: "#FAF7F0",
-          dim: "#F2EEE3",
+          DEFAULT: "#FBFBF9", // Soft clean warm white background
+          dim: "#FFFFFF",    // Solid white for cards
+          light: "#F0EFEA",  // Soft border gray-sand
         },
         ink: {
-          DEFAULT: "#201D1A",
-          soft: "#4A453E",
+          DEFAULT: "#1B221E", // Deep Pine charcoal main text
+          soft: "#55625B",    // Muted slate-green text
         },
         ochre: {
-          DEFAULT: "#A9792C",
-          light: "#C79A4F",
-          dark: "#7E5A1F",
+          DEFAULT: "#1E5D3A", // Organic forest green (primary accent)
+          light: "#3E8E5E",   // Sage green
+          dark: "#103F25",    // Deep pine green
         },
         indigo: {
-          DEFAULT: "#2B3A5C",
-          light: "#3E5280",
+          DEFAULT: "#2A6F6B", // Secondary accent green/teal
+          light: "#4A9F9A",   // Sage teal
         },
         brick: {
-          DEFAULT: "#8C3A2B",
-          light: "#A94C3A",
+          DEFAULT: "#B2533E", // Earthy clay terracotta highlight
+          light: "#D78370",
         },
         moss: {
-          DEFAULT: "#4B5A3F",
+          DEFAULT: "#1E5D3A", // Forest green
         },
       },
       fontFamily: {
-        display: ["var(--font-fraunces)", "serif"],
+        display: ["var(--font-outfit)", "sans-serif"],
         body: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-plex-mono)", "monospace"],
       },

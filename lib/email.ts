@@ -1,7 +1,7 @@
 import "server-only";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || "re_dummy_key_for_build");
 
 const SUBJECT_BY_LOCALE: Record<string, string> = {
   am: "የናሙና ምዘና ተያይዟል | Shega Generations",

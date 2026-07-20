@@ -11,14 +11,38 @@
 }
 
 body {
-  background-color: #FAF7F0;
-  color: #201D1A;
+  background-color: #FBFBF9;
+  color: #1B221E;
 }
 
 /* Visible keyboard focus everywhere, never suppressed */
 :focus-visible {
-  outline: 2px solid #A9792C;
+  outline: 2px solid #1E5D3A;
   outline-offset: 3px;
+}
+
+/* Clean cards styled as structured modules */
+.glass-card {
+  background: #FFFFFF;
+  border: 1px solid #F0EFEA;
+  box-shadow: 0 1px 3px rgba(27, 34, 30, 0.03), 0 1px 2px rgba(27, 34, 30, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(30, 93, 58, 0.15);
+  box-shadow: 0 10px 25px -5px rgba(27, 34, 30, 0.04), 0 8px 10px -6px rgba(27, 34, 30, 0.04);
+}
+
+/* Ambient glow bubble helper */
+.glow-bubble {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: multiply;
 }
 
 /* Horizontal rail: native scroll-snap, not a hijacked scroll listener.
@@ -31,14 +55,14 @@ body {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: #A9792C transparent;
+  scrollbar-color: #1E5D3A transparent;
 }
 
 .rail::-webkit-scrollbar {
   height: 6px;
 }
 .rail::-webkit-scrollbar-thumb {
-  background-color: #A9792C;
+  background-color: #1E5D3A;
   border-radius: 999px;
 }
 

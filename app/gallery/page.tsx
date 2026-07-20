@@ -9,15 +9,20 @@ export default async function GalleryPage() {
   const items = await safeFetch(GALLERY_QUERY, {}, demoGallery);
 
   return (
-    <div className="pb-24 pt-16">
-      <div className="mx-auto max-w-5xl px-6 sm:px-10">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ochre">Media Hub</p>
-        <h1 className="mt-3 font-display text-display-lg">Moments from the field</h1>
-        <p className="mt-4 max-w-xl text-ink-soft">
+    <div className="pb-28 pt-20 relative">
+      <div className="glow-bubble top-[10%] left-[10%] w-[35vw] h-[35vw] bg-indigo/5" />
+      <div className="glow-bubble bottom-[20%] right-[10%] w-[35vw] h-[35vw] bg-ochre/5" />
+
+      <div className="mx-auto max-w-5xl px-6 sm:px-10 relative z-20">
+        <span className="inline-block px-3 py-1 rounded-full font-mono text-xs uppercase tracking-[0.2em] bg-ochre/10 text-ochre border border-ochre/20">
+          Media Hub
+        </span>
+        <h1 className="mt-6 font-display text-display-lg font-bold text-ink leading-tight">Moments from the field</h1>
+        <p className="mt-4 max-w-xl text-lg text-ink-soft">
           Expeditions, hackathons, classrooms, and volunteer work. Filter by what you want to see.
         </p>
 
-        <div className="mt-12">
+        <div className="mt-14">
           <GalleryGrid items={items} />
         </div>
       </div>
