@@ -23,12 +23,17 @@ const builder = imageUrlBuilder(sanityClient);
  * imagery and switch to real photos the moment someone drops an asset
  * into Sanity Studio, no code change required.
  */
-export function safeImageUrl(source: Image | undefined | null, width = 800): string {
-  if (!source?.asset) return "/placeholder.svg";
+export function safeImageUrl(
+  source: any,
+  width = 800,
+  fallback = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800"
+): string {
+  if (typeof source === "string" && source.startsWith("http")) return source;
+  if (!source?.asset) return fallback;
   try {
     return builder.image(source).width(width).auto("format").url();
   } catch {
-    return "/placeholder.svg";
+    return fallback;
   }
 }
 

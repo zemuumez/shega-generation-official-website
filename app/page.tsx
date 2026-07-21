@@ -3,6 +3,8 @@ import UpcomingEventCard from "@/components/UpcomingEventCard";
 import { CourseCard } from "@/components/Cards";
 import ExpandingProjectCapsules from "@/components/ExpandingProjectCapsules";
 import InteractiveProgramExplorer from "@/components/InteractiveProgramExplorer";
+import TibebPattern from "@/components/TibebPattern";
+import LeafPattern from "@/components/LeafPattern";
 import { safeFetch } from "@/sanity/lib/client";
 import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY } from "@/sanity/lib/queries";
 import { demoUpcomingEvent, demoCourses, demoProjects } from "@/lib/demoData";
@@ -15,7 +17,25 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO PORTAL */}
-      <section className="relative overflow-hidden px-6 pb-20 pt-20 sm:pb-28 sm:pt-28">
+      <section className="relative overflow-hidden px-6 pb-20 pt-20 sm:pb-28 sm:pt-28 bg-[#F4F3EE]">
+        {/* Left Side Framing border ribbon from custom SVG */}
+        <div className="absolute left-0 top-0 bottom-0 w-[18%] max-w-[200px] z-0 pointer-events-none opacity-15 hidden lg:block scale-x-[-1]">
+          <img
+            src="/images/pattern1.svg"
+            alt=""
+            className="h-full w-full object-cover object-left"
+          />
+        </div>
+
+        {/* Right Side Framing border ribbon from custom SVG */}
+        <div className="absolute right-0 top-0 bottom-0 w-[18%] max-w-[200px] z-0 pointer-events-none opacity-15 hidden lg:block">
+          <img
+            src="/images/pattern1.svg"
+            alt=""
+            className="h-full w-full object-cover object-left"
+          />
+        </div>
+
         <div className="relative mx-auto max-w-5xl z-20 flex flex-col items-center">
           <span className="inline-block px-4 py-1 rounded-full font-mono text-[10px] uppercase tracking-[0.25em] bg-ink/5 text-ink border border-zinc-200 font-bold">
             ሽጋ ትውልድ &middot; Shega Generations
@@ -72,8 +92,12 @@ export default async function HomePage() {
       </section>
 
       {/* HALF-PAGE SPLIT SCROLL CURRICULUM SECTION */}
-      <section className="mx-auto max-w-5xl px-6 sm:px-10 py-24 relative z-20 border-b border-zinc-200">
-        <div className="flex flex-col md:flex-row gap-12">
+      <section className="mx-auto max-w-5xl px-6 sm:px-10 py-24 relative z-20 border-b border-zinc-200 overflow-hidden">
+        {/* Background Leaf Pattern */}
+        <div className="absolute inset-y-0 -left-10 w-96 pointer-events-none opacity-25 z-0 hidden lg:block">
+          <LeafPattern tone="gold" id="curriculum-leaf" opacity="0.1" />
+        </div>
+        <div className="flex flex-col md:flex-row gap-12 relative z-10">
           {/* Left Column - Sticky Section Title */}
           <div className="md:w-1/2 md:sticky md:top-28 h-fit">
             <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">
@@ -149,15 +173,21 @@ export default async function HomePage() {
       </section>
 
       {/* INTERACTIVE TRACK EXPLORER */}
-      <section className="py-24 border-b border-zinc-200">
-        <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Dynamic Curriculum</span>
-          <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Interactive Track Explorer</h2>
-          <p className="mt-3 max-w-xl text-ink-soft">
-            Explore our curriculum paths, tech stacks, cohort dates, and class size metrics below.
-          </p>
+      <section className="py-24 border-b border-zinc-200 relative overflow-hidden">
+        {/* Background Leaf Pattern */}
+        <div className="absolute inset-y-0 -right-20 w-96 pointer-events-none opacity-25 z-0 hidden lg:block">
+          <LeafPattern tone="gold" id="explorer-leaf" opacity="0.1" />
         </div>
-        <InteractiveProgramExplorer />
+        <div className="relative z-10">
+          <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Dynamic Curriculum</span>
+            <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Interactive Track Explorer</h2>
+            <p className="mt-3 max-w-xl text-ink-soft">
+              Explore our curriculum paths, tech stacks, cohort dates, and class size metrics below.
+            </p>
+          </div>
+          <InteractiveProgramExplorer />
+        </div>
       </section>
 
       {/* UPCOMING EVENT ACCENT HERO */}
@@ -171,31 +201,43 @@ export default async function HomePage() {
       )}
 
       {/* LMS FEATURED COURSE CAROUSEL */}
-      <section className="py-24 relative border-b border-zinc-200">
-        <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Learn Tech</span>
-          <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
-          <p className="mt-3 max-w-xl text-ink-soft">
-            Every card opens directly in the learning module it belongs to.
-          </p>
+      <section className="py-24 relative border-b border-zinc-200 overflow-hidden">
+        {/* Background Leaf Pattern */}
+        <div className="absolute inset-0 pointer-events-none opacity-20 z-0">
+          <LeafPattern tone="gold" id="courses-leaf" opacity="0.08" />
         </div>
-        <HorizontalRail ariaLabel="Featured courses">
-          {courses.map((course: any) => (
-            <CourseCard key={course._id} course={course} />
-          ))}
-        </HorizontalRail>
+        <div className="relative z-10">
+          <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Learn Tech</span>
+            <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
+            <p className="mt-3 max-w-xl text-ink-soft">
+              Every card opens directly in the learning module it belongs to.
+            </p>
+          </div>
+          <HorizontalRail ariaLabel="Featured courses">
+            {courses.map((course: any) => (
+              <CourseCard key={course._id} course={course} />
+            ))}
+          </HorizontalRail>
+        </div>
       </section>
 
       {/* VENTURE SHOWCASE / JOURNEYS (Expanding Capsules) */}
-      <section className="py-24 relative border-b border-zinc-200">
-        <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Student Journeys</span>
-          <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Student Journeys</h2>
-          <p className="mt-3 max-w-xl text-ink-soft">
-            Alumni startups, projects, and employment stories that started as a Shega assignment. Hover or click to explore.
-          </p>
+      <section className="py-24 relative border-b border-zinc-200 overflow-hidden">
+        {/* Background Leaf Pattern */}
+        <div className="absolute inset-0 pointer-events-none opacity-25 z-0">
+          <LeafPattern tone="gold" id="journeys-leaf" opacity="0.08" />
         </div>
-        <ExpandingProjectCapsules projects={projects} />
+        <div className="relative z-10">
+          <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Student Journeys</span>
+            <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Student Journeys</h2>
+            <p className="mt-3 max-w-xl text-ink-soft">
+              Alumni startups, projects, and employment stories that started as a Shega assignment. Hover or click to explore.
+            </p>
+          </div>
+          <ExpandingProjectCapsules projects={projects} />
+        </div>
       </section>
 
       {/* TESTIMONIALS HORIZONTAL RAIL */}

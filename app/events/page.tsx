@@ -1,5 +1,6 @@
 import HorizontalRail from "@/components/HorizontalRail";
 import { EventCard } from "@/components/Cards";
+import LeafPattern from "@/components/LeafPattern";
 import { safeFetch } from "@/sanity/lib/client";
 import { ALL_EVENTS_QUERY } from "@/sanity/lib/queries";
 import { demoEvents } from "@/lib/demoData";
@@ -12,8 +13,13 @@ export default async function EventsPage() {
   const past = events.filter((e: any) => !(e.isUpcoming !== false && new Date(e.eventDate) >= new Date()));
 
   return (
-    <div className="pb-28 pt-20 relative">
-      <div className="mx-auto max-w-5xl px-6 sm:px-10 relative z-20">
+    <div className="pb-28 pt-20 relative overflow-hidden">
+      {/* Background Leaf Pattern */}
+      <div className="absolute inset-0 pointer-events-none opacity-20 z-0">
+        <LeafPattern tone="gold" id="events-leaf" opacity="0.08" />
+      </div>
+      <div className="relative z-10">
+        <div className="mx-auto max-w-5xl px-6 sm:px-10 relative z-20">
         <span className="inline-block px-3.5 py-1 rounded-full font-mono text-xs uppercase tracking-[0.2em] bg-ink/5 text-ink border border-zinc-200 font-bold">
           Directory
         </span>
@@ -49,6 +55,7 @@ export default async function EventsPage() {
             <EventCard key={event._id} event={event} />
           ))}
         </HorizontalRail>
+      </div>
       </div>
     </div>
   );
