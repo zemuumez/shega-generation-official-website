@@ -89,7 +89,7 @@ export default async function HomePage() {
       </section>
 
       {/* HALF-PAGE SPLIT SCROLL CURRICULUM SECTION */}
-      <section className="mx-auto max-w-5xl px-6 sm:px-10 py-24 relative z-20 border-b border-zinc-200 overflow-hidden">
+      <section className="mx-auto max-w-5xl px-6 sm:px-10 py-24 relative z-20 border-b border-zinc-200">
         {/* Background Leaf Pattern */}
         <div className="absolute inset-y-0 -left-10 w-96 pointer-events-none opacity-25 z-0 hidden lg:block">
           <LeafPattern tone="gold" id="curriculum-leaf" opacity="0.1" />
