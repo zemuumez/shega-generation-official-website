@@ -46,6 +46,26 @@ export default function GoogleTranslator() {
       script.async = true;
       document.body.appendChild(script);
     }
+
+    // 5. Active style observer interval to override Google Translate inline offsets
+    const interval = setInterval(() => {
+      if (document.body) {
+        if (document.body.style.top !== "0px" && document.body.style.top !== "") {
+          document.body.style.setProperty("top", "0px", "important");
+        }
+        if (document.body.style.position === "relative") {
+          document.body.style.setProperty("position", "static", "important");
+        }
+      }
+      const htmlEl = document.documentElement;
+      if (htmlEl) {
+        if (htmlEl.style.top !== "0px" && htmlEl.style.top !== "") {
+          htmlEl.style.setProperty("top", "0px", "important");
+        }
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Set the standard Google translation cookies and trigger reload
@@ -79,10 +99,11 @@ export default function GoogleTranslator() {
       
       <button
         onClick={toggleLanguage}
-        className="flex items-center gap-1.5 border border-ink/30 hover:border-ink rounded-full px-4 py-1.5 text-xs font-mono font-bold tracking-wider text-ink hover:bg-zinc-100/50 transition-all duration-300"
+        className="flex items-center justify-center border border-ink/20 hover:border-ink rounded-full w-10 h-10 text-lg text-ink bg-white/40 hover:bg-zinc-100/50 transition-all duration-300 shadow-sm"
+        title={lang === "en" ? "Translate to አማርኛ" : "Switch to English"}
+        aria-label="Translate website"
       >
-        <span className="text-sm select-none" aria-hidden="true">🌐</span>
-        <span>{lang === "en" ? "Translate to አማርኛ" : "Switch to English"}</span>
+        🌐
       </button>
     </div>
   );

@@ -137,14 +137,25 @@ body {
   display: none !important; /* Hide small arrows */
 }
 
-/* Hide Google Translate top banner frame */
+/* Hide Google Translate top banner frame & prevent body shift */
+html, body {
+  top: 0px !important;
+  position: static !important;
+}
+
 body {
   top: 0px !important;
 }
 
-.goog-te-banner-frame {
+.goog-te-banner-frame,
+.goog-te-banner,
+.goog-te-popup,
+#goog-gt-tt,
+.goog-tooltip,
+.goog-tooltip:hover {
   display: none !important;
   visibility: hidden !important;
+  opacity: 0 !important;
 }
 
 .skiptranslate {
@@ -153,14 +164,7 @@ body {
 
 iframe.goog-te-banner-frame {
   display: none !important;
-}
-
-.goog-tooltip {
-  display: none !important;
-}
-
-.goog-tooltip:hover {
-  display: none !important;
+  visibility: hidden !important;
 }
 
 .goog-text-highlight {

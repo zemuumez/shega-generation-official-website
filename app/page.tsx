@@ -17,7 +17,7 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO PORTAL */}
-      <section className="relative overflow-hidden px-6 pb-20 pt-20 sm:pb-28 sm:pt-28 bg-[#F4F3EE]">
+      <section className="relative overflow-hidden px-6 pb-20  sm:pb-28 sm:pt-28 bg-[#F4F3EE]">
         {/* Left Side Framing border ribbon from custom SVG */}
         <div className="absolute left-0 top-0 bottom-0 w-[18%] max-w-[200px] z-0 pointer-events-none opacity-15 hidden lg:block scale-x-[-1]">
           <img
