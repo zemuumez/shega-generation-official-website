@@ -17,7 +17,7 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO PORTAL */}
-      <section className="relative overflow-hidden px-6 pb-20  sm:pb-28 sm:pt-28 bg-[#F4F3EE]">
+      <section className="relative min-h-[calc(100dvh-76px)] flex flex-col justify-center items-center overflow-hidden px-6 py-12 md:py-20 bg-[#F4F3EE]">
         {/* Left Side Framing border ribbon from custom SVG */}
         <div className="absolute left-0 top-0 bottom-0 w-[18%] max-w-[200px] z-0 pointer-events-none opacity-15 hidden lg:block scale-x-[-1]">
           <img
@@ -36,26 +36,23 @@ export default async function HomePage() {
           />
         </div>
 
-        <div className="relative mx-auto max-w-5xl z-20 flex flex-col items-center">
-          <span className="inline-block px-4 py-1 rounded-full font-mono text-[10px] uppercase tracking-[0.25em] bg-ink/5 text-ink border border-zinc-200 font-bold">
-            ሽጋ ትውልድ &middot; Shega Generations
-          </span>
+        <div className="relative mx-auto max-w-5xl z-20 flex flex-col items-center justify-center w-full">
           
           {/* Giant Masked Text Title */}
-          <div className="flex flex-col items-center justify-center text-center mt-12 select-none">
-            <h1 className="font-display font-bold text-[14vw] sm:text-[11vw] leading-[0.82] tracking-tighter uppercase text-masked-bg">
+          <div className="flex flex-col items-center justify-center text-center mt-4 sm:mt-6 select-none">
+            <h1 className="font-display font-bold text-[clamp(3.5rem,14vw,6.5rem)] sm:text-[clamp(6.5rem,11vw,10.5rem)] leading-[0.92] tracking-tighter uppercase text-masked-bg">
               Shega
               <br className="sm:hidden" />
               <span className="sm:inline"> Generations</span>
             </h1>
           </div>
 
-          <div className="mt-12 mx-auto max-w-2xl text-center">
+          <div className="mt-8 sm:mt-10 mx-auto max-w-2xl text-center">
             <p className="text-lg sm:text-xl text-ink-soft leading-relaxed">
               AI/ML, web and mobile development, and DevOps, woven together with life skills
               and indigenous knowledge. Built by the generation it teaches, in every region of the country.
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
                 href="/events"
                 className="w-full sm:w-auto bg-ochre px-9 py-4 rounded-full text-xs font-mono uppercase tracking-widest text-white transition-all duration-300 hover:bg-ochre-dark hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
