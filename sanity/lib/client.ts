@@ -11,7 +11,7 @@ export const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
   apiVersion: "2024-06-01",
-  useCdn: true,
+  useCdn: false,
   perspective: "published",
 });
 
@@ -46,7 +46,10 @@ export function safeImageUrl(
 export async function safeFetch<T>(query: string, params: Record<string, unknown> = {}, fallback: T): Promise<T> {
   if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) return fallback;
   try {
-    const data = await sanityClient.fetch<T>(query, params, { cache: "no-store" });
+    const data = await sanityClient.fetch<T>(query, params, {
+      cache: "no-store",
+      next: { revalidate: 0 },
+    });
     return data ?? fallback;
   } catch (err) {
     console.error("Sanity fetch failed, using fallback data:", err);

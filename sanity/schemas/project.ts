@@ -1,8 +1,10 @@
 import { defineField, defineType } from "sanity";
+import { RocketIcon } from "@sanity/icons";
 
 export default defineType({
   name: "project",
   title: "Student Journey & Venture",
+  icon: RocketIcon,
   type: "document",
   fields: [
     defineField({ name: "title", title: "Project Title", type: "string", validation: (Rule) => Rule.required() }),

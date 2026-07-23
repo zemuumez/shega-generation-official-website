@@ -1,8 +1,10 @@
 import { defineField, defineType } from "sanity";
+import { CommentIcon } from "@sanity/icons";
 
 export default defineType({
   name: "testimonial",
   title: "Alumni Testimonial",
+  icon: CommentIcon,
   type: "document",
   fields: [
     defineField({ name: "quote", title: "Quote", type: "text", rows: 3, validation: (Rule) => Rule.required() }),

@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { UserIcon } from "@sanity/icons";
 
 const ETHIOPIAN_REGIONS = [
   "Addis Ababa",
@@ -20,6 +21,7 @@ const ETHIOPIAN_REGIONS = [
 export default defineType({
   name: "studentApplication",
   title: "Student Application",
+  icon: UserIcon,
   type: "document",
   // Applications are created only by the server-side onboarding API using a
   // scoped write token. This document type should never be editable through

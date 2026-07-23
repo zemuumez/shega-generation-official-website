@@ -4,6 +4,7 @@ import { GALLERY_QUERY } from "@/sanity/lib/queries";
 import { demoGallery } from "@/lib/demoData";
 
 export const metadata = { title: "Gallery | Shega Generations" };
+export const revalidate = 0;
 
 export default async function GalleryPage() {
   const items = await safeFetch(GALLERY_QUERY, {}, demoGallery);

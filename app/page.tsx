@@ -12,6 +12,8 @@ import { safeFetch, safeImageUrl } from "@/sanity/lib/client";
 import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY, SITE_SETTINGS_QUERY, TESTIMONIALS_QUERY } from "@/sanity/lib/queries";
 import { demoUpcomingEvent, demoCourses, demoProjects, demoTestimonials } from "@/lib/demoData";
 
+export const revalidate = 0;
+
 export default async function HomePage() {
   const siteSettings = await safeFetch(SITE_SETTINGS_QUERY, {}, {} as any);
   const upcomingEvent = await safeFetch(UPCOMING_EVENT_QUERY, {}, demoUpcomingEvent);
@@ -19,9 +21,9 @@ export default async function HomePage() {
   const fetchedProjects = await safeFetch(PROJECTS_QUERY, {}, demoProjects);
   const fetchedTestimonials = await safeFetch(TESTIMONIALS_QUERY, {}, demoTestimonials);
 
-  const courseList = (fetchedCourses && fetchedCourses.length >= 3) ? fetchedCourses : demoCourses;
-  const projectList = (fetchedProjects && fetchedProjects.length >= 3) ? fetchedProjects : demoProjects;
-  const testimonialList = (fetchedTestimonials && fetchedTestimonials.length >= 1) ? fetchedTestimonials : demoTestimonials;
+  const courseList = (fetchedCourses && fetchedCourses.length > 0) ? fetchedCourses : demoCourses;
+  const projectList = (fetchedProjects && fetchedProjects.length > 0) ? fetchedProjects : demoProjects;
+  const testimonialList = (fetchedTestimonials && fetchedTestimonials.length > 0) ? fetchedTestimonials : demoTestimonials;
 
   const heroTitle = siteSettings?.heroTitle || "Shega Generations";
   const heroCaption = siteSettings?.heroCaption || "Dedicated to sharing knowledge kindly across generations, weaving rich indigenous wisdom with modern technology to anchor, empower, and shape future leaders in every region.";
