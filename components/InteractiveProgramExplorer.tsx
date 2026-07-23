@@ -119,7 +119,7 @@ export default function InteractiveProgramExplorer() {
           </div>
 
           {/* Tab Buttons List */}
-          <div className="flex flex-col gap-2.5" role="tablist" aria-label="Course Tracks">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-col sm:gap-2.5" role="tablist" aria-label="Course Tracks">
             {TRACKS.map((t) => {
               const isActive = activeTab === t.id;
               return (
@@ -128,14 +128,14 @@ export default function InteractiveProgramExplorer() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => handleTabClick(t.id)}
-                  className={`w-full text-left px-6 py-4 rounded-full transition-all duration-300 border text-xs font-mono uppercase tracking-widest flex items-center justify-between ${
+                  className={`w-full text-left px-4 sm:px-6 py-3 sm:py-4 rounded-2xl sm:rounded-full transition-all duration-300 border text-[11px] sm:text-xs font-mono uppercase tracking-wider sm:tracking-widest flex items-center justify-between ${
                     isActive
-                      ? "bg-ochre border-ochre text-white font-bold shadow-md translate-x-1"
+                      ? "bg-ochre border-ochre text-white font-bold shadow-md sm:translate-x-1"
                       : "bg-white border-zinc-200 text-ink-soft hover:border-zinc-300 hover:text-ink"
                   }`}
                 >
-                  <span>{t.name}</span>
-                  <span className={`text-[10px] ${isActive ? "text-white/80" : "text-ink-soft/60"}`}>
+                  <span className="truncate">{t.name}</span>
+                  <span className={`text-[10px] hidden sm:inline ${isActive ? "text-white/80" : "text-ink-soft/60"}`}>
                     &rarr;
                   </span>
                 </button>

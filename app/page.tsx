@@ -111,7 +111,7 @@ export default async function HomePage() {
       </section>
 
       {/* INTERACTIVE TRACK EXPLORER */}
-      <section className="pt-14 sm:pt-16 pb-28 border-t border-b border-zinc-200 relative">
+      <section className="py-24 border-b border-zinc-200 relative">
         {/* Background Geometric Line Pattern - Bleeds outward without breaking section entrance scroll */}
         <div className="absolute inset-y-0 -right-8 md:-right-14 w-96 pointer-events-none opacity-60 z-0 hidden lg:block [mask-image:linear-gradient(to_left,white_50%,transparent_100%)]">
           <LeafPattern tone="gray" variant="arches" id="explorer-leaf" opacity="0.3" />

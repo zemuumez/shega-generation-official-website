@@ -38,30 +38,13 @@ const NAV = [
   { href: "/studio", label: "Studio" },
 ];
 
+import Navbar from "@/components/Navbar";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${oswald.variable} ${inter.variable} ${plexMono.variable}`}>
       <body className="font-body bg-ivory text-ink antialiased min-h-screen relative overflow-x-hidden selection:bg-ochre/20 selection:text-ochre-dark">
-        <header className="sticky top-0 z-40 bg-[#F4F3EE]/95 backdrop-blur-md border-b border-ivory-light/80 shadow-sm">
-          <div className="mx-auto flex w-full max-w-[90vw] items-center justify-between px-4 py-4 sm:px-6">
-            <Link href="/" className="font-display text-3xl font-bold uppercase tracking-tight text-ink hover:text-ink/80 transition-colors duration-300">
-              Shega Generations
-            </Link>
-            <nav className="hidden md:flex items-center gap-10 text-lg tracking-tight text-ink/95">
-              {NAV.map((item) => (
-                <Link key={item.href} href={item.href} className="hover:text-ink/70 transition-colors relative py-1 font-extrabold">
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="flex items-center gap-6">
-              <GoogleTranslator />
-              <Link href="/donate" className="border border-ink/40 text-ink rounded-full px-7 py-3 hover:bg-ochre hover:text-white hover:border-ochre text-xs tracking-widest transition-all uppercase font-mono font-bold">
-                Donate
-              </Link>
-            </div>
-          </div>
-        </header>
+        <Navbar />
 
         <main className="relative z-10">{children}</main>
 
