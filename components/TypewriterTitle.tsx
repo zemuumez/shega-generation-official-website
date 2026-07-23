@@ -18,15 +18,15 @@ export default function TypewriterTitle({
     let timer: NodeJS.Timeout;
 
     if (!isDeleting && displayText.length < text.length) {
-      // Type out character by character
+      // Type out character by character (slower, smoother pace)
       timer = setTimeout(() => {
         setDisplayText(text.slice(0, displayText.length + 1));
-      }, 110);
+      }, 90);
     } else if (!isDeleting && displayText.length === text.length) {
-      // Hold at full text for 2.5s
+      // Hold at full text for 3.5 seconds
       timer = setTimeout(() => {
         setIsDeleting(true);
-      }, 2500);
+      }, 5500);
     } else if (isDeleting && displayText.length > 0) {
       // Backspace character by character
       timer = setTimeout(() => {
@@ -36,7 +36,7 @@ export default function TypewriterTitle({
       // Hold at empty before typing again
       timer = setTimeout(() => {
         setIsDeleting(false);
-      }, 600);
+      }, 900);
     }
 
     return () => clearTimeout(timer);
