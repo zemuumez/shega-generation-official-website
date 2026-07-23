@@ -32,15 +32,15 @@ const curriculumItems = [
 
 export default function CurriculumSplitSection() {
   return (
-    <section className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 pt-6 pb-28 relative border-t border-b border-zinc-200">
+    <section className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 pt-14 sm:pt-16 pb-28 relative border-t border-b border-zinc-200">
       {/* Background Geometric Line Pattern */}
       <div className="absolute inset-y-0 -left-8 md:-left-14 w-96 pointer-events-none opacity-60 z-0 hidden lg:block [mask-image:linear-gradient(to_right,white_50%,transparent_100%)]">
         <LeafPattern tone="gray" variant="mosaic" id="curriculum-leaf" opacity="0.3" />
       </div>
 
       <div className="flex flex-col md:flex-row gap-12 lg:gap-16 relative z-10">
-        {/* Left Column - Slowly positions to the vertical middle of viewport while right side scrolls */}
-        <div className="md:w-1/2 md:sticky md:top-[calc(50vh-200px)] h-fit pt-2 transition-all duration-300">
+        {/* Left Column - Sticky Section Title */}
+        <div className="md:w-1/2 md:sticky md:top-28 h-fit pt-2">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">
             &bull; Pedagogical Architecture
           </span>
