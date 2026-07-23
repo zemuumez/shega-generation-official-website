@@ -11,6 +11,7 @@ import {
   FolderIcon,
   SparklesIcon,
   EnvelopeIcon,
+  AddCommentIcon,
 } from "@sanity/icons";
 
 export const deskStructure: StructureResolver = (S) =>
@@ -142,10 +143,10 @@ export const deskStructure: StructureResolver = (S) =>
             ])
         ),
 
-      // 4. STUDENT APPLICATIONS & ONBOARDING
+      // 4. STUDENT APPLICATIONS
       S.listItem()
         .title("Student Applications")
-        .icon(EnvelopeIcon)
+        .icon(UserIcon)
         .child(
           S.list()
             .title("Applications by Status")
@@ -182,9 +183,49 @@ export const deskStructure: StructureResolver = (S) =>
             ])
         ),
 
+      // 5. CONTACT INQUIRIES & MESSAGES
+      S.listItem()
+        .title("Contact Messages")
+        .icon(EnvelopeIcon)
+        .child(
+          S.list()
+            .title("Messages by Status")
+            .items([
+              S.listItem()
+                .title("New Messages")
+                .child(
+                  S.documentList()
+                    .title("New Contact Messages")
+                    .filter('_type == "contactMessage" && status == "New"')
+                ),
+              S.listItem()
+                .title("In Progress")
+                .child(
+                  S.documentList()
+                    .title("In Progress Messages")
+                    .filter('_type == "contactMessage" && status == "In Progress"')
+                ),
+              S.listItem()
+                .title("Resolved / Replied")
+                .child(
+                  S.documentList()
+                    .title("Resolved Messages")
+                    .filter('_type == "contactMessage" && status == "Resolved"')
+                ),
+              S.divider(),
+              S.listItem()
+                .title("All Contact Messages")
+                .icon(FolderIcon)
+                .child(
+                  S.documentTypeList("contactMessage")
+                    .title("All Messages")
+                ),
+            ])
+        ),
+
       S.divider(),
 
-      // 5. ALL CONTENT COLLECTIONS
+      // 6. ALL CONTENT COLLECTIONS
       S.listItem()
         .title("All Content Collections")
         .icon(FolderIcon)
@@ -198,10 +239,11 @@ export const deskStructure: StructureResolver = (S) =>
               S.documentTypeListItem("project").title("Student Projects").icon(RocketIcon),
               S.documentTypeListItem("testimonial").title("Alumni Testimonials").icon(CommentIcon),
               S.documentTypeListItem("studentApplication").title("Student Applications").icon(UserIcon),
+              S.documentTypeListItem("contactMessage").title("Contact Messages").icon(EnvelopeIcon),
             ])
         ),
 
-      // 6. GLOBAL SITE SETTINGS
+      // 7. GLOBAL SITE SETTINGS
       S.listItem()
         .title("Global Site Settings")
         .icon(CogIcon)

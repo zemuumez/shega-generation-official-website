@@ -5,6 +5,7 @@ import studentApplication from "./studentApplication";
 import gallery from "./gallery";
 import testimonial from "./testimonial";
 import siteSettings from "./siteSettings";
+import contactMessage from "./contactMessage";
 
 export const schemaTypes = [
   event,
@@ -14,4 +15,5 @@ export const schemaTypes = [
   gallery,
   testimonial,
   siteSettings,
+  contactMessage,
 ];

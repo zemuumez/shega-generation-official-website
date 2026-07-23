@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Us | Shega Generations",
@@ -57,65 +58,7 @@ export default function ContactPage() {
 
           {/* Contact Form Column */}
           <div className="md:col-span-3 space-y-4">
-            <form className="space-y-4">
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-ink/70 font-bold mb-1.5">
-                  Your Full Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Dawit Kassaye"
-                  className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-ink/70 font-bold mb-1.5">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="name@example.com"
-                  className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-ink/70 font-bold mb-1.5">
-                  Subject / Cohort Interest
-                </label>
-                <select
-                  className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink bg-white focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all"
-                >
-                  <option value="general">General Inquiry</option>
-                  <option value="tech">Tech Orientation Labs</option>
-                  <option value="indigenous">Indigenous Knowledge & Tibeb</option>
-                  <option value="mentorship">Mentorship & Mentee Application</option>
-                  <option value="partnership">Partnership & Regional Hubs</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-widest text-ink/70 font-bold mb-1.5">
-                  Your Message
-                </label>
-                <textarea
-                  rows={4}
-                  required
-                  placeholder="How can we assist or collaborate with you?"
-                  className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-zinc-950 hover:bg-black text-white font-mono text-xs uppercase tracking-widest py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md active:scale-[0.99]"
-              >
-                Send Message
-              </button>
-            </form>
+            <ContactForm />
           </div>
         </div>
       </div>

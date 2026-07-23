@@ -1,0 +1,722 @@
+{
+  "meta": {
+    "exportedAt": "2026-07-23T23:24:57.317Z",
+    "projectId": "g8zdm74i",
+    "dataset": "production",
+    "totalDocuments": 32,
+    "breakdown": {
+      "system.group": 11,
+      "system.retention": 1,
+      "gallery": 1,
+      "course": 6,
+      "event": 3,
+      "sanity.imageAsset": 1,
+      "project": 5,
+      "siteSettings": 1,
+      "testimonial": 3
+    }
+  },
+  "documents": [
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.access-manager",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.administrator",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      ],
+      "members": [
+        "p65HXzLAp"
+      ]
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.blueprints-deployer",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.create-session",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.public",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"*\")",
+          "permissions": [
+            "read"
+          ]
+        }
+      ],
+      "members": [
+        "everyone"
+      ]
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.read",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.sanity.contributor",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_type == \"sanity.imageAsset\"",
+          "permissions": [
+            "create"
+          ]
+        },
+        {
+          "filter": "_type == \"sanity.fileAsset\"",
+          "permissions": [
+            "create"
+          ]
+        },
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      ],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.sanity.developer",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      ],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.sanity.editor",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      ],
+      "members": [
+        "pUDgoCOet"
+      ]
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.sanity.viewer",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read"
+          ]
+        }
+      ],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.write",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": [
+        "pUDgoCOet"
+      ]
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.retention._maximum_project",
+      "_rev": "6rm71nnTDOxtgIcQO8QRQ6",
+      "_type": "system.retention",
+      "_updatedAt": "2026-07-18T17:51:39Z",
+      "days": 90,
+      "maximum": true,
+      "preferShorter": true
+    },
+    {
+      "_createdAt": "2026-07-18T18:13:12Z",
+      "_id": "cf7eb362-08e8-4b24-a8ad-d46927d7570f",
+      "_rev": "v4Gmojd07EdzSZUAQ9zCw3",
+      "_type": "gallery",
+      "_updatedAt": "2026-07-18T18:14:15Z",
+      "caption": "Shega Generation 2025 batch",
+      "categoryTag": "Classroom",
+      "image": {
+        "_type": "image",
+        "alt": "Shega Generation 2025 batch",
+        "asset": {
+          "_ref": "image-0ae2cc53f605c891b20f3509b62e9ad459ed31c3-1280x1280-jpg",
+          "_type": "reference"
+        }
+      }
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:13Z",
+      "_id": "course-1",
+      "_rev": "eJ7skWqptDvdh6OpbOWx1X",
+      "_type": "course",
+      "_updatedAt": "2026-07-23T21:45:13Z",
+      "badgeCategory": "Tech Orientation",
+      "enrolledCount": 140,
+      "externalLmsUrl": "#",
+      "instructor": "Zemichael Tefera • Lead Engineer",
+      "level": "Intermediate • 12 Weeks",
+      "rating": "4.9",
+      "sequenceOrder": 1,
+      "snippet": "Master modern TypeScript, Next.js App Router, React Native, and PostgreSQL to craft resilient web and mobile platforms built for local commerce.",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "React Native",
+        "PostgreSQL"
+      ],
+      "title": "Full-Stack Web & Mobile Architecture"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:15Z",
+      "_id": "course-2",
+      "_rev": "kqd32DnwMDSkqBnWPsRpn7",
+      "_type": "course",
+      "_updatedAt": "2026-07-23T21:45:15Z",
+      "badgeCategory": "Tech Orientation",
+      "enrolledCount": 95,
+      "externalLmsUrl": "#",
+      "instructor": "Dr. Abera B. • AI Research Lead",
+      "level": "Advanced • 10 Weeks",
+      "rating": "5.0",
+      "sequenceOrder": 2,
+      "snippet": "Train custom neural networks, fine-tune open-weights models (Llama 3, Mistral) on Amharic/Afan Oromo corpora, and build OCR pipelines for Ge'ez script.",
+      "tags": [
+        "PyTorch",
+        "HuggingFace",
+        "Ge'ez OCR",
+        "Llama 3"
+      ],
+      "title": "Applied AI & Low-Resource Language Models"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:16Z",
+      "_id": "course-3",
+      "_rev": "kqd32DnwMDSkqBnWPsRpyR",
+      "_type": "course",
+      "_updatedAt": "2026-07-23T21:45:16Z",
+      "badgeCategory": "Tech Orientation",
+      "enrolledCount": 110,
+      "externalLmsUrl": "#",
+      "instructor": "Kidus Y. • Systems Architect",
+      "level": "Intermediate • 8 Weeks",
+      "rating": "4.8",
+      "sequenceOrder": 3,
+      "snippet": "Construct GitOps CI/CD pipelines, Docker containers, and resilient Kubernetes clusters tailored for low-bandwidth, offline-first regional deployments.",
+      "tags": [
+        "Docker",
+        "Kubernetes",
+        "GitOps",
+        "Terraform"
+      ],
+      "title": "DevOps, Containerization & Offline Edge Nodes"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:18Z",
+      "_id": "course-4",
+      "_rev": "kqd32DnwMDSkqBnWPsRq7s",
+      "_type": "course",
+      "_updatedAt": "2026-07-23T21:45:18Z",
+      "badgeCategory": "Indigenous Knowledge",
+      "enrolledCount": 210,
+      "externalLmsUrl": "#",
+      "instructor": "Master Weaver Wolete & Shega Tech Team",
+      "level": "All Levels • 6 Weeks",
+      "rating": "5.0",
+      "sequenceOrder": 4,
+      "snippet": "Decode structural geometry patterns in traditional Ethiopian Tibeb textiles. Translate organic weaving matrices into responsive CSS grids and SVG graphic algorithms.",
+      "tags": [
+        "Ethnomathematics",
+        "SVG Grids",
+        "Tibeb Geometry",
+        "CSS Math"
+      ],
+      "title": "Ethnomathematics & Tibeb Weaving Geometry"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:19Z",
+      "_id": "course-5",
+      "_rev": "kqd32DnwMDSkqBnWPsRqL5",
+      "_type": "course",
+      "_updatedAt": "2026-07-23T21:45:19Z",
+      "badgeCategory": "Life Skills",
+      "enrolledCount": 180,
+      "externalLmsUrl": "#",
+      "instructor": "Bethlehem T. & Shega Founders Network",
+      "level": "All Levels • 6 Weeks",
+      "rating": "4.9",
+      "sequenceOrder": 5,
+      "snippet": "Master technical storytelling, contract negotiation, financial literacy, and community ethics. Prepare to pitch, launch, and sustain independent engineering ventures.",
+      "tags": [
+        "Venture Pitching",
+        "Financial Literacy",
+        "Leadership",
+        "Ethics"
+      ],
+      "title": "Negotiation, Pitching & Venture Leadership"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:21Z",
+      "_id": "course-6",
+      "_rev": "eJ7skWqptDvdh6OpbOWxIl",
+      "_type": "course",
+      "_updatedAt": "2026-07-23T21:45:21Z",
+      "badgeCategory": "Tech Orientation",
+      "enrolledCount": 85,
+      "externalLmsUrl": "#",
+      "instructor": "Tewodros A. • GIS Specialist",
+      "level": "Intermediate • 8 Weeks",
+      "rating": "4.9",
+      "sequenceOrder": 6,
+      "snippet": "Build spatial data pipelines mapping regional supply chains, local crop micro-climates, and transport networks across Ethiopian secondary cities.",
+      "tags": [
+        "QGIS",
+        "GeoJSON",
+        "Python Data",
+        "Logistics"
+      ],
+      "title": "Geospatial Data & Agricultural Logistics"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:30Z",
+      "_id": "event-1",
+      "_rev": "eJ7skWqptDvdh6OpbOWy48",
+      "_type": "event",
+      "_updatedAt": "2026-07-23T21:45:30Z",
+      "eventDate": "2026-08-04T21:45:11.103Z",
+      "isUpcoming": true,
+      "location": "Bahir Dar, Amhara Region",
+      "registrationLink": "#",
+      "slug": {
+        "_type": "slug",
+        "current": "bahir-dar-ctf"
+      },
+      "title": "Regional CTF: Bahir Dar Circuit",
+      "type": "CTF"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:32Z",
+      "_id": "event-2",
+      "_rev": "kqd32DnwMDSkqBnWPsRrA2",
+      "_type": "event",
+      "_updatedAt": "2026-07-23T21:45:32Z",
+      "eventDate": "2026-06-13T21:45:11.105Z",
+      "isUpcoming": false,
+      "location": "Simien Mountains, Amhara Region",
+      "registrationLink": "#",
+      "slug": {
+        "_type": "slug",
+        "current": "simien-expedition"
+      },
+      "title": "Simien Mountains Expedition",
+      "type": "Hiking"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:33Z",
+      "_id": "event-3",
+      "_rev": "C90lXvqhCRFE4tCBdj8JOw",
+      "_system": {
+        "base": {
+          "id": "event-3",
+          "rev": "eJ7skWqptDvdh6OpbOWyH3"
+        }
+      },
+      "_type": "event",
+      "_updatedAt": "2026-07-23T23:09:47Z",
+      "description": [
+        {
+          "_key": "92ade968cdbe",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "eca1c58e2413",
+              "_type": "span",
+              "marks": [],
+              "text": "zt"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eventDate": "2026-09-16T21:45:11.105Z",
+      "isUpcoming": true,
+      "location": "Addis Ababa",
+      "registrationLink": "https://example.cmo",
+      "slug": {
+        "_type": "slug",
+        "current": "build-for-home zt"
+      },
+      "title": "National Hackathon: Build for Home zt",
+      "type": "Tech Training"
+    },
+    {
+      "_createdAt": "2026-07-18T18:13:21Z",
+      "_id": "image-0ae2cc53f605c891b20f3509b62e9ad459ed31c3-1280x1280-jpg",
+      "_rev": "aq7AUICLogGimJulQH5ok7",
+      "_type": "sanity.imageAsset",
+      "_updatedAt": "2026-07-18T18:13:21Z",
+      "assetId": "0ae2cc53f605c891b20f3509b62e9ad459ed31c3",
+      "extension": "jpg",
+      "metadata": {
+        "_type": "sanity.imageMetadata",
+        "blurHash": "eKHo8y8_NG%2M_01jDfmx[Rj_LROa%xujZS1IUjvobRjbJWBofoIRj",
+        "dimensions": {
+          "_type": "sanity.imageDimensions",
+          "aspectRatio": 1,
+          "height": 1280,
+          "width": 1280
+        },
+        "hasAlpha": false,
+        "isOpaque": true,
+        "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUABQDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAUGAwT/xAAkEAABBAIBBAIDAAAAAAAAAAABAAIDBAURBhITITEycUFDUf/EABcBAAMBAAAAAAAAAAAAAAAAAAECAwT/xAAcEQACAgIDAAAAAAAAAAAAAAAAAQIREyESQVH/2gAMAwEAAhEDEQA/AMvLQkkzRpxvb0b13PwAtfw7OvwjL1OKuZLTGaa7Ww7f8UfjGNyr44I7FdoYzqJefkd+lbx3GeQG42YWIoY43ktAGyR9pFCC3Y9ctM8UuezMjy91t1cn9YGgEVDKcBv3bXdbdLdtAP2ipnXpPEujeVIYy4u6QD78KtFG1rfARFlRU7MALfIRERFP/9k=",
+        "palette": {
+          "_type": "sanity.imagePalette",
+          "darkMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#615b3d",
+            "foreground": "#fff",
+            "population": 3.47,
+            "title": "#fff"
+          },
+          "darkVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#0f4574",
+            "foreground": "#fff",
+            "population": 0,
+            "title": "#fff"
+          },
+          "dominant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#8d8668",
+            "foreground": "#fff",
+            "population": 3.61,
+            "title": "#fff"
+          },
+          "lightMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#ccc1b1",
+            "foreground": "#000",
+            "population": 1.47,
+            "title": "#fff"
+          },
+          "lightVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#b6c8e6",
+            "foreground": "#000",
+            "population": 3.08,
+            "title": "#fff"
+          },
+          "muted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#8d8668",
+            "foreground": "#fff",
+            "population": 3.61,
+            "title": "#fff"
+          },
+          "vibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#74b4ec",
+            "foreground": "#000",
+            "population": 0,
+            "title": "#fff"
+          }
+        },
+        "thumbHash": "IggKDwJzaJlwmIdtmGiFd4d7qEb7TMIA"
+      },
+      "mimeType": "image/jpeg",
+      "originalFilename": "photo_2026-06-06 00.30.19.jpeg",
+      "path": "images/g8zdm74i/production/0ae2cc53f605c891b20f3509b62e9ad459ed31c3-1280x1280.jpg",
+      "sha1hash": "0ae2cc53f605c891b20f3509b62e9ad459ed31c3",
+      "size": 479115,
+      "uploadId": "3f13c88686768794c5a9e123868c95c68be2a611",
+      "url": "https://cdn.sanity.io/images/g8zdm74i/production/0ae2cc53f605c891b20f3509b62e9ad459ed31c3-1280x1280.jpg"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:22Z",
+      "_id": "project-1",
+      "_rev": "eJ7skWqptDvdh6OpbOWxUF",
+      "_type": "project",
+      "_updatedAt": "2026-07-23T21:45:22Z",
+      "category": "Venture Startup",
+      "cohortLocation": "Hawassa Cohort",
+      "creatorName": "Sara Mohammed",
+      "description": "Decentralized dispatch & inventory tracker for regional agricultural cooperatives. Connected 14 rural farming unions in Sidama, processing over $120k in regional grain trades.",
+      "impactMetric": "14 Unions Connected • $120k Processed",
+      "projectUrl": "#",
+      "quote": "Shega showed me how to turn local logistics challenges into production-grade software.",
+      "techStack": [
+        "Next.js",
+        "PostgreSQL",
+        "Twilio SMS",
+        "TailwindCSS"
+      ],
+      "title": "Adera Logistics Platform"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:24Z",
+      "_id": "project-2",
+      "_rev": "kqd32DnwMDSkqBnWPsRqhj",
+      "_type": "project",
+      "_updatedAt": "2026-07-23T21:45:24Z",
+      "category": "Open-Source AI",
+      "cohortLocation": "Bahir Dar Cohort",
+      "creatorName": "Dawit Kassaye",
+      "description": "Deep-learning optical character recognition model fine-tuned for historic Ge'ez and Amharic manuscripts. Digitized over 400 ancient texts for public archives.",
+      "impactMetric": "400+ Manuscripts Digitized • 98.4% Accuracy",
+      "projectUrl": "#",
+      "quote": "We combined our AI lab training with local manuscript preservation.",
+      "techStack": [
+        "PyTorch",
+        "OpenCV",
+        "Tesseract",
+        "FastAPI"
+      ],
+      "title": "Ge'ez Vision OCR"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:26Z",
+      "_id": "project-3",
+      "_rev": "C90lXvqhCRFE4tCBdiobQc",
+      "_type": "project",
+      "_updatedAt": "2026-07-23T21:45:26Z",
+      "category": "Offline Agritech",
+      "cohortLocation": "Adama Cohort",
+      "creatorName": "Hana Assefa",
+      "description": "USSD & SMS weather advisory delivering micro-climate frost alerts and market prices to smallholder farmers without smartphone or internet connectivity.",
+      "impactMetric": "12,500 Active Farmers • 4 Languages",
+      "projectUrl": "#",
+      "quote": "Building offline-first tools meant our software actually reached local farm hands.",
+      "techStack": [
+        "Node.js",
+        "Africa's Talking API",
+        "Redis",
+        "USSD"
+      ],
+      "title": "AgriSignal SMS"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:28Z",
+      "_id": "project-4",
+      "_rev": "eJ7skWqptDvdh6OpbOWxpm",
+      "_type": "project",
+      "_updatedAt": "2026-07-23T21:45:28Z",
+      "category": "UI Framework",
+      "cohortLocation": "Mekelle Cohort",
+      "creatorName": "Yonas & Samrawit",
+      "description": "An open-source generative CSS/SVG grid generator that converts traditional Ethiopian weaving math into production Web component design tokens.",
+      "impactMetric": "1,200+ GitHub Stars • Used in 15 Apps",
+      "projectUrl": "#",
+      "quote": "Ethnomathematics became our superpower for creating authentic digital interfaces.",
+      "techStack": [
+        "TypeScript",
+        "SVG Engine",
+        "Tailwind Plugin",
+        "Web Components"
+      ],
+      "title": "Tibeb Design System"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:29Z",
+      "_id": "project-5",
+      "_rev": "kqd32DnwMDSkqBnWPsRqwp",
+      "_type": "project",
+      "_updatedAt": "2026-07-23T21:45:29Z",
+      "category": "HealthTech",
+      "cohortLocation": "Jima Cohort",
+      "creatorName": "Abdi Tolosa",
+      "description": "Low-bandwidth patient diagnostic sync tool operating over intermittent 2G networks, connecting remote rural health posts with referral hospitals.",
+      "impactMetric": "32 Clinics Deployed • 8,000 Patient Logs",
+      "projectUrl": "#",
+      "quote": "Our DevOps training helped us design software that never crashes when the network drops.",
+      "techStack": [
+        "React Native",
+        "SQLite",
+        "Docker",
+        "Go"
+      ],
+      "title": "HealthReach Telemetry"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:12Z",
+      "_id": "siteSettings",
+      "_rev": "kqd32DnwMDSkqBnWPsgcaM",
+      "_system": {
+        "base": {
+          "id": "siteSettings",
+          "rev": "C90lXvqhCRFE4tCBdjAMPW"
+        }
+      },
+      "_type": "siteSettings",
+      "_updatedAt": "2026-07-23T23:20:02Z",
+      "communityTitle": "Follow the day to day",
+      "culturalAnchoringDescription": "By grounding tech instruction in traditional craft and community cooperation, we build leaders who build for their homeland.",
+      "culturalAnchoringSubtitle": "Our Cultural Anchoring",
+      "curriculumDescription": "Explore open courses across three core tracks: Tech Orientation, Life Skills, and Indigenous Knowledge.",
+      "curriculumTitle": "Dynamic Curriculum & Tracks",
+      "heroCaption": "Dedicated to sharing knowledge kindly across generations, weaving rich indigenous wisdom with modern technology to anchor, empower, and shape future leaders in every region.",
+      "heroCtaPrimary": "Join the Generation",
+      "heroCtaSecondary": "Support the Mission",
+      "heroTitle": "Shega Generations",
+      "journeysDescription": "Alumni startups, open-source AI models, and regional logistics tools that started as a Shega assignment.",
+      "journeysTitle": "Student Journeys & Ventures",
+      "pedagogicalDescription": "Our three-pillared methodology weaves digital literacy, life wisdom, and indigenous heritage into one holistic trajectory.",
+      "pedagogicalTitle": "Pedagogical Architecture",
+      "statementBannerTitle1": "Tech Orientation",
+      "statementBannerTitle2": "Life Skills",
+      "statementBannerTitle3": "Indigenous Weaving",
+      "testimonialsDescription": "Graduate stories from regional cohorts across Ethiopia — building localized software and launching real ventures.",
+      "testimonialsTitle": "Voices of Shega"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:35Z",
+      "_id": "testimonial-1",
+      "_rev": "C90lXvqhCRFE4tCBdiocR4",
+      "_type": "testimonial",
+      "_updatedAt": "2026-07-23T21:45:35Z",
+      "author": "Tsion Kebede",
+      "location": "Bahir Dar Cohort",
+      "quote": "Shega gave me the space to write my first line of code. Today, I'm training low-resource NLP models translating educational textbooks into our regional languages.",
+      "role": "AI Researcher @ Lesan AI",
+      "track": "AI Laboratory Graduate"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:36Z",
+      "_id": "testimonial-2",
+      "_rev": "kqd32DnwMDSkqBnWPsRrNF",
+      "_type": "testimonial",
+      "_updatedAt": "2026-07-23T21:45:36Z",
+      "author": "Elias Worku",
+      "location": "Hawassa Cohort",
+      "quote": "The ethnomathematics module opened my eyes. We don't have to copy Silicon Valley — we can build tools rooted in our own culture, ethics, and economic needs.",
+      "role": "Founding Engineer @ Adera",
+      "track": "Web & Mobile Cohort"
+    },
+    {
+      "_createdAt": "2026-07-23T21:45:38Z",
+      "_id": "testimonial-3",
+      "_rev": "kqd32DnwMDSkqBnWPsRrYZ",
+      "_type": "testimonial",
+      "_updatedAt": "2026-07-23T21:45:38Z",
+      "author": "Bethlehem Hailu",
+      "location": "Adama Cohort",
+      "quote": "The life skills and negotiation track was just as critical as the coding labs. It gave me the confidence to pitch our agritech startup to regional trade bodies.",
+      "role": "Co-Founder @ AgriSignal",
+      "track": "Venture Leadership Cohort"
+    }
+  ]
+}

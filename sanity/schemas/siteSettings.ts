@@ -69,6 +69,14 @@ export default defineType({
       initialValue: "Indigenous Weaving",
       group: "statement",
     }),
+    defineField({
+      name: "statementBannerImage",
+      title: "Statement Banner Parallax Background Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [{ name: "alt", type: "string", title: "Alt Text" }],
+      group: "statement",
+    }),
 
     // Cultural Anchoring Section
     defineField({
@@ -82,6 +90,14 @@ export default defineType({
       title: "Cultural Anchoring Description",
       type: "text",
       rows: 3,
+      group: "cultural",
+    }),
+    defineField({
+      name: "culturalAnchoringImage",
+      title: "Cultural Anchoring Parallax Background Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [{ name: "alt", type: "string", title: "Alt Text" }],
       group: "cultural",
     }),
 

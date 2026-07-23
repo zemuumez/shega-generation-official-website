@@ -33,9 +33,11 @@ export default async function HomePage() {
   const statement1 = siteSettings?.statementBannerTitle1 || "Tech Orientation";
   const statement2 = siteSettings?.statementBannerTitle2 || "Life Skills";
   const statement3 = siteSettings?.statementBannerTitle3 || "Indigenous Weaving";
+  const statementBannerBg = siteSettings?.statementBannerImage ? safeImageUrl(siteSettings.statementBannerImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
 
   const culturalSubtitle = siteSettings?.culturalAnchoringSubtitle || "Our Cultural Anchoring";
   const culturalDescription = siteSettings?.culturalAnchoringDescription || "By grounding tech instruction in traditional craft and community cooperation, we build leaders who build for their homeland.";
+  const culturalAnchoringBg = siteSettings?.culturalAnchoringImage ? safeImageUrl(siteSettings.culturalAnchoringImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
 
   return (
     <>
@@ -93,7 +95,7 @@ export default async function HomePage() {
 
       {/* FULL-WIDTH PHOTO OVERLAY STATEMENT BANNER WITH PARALLAX EFFECT */}
       <section className="relative w-full h-[55vh] min-h-[420px] overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('/images/hero-bg.png')" }} />
+        <div className="absolute inset-0 bg-fixed bg-cover bg-center" style={{ backgroundImage: `url('${statementBannerBg}')` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/35 z-10" />
         
         <div className="relative z-20 flex flex-col items-center justify-center text-center p-6 select-none leading-[0.95]">
@@ -113,7 +115,7 @@ export default async function HomePage() {
       <CurriculumSplitSection />
 
       {/* PARALLAX PHILOSOPHY BANNER */}
-      <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center bg-fixed bg-cover bg-center select-none" style={{ backgroundImage: "url('/images/hero-bg.png')" }}>
+      <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center bg-fixed bg-cover bg-center select-none" style={{ backgroundImage: `url('${culturalAnchoringBg}')` }}>
         <div className="absolute inset-0 bg-black/65 z-10" />
         <div className="relative z-20 max-w-4xl text-center px-6">
           <span className="font-mono text-xs uppercase tracking-widest text-ink/65 font-bold">&bull; {culturalSubtitle}</span>
