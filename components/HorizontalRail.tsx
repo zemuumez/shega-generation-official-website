@@ -57,8 +57,8 @@ export default function HorizontalRail({
         </div>
       </div>
 
-      {/* Aligned Footer Controls matching max-w-6xl px-6 sm:px-10 header line */}
-      <div className="mx-auto max-w-6xl mt-4 px-6 sm:px-10 flex items-center justify-between">
+      {/* Aligned Footer Controls matching 90vw layout line */}
+      <div className="mx-auto w-full max-w-[90vw] mt-4 px-4 sm:px-6 flex items-center justify-between">
         <p className="text-xs text-ink-soft/60 font-mono">
           scroll or drag to explore &rarr;
         </p>

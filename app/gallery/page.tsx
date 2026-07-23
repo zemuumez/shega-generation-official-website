@@ -10,7 +10,7 @@ export default async function GalleryPage() {
 
   return (
     <div className="pb-28 pt-20 relative">
-      <div className="mx-auto max-w-5xl px-6 sm:px-10 relative z-20">
+      <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-20">
         <span className="inline-block px-3.5 py-1 rounded-full font-mono text-xs uppercase tracking-[0.2em] bg-ink/5 text-ink border border-zinc-200 font-bold">
           Media Hub
         </span>

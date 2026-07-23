@@ -19,7 +19,7 @@ export default async function EventsPage() {
         <LeafPattern tone="gold" id="events-leaf" opacity="0.08" />
       </div>
       <div className="relative z-10">
-        <div className="mx-auto max-w-5xl px-6 sm:px-10 relative z-20">
+        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-20">
         <span className="inline-block px-3.5 py-1 rounded-full font-mono text-xs uppercase tracking-[0.2em] bg-ink/5 text-ink border border-zinc-200 font-bold">
           Directory
         </span>
@@ -30,7 +30,7 @@ export default async function EventsPage() {
       </div>
 
       <div className="mt-20 relative z-20">
-        <div className="mx-auto mb-6 max-w-5xl px-6 sm:px-10">
+        <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">&bull; Live Schedule</span>
           <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Upcoming Gathering</h2>
         </div>
@@ -41,12 +41,12 @@ export default async function EventsPage() {
             ))}
           </HorizontalRail>
         ) : (
-          <p className="mx-auto max-w-5xl px-6 text-ink-soft sm:px-10">Nothing scheduled yet. Check back soon.</p>
+          <p className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 text-ink-soft">Nothing scheduled yet. Check back soon.</p>
         )}
       </div>
 
       <div className="mt-20 relative z-20">
-        <div className="mx-auto mb-6 max-w-5xl px-6 sm:px-10">
+        <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">&bull; History</span>
           <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Past Gatherings</h2>
         </div>

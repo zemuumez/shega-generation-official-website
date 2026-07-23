@@ -100,7 +100,7 @@ export default function InteractiveProgramExplorer() {
   const activePct = Math.round((activeTrack.enrolled / activeTrack.capacity) * 100);
 
   return (
-    <div className="mx-auto max-w-6xl px-6 sm:px-10">
+    <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
       <div className="flex flex-col md:flex-row gap-8 items-start">
         
         {/* LEFT COLUMN: Sticky Section Header, Navigation Tabs & Active Overview */}

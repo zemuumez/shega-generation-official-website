@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${oswald.variable} ${inter.variable} ${plexMono.variable}`}>
       <body className="font-body bg-ivory text-ink antialiased min-h-screen relative overflow-x-hidden selection:bg-ochre/20 selection:text-ochre-dark">
         <header className="sticky top-0 z-40 bg-[#F4F3EE]/95 backdrop-blur-md border-b border-ivory-light/80 shadow-sm">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-10">
+          <div className="mx-auto flex w-full max-w-[90vw] items-center justify-between px-4 py-4 sm:px-6">
             <Link href="/" className="font-display text-3xl font-bold uppercase tracking-tight text-ink hover:text-ink/80 transition-colors duration-300">
               Shega Generations
             </Link>
@@ -66,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="relative z-10">{children}</main>
 
         <footer className="mt-24 border-t border-ivory-light bg-white/40 relative z-10">
-          <div className="mx-auto max-w-6xl px-6 py-14 sm:px-10">
+          <div className="mx-auto w-full max-w-[90vw] px-4 py-14 sm:px-6">
             <div className="flex flex-col justify-between gap-10 sm:flex-row">
               <div>
                 <p className="font-display text-2xl font-bold uppercase tracking-wider text-ink">Shega Generations</p>
