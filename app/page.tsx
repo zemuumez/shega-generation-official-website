@@ -25,17 +25,17 @@ export default async function HomePage() {
     <>
       {/* HERO PORTAL */}
       <section className="relative min-h-[calc(100dvh-76px)] flex flex-col justify-center items-center overflow-hidden px-6 py-12 md:py-20 bg-[#F4F3EE]">
-        {/* Left Side Framing border ribbon from custom SVG */}
-        <div className="absolute left-0 top-0 bottom-0 w-[18%] max-w-[200px] z-0 pointer-events-none opacity-15 hidden lg:block scale-x-[-1]">
+        {/* Left Side Framing border ribbon - Subtle semi-transparent pattern fading inward toward center text */}
+        <div className="absolute left-0 top-0 bottom-0 w-[42vw] max-w-2xl z-0 pointer-events-none opacity-20 hidden md:block [mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)] [-webkit-mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)]">
           <img
             src="/images/pattern1.svg"
             alt=""
-            className="h-full w-full object-cover object-left"
+            className="h-full w-full object-cover object-left scale-x-[-1]"
           />
         </div>
 
-        {/* Right Side Framing border ribbon from custom SVG */}
-        <div className="absolute right-0 top-0 bottom-0 w-[18%] max-w-[200px] z-0 pointer-events-none opacity-15 hidden lg:block">
+        {/* Right Side Framing border ribbon - Subtle semi-transparent pattern fading inward toward center text */}
+        <div className="absolute right-0 top-0 bottom-0 w-[42vw] max-w-2xl z-0 pointer-events-none opacity-20 hidden md:block [mask-image:linear-gradient(to_left,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)] [-webkit-mask-image:linear-gradient(to_left,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)]">
           <img
             src="/images/pattern1.svg"
             alt=""
@@ -75,9 +75,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* FULL-WIDTH PHOTO OVERLAY STATEMENT BANNER */}
+      {/* FULL-WIDTH PHOTO OVERLAY STATEMENT BANNER WITH PARALLAX EFFECT */}
       <section className="relative w-full h-[55vh] min-h-[420px] overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/hero-bg.png')" }} />
+        <div className="absolute inset-0 bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('/images/hero-bg.png')" }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/35 z-10" />
         
         <div className="relative z-20 flex flex-col items-center justify-center text-center p-6 select-none leading-[0.95]">
