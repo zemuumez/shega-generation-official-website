@@ -3,13 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import GoogleTranslator from "@/components/GoogleTranslator";
+import { Unbounded } from "next/font/google";
+
+const unbounded = Unbounded({
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  display: "swap",
+});
 
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
-  { href: "/studio", label: "Studio" },
 ];
 
 export default function Navbar() {
@@ -19,16 +24,16 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-[#F4F3EE]/95 backdrop-blur-md border-b border-ivory-light/80 shadow-sm">
       <div className="mx-auto flex w-full max-w-[90vw] items-center justify-between px-4 py-4 sm:px-6">
-        {/* Brand Logo */}
+        {/* Brand Logo - Unique Unbounded Font in Brand Green */}
         <Link
           href="/"
-          className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight text-ink hover:text-ink/80 transition-colors duration-300"
+          className={`${unbounded.className} text-xl sm:text-2xl font-black uppercase tracking-tight text-ochre hover:text-ochre-dark transition-colors duration-300`}
         >
           Shega Generations
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 lg:gap-10 text-base lg:text-lg tracking-tight text-ink/95">
+        {/* Desktop Navigation - Right Aligned with Green Button for Donate */}
+        <nav className="hidden md:flex items-center gap-8 lg:gap-10 text-base lg:text-lg tracking-tight text-ink/95 ml-auto">
           {NAV.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -43,22 +48,17 @@ export default function Navbar() {
               </Link>
             );
           })}
-        </nav>
-
-        {/* Desktop Right Action */}
-        <div className="hidden sm:flex items-center gap-4 lg:gap-6">
-          <GoogleTranslator />
+          {/* Donate Green Button */}
           <Link
             href="/donate"
-            className="border border-ink/40 text-ink rounded-full px-6 lg:px-7 py-2.5 lg:py-3 hover:bg-ochre hover:text-white hover:border-ochre text-xs tracking-widest transition-all uppercase font-mono font-bold"
+            className="bg-ochre hover:bg-ochre-dark text-white rounded-full px-6 py-2.5 text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.03] active:scale-[0.98]"
           >
             Donate
           </Link>
-        </div>
+        </nav>
 
-        {/* Mobile Hamburger Toggle & Translator */}
-        <div className="flex sm:hidden items-center gap-2">
-          <GoogleTranslator />
+        {/* Mobile Hamburger Toggle */}
+        <div className="flex md:hidden items-center">
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 rounded-lg text-ink hover:bg-black/5 transition-colors focus:outline-none"
@@ -84,7 +84,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="sm:hidden bg-[#F4F3EE] border-b border-zinc-200 px-6 py-6 space-y-4">
+        <div className="md:hidden bg-[#F4F3EE] border-b border-zinc-200 px-6 py-6 space-y-3">
           <nav className="flex flex-col gap-3 font-mono text-xs uppercase tracking-widest font-bold">
             {NAV.map((item) => (
               <Link
@@ -99,9 +99,9 @@ export default function Navbar() {
             <Link
               href="/donate"
               onClick={() => setIsOpen(false)}
-              className="mt-2 w-full text-center bg-ochre text-white py-3.5 rounded-full text-xs font-mono uppercase tracking-widest font-bold shadow-md"
+              className="mt-2 w-full text-center bg-ochre hover:bg-ochre-dark text-white py-3 rounded-full text-xs font-mono uppercase tracking-widest font-bold shadow-md"
             >
-              Donate Now
+              Donate
             </Link>
           </nav>
         </div>

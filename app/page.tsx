@@ -8,24 +8,38 @@ import LeafPattern from "@/components/LeafPattern";
 import CurriculumSplitSection from "@/components/CurriculumSplitSection";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import Image from "next/image";
-import { safeFetch } from "@/sanity/lib/client";
-import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY } from "@/sanity/lib/queries";
+import { safeFetch, safeImageUrl } from "@/sanity/lib/client";
+import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY, SITE_SETTINGS_QUERY, TESTIMONIALS_QUERY } from "@/sanity/lib/queries";
 import { demoUpcomingEvent, demoCourses, demoProjects, demoTestimonials } from "@/lib/demoData";
 
 export default async function HomePage() {
+  const siteSettings = await safeFetch(SITE_SETTINGS_QUERY, {}, {} as any);
   const upcomingEvent = await safeFetch(UPCOMING_EVENT_QUERY, {}, demoUpcomingEvent);
   const fetchedCourses = await safeFetch(FEATURED_COURSES_QUERY, {}, demoCourses);
   const fetchedProjects = await safeFetch(PROJECTS_QUERY, {}, demoProjects);
+  const fetchedTestimonials = await safeFetch(TESTIMONIALS_QUERY, {}, demoTestimonials);
 
   const courseList = (fetchedCourses && fetchedCourses.length >= 3) ? fetchedCourses : demoCourses;
   const projectList = (fetchedProjects && fetchedProjects.length >= 3) ? fetchedProjects : demoProjects;
-  const testimonialList = demoTestimonials;
+  const testimonialList = (fetchedTestimonials && fetchedTestimonials.length >= 1) ? fetchedTestimonials : demoTestimonials;
+
+  const heroTitle = siteSettings?.heroTitle || "Shega Generations";
+  const heroCaption = siteSettings?.heroCaption || "Dedicated to sharing knowledge kindly across generations, weaving rich indigenous wisdom with modern technology to anchor, empower, and shape future leaders in every region.";
+  const heroCtaPrimary = siteSettings?.heroCtaPrimary || "Join the Generation";
+  const heroCtaSecondary = siteSettings?.heroCtaSecondary || "Support the Mission";
+
+  const statement1 = siteSettings?.statementBannerTitle1 || "Tech Orientation";
+  const statement2 = siteSettings?.statementBannerTitle2 || "Life Skills";
+  const statement3 = siteSettings?.statementBannerTitle3 || "Indigenous Weaving";
+
+  const culturalSubtitle = siteSettings?.culturalAnchoringSubtitle || "Our Cultural Anchoring";
+  const culturalDescription = siteSettings?.culturalAnchoringDescription || "By grounding tech instruction in traditional craft and community cooperation, we build leaders who build for their homeland.";
 
   return (
     <>
       {/* HERO PORTAL */}
       <section className="relative min-h-[calc(100dvh-76px)] flex flex-col justify-center items-center overflow-hidden px-6 py-12 md:py-20 bg-[#F4F3EE]">
-        {/* Left Side Framing border ribbon - Subtle semi-transparent pattern fading inward toward center text */}
+        {/* Left Side Framing border ribbon */}
         <div className="absolute left-0 top-0 bottom-0 w-[42vw] max-w-2xl z-0 pointer-events-none opacity-20 hidden md:block [mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)] [-webkit-mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)]">
           <img
             src="/images/pattern1.svg"
@@ -34,7 +48,7 @@ export default async function HomePage() {
           />
         </div>
 
-        {/* Right Side Framing border ribbon - Subtle semi-transparent pattern fading inward toward center text */}
+        {/* Right Side Framing border ribbon */}
         <div className="absolute right-0 top-0 bottom-0 w-[42vw] max-w-2xl z-0 pointer-events-none opacity-20 hidden md:block [mask-image:linear-gradient(to_left,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)] [-webkit-mask-image:linear-gradient(to_left,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)]">
           <img
             src="/images/pattern1.svg"
@@ -48,27 +62,27 @@ export default async function HomePage() {
           {/* Giant Typewriter Title - Types and Backspaces in a Loop */}
           <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[1.1em]">
             <TypewriterTitle
-              text="Shega Generations"
+              text={heroTitle}
               className="font-display font-extrabold text-[clamp(3.8rem,16vw,7.5rem)] sm:text-[clamp(6.5rem,13vw,12.5rem)] leading-[0.95] tracking-[0.05em] sm:tracking-[0.07em] uppercase text-masked-bg text-center max-w-full"
             />
           </div>
 
           <div className="mt-8 sm:mt-12 mx-auto max-w-3xl text-center">
             <p className="text-lg sm:text-2xl text-ink-soft leading-relaxed font-sans font-medium px-4">
-              Dedicated to sharing knowledge kindly across generations, weaving rich indigenous wisdom with modern technology to anchor, empower, and shape future leaders in every region.
+              {heroCaption}
             </p>
             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
                 href="/events"
                 className="w-full sm:w-auto bg-ochre px-9 py-4 rounded-full text-xs font-mono uppercase tracking-widest text-white transition-all duration-300 hover:bg-ochre-dark hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
               >
-                Join the Generation
+                {heroCtaPrimary}
               </a>
               <a
                 href="/donate"
                 className="w-full sm:w-auto border border-ink/40 text-ink hover:border-ochre hover:text-ochre px-9 py-4 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 hover:bg-white hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
               >
-                Support the Mission
+                {heroCtaSecondary}
               </a>
             </div>
           </div>
@@ -82,13 +96,13 @@ export default async function HomePage() {
         
         <div className="relative z-20 flex flex-col items-center justify-center text-center p-6 select-none leading-[0.95]">
           <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider">
-            Tech Orientation
+            {statement1}
           </h2>
           <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl stroke-text uppercase tracking-wider mt-3">
-            Life Skills
+            {statement2}
           </h2>
           <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider mt-3">
-            Indigenous Weaving
+            {statement3}
           </h2>
         </div>
       </section>
@@ -100,12 +114,12 @@ export default async function HomePage() {
       <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center bg-fixed bg-cover bg-center select-none" style={{ backgroundImage: "url('/images/hero-bg.png')" }}>
         <div className="absolute inset-0 bg-black/65 z-10" />
         <div className="relative z-20 max-w-4xl text-center px-6">
-          <span className="font-mono text-xs uppercase tracking-widest text-ink/65 font-bold">&bull; Our Cultural Anchoring</span>
+          <span className="font-mono text-xs uppercase tracking-widest text-ink/65 font-bold">&bull; {culturalSubtitle}</span>
           <h2 className="mt-4 font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider leading-tight">
             We weave modern technology with cultural roots
           </h2>
           <p className="mt-6 text-zinc-300 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-            By grounding tech instruction in traditional craft and community cooperation, we build leaders who build for their homeland.
+            {culturalDescription}
           </p>
         </div>
       </section>
