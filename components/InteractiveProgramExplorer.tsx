@@ -100,11 +100,24 @@ export default function InteractiveProgramExplorer() {
   const activePct = Math.round((activeTrack.enrolled / activeTrack.capacity) * 100);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 sm:px-10 mt-10">
+    <div className="mx-auto max-w-5xl px-6 sm:px-10">
       <div className="flex flex-col md:flex-row gap-8 items-start">
         
-        {/* LEFT COLUMN: Sticky Navigation Tabs & Active Overview */}
+        {/* LEFT COLUMN: Sticky Section Header, Navigation Tabs & Active Overview */}
         <div className="md:w-5/12 w-full md:sticky md:top-28 h-fit space-y-6 z-10">
+          {/* Section Entrance Header */}
+          <div>
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">
+              &bull; Dynamic Curriculum
+            </span>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink uppercase tracking-wide leading-tight">
+              Interactive Track Explorer
+            </h2>
+            <p className="mt-3 text-xs sm:text-sm text-ink-soft leading-relaxed">
+              Explore our curriculum paths, tech stacks, cohort dates, and class size metrics below.
+            </p>
+          </div>
+
           {/* Tab Buttons List */}
           <div className="flex flex-col gap-2.5" role="tablist" aria-label="Course Tracks">
             {TRACKS.map((t) => {

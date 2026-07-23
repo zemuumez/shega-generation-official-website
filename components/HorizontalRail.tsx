@@ -22,29 +22,43 @@ export default function HorizontalRail({
 
   const scrollLeft = () => {
     if (railRef.current) {
-      railRef.current.scrollBy({ left: -340, behavior: "smooth" });
+      railRef.current.scrollBy({ left: -360, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (railRef.current) {
-      railRef.current.scrollBy({ left: 340, behavior: "smooth" });
+      railRef.current.scrollBy({ left: 360, behavior: "smooth" });
     }
   };
 
   return (
-    <motion.div ref={containerRef} style={{ y, opacity }} className="relative">
+    <motion.div
+      ref={containerRef}
+      style={{ y, opacity }}
+      className="relative mx-auto max-w-5xl px-6 sm:px-10"
+    >
+      {/* Scroll Container with Left/Right Mask Fade Effect */}
       <div
-        ref={railRef}
-        className="rail gap-5 px-6 pb-4 sm:px-10 scroll-smooth"
-        role="region"
-        aria-label={ariaLabel}
-        tabIndex={0}
+        className="relative w-full overflow-hidden"
+        style={{
+          maskImage: "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+        }}
       >
-        {children}
+        <div
+          ref={railRef}
+          className="rail gap-5 pb-4 scroll-smooth"
+          role="region"
+          aria-label={ariaLabel}
+          tabIndex={0}
+        >
+          {children}
+        </div>
       </div>
 
-      <div className="mt-4 px-6 sm:px-10 flex items-center justify-between">
+      {/* Aligned Footer Controls */}
+      <div className="mt-4 flex items-center justify-between">
         <p className="text-xs text-ink-soft/60 font-mono">
           scroll or drag to explore &rarr;
         </p>

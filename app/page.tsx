@@ -181,13 +181,6 @@ export default async function HomePage() {
           <LeafPattern tone="gold" id="explorer-leaf" opacity="0.1" />
         </div>
         <div className="relative z-10">
-          <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Dynamic Curriculum</span>
-            <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Interactive Track Explorer</h2>
-            <p className="mt-3 max-w-xl text-ink-soft">
-              Explore our curriculum paths, tech stacks, cohort dates, and class size metrics below.
-            </p>
-          </div>
           <InteractiveProgramExplorer />
         </div>
       </section>
