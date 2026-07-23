@@ -94,10 +94,10 @@ export default async function HomePage() {
       </section>
 
       {/* HALF-PAGE SPLIT SCROLL CURRICULUM SECTION */}
-      <section className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 py-24 relative z-20 border-b border-zinc-200">
-        {/* Background Leaf Pattern */}
-        <div className="absolute inset-y-0 -left-10 w-96 pointer-events-none opacity-25 z-0 hidden lg:block">
-          <LeafPattern tone="gold" id="curriculum-leaf" opacity="0.1" />
+      <section className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 py-24 relative border-b border-zinc-200">
+        {/* Background Geometric Line Pattern - Bleeds slightly outward without breaking sticky scroll */}
+        <div className="absolute inset-y-0 -left-8 md:-left-14 w-96 pointer-events-none opacity-60 z-0 hidden lg:block [mask-image:linear-gradient(to_right,white_50%,transparent_100%)]">
+          <LeafPattern tone="gray" variant="mosaic" id="curriculum-leaf" opacity="0.3" />
         </div>
         <div className="flex flex-col md:flex-row gap-12 relative z-10">
           {/* Left Column - Sticky Section Title */}
@@ -176,9 +176,9 @@ export default async function HomePage() {
 
       {/* INTERACTIVE TRACK EXPLORER */}
       <section className="py-24 border-b border-zinc-200 relative">
-        {/* Background Leaf Pattern */}
-        <div className="absolute inset-y-0 -right-20 w-96 pointer-events-none opacity-25 z-0 hidden lg:block">
-          <LeafPattern tone="gold" id="explorer-leaf" opacity="0.1" />
+        {/* Background Geometric Line Pattern - Bleeds outward without breaking section entrance scroll */}
+        <div className="absolute inset-y-0 -right-8 md:-right-14 w-96 pointer-events-none opacity-60 z-0 hidden lg:block [mask-image:linear-gradient(to_left,white_50%,transparent_100%)]">
+          <LeafPattern tone="gray" variant="arches" id="explorer-leaf" opacity="0.3" />
         </div>
         <div className="relative z-10">
           <InteractiveProgramExplorer />
@@ -197,10 +197,6 @@ export default async function HomePage() {
 
       {/* LMS FEATURED COURSE CAROUSEL */}
       <section className="py-24 relative border-b border-zinc-200 overflow-hidden">
-        {/* Background Leaf Pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 z-0">
-          <LeafPattern tone="gold" id="courses-leaf" opacity="0.08" />
-        </div>
         <div className="relative z-10">
           <div className="mx-auto mb-10 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
@@ -226,10 +222,6 @@ export default async function HomePage() {
 
       {/* VENTURE SHOWCASE / JOURNEYS (Expanding Capsules) */}
       <section className="py-24 relative border-b border-zinc-200">
-        {/* Background Leaf Pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-25 z-0">
-          <LeafPattern tone="gold" id="journeys-leaf" opacity="0.08" />
-        </div>
         <div className="relative z-10">
           <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
