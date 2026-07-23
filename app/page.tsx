@@ -63,7 +63,7 @@ export default async function HomePage() {
           <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[1.1em]">
             <TypewriterTitle
               text={heroTitle}
-              className="font-display font-extrabold text-[clamp(3.8rem,16vw,7.5rem)] sm:text-[clamp(6.5rem,13vw,12.5rem)] leading-[0.95] tracking-[0.05em] sm:tracking-[0.07em] uppercase text-masked-bg text-center max-w-full"
+              className="font-display font-extrabold text-[clamp(2.5rem,9vw,4.5rem)] sm:text-[clamp(4.2rem,8.5vw,7.5rem)] leading-[1.05] tracking-[0.04em] sm:tracking-[0.06em] uppercase text-masked-bg text-center max-w-full"
             />
           </div>
 

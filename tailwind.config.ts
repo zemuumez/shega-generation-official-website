@@ -19,9 +19,9 @@ const config: Config = {
           soft: "#5A5E5B",    // Muted slate text
         },
         ochre: {
-          DEFAULT: "#27AE60", // Vibrant light green accent
-          light: "#2ECC71",   // Bright minty green
-          dark: "#1E824C",    // Rich emerald green
+          DEFAULT: "#145A32", // Deep #145A32 green accent
+          light: "#1E824C",   // Supporting emerald green
+          dark: "#0E3B21",    // Dark forest green
         },
         indigo: {
           DEFAULT: "#2A6F6B", // Secondary slate green/teal
@@ -32,7 +32,7 @@ const config: Config = {
           light: "#D78370",
         },
         moss: {
-          DEFAULT: "#27AE60", // Match light green
+          DEFAULT: "#145A32", // Primary #145A32 green
         },
       },
       fontFamily: {
