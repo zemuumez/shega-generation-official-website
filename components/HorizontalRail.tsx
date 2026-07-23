@@ -3,18 +3,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-/**
- * HorizontalRail
- * ---------------
- * Generic horizontal-scroll showcase used for the LMS course carousel and
- * the events directory. Built on native CSS scroll-snap (see .rail in
- * globals.css) rather than a JS scroll-jacking approach, so it stays
- * responsive on low-end touch devices.
- *
- * A subtle vertical parallax reveal is layered on top via Framer Motion,
- * tied to viewport intersection, not to horizontal position, so it degrades
- * gracefully and respects prefers-reduced-motion globally.
- */
 export default function HorizontalRail({
   children,
   ariaLabel,
@@ -23,26 +11,62 @@ export default function HorizontalRail({
   ariaLabel: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 0.5, 1], [24, 0, -12]);
-  const opacity = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [16, 0, -8]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
+
+  const scrollLeft = () => {
+    if (railRef.current) {
+      railRef.current.scrollBy({ left: -340, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (railRef.current) {
+      railRef.current.scrollBy({ left: 340, behavior: "smooth" });
+    }
+  };
 
   return (
-    <motion.div ref={containerRef} style={{ y, opacity }}>
+    <motion.div ref={containerRef} style={{ y, opacity }} className="relative">
       <div
-        className="rail gap-5 px-6 pb-4 sm:px-10"
+        ref={railRef}
+        className="rail gap-5 px-6 pb-4 sm:px-10 scroll-smooth"
         role="region"
         aria-label={ariaLabel}
         tabIndex={0}
       >
         {children}
       </div>
-      <p className="mt-2 px-6 text-xs text-ink-soft/60 font-mono sm:px-10">
-        drag to explore &rarr;
-      </p>
+
+      <div className="mt-4 px-6 sm:px-10 flex items-center justify-between">
+        <p className="text-xs text-ink-soft/60 font-mono">
+          scroll or drag to explore &rarr;
+        </p>
+
+        {/* Scroll Control Arrows */}
+        <div className="flex gap-2">
+          <button
+            onClick={scrollLeft}
+            aria-label="Scroll left"
+            className="w-9 h-9 rounded-full border border-zinc-200 bg-white text-ink hover:border-ochre hover:text-ochre flex items-center justify-center text-xs font-mono font-bold transition-all duration-300 shadow-sm active:scale-95"
+          >
+            &larr;
+          </button>
+          <button
+            onClick={scrollRight}
+            aria-label="Scroll right"
+            className="w-9 h-9 rounded-full border border-zinc-200 bg-white text-ink hover:border-ochre hover:text-ochre flex items-center justify-center text-xs font-mono font-bold transition-all duration-300 shadow-sm active:scale-95"
+          >
+            &rarr;
+          </button>
+        </div>
+      </div>
     </motion.div>
   );
 }

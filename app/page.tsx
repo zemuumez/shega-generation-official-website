@@ -5,14 +5,19 @@ import ExpandingProjectCapsules from "@/components/ExpandingProjectCapsules";
 import InteractiveProgramExplorer from "@/components/InteractiveProgramExplorer";
 import TibebPattern from "@/components/TibebPattern";
 import LeafPattern from "@/components/LeafPattern";
+import Image from "next/image";
 import { safeFetch } from "@/sanity/lib/client";
 import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY } from "@/sanity/lib/queries";
-import { demoUpcomingEvent, demoCourses, demoProjects } from "@/lib/demoData";
+import { demoUpcomingEvent, demoCourses, demoProjects, demoTestimonials } from "@/lib/demoData";
 
 export default async function HomePage() {
   const upcomingEvent = await safeFetch(UPCOMING_EVENT_QUERY, {}, demoUpcomingEvent);
-  const courses = await safeFetch(FEATURED_COURSES_QUERY, {}, demoCourses);
-  const projects = await safeFetch(PROJECTS_QUERY, {}, demoProjects);
+  const fetchedCourses = await safeFetch(FEATURED_COURSES_QUERY, {}, demoCourses);
+  const fetchedProjects = await safeFetch(PROJECTS_QUERY, {}, demoProjects);
+
+  const courseList = (fetchedCourses && fetchedCourses.length >= 3) ? fetchedCourses : demoCourses;
+  const projectList = (fetchedProjects && fetchedProjects.length >= 3) ? fetchedProjects : demoProjects;
+  const testimonialList = demoTestimonials;
 
   return (
     <>
@@ -170,7 +175,7 @@ export default async function HomePage() {
       </section>
 
       {/* INTERACTIVE TRACK EXPLORER */}
-      <section className="py-24 border-b border-zinc-200 relative overflow-hidden">
+      <section className="py-24 border-b border-zinc-200 relative">
         {/* Background Leaf Pattern */}
         <div className="absolute inset-y-0 -right-20 w-96 pointer-events-none opacity-25 z-0 hidden lg:block">
           <LeafPattern tone="gold" id="explorer-leaf" opacity="0.1" />
@@ -205,14 +210,21 @@ export default async function HomePage() {
         </div>
         <div className="relative z-10">
           <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Learn Tech</span>
-            <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
-            <p className="mt-3 max-w-xl text-ink-soft">
-              Every card opens directly in the learning module it belongs to.
-            </p>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Learn Tech</span>
+                <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
+                <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
+                  Hands-on engineering tracks, AI laboratories, and indigenous math modules built by practitioners.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ink-soft font-bold bg-white px-3.5 py-1.5 rounded-full border border-zinc-200 shadow-sm">
+                <span>{courseList.length} Active Modules</span>
+              </div>
+            </div>
           </div>
           <HorizontalRail ariaLabel="Featured courses">
-            {courses.map((course: any) => (
+            {courseList.map((course: any) => (
               <CourseCard key={course._id} course={course} />
             ))}
           </HorizontalRail>
@@ -220,75 +232,91 @@ export default async function HomePage() {
       </section>
 
       {/* VENTURE SHOWCASE / JOURNEYS (Expanding Capsules) */}
-      <section className="py-24 relative border-b border-zinc-200 overflow-hidden">
+      <section className="py-24 relative border-b border-zinc-200">
         {/* Background Leaf Pattern */}
         <div className="absolute inset-0 pointer-events-none opacity-25 z-0">
           <LeafPattern tone="gold" id="journeys-leaf" opacity="0.08" />
         </div>
         <div className="relative z-10">
-          <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Student Journeys</span>
-            <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Student Journeys</h2>
-            <p className="mt-3 max-w-xl text-ink-soft">
-              Alumni startups, projects, and employment stories that started as a Shega assignment. Hover or click to explore.
-            </p>
+          <div className="mx-auto mb-6 max-w-5xl px-6 sm:px-10">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Student Journeys</span>
+                <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Student Journeys & Ventures</h2>
+                <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
+                  Alumni startups, open-source AI models, and regional logistics tools that started as a Shega assignment. Hover or click to explore each journey.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ochre-dark font-bold bg-ochre/10 px-3.5 py-1.5 rounded-full border border-ochre/20">
+                <span>✦ Real Ethiopian Impact</span>
+              </div>
+            </div>
           </div>
-          <ExpandingProjectCapsules projects={projects} />
+          <ExpandingProjectCapsules projects={projectList} />
         </div>
       </section>
 
       {/* TESTIMONIALS HORIZONTAL RAIL */}
-      <section className="py-24 relative overflow-hidden bg-white/10">
+      <section className="py-24 relative overflow-hidden bg-white/20 border-b border-zinc-200">
         <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Alumni Testimonials</span>
-          <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Voices of Shega</h2>
-          <p className="mt-3 max-w-xl text-ink-soft">
-            Here is what our graduates say about their journey through the regional cohorts.
-          </p>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+            <div>
+              <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Alumni Testimonials</span>
+              <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Voices of Shega</h2>
+              <p className="mt-2 max-w-xl text-ink-soft text-sm sm:text-base leading-relaxed">
+                Graduate stories from regional cohorts across Ethiopia — building localized software and launching real ventures.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ochre-dark font-bold bg-ochre/10 px-3.5 py-1.5 rounded-full border border-ochre/20">
+              <span>✓ Verified Graduates</span>
+            </div>
+          </div>
         </div>
+
         <HorizontalRail ariaLabel="Alumni testimonials">
-          {[
-            {
-              quote: "Shega gave me the chance to write my first line of code. Today, I'm developing NLP tools to translate school books into our regional language.",
-              author: "Tsion Kebede",
-              track: "AI Laboratory Graduate",
-              region: "Hawassa",
-            },
-            {
-              quote: "The DevOps track was hard but it gave me practical skills. Building real tools alongside peers taught me more than any online course.",
-              author: "Yonas Alemu",
-              track: "DevOps Pipeline Graduate",
-              region: "Bahir Dar",
-            },
-            {
-              quote: "Ethnomathematics opened my eyes. Combining Tibeb weaving geometries with SVG grid coding helped me understand programming matrix models.",
-              author: "Samrawit Birhan",
-              track: "Craft & Software Graduate",
-              region: "Mekelle",
-            },
-            {
-              quote: "Our leadership cohort did more than teach programming. We built community projects together, which made us a real family.",
-              author: "Abdi Tolosa",
-              track: "Software Studio Graduate",
-              region: "Adama",
-            },
-          ].map((test, index) => (
+          {testimonialList.map((test: any, index: number) => (
             <div
               key={index}
-              className="rail-item flex-shrink-0 w-80 sm:w-96 rounded-[32px] border border-zinc-200 bg-white p-8 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-md hover:border-zinc-300/40"
+              className="rail-item flex-shrink-0 w-84 sm:w-[420px] rounded-[36px] border border-zinc-200 bg-white p-8 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-ochre/30 hover:-translate-y-1"
             >
               <div>
-                <span className="text-4xl text-ink/10 font-serif leading-none select-none">&ldquo;</span>
-                <p className="text-sm text-ink-soft italic leading-relaxed mt-2">{test.quote}</p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-zinc-100 flex justify-between items-center">
-                <div>
-                  <h4 className="font-display text-sm font-bold text-ink uppercase">{test.author}</h4>
-                  <p className="text-[10px] font-mono text-ink-soft mt-0.5">{test.track}</p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-3xl text-ochre/40 font-serif leading-none select-none">&ldquo;</span>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-zinc-100 border border-zinc-200 px-3 py-1 text-[9px] font-mono uppercase tracking-widest text-ink-soft font-bold">
+                      {test.region} Cohort
+                    </span>
+                    <span className="rounded-full bg-ochre/10 text-ochre-dark border border-ochre/20 px-2.5 py-1 text-[9px] font-mono font-bold">
+                      {test.year}
+                    </span>
+                  </div>
                 </div>
-                <span className="rounded-full bg-zinc-50 border border-zinc-200 px-3 py-1 text-[9px] font-mono uppercase tracking-widest text-ink-soft font-bold">
-                  {test.region}
-                </span>
+
+                <p className="text-sm sm:text-base text-ink-soft italic leading-relaxed text-zinc-700">
+                  &ldquo;{test.quote}&rdquo;
+                </p>
+              </div>
+
+              <div className="mt-8 pt-5 border-t border-zinc-100 flex items-center justify-between">
+                <div className="flex items-center gap-3.5">
+                  <div className="relative w-11 h-11 rounded-full overflow-hidden border border-zinc-200 shadow-sm flex-shrink-0">
+                    <Image
+                      src={test.avatar}
+                      alt={test.author}
+                      fill
+                      sizes="44px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-display text-base font-bold text-ink uppercase tracking-wide leading-tight">
+                      {test.author}
+                    </h4>
+                    <p className="text-[11px] font-mono text-ochre-dark font-medium mt-0.5">
+                      {test.role}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
