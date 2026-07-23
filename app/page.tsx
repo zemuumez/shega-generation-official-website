@@ -41,32 +41,29 @@ export default async function HomePage() {
           />
         </div>
 
-        <div className="relative mx-auto max-w-5xl z-20 flex flex-col items-center justify-center w-full">
+        <div className="relative mx-auto max-w-7xl z-20 flex flex-col items-center justify-center w-full">
           
-          {/* Giant Masked Text Title */}
-          <div className="flex flex-col items-center justify-center text-center mt-4 sm:mt-6 select-none">
-            <h1 className="font-display font-bold text-[clamp(3.5rem,14vw,6.5rem)] sm:text-[clamp(6.5rem,11vw,10.5rem)] leading-[0.92] tracking-tighter uppercase text-masked-bg">
-              Shega
-              <br className="sm:hidden" />
-              <span className="sm:inline"> Generations</span>
+          {/* Giant Masked Text Title - Bigger & Well Spaced */}
+          <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full">
+            <h1 className="font-display font-extrabold text-[clamp(3.8rem,16vw,7.5rem)] sm:text-[clamp(6.5rem,13vw,12.5rem)] leading-[0.95] tracking-[0.05em] sm:tracking-[0.07em] uppercase text-masked-bg text-center max-w-full">
+              Shega Generations
             </h1>
           </div>
 
-          <div className="mt-8 sm:mt-10 mx-auto max-w-2xl text-center">
-            <p className="text-lg sm:text-xl text-ink-soft leading-relaxed">
-              AI/ML, web and mobile development, and DevOps, woven together with life skills
-              and indigenous knowledge. Built by the generation it teaches, in every region of the country.
+          <div className="mt-8 sm:mt-12 mx-auto max-w-3xl text-center">
+            <p className="text-lg sm:text-2xl text-ink-soft leading-relaxed font-sans font-medium px-4">
+              Dedicated to sharing knowledge kindly across generations — weaving rich indigenous wisdom with modern technology to anchor, empower, and shape future leaders in every region.
             </p>
-            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row gap-5 justify-center items-center">
               <a
                 href="/events"
-                className="w-full sm:w-auto bg-ochre px-9 py-4 rounded-full text-xs font-mono uppercase tracking-widest text-white transition-all duration-300 hover:bg-ochre-dark hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
+                className="w-full sm:w-auto bg-ochre px-10 py-4.5 rounded-full text-xs font-mono uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-ochre-dark hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
               >
                 Join the Generation
               </a>
               <a
                 href="/donate"
-                className="w-full sm:w-auto border border-ink/40 text-ink hover:border-ochre hover:text-ochre px-9 py-4 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 hover:bg-white hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
+                className="w-full sm:w-auto border border-ink/40 text-ink hover:border-ochre hover:text-ochre px-10 py-4.5 rounded-full text-xs font-mono uppercase tracking-[0.2em] transition-all duration-300 hover:bg-white hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
               >
                 Support the Mission
               </a>
