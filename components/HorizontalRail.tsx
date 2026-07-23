@@ -36,14 +36,14 @@ export default function HorizontalRail({
     <motion.div
       ref={containerRef}
       style={{ y, opacity }}
-      className="relative mx-auto max-w-5xl px-6 sm:px-10"
+      className="relative w-full overflow-hidden"
     >
-      {/* Scroll Container with Left/Right Mask Fade Effect */}
+      {/* Scroll Container extends slightly past header alignment with soft outer edge mask */}
       <div
-        className="relative w-full overflow-hidden"
+        className="relative mx-auto max-w-[1240px] px-3 sm:px-6 overflow-hidden"
         style={{
-          maskImage: "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+          maskImage: "linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%)",
         }}
       >
         <div
@@ -57,8 +57,8 @@ export default function HorizontalRail({
         </div>
       </div>
 
-      {/* Aligned Footer Controls */}
-      <div className="mt-4 flex items-center justify-between">
+      {/* Aligned Footer Controls matching max-w-6xl px-6 sm:px-10 header line */}
+      <div className="mx-auto max-w-6xl mt-4 px-6 sm:px-10 flex items-center justify-between">
         <p className="text-xs text-ink-soft/60 font-mono">
           scroll or drag to explore &rarr;
         </p>

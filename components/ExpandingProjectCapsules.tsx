@@ -15,7 +15,7 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
     : projects.filter((p) => p.category === filter);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 sm:px-10 mt-8">
+    <div className="mx-auto max-w-6xl px-6 sm:px-10 mt-8">
       {/* Category Filter Pills */}
       <div className="flex flex-wrap gap-2 mb-8" role="tablist" aria-label="Project Categories">
         {categories.map((cat) => (

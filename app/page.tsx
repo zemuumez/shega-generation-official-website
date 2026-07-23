@@ -94,7 +94,7 @@ export default async function HomePage() {
       </section>
 
       {/* HALF-PAGE SPLIT SCROLL CURRICULUM SECTION */}
-      <section className="mx-auto max-w-5xl px-6 sm:px-10 py-24 relative z-20 border-b border-zinc-200">
+      <section className="mx-auto max-w-6xl px-6 sm:px-10 py-24 relative z-20 border-b border-zinc-200">
         {/* Background Leaf Pattern */}
         <div className="absolute inset-y-0 -left-10 w-96 pointer-events-none opacity-25 z-0 hidden lg:block">
           <LeafPattern tone="gold" id="curriculum-leaf" opacity="0.1" />
@@ -188,7 +188,7 @@ export default async function HomePage() {
       {/* UPCOMING EVENT ACCENT HERO */}
       {upcomingEvent && (
         <section className="px-6 py-24 sm:px-10 relative border-b border-zinc-200">
-          <h2 className="mx-auto mb-10 max-w-5xl font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">
+          <h2 className="mx-auto mb-10 max-w-6xl font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">
             &bull; The nearest gathering
           </h2>
           <UpcomingEventCard event={upcomingEvent} />
@@ -202,7 +202,7 @@ export default async function HomePage() {
           <LeafPattern tone="gold" id="courses-leaf" opacity="0.08" />
         </div>
         <div className="relative z-10">
-          <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
+          <div className="mx-auto mb-10 max-w-6xl px-6 sm:px-10">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
                 <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Learn Tech</span>
@@ -231,7 +231,7 @@ export default async function HomePage() {
           <LeafPattern tone="gold" id="journeys-leaf" opacity="0.08" />
         </div>
         <div className="relative z-10">
-          <div className="mx-auto mb-6 max-w-5xl px-6 sm:px-10">
+          <div className="mx-auto mb-6 max-w-6xl px-6 sm:px-10">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
                 <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Student Journeys</span>
@@ -251,7 +251,7 @@ export default async function HomePage() {
 
       {/* TESTIMONIALS HORIZONTAL RAIL */}
       <section className="py-24 relative overflow-hidden bg-white/20 border-b border-zinc-200">
-        <div className="mx-auto mb-10 max-w-5xl px-6 sm:px-10">
+        <div className="mx-auto mb-10 max-w-6xl px-6 sm:px-10">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
               <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Alumni Testimonials</span>
@@ -318,7 +318,7 @@ export default async function HomePage() {
 
       {/* SOCIAL MEDIA INTERACTION MODULE */}
       <section className="px-6 py-24 sm:px-10 relative bg-white/20 border-t border-zinc-200">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-6xl">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink-soft/60 font-bold">&bull; Community</span>
           <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Follow the day to day</h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
