@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type TypewriterTitleProps = {
   phrases?: string[];
   text?: string;
   className?: string;
+  style?: React.CSSProperties;
 };
 
 export default function TypewriterTitle({
   phrases = ["ሸጋ ትውልድ"],
   text,
   className = "",
+  style,
 }: TypewriterTitleProps) {
   const phraseList = text ? [text] : phrases;
 
@@ -59,7 +61,7 @@ export default function TypewriterTitle({
   const line2Text = !isLine1Active ? displayText.slice(firstWord.length + 1) : "";
 
   return (
-    <h1 className={`${className} transition-all duration-500`}>
+    <h1 className={`${className} transition-all duration-500`} style={style}>
       {/* Line 1: "ሸጋ" */}
       <span className="block">
         {line1Text}

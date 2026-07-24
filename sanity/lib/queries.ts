@@ -4,6 +4,7 @@ export const SITE_SETTINGS_QUERY = `
   heroCaption,
   heroCtaPrimary,
   heroCtaSecondary,
+  heroTitleBgImage,
   statementBannerTitle1,
   statementBannerTitle2,
   statementBannerTitle3,

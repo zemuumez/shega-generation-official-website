@@ -46,6 +46,15 @@ export default defineType({
       initialValue: "Support the Mission",
       group: "hero",
     }),
+    defineField({
+      name: "heroTitleBgImage",
+      title: "Hero Title Mask Background Image",
+      description: "Upload an image to fill/mask the characters of the giant Shega Generation hero typewriter title text.",
+      type: "image",
+      options: { hotspot: true },
+      fields: [{ name: "alt", type: "string", title: "Alt Text" }],
+      group: "hero",
+    }),
 
     // Statement Banner Section
     defineField({

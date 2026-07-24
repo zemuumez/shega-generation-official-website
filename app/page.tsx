@@ -29,6 +29,7 @@ export default async function HomePage() {
   const heroCaption = siteSettings?.heroCaption || "Sharing knowledge in kindness across generations — fusing software engineering and AI with Ethiopian heritage to empower future leaders.";
   const heroCtaPrimary = siteSettings?.heroCtaPrimary || "Apply for Summer Camp";
   const heroCtaSecondary = siteSettings?.heroCtaSecondary || "Partner & Sponsor";
+  const heroTitleMaskBg = siteSettings?.heroTitleBgImage ? safeImageUrl(siteSettings.heroTitleBgImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
 
   const statement1 = siteSettings?.statementBannerTitle1 || "Software & AI Labs";
   const statement2 = siteSettings?.statementBannerTitle2 || "Indigenous Wisdom & Erq";
@@ -66,8 +67,9 @@ export default async function HomePage() {
           {/* Giant Typewriter Title - Types and Backspaces in a Loop */}
           <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[2.1em]">
             <TypewriterTitle
-              phrases={["ሸጋ ትውልድ"]}
-              className="font-display font-black text-[clamp(3rem,10.5vw,5.8rem)] sm:text-[clamp(4.8rem,9.8vw,8.5rem)] leading-[0.95] tracking-[0.14em] sm:tracking-[0.24em] scale-x-[1.06] uppercase text-masked-bg text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center"
+              phrases={[heroTitle || "Shega Generation", "ሸጋ ትውልድ"]}
+              className="font-display font-black text-[clamp(3rem,10.5vw,5.8rem)] sm:text-[clamp(4.8rem,9.8vw,8.5rem)] leading-[0.95] tracking-[0.03em] sm:tracking-[0.05em] uppercase text-masked-bg text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center"
+              style={{ backgroundImage: `linear-gradient(to bottom, rgba(46, 204, 113, 0.35), rgba(39, 174, 96, 0.45)), url('${heroTitleMaskBg}')` }}
             />
           </div>
 
