@@ -43,7 +43,38 @@ export default async function HomePage() {
   const culturalDescription = siteSettings?.culturalAnchoringDescription || "From ancient Ge'ez fundamentals and Ethiopian history to traditional dining etiquette (የማዕድ ስነ-ስርዓት) and positive communication (ፈገግታና አዎንታዊ ተግባቦት), we nurture technically elite, culturally grounded leaders.";
   const culturalAnchoringBg = siteSettings?.culturalAnchoringImage ? safeImageUrl(siteSettings.culturalAnchoringImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
   const eventsKicker = siteSettings?.eventsSectionKicker || "The nearest gathering";
-  const communityTitle = siteSettings?.communityTitle || "Strategic Institutional Partners & Collaborators";
+  const communityKicker = siteSettings?.communityKicker || "Community";
+  const communityTitle = siteSettings?.communityTitle || "Follow the day to day";
+  const facebookHandle = siteSettings?.socialFacebookHandle || "@shegagenerations";
+  const facebookUrl = siteSettings?.socialFacebookUrl || "https://facebook.com/shegagenerations";
+  const telegramHandle = siteSettings?.socialTelegramHandle || "t.me/shegagenerations";
+  const telegramUrl = siteSettings?.socialTelegramUrl || "https://t.me/shegagenerations";
+  const tiktokHandle = siteSettings?.socialTikTokHandle || "@shegagenerations";
+  const tiktokUrl = siteSettings?.socialTikTokUrl || "https://tiktok.com/@shegagenerations";
+
+  const socialChannels = [
+    {
+      name: "Facebook",
+      handle: facebookHandle,
+      url: facebookUrl,
+      badgeColor: "bg-[#1877F2]/10 text-[#1877F2] border-[#1877F2]/20",
+      accent: "text-[#1877F2]",
+    },
+    {
+      name: "Telegram",
+      handle: telegramHandle,
+      url: telegramUrl,
+      badgeColor: "bg-[#229ED9]/10 text-[#229ED9] border-[#229ED9]/20",
+      accent: "text-[#229ED9]",
+    },
+    {
+      name: "TikTok",
+      handle: tiktokHandle,
+      url: tiktokUrl,
+      badgeColor: "bg-black/90 text-white border-black/20",
+      accent: "text-zinc-900",
+    },
+  ];
 
   return (
     <>
@@ -279,24 +310,44 @@ export default async function HomePage() {
       <PartnersSection partners={partnerList} />
 
       {/* SOCIAL MEDIA INTERACTION MODULE */}
-      <section className="px-4 py-24 sm:px-6 relative bg-white/20 border-t border-zinc-200">
+      <section className="px-4 py-24 sm:px-6 relative bg-white border-t border-zinc-200">
         <div className="mx-auto w-full max-w-[90vw]">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink-soft/60 font-bold">&bull; Community</span>
-          <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Follow the day to day</h2>
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold block mb-2">
+            &bull; {communityKicker}
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black text-ink uppercase tracking-wide">
+            {communityTitle}
+          </h2>
+
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
-            {[
-              { name: "X", handle: "@shegagenerations", tone: "ink-soft" },
-              { name: "Telegram", handle: "t.me/shegagenerations", tone: "ink-soft" },
-              { name: "YouTube", handle: "Shega Generations", tone: "ink-soft" },
-            ].map((channel) => (
-              <div
+            {socialChannels.map((channel) => (
+              <a
                 key={channel.name}
-                className="rounded-[32px] border border-zinc-200 bg-white p-6 group hover:border-zinc-300/40 transition-all duration-300 shadow-sm"
+                href={channel.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-3xl border border-zinc-200/90 bg-white p-7 group hover:border-[#145A32]/40 hover:-translate-y-1.5 transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between"
               >
-                <p className="font-mono text-[10px] uppercase tracking-widest text-ink-soft/60 font-bold">{channel.name}</p>
-                <p className="mt-3 font-display text-lg font-bold text-ink group-hover:text-ink/75 transition-colors duration-300">{channel.handle}</p>
-                <div className="mt-5 aspect-video w-full bg-zinc-50 border border-zinc-100 rounded-2xl transition-all duration-300 group-hover:bg-zinc-100/50" aria-hidden="true" />
-              </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className={`font-mono text-[10px] uppercase tracking-widest px-3 py-1 rounded-full border font-bold ${channel.badgeColor}`}>
+                      {channel.name}
+                    </span>
+                    <span className="font-mono text-xs font-bold text-zinc-400 group-hover:text-[#145A32] transition-colors">
+                      Follow &rarr;
+                    </span>
+                  </div>
+
+                  <p className="mt-5 font-display text-xl font-extrabold text-ink group-hover:text-[#145A32] transition-colors duration-300">
+                    {channel.handle}
+                  </p>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-zinc-100 flex items-center justify-between font-mono text-xs text-zinc-400 font-semibold group-hover:text-zinc-600 transition-colors">
+                  <span>Connect on {channel.name}</span>
+                  <span className="text-[#145A32] font-bold">● Live</span>
+                </div>
+              </a>
             ))}
           </div>
         </div>

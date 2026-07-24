@@ -25,7 +25,15 @@ export const SITE_SETTINGS_QUERY = `
   partnersKicker,
   partnersHeadline,
   partnersDescription,
-  communityTitle
+  communityKicker,
+  communityTitle,
+  communityDescription,
+  socialFacebookHandle,
+  socialFacebookUrl,
+  socialTelegramHandle,
+  socialTelegramUrl,
+  socialTikTokHandle,
+  socialTikTokUrl
 }`;
 
 export const UPCOMING_EVENT_QUERY = `
