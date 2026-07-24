@@ -12,6 +12,7 @@ import {
   SparklesIcon,
   EnvelopeIcon,
   AddCommentIcon,
+  UsersIcon,
 } from "@sanity/icons";
 
 export const deskStructure: StructureResolver = (S) =>
@@ -57,6 +58,14 @@ export const deskStructure: StructureResolver = (S) =>
                 .child(
                   S.documentTypeList("testimonial")
                     .title("Alumni Testimonials")
+                ),
+              S.listItem()
+                .title("Strategic Partners Section")
+                .icon(UsersIcon)
+                .child(
+                  S.documentTypeList("partner")
+                    .title("Strategic Institutional Partners")
+                    .defaultOrdering([{ field: "order", direction: "asc" }])
                 ),
             ])
         ),
@@ -238,6 +247,7 @@ export const deskStructure: StructureResolver = (S) =>
               S.documentTypeListItem("gallery").title("Gallery Items").icon(ImageIcon),
               S.documentTypeListItem("project").title("Student Projects").icon(RocketIcon),
               S.documentTypeListItem("testimonial").title("Alumni Testimonials").icon(CommentIcon),
+              S.documentTypeListItem("partner").title("Strategic Partners").icon(UsersIcon),
               S.documentTypeListItem("studentApplication").title("Student Applications").icon(UserIcon),
               S.documentTypeListItem("contactMessage").title("Contact Messages").icon(EnvelopeIcon),
             ])

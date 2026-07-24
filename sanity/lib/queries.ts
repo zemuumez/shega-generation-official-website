@@ -20,6 +20,9 @@ export const SITE_SETTINGS_QUERY = `
   journeysDescription,
   testimonialsTitle,
   testimonialsDescription,
+  partnersKicker,
+  partnersHeadline,
+  partnersDescription,
   communityTitle
 }`;
 

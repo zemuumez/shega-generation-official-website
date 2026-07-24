@@ -14,6 +14,7 @@ export default defineType({
     { name: "curriculum", title: "📚 Curriculum Section" },
     { name: "journeys", title: "🚀 Journeys Section" },
     { name: "testimonials", title: "💬 Testimonials Section" },
+    { name: "partners", title: "🤝 Partners Section" },
     { name: "community", title: "👥 Community Section" },
   ],
   fields: [
@@ -49,41 +50,36 @@ export default defineType({
     defineField({
       name: "heroTitleBgImage",
       title: "Hero Title Mask Background Image",
-      description: "Upload an image to fill/mask the characters of the giant Shega Generation hero typewriter title text.",
+      description: "Upload custom image asset to fill/mask the typewriter title background",
       type: "image",
       options: { hotspot: true },
-      fields: [{ name: "alt", type: "string", title: "Alt Text" }],
       group: "hero",
     }),
 
     // Statement Banner Section
     defineField({
       name: "statementBannerTitle1",
-      title: "Statement Banner Line 1",
+      title: "Banner Line 1",
       type: "string",
-      initialValue: "Tech Orientation",
       group: "statement",
     }),
     defineField({
       name: "statementBannerTitle2",
-      title: "Statement Banner Line 2",
+      title: "Banner Line 2 (Outlined Stroke)",
       type: "string",
-      initialValue: "Life Skills",
       group: "statement",
     }),
     defineField({
       name: "statementBannerTitle3",
-      title: "Statement Banner Line 3",
+      title: "Banner Line 3",
       type: "string",
-      initialValue: "Indigenous Weaving",
       group: "statement",
     }),
     defineField({
       name: "statementBannerImage",
-      title: "Statement Banner Parallax Background Image",
+      title: "Banner Background Image",
       type: "image",
       options: { hotspot: true },
-      fields: [{ name: "alt", type: "string", title: "Alt Text" }],
       group: "statement",
     }),
 
@@ -103,10 +99,9 @@ export default defineType({
     }),
     defineField({
       name: "culturalAnchoringImage",
-      title: "Cultural Anchoring Parallax Background Image",
+      title: "Cultural Anchoring Background Image",
       type: "image",
       options: { hotspot: true },
-      fields: [{ name: "alt", type: "string", title: "Alt Text" }],
       group: "cultural",
     }),
 
@@ -168,6 +163,30 @@ export default defineType({
       type: "text",
       rows: 3,
       group: "testimonials",
+    }),
+
+    // Partners Section
+    defineField({
+      name: "partnersKicker",
+      title: "Partners Section Kicker Tag",
+      type: "string",
+      initialValue: "Our clients / partners",
+      group: "partners",
+    }),
+    defineField({
+      name: "partnersHeadline",
+      title: "Partners Section Headline",
+      type: "string",
+      initialValue: "Pleasure to work with",
+      group: "partners",
+    }),
+    defineField({
+      name: "partnersDescription",
+      title: "Partners Section Description",
+      type: "text",
+      rows: 3,
+      initialValue: "Shega Generation collaborates with Ethiopia's premier educational academies, hospitality centers, media houses, and venue operators across Addis Ababa.",
+      group: "partners",
     }),
 
     // Community Section

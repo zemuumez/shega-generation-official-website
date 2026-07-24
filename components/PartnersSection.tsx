@@ -151,7 +151,8 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
           <div className="lg:col-span-7">
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 items-center">
               {partnerList.map((partner) => {
-                const partnerLogo = partner.logo ? safeImageUrl(partner.logo) : null;
+                const partnerLogoUrl = partner.logo ? safeImageUrl(partner.logo, 400, "") : "";
+                const hasUploadedLogo = Boolean(partnerLogoUrl && partnerLogoUrl.length > 0 && partnerLogoUrl !== "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800");
                 const isSelected = activePartner.name === partner.name;
 
                 return (
@@ -166,10 +167,10 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
                         : "border-zinc-200/60 bg-white hover:border-zinc-300 hover:bg-zinc-50/80 hover:-translate-y-1"
                     }`}
                   >
-                    {partnerLogo ? (
+                    {hasUploadedLogo ? (
                       <div className="relative w-full h-12 flex items-center justify-center">
                         <Image
-                          src={partnerLogo}
+                          src={partnerLogoUrl}
                           alt={partner.name}
                           fill
                           sizes="200px"
