@@ -9,14 +9,11 @@ type TypewriterTitleProps = {
 };
 
 export default function TypewriterTitle({
-  phrases = ["Shega Generation", "ሸጋ ትውልድ"],
+  phrases = ["ሸጋ ትውልድ"],
   text,
   className = "",
 }: TypewriterTitleProps) {
-  // If a single text string was passed, create bilingual pair with Amharic fallback
-  const phraseList = text
-    ? [text, "ሸጋ ትውልድ"]
-    : phrases;
+  const phraseList = text ? [text] : phrases;
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
@@ -43,7 +40,7 @@ export default function TypewriterTitle({
         setDisplayText(currentPhrase.slice(0, displayText.length - 1));
       }, 55);
     } else if (isDeleting && displayText.length === 0) {
-      // Switch to next phrase in loop after brief pause
+      // Re-type phrase after brief pause
       timer = setTimeout(() => {
         setIsDeleting(false);
         setPhraseIndex((prev) => (prev + 1) % phraseList.length);
@@ -53,7 +50,7 @@ export default function TypewriterTitle({
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, currentPhrase, phraseList.length]);
 
-  // Find space index to split into 2 distinct lines
+  // Find space index to split into 2 distinct lines ("ሸጋ" on Line 1, "ትውልድ" on Line 2)
   const spaceIndex = currentPhrase.indexOf(" ");
   const firstWord = spaceIndex !== -1 ? currentPhrase.slice(0, spaceIndex) : currentPhrase;
 
@@ -62,8 +59,8 @@ export default function TypewriterTitle({
   const line2Text = !isLine1Active ? displayText.slice(firstWord.length + 1) : "";
 
   return (
-    <h1 className={className}>
-      {/* Line 1: English "Shega" / Amharic "ሸጋ" */}
+    <h1 className={`${className} transition-all duration-500`}>
+      {/* Line 1: "ሸጋ" */}
       <span className="block">
         {line1Text}
         {isLine1Active && (
@@ -74,7 +71,7 @@ export default function TypewriterTitle({
         )}
       </span>
 
-      {/* Line 2: English "Generation" / Amharic "ትውልድ" */}
+      {/* Line 2: "ትውልድ" */}
       <span className="block min-h-[1em]">
         {!isLine1Active ? (
           <span className="inline-block whitespace-nowrap">

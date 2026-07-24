@@ -66,8 +66,8 @@ export default async function HomePage() {
           {/* Giant Typewriter Title - Types and Backspaces in a Loop */}
           <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[2.1em]">
             <TypewriterTitle
-              phrases={[heroTitle || "Shega Generation", "ሸጋ ትውልድ"]}
-              className="font-display font-black text-[clamp(3rem,10.5vw,5.8rem)] sm:text-[clamp(4.8rem,9.8vw,8.5rem)] leading-[0.95] tracking-[0.03em] sm:tracking-[0.05em] uppercase text-masked-bg text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center"
+              phrases={["ሸጋ ትውልድ"]}
+              className="font-display font-black text-[clamp(3rem,10.5vw,5.8rem)] sm:text-[clamp(4.8rem,9.8vw,8.5rem)] leading-[0.95] tracking-[0.14em] sm:tracking-[0.24em] scale-x-[1.06] uppercase text-masked-bg text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center"
             />
           </div>
 

@@ -21,13 +21,15 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-[#F4F3EE]/95 backdrop-blur-md border-b border-zinc-200/80 shadow-sm">
       <div className="mx-auto flex w-full max-w-[90vw] items-center justify-between px-4 py-3.5 sm:px-6">
-        {/* Brand Logo: Logo Badge with #145A32 Green Border */}
+        {/* Brand Logo: Exclusively Amharic "ሸጋ ትውልድ" */}
         <Link
           href="/"
-          className="flex items-center gap-1.5 border-2 border-[#145A32] rounded-2xl px-3.5 py-1 text-lg sm:text-xl tracking-tight transition-all hover:bg-[#145A32]/5 select-none shadow-sm"
+          className="flex items-center justify-center border-2 border-[#145A32] rounded-2xl px-4 h-10 tracking-tight transition-all duration-300 hover:bg-[#145A32]/5 select-none shadow-sm flex-shrink-0"
         >
-          <span className="font-extrabold text-[#145A32] font-display">Shega</span>
-          <span className="font-medium text-zinc-600 font-sans">Generations</span>
+          <div className="flex items-baseline gap-1.5 text-lg sm:text-xl leading-none text-center">
+            <span className="font-extrabold text-[#145A32] font-display tracking-wide">ሸጋ</span>
+            <span className="font-semibold text-zinc-700 font-sans tracking-wider">ትውልድ</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation Links: Events, Gallery, Contact */}
