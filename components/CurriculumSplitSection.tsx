@@ -5,28 +5,28 @@ import LeafPattern from "@/components/LeafPattern";
 const curriculumItems = [
   {
     num: "01",
-    title: "Artificial Intelligence Laboratory",
-    desc: "Focusing on low-resource language processing (NLP), local dialects, optical character recognition (OCR) for Ge'ez, and agricultural diagnostic models.",
+    title: "Modern & Advanced Tech",
+    desc: "From foundational computational thinking and block coding (Scratch, Minecraft) for kids to full-stack web development, Python, cybersecurity, and AI command engineering for youth.",
   },
   {
     num: "02",
-    title: "Software Engineering Studio",
-    desc: "Constructing robust backend layers, native cross-platform mobile portals, and database architectures to support commerce in secondary cities.",
+    title: "Indigenous Knowledge & Heritage",
+    desc: "Ancient Ge'ez fundamentals, Ethiopian history, structural engineering secrets behind historic Ethiopian landmarks, and traditional conflict resolution principles (Erq).",
   },
   {
     num: "03",
-    title: "Cloud Infrastructure Pipeline",
-    desc: "Continuous integration, GitOps deployment practices, local server administration, and offline-first container systems for rural deployments.",
+    title: "Etiquette, Hospitality & Life Skills",
+    desc: "Practical instruction in የማዕድ ስነ-ስርዓት (Dining Etiquette), ፈገግታና አዎንታዊ ተግባቦት (Positive Communication) through interactive games, public speaking, and mineralogy.",
   },
   {
     num: "04",
-    title: "Traditional Craft & Ethnomathematics",
-    desc: "Decoding structural geometry patterns in traditional Ethiopian weaving (Tibeb), translating organic matrices into scalable CSS grids and graphics code.",
+    title: "Physical Fitness & Talent Showcases",
+    desc: "Sports activities, self-defense martial arts, traditional board games (Gebeta), and national talent showcases such as 'Sofor's Got Talent'.",
   },
   {
     num: "05",
-    title: "Life Skills & Local Leadership",
-    desc: "Storytelling, critical thinking, negotiation, community support ethics, and financial literacy, preparing developers to run sustainable ventures.",
+    title: "High-Level Field Trips & Network Access",
+    desc: "Direct operational visits to major national tech hubs—including INSA (Information Network Security Agency) and the Ethiopian Artificial Intelligence Institute.",
   },
 ];
 

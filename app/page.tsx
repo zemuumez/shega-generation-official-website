@@ -25,18 +25,18 @@ export default async function HomePage() {
   const projectList = (fetchedProjects && fetchedProjects.length > 0) ? fetchedProjects : demoProjects;
   const testimonialList = (fetchedTestimonials && fetchedTestimonials.length > 0) ? fetchedTestimonials : demoTestimonials;
 
-  const heroTitle = siteSettings?.heroTitle || "Shega Generations";
-  const heroCaption = siteSettings?.heroCaption || "Dedicated to sharing knowledge kindly across generations, weaving rich indigenous wisdom with modern technology to anchor, empower, and shape future leaders in every region.";
-  const heroCtaPrimary = siteSettings?.heroCtaPrimary || "Join the Generation";
-  const heroCtaSecondary = siteSettings?.heroCtaSecondary || "Support the Mission";
+  const heroTitle = siteSettings?.heroTitle || "Shega Generation";
+  const heroCaption = siteSettings?.heroCaption || "Shaping a well-rounded youth demographic in Addis Ababa and across Ethiopia by blending cutting-edge software engineering and AI with Ethiopian cultural values, indigenous knowledge, and hands-on personal development.";
+  const heroCtaPrimary = siteSettings?.heroCtaPrimary || "Apply for Summer Camp";
+  const heroCtaSecondary = siteSettings?.heroCtaSecondary || "Partner & Sponsor";
 
-  const statement1 = siteSettings?.statementBannerTitle1 || "Tech Orientation";
-  const statement2 = siteSettings?.statementBannerTitle2 || "Life Skills";
-  const statement3 = siteSettings?.statementBannerTitle3 || "Indigenous Weaving";
+  const statement1 = siteSettings?.statementBannerTitle1 || "Software & AI Labs";
+  const statement2 = siteSettings?.statementBannerTitle2 || "Indigenous Wisdom & Erq";
+  const statement3 = siteSettings?.statementBannerTitle3 || "Youth Leadership";
   const statementBannerBg = siteSettings?.statementBannerImage ? safeImageUrl(siteSettings.statementBannerImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
 
-  const culturalSubtitle = siteSettings?.culturalAnchoringSubtitle || "Our Cultural Anchoring";
-  const culturalDescription = siteSettings?.culturalAnchoringDescription || "By grounding tech instruction in traditional craft and community cooperation, we build leaders who build for their homeland.";
+  const culturalSubtitle = siteSettings?.culturalAnchoringSubtitle || "Rooted in Ethiopian Heritage & Character";
+  const culturalDescription = siteSettings?.culturalAnchoringDescription || "From ancient Ge'ez fundamentals and Ethiopian history to traditional dining etiquette (የማዕድ ስነ-ስርዓት) and positive communication (ፈገግታና አዎንታዊ ተግባቦት), we nurture technically elite, culturally grounded leaders.";
   const culturalAnchoringBg = siteSettings?.culturalAnchoringImage ? safeImageUrl(siteSettings.culturalAnchoringImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
 
   return (
@@ -260,6 +260,76 @@ export default async function HomePage() {
             </div>
           ))}
         </HorizontalRail>
+      </section>
+
+      {/* STRATEGIC INSTITUTIONAL PARTNERS SHOWCASE */}
+      <section className="px-4 py-24 sm:px-6 relative bg-white border-t border-zinc-200">
+        <div className="mx-auto w-full max-w-[90vw]">
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre-dark font-bold">
+            &bull; Institutional Credibility
+          </span>
+          <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">
+            Key Strategic Partners
+          </h2>
+          <p className="mt-3 max-w-2xl text-ink-soft leading-relaxed">
+            Shega Generation collaborates closely with leading educational, hospitality, media, and event institutions across Addis Ababa to deliver world-class programs.
+          </p>
+
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                name: "Sofor Code Academy",
+                role: "Advanced Coding & Robotics Partner",
+                desc: "Direct partner handling advanced programming languages, Python, AI command engineering, and robotics curriculum execution.",
+                tag: "Curriculum & Tech",
+              },
+              {
+                name: "Tourism Training Institute (TTI)",
+                role: "Facility & Hospitality Partner",
+                desc: "Facility partner providing computer laboratories, green spaces, and practical hospitality training environments.",
+                tag: "Labs & Venue",
+              },
+              {
+                name: "Guenet Hotel Mexico",
+                role: "Hospitality & Venue Partner",
+                desc: "Hospitality and official event venue partner hosting workshops, cohort showcases, and cultural gatherings.",
+                tag: "Events Venue",
+              },
+              {
+                name: "Samilos Media & Communications",
+                role: "Media & Production Partner",
+                desc: "Media production and coverage partner documenting cohort progress, student documentaries, and national broadcasts.",
+                tag: "Media & Coverage",
+              },
+              {
+                name: "Enqu Events",
+                role: "Event Production & Logistics Partner",
+                desc: "Event organizing and production partner coordinating national student showcases and community drives.",
+                tag: "Event Production",
+              },
+            ].map((partner) => (
+              <div
+                key={partner.name}
+                className="rounded-[32px] border border-zinc-200 bg-[#F4F3EE]/50 p-7 hover:border-ochre/40 transition-all duration-300 shadow-sm flex flex-col justify-between"
+              >
+                <div>
+                  <span className="inline-block px-3 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-white border border-zinc-200 text-ochre-dark font-bold mb-4">
+                    {partner.tag}
+                  </span>
+                  <h3 className="font-display text-xl font-bold text-ink uppercase tracking-wide">
+                    {partner.name}
+                  </h3>
+                  <p className="font-mono text-xs text-ochre-dark font-semibold mt-1">
+                    {partner.role}
+                  </p>
+                  <p className="mt-3 text-sm text-ink-soft leading-relaxed">
+                    {partner.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* SOCIAL MEDIA INTERACTION MODULE */}

@@ -5,49 +5,49 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const TRACKS = [
   {
-    id: "ai",
-    name: "AI Laboratory",
-    slogan: "Machine Learning & Natural Language Processing",
-    desc: "Underprivileged students deep-dive into Python fundamentals, data handling, training custom neural networks, and optimizing open-weights models (like Llama) for local dialects.",
-    tech: ["Python", "PyTorch", "HuggingFace", "Jupyter", "Scikit-Learn"],
-    capacity: 25,
-    enrolled: 22,
-    date: "Sept 15, 2026",
+    id: "creative-kids",
+    name: "Creative Kids (Ages 7–10)",
+    slogan: "Learning Through Play & Computer Science Basics",
+    desc: "Designed for young minds to explore computational thinking through block coding (Scratch, Minecraft), interactive cooking games, computer fundamentals, and tales of kindness.",
+    tech: ["Scratch", "Minecraft", "Block Coding", "Tales of Kindness", "Logic Games"],
+    capacity: 60,
+    enrolled: 58,
+    date: "Summer Camp Batch",
   },
   {
-    id: "dev",
-    name: "Software Studio",
-    slogan: "Web & Mobile Development",
-    desc: "Building highly responsive interfaces, responsive layouts, and cross-platform native applications. Students construct full-stack ecosystems using modern database engines.",
-    tech: ["Next.js", "React Native", "TypeScript", "TailwindCSS", "PostgreSQL"],
+    id: "astute-teens",
+    name: "Astute Teens (Ages 11–13)",
+    slogan: "Logical Reasoning & Web Engineering",
+    desc: "Focusing on logical problem solving, intermediate HTML/CSS web development, life skills, and constructing real tourism-related web portals for Ethiopian heritage.",
+    tech: ["HTML5", "CSS3", "JavaScript", "Tourism Portals", "Life Skills"],
+    capacity: 70,
+    enrolled: 65,
+    date: "Summer Camp Batch",
+  },
+  {
+    id: "leader-youth",
+    name: "Leader Youth (Ages 14–18)",
+    slogan: "Advanced Python, AI & Cybersecurity",
+    desc: "Advanced programming in Python, full-stack web architecture, cybersecurity protocols, AI command engineering, entrepreneurship, and youth leadership.",
+    tech: ["Python", "AI Engineering", "Cybersecurity", "Full-Stack Web", "Leadership"],
+    capacity: 70,
+    enrolled: 70,
+    date: "Summer Camp Batch",
+  },
+  {
+    id: "student-lab",
+    name: "Real-World Student Project Lab",
+    slogan: "Commercial Software Contracts & Industry Training",
+    desc: "Senior students execute external software development contracts for businesses—gaining portfolio experience while earning money for their contributions.",
+    tech: ["Next.js", "TypeScript", "Client Build Contracts", "Corporate Training", "Partnerships"],
     capacity: 30,
-    enrolled: 29,
-    date: "Oct 01, 2026",
-  },
-  {
-    id: "ops",
-    name: "DevOps Pipeline",
-    slogan: "Cloud Architecture & GitOps Systems",
-    desc: "Understanding code deployment pipelines, containerization, orchestration, and continuous integration models. Preparing students to construct self-healing environments.",
-    tech: ["Docker", "Kubernetes", "GitHub Actions", "Terraform", "AWS"],
-    capacity: 20,
-    enrolled: 16,
-    date: "Oct 10, 2026",
-  },
-  {
-    id: "craft",
-    name: "Craft & Culture",
-    slogan: "Traditional Weaving & Ethnomathematics",
-    desc: "Connecting ancestral geometric designs (like Ethiopian Tibeb weaving patterns) to computational thinking and matrix transformations. Nurturing cultural roots as structural design inputs.",
-    tech: ["Ethnomathematics", "Vector Art", "SVG Grid System", "Weaving Geometry"],
-    capacity: 40,
-    enrolled: 40,
-    date: "Ongoing",
+    enrolled: 28,
+    date: "Year-Round",
   },
 ];
 
 export default function InteractiveProgramExplorer() {
-  const [activeTab, setActiveTab] = useState("ai");
+  const [activeTab, setActiveTab] = useState("creative-kids");
   const isClickScrolling = useRef(false);
 
   useEffect(() => {
