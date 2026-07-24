@@ -271,71 +271,99 @@ export default async function HomePage() {
       </section>
 
       {/* STRATEGIC INSTITUTIONAL PARTNERS SHOWCASE */}
-      <section className="px-4 py-24 sm:px-6 relative bg-white border-t border-zinc-200">
-        <div className="mx-auto w-full max-w-[90vw]">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre-dark font-bold">
-            &bull; Institutional Credibility
-          </span>
-          <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">
-            Key Strategic Partners
-          </h2>
-          <p className="mt-3 max-w-2xl text-ink-soft leading-relaxed">
-            Shega Generation collaborates closely with leading educational, hospitality, media, and event institutions across Addis Ababa to deliver world-class programs.
-          </p>
+      <section className="px-4 py-24 sm:px-6 relative bg-[#F4F9F6] border-t border-b border-zinc-200/80 overflow-hidden">
+        {/* Bottom Right Dot Matrix Decorative Grid */}
+        <div className="absolute right-8 bottom-8 opacity-25 pointer-events-none hidden md:block" aria-hidden="true">
+          <div className="grid grid-cols-8 gap-2.5">
+            {Array.from({ length: 32 }).map((_, i) => (
+              <span key={i} className="w-1.5 h-1.5 rounded-full bg-[#145A32]" />
+            ))}
+          </div>
+        </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto w-full max-w-6xl relative z-10">
+          <div className="text-center max-w-3xl mx-auto">
+            <span className="font-mono text-xs uppercase tracking-[0.28em] text-[#145A32] font-bold block mb-3">
+              CLIENTS / PARTNERS
+            </span>
+            <h2 className="font-display text-3xl sm:text-5xl font-bold text-ink uppercase tracking-wide leading-tight">
+              {siteSettings?.communityTitle || "Strategic Institutional Partners & Collaborators"}
+            </h2>
+          </div>
+
+          <div className="mt-12 sm:mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
             {[
               {
                 name: "Sofor Code Academy",
-                role: "Advanced Coding & Robotics Partner",
-                desc: "Direct partner handling advanced programming languages, Python, AI command engineering, and robotics curriculum execution.",
-                tag: "Curriculum & Tech",
+                category: "Coding & AI Partner",
+                icon: "💻",
               },
               {
-                name: "Tourism Training Institute (TTI)",
-                role: "Facility & Hospitality Partner",
-                desc: "Facility partner providing computer laboratories, green spaces, and practical hospitality training environments.",
-                tag: "Labs & Venue",
+                name: "Tourism Training Institute",
+                category: "Labs & Facility Partner",
+                icon: "🏛️",
               },
               {
                 name: "Guenet Hotel Mexico",
-                role: "Hospitality & Venue Partner",
-                desc: "Hospitality and official event venue partner hosting workshops, cohort showcases, and cultural gatherings.",
-                tag: "Events Venue",
+                category: "Hospitality & Venue",
+                icon: "🏨",
               },
               {
-                name: "Samilos Media & Communications",
-                role: "Media & Production Partner",
-                desc: "Media production and coverage partner documenting cohort progress, student documentaries, and national broadcasts.",
-                tag: "Media & Coverage",
+                name: "Samilos Media",
+                category: "Media & Broadcast",
+                icon: "🎥",
               },
               {
                 name: "Enqu Events",
-                role: "Event Production & Logistics Partner",
-                desc: "Event organizing and production partner coordinating national student showcases and community drives.",
-                tag: "Event Production",
+                category: "Event Production",
+                icon: "🎉",
+              },
+              {
+                name: "MInT Ethiopia",
+                category: "Innovation Ecosystem",
+                icon: "🇪🇹",
+              },
+              {
+                name: "Addis Youth Guild",
+                category: "Community Outreach",
+                icon: "👥",
+              },
+              {
+                name: "Shega Dev Lab",
+                category: "Commercial Contracts",
+                icon: "⚡",
+              },
+              {
+                name: "Ethiopian Tech Hub",
+                category: "Infrastructure",
+                icon: "📡",
               },
             ].map((partner) => (
               <div
                 key={partner.name}
-                className="rounded-[32px] border border-zinc-200 bg-[#F4F3EE]/50 p-7 hover:border-ochre/40 transition-all duration-300 shadow-sm flex flex-col justify-between"
+                className="bg-white rounded-2xl sm:rounded-[22px] border border-zinc-200/90 p-5 aspect-[16/10] sm:aspect-[16/9] flex flex-col items-center justify-center text-center transition-all duration-300 hover:shadow-md hover:border-[#145A32]/40 hover:-translate-y-1 shadow-sm group relative"
               >
-                <div>
-                  <span className="inline-block px-3 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-white border border-zinc-200 text-ochre-dark font-bold mb-4">
-                    {partner.tag}
-                  </span>
-                  <h3 className="font-display text-xl font-bold text-ink uppercase tracking-wide">
-                    {partner.name}
-                  </h3>
-                  <p className="font-mono text-xs text-ochre-dark font-semibold mt-1">
-                    {partner.role}
-                  </p>
-                  <p className="mt-3 text-sm text-ink-soft leading-relaxed">
-                    {partner.desc}
-                  </p>
-                </div>
+                <span className="text-2xl mb-1.5 transition-transform duration-300 group-hover:scale-110">
+                  {partner.icon}
+                </span>
+                <h3 className="font-display text-sm sm:text-base font-bold text-ink leading-tight uppercase group-hover:text-[#145A32] transition-colors">
+                  {partner.name}
+                </h3>
+                <span className="font-mono text-[9px] uppercase tracking-wider text-ink-soft/70 mt-1 font-medium">
+                  {partner.category}
+                </span>
               </div>
             ))}
+
+            {/* 10th Card: + Many more -> */}
+            <a
+              href="/contact"
+              className="bg-white rounded-2xl sm:rounded-[22px] border border-emerald-200/80 p-5 aspect-[16/10] sm:aspect-[16/9] flex items-center justify-center text-center transition-all duration-300 hover:shadow-md hover:border-[#145A32] hover:bg-emerald-50/50 hover:-translate-y-1 shadow-sm group"
+            >
+              <span className="font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[#145A32] group-hover:translate-x-0.5 transition-transform flex items-center gap-1.5">
+                + Many more &rarr;
+              </span>
+            </a>
           </div>
         </div>
       </section>
