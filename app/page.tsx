@@ -69,7 +69,7 @@ export default async function HomePage() {
             <TypewriterTitle
               phrases={[heroTitle || "Shega Generation", "ሸጋ ትውልድ"]}
               className="font-display font-black text-[clamp(3.4rem,12vw,6.8rem)] sm:text-[clamp(5.4rem,11.5vw,10rem)] leading-[0.94] uppercase text-masked-bg text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center py-2"
-              style={{ backgroundImage: `linear-gradient(to bottom, rgba(46, 204, 113, 0.35), rgba(39, 174, 96, 0.45)), url('${heroTitleMaskBg}')` }}
+              style={{ backgroundImage: `linear-gradient(to bottom, rgba(46, 204, 112, 0.12), rgba(39, 174, 95, 0.17)), url('${heroTitleMaskBg}')` }}
             />
           </div>
 
