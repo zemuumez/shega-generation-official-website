@@ -26,7 +26,7 @@ export default async function HomePage() {
   const testimonialList = (fetchedTestimonials && fetchedTestimonials.length > 0) ? fetchedTestimonials : demoTestimonials;
 
   const heroTitle = siteSettings?.heroTitle || "Shega Generation";
-  const heroCaption = siteSettings?.heroCaption || "Shaping a well-rounded youth demographic in Addis Ababa and across Ethiopia by blending cutting-edge software engineering and AI with Ethiopian cultural values, indigenous knowledge, and hands-on personal development.";
+  const heroCaption = siteSettings?.heroCaption || "Sharing knowledge in kindness across generations — fusing software engineering and AI with Ethiopian heritage to empower future leaders.";
   const heroCtaPrimary = siteSettings?.heroCtaPrimary || "Apply for Summer Camp";
   const heroCtaSecondary = siteSettings?.heroCtaSecondary || "Partner & Sponsor";
 
@@ -67,12 +67,12 @@ export default async function HomePage() {
           <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[1.1em]">
             <TypewriterTitle
               text={heroTitle}
-              className="font-display font-extrabold text-[clamp(2.5rem,9vw,4.5rem)] sm:text-[clamp(4.2rem,8.5vw,7.5rem)] leading-[1.05] tracking-[0.04em] sm:tracking-[0.06em] uppercase text-masked-bg text-center max-w-full"
+              className="font-display font-black text-[clamp(3.5rem,11.5vw,7rem)] sm:text-[clamp(5.5rem,11vw,10.5rem)] leading-[1.02] tracking-[0.03em] sm:tracking-[0.05em] uppercase text-masked-bg text-center max-w-full drop-shadow-sm"
             />
           </div>
 
-          <div className="mt-8 sm:mt-12 mx-auto max-w-3xl text-center">
-            <p className="text-lg sm:text-2xl text-ink-soft leading-relaxed font-sans font-medium px-4">
+          <div className="mt-6 sm:mt-8 mx-auto max-w-2xl text-center">
+            <p className="text-base sm:text-xl text-ink/80 leading-relaxed font-sans font-medium px-4 tracking-wide">
               {heroCaption}
             </p>
             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">

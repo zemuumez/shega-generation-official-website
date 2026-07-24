@@ -48,7 +48,6 @@ export async function safeFetch<T>(query: string, params: Record<string, unknown
   try {
     const data = await sanityClient.fetch<T>(query, params, {
       cache: "no-store",
-      next: { revalidate: 0 },
     });
     return data ?? fallback;
   } catch (err) {

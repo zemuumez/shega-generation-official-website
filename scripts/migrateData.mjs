@@ -45,7 +45,7 @@ const SHEGA_SITE_SETTINGS = {
   _type: "siteSettings",
   heroTitle: "Shega Generation",
   heroCaption:
-    "Shaping a well-rounded youth demographic in Addis Ababa and across Ethiopia by blending cutting-edge software engineering and AI with Ethiopian cultural values, indigenous knowledge, and hands-on personal development.",
+    "Sharing knowledge in kindness across generations — fusing software engineering and AI with Ethiopian heritage to empower future leaders.",
   heroCtaPrimary: "Apply for Summer Camp",
   heroCtaSecondary: "Partner & Sponsor",
 
