@@ -98,16 +98,16 @@ export default async function HomePage() {
       {/* FULL-WIDTH PHOTO OVERLAY STATEMENT BANNER WITH PARALLAX EFFECT */}
       <section className="relative w-full h-[55vh] min-h-[420px] overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-fixed bg-cover bg-center" style={{ backgroundImage: `url('${statementBannerBg}')` }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/35 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/45 to-black/35 z-10" />
         
         <div className="relative z-20 flex flex-col items-center justify-center text-center p-6 select-none leading-[0.95]">
-          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider">
+          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider drop-shadow-md">
             {statement1}
           </h2>
-          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl stroke-text uppercase tracking-wider mt-3">
+          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl stroke-text uppercase tracking-wider mt-3 drop-shadow-md">
             {statement2}
           </h2>
-          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider mt-3">
+          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider mt-3 drop-shadow-md">
             {statement3}
           </h2>
         </div>
@@ -118,13 +118,13 @@ export default async function HomePage() {
 
       {/* PARALLAX PHILOSOPHY BANNER */}
       <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center bg-fixed bg-cover bg-center select-none" style={{ backgroundImage: `url('${culturalAnchoringBg}')` }}>
-        <div className="absolute inset-0 bg-black/65 z-10" />
+        <div className="absolute inset-0 bg-black/35 z-10" />
         <div className="relative z-20 max-w-4xl text-center px-6">
-          <span className="font-mono text-xs uppercase tracking-widest text-ink/65 font-bold">&bull; {culturalSubtitle}</span>
-          <h2 className="mt-4 font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider leading-tight">
+          <span className="font-mono text-xs uppercase tracking-widest text-emerald-300 font-bold drop-shadow-sm">&bull; {culturalSubtitle}</span>
+          <h2 className="mt-4 font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider leading-tight drop-shadow-md">
             We weave modern technology with cultural roots
           </h2>
-          <p className="mt-6 text-zinc-300 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+          <p className="mt-6 text-zinc-100 max-w-xl mx-auto text-sm sm:text-base leading-relaxed font-medium drop-shadow-sm">
             {culturalDescription}
           </p>
         </div>
