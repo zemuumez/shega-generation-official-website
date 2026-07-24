@@ -7,10 +7,11 @@ import TibebPattern from "@/components/TibebPattern";
 import LeafPattern from "@/components/LeafPattern";
 import CurriculumSplitSection from "@/components/CurriculumSplitSection";
 import TypewriterTitle from "@/components/TypewriterTitle";
+import PartnersSection from "@/components/PartnersSection";
 import Image from "next/image";
 import { safeFetch, safeImageUrl } from "@/sanity/lib/client";
-import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY, SITE_SETTINGS_QUERY, TESTIMONIALS_QUERY } from "@/sanity/lib/queries";
-import { demoUpcomingEvent, demoCourses, demoProjects, demoTestimonials } from "@/lib/demoData";
+import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY, SITE_SETTINGS_QUERY, TESTIMONIALS_QUERY, PARTNERS_QUERY } from "@/sanity/lib/queries";
+import { demoUpcomingEvent, demoCourses, demoProjects, demoTestimonials, demoPartners } from "@/lib/demoData";
 
 export const revalidate = 0;
 
@@ -20,10 +21,12 @@ export default async function HomePage() {
   const fetchedCourses = await safeFetch(FEATURED_COURSES_QUERY, {}, demoCourses);
   const fetchedProjects = await safeFetch(PROJECTS_QUERY, {}, demoProjects);
   const fetchedTestimonials = await safeFetch(TESTIMONIALS_QUERY, {}, demoTestimonials);
+  const fetchedPartners = await safeFetch(PARTNERS_QUERY, {}, demoPartners);
 
   const courseList = (fetchedCourses && fetchedCourses.length > 0) ? fetchedCourses : demoCourses;
   const projectList = (fetchedProjects && fetchedProjects.length > 0) ? fetchedProjects : demoProjects;
   const testimonialList = (fetchedTestimonials && fetchedTestimonials.length > 0) ? fetchedTestimonials : demoTestimonials;
+  const partnerList = (fetchedPartners && fetchedPartners.length > 0) ? fetchedPartners : demoPartners;
 
   const heroTitle = siteSettings?.heroTitle || "Shega Generation";
   const heroCaption = siteSettings?.heroCaption || "Sharing knowledge in kindness across generations — fusing software engineering and AI with Ethiopian heritage to empower future leaders.";
@@ -39,6 +42,7 @@ export default async function HomePage() {
   const culturalSubtitle = siteSettings?.culturalAnchoringSubtitle || "Rooted in Ethiopian Heritage & Character";
   const culturalDescription = siteSettings?.culturalAnchoringDescription || "From ancient Ge'ez fundamentals and Ethiopian history to traditional dining etiquette (የማዕድ ስነ-ስርዓት) and positive communication (ፈገግታና አዎንታዊ ተግባቦት), we nurture technically elite, culturally grounded leaders.";
   const culturalAnchoringBg = siteSettings?.culturalAnchoringImage ? safeImageUrl(siteSettings.culturalAnchoringImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
+  const communityTitle = siteSettings?.communityTitle || "Strategic Institutional Partners & Collaborators";
 
   return (
     <>
@@ -271,102 +275,7 @@ export default async function HomePage() {
       </section>
 
       {/* STRATEGIC INSTITUTIONAL PARTNERS SHOWCASE */}
-      <section className="px-4 py-24 sm:px-6 relative bg-[#F4F9F6] border-t border-b border-zinc-200/80 overflow-hidden">
-        {/* Bottom Right Dot Matrix Decorative Grid */}
-        <div className="absolute right-8 bottom-8 opacity-25 pointer-events-none hidden md:block" aria-hidden="true">
-          <div className="grid grid-cols-8 gap-2.5">
-            {Array.from({ length: 32 }).map((_, i) => (
-              <span key={i} className="w-1.5 h-1.5 rounded-full bg-[#145A32]" />
-            ))}
-          </div>
-        </div>
-
-        <div className="mx-auto w-full max-w-6xl relative z-10">
-          <div className="text-center max-w-3xl mx-auto">
-            <span className="font-mono text-xs uppercase tracking-[0.28em] text-[#145A32] font-bold block mb-3">
-              CLIENTS / PARTNERS
-            </span>
-            <h2 className="font-display text-3xl sm:text-5xl font-bold text-ink uppercase tracking-wide leading-tight">
-              {siteSettings?.communityTitle || "Strategic Institutional Partners & Collaborators"}
-            </h2>
-          </div>
-
-          <div className="mt-12 sm:mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
-            {[
-              {
-                name: "Sofor Code Academy",
-                category: "Coding & AI Partner",
-                icon: "💻",
-              },
-              {
-                name: "Tourism Training Institute",
-                category: "Labs & Facility Partner",
-                icon: "🏛️",
-              },
-              {
-                name: "Guenet Hotel Mexico",
-                category: "Hospitality & Venue",
-                icon: "🏨",
-              },
-              {
-                name: "Samilos Media",
-                category: "Media & Broadcast",
-                icon: "🎥",
-              },
-              {
-                name: "Enqu Events",
-                category: "Event Production",
-                icon: "🎉",
-              },
-              {
-                name: "MInT Ethiopia",
-                category: "Innovation Ecosystem",
-                icon: "🇪🇹",
-              },
-              {
-                name: "Addis Youth Guild",
-                category: "Community Outreach",
-                icon: "👥",
-              },
-              {
-                name: "Shega Dev Lab",
-                category: "Commercial Contracts",
-                icon: "⚡",
-              },
-              {
-                name: "Ethiopian Tech Hub",
-                category: "Infrastructure",
-                icon: "📡",
-              },
-            ].map((partner) => (
-              <div
-                key={partner.name}
-                className="bg-white rounded-2xl sm:rounded-[22px] border border-zinc-200/90 p-5 aspect-[16/10] sm:aspect-[16/9] flex flex-col items-center justify-center text-center transition-all duration-300 hover:shadow-md hover:border-[#145A32]/40 hover:-translate-y-1 shadow-sm group relative"
-              >
-                <span className="text-2xl mb-1.5 transition-transform duration-300 group-hover:scale-110">
-                  {partner.icon}
-                </span>
-                <h3 className="font-display text-sm sm:text-base font-bold text-ink leading-tight uppercase group-hover:text-[#145A32] transition-colors">
-                  {partner.name}
-                </h3>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-ink-soft/70 mt-1 font-medium">
-                  {partner.category}
-                </span>
-              </div>
-            ))}
-
-            {/* 10th Card: + Many more -> */}
-            <a
-              href="/contact"
-              className="bg-white rounded-2xl sm:rounded-[22px] border border-emerald-200/80 p-5 aspect-[16/10] sm:aspect-[16/9] flex items-center justify-center text-center transition-all duration-300 hover:shadow-md hover:border-[#145A32] hover:bg-emerald-50/50 hover:-translate-y-1 shadow-sm group"
-            >
-              <span className="font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[#145A32] group-hover:translate-x-0.5 transition-transform flex items-center gap-1.5">
-                + Many more &rarr;
-              </span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <PartnersSection partners={partnerList} />
 
       {/* SOCIAL MEDIA INTERACTION MODULE */}
       <section className="px-4 py-24 sm:px-6 relative bg-white/20 border-t border-zinc-200">

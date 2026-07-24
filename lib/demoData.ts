@@ -272,3 +272,46 @@ export const demoGallery = [
     categoryTag: "Volunteer-Work",
   },
 ];
+
+export const demoPartners = [
+  {
+    _id: "demo-partner-1",
+    name: "Sofor Code Academy",
+    role: "Advanced Coding & Robotics Partner",
+    description: "Direct partner executing advanced programming languages, Python labs, AI command engineering, and robotics curriculum.",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 1,
+  },
+  {
+    _id: "demo-partner-2",
+    name: "Tourism Training Institute (TTI)",
+    role: "Facility & Hospitality Partner",
+    description: "Facility partner providing state-of-the-art computer labs, green grounds, and practical hospitality environments.",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 2,
+  },
+  {
+    _id: "demo-partner-3",
+    name: "Guenet Hotel Mexico",
+    role: "Hospitality & Venue Partner",
+    description: "Hospitality and official event venue partner hosting summer workshops, student showcases, and cultural gatherings.",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 3,
+  },
+  {
+    _id: "demo-partner-4",
+    name: "Samilos Media & Communications",
+    role: "Media & Production Partner",
+    description: "Media production partner documenting student progress, producing documentaries, and broadcasting national cohort stories.",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 4,
+  },
+  {
+    _id: "demo-partner-5",
+    name: "Enqu Events",
+    role: "Event Production & Logistics Partner",
+    description: "Event organizing partner coordinating national youth talent showcases, robotics competitions, and community drives.",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 5,
+  },
+];

@@ -367,6 +367,49 @@ const SHEGA_GALLERY = [
   },
 ];
 
+const SHEGA_PARTNERS = [
+  {
+    _id: "partner-1",
+    _type: "partner",
+    name: "Sofor Code Academy",
+    role: "Advanced Coding & Robotics Partner",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 1,
+  },
+  {
+    _id: "partner-2",
+    _type: "partner",
+    name: "Tourism Training Institute (TTI)",
+    role: "Facility & Hospitality Partner",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 2,
+  },
+  {
+    _id: "partner-3",
+    _type: "partner",
+    name: "Guenet Hotel Mexico",
+    role: "Hospitality & Venue Partner",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 3,
+  },
+  {
+    _id: "partner-4",
+    _type: "partner",
+    name: "Samilos Media & Communications",
+    role: "Media & Production Partner",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 4,
+  },
+  {
+    _id: "partner-5",
+    _type: "partner",
+    name: "Enqu Events",
+    role: "Event Production & Logistics Partner",
+    websiteUrl: "https://shegagenerations.org/contact",
+    order: 5,
+  },
+];
+
 async function migrate() {
   console.log("🚀 Starting Shega Generation non-destructive dataset migration...");
   console.log(`Targeting project [${projectId}], dataset [${dataset}]...`);
@@ -404,6 +447,12 @@ async function migrate() {
   console.log("📌 Syncing Gallery Items...");
   for (const galleryItem of SHEGA_GALLERY) {
     await client.createIfNotExists(galleryItem);
+  }
+
+  // Step 7: Create Partners if not present
+  console.log("📌 Syncing Strategic Partners...");
+  for (const partnerItem of SHEGA_PARTNERS) {
+    await client.createIfNotExists(partnerItem);
   }
 
   console.log("🎉 Shega Generation safe dataset sync completed successfully!");

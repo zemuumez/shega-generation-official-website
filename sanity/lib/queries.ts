@@ -52,3 +52,8 @@ export const GALLERY_QUERY = `
 *[_type == "gallery"] | order(_createdAt desc) {
   _id, image, caption, categoryTag
 }`;
+
+export const PARTNERS_QUERY = `
+*[_type == "partner"] | order(order asc, _createdAt asc) {
+  _id, name, role, description, logo, websiteUrl, order
+}`;
