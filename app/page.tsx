@@ -42,6 +42,7 @@ export default async function HomePage() {
   const culturalSubtitle = siteSettings?.culturalAnchoringSubtitle || "Rooted in Ethiopian Heritage & Character";
   const culturalDescription = siteSettings?.culturalAnchoringDescription || "From ancient Ge'ez fundamentals and Ethiopian history to traditional dining etiquette (የማዕድ ስነ-ስርዓት) and positive communication (ፈገግታና አዎንታዊ ተግባቦት), we nurture technically elite, culturally grounded leaders.";
   const culturalAnchoringBg = siteSettings?.culturalAnchoringImage ? safeImageUrl(siteSettings.culturalAnchoringImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
+  const eventsKicker = siteSettings?.eventsSectionKicker || "The nearest gathering";
   const communityTitle = siteSettings?.communityTitle || "Strategic Institutional Partners & Collaborators";
 
   return (
@@ -149,7 +150,7 @@ export default async function HomePage() {
       {upcomingEvent && (
         <section className="px-4 py-24 sm:px-6 relative border-b border-zinc-200">
           <h2 className="mx-auto mb-10 w-full max-w-[90vw] font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">
-            &bull; The nearest gathering
+            &bull; {eventsKicker}
           </h2>
           <UpcomingEventCard event={upcomingEvent} />
         </section>

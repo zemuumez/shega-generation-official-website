@@ -20,6 +20,8 @@ export const SITE_SETTINGS_QUERY = `
   journeysDescription,
   testimonialsTitle,
   testimonialsDescription,
+  eventsSectionKicker,
+  eventsSectionTitle,
   partnersKicker,
   partnersHeadline,
   partnersDescription,

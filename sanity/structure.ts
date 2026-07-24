@@ -38,6 +38,14 @@ export const deskStructure: StructureResolver = (S) =>
                 ),
               S.divider(),
               S.listItem()
+                .title("The Nearest Gathering / Upcoming Event")
+                .icon(CalendarIcon)
+                .child(
+                  S.documentList()
+                    .title("Upcoming Event (Nearest Gathering)")
+                    .filter('_type == "event" && isUpcoming == true')
+                ),
+              S.listItem()
                 .title("Curriculum Courses Section")
                 .icon(BookIcon)
                 .child(

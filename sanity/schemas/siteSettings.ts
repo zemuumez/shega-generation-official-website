@@ -14,6 +14,7 @@ export default defineType({
     { name: "curriculum", title: "📚 Curriculum Section" },
     { name: "journeys", title: "🚀 Journeys Section" },
     { name: "testimonials", title: "💬 Testimonials Section" },
+    { name: "events", title: "📅 Nearest Gathering Section" },
     { name: "partners", title: "🤝 Partners Section" },
     { name: "community", title: "👥 Community Section" },
   ],
@@ -163,6 +164,22 @@ export default defineType({
       type: "text",
       rows: 3,
       group: "testimonials",
+    }),
+
+    // Nearest Gathering / Events Section
+    defineField({
+      name: "eventsSectionKicker",
+      title: "Nearest Gathering Section Kicker Tag",
+      type: "string",
+      initialValue: "The nearest gathering",
+      group: "events",
+    }),
+    defineField({
+      name: "eventsSectionTitle",
+      title: "Nearest Gathering Section Title",
+      type: "string",
+      initialValue: "Upcoming Gathering & Workshops",
+      group: "events",
     }),
 
     // Partners Section
