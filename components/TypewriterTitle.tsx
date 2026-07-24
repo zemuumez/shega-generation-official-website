@@ -3,48 +3,59 @@
 import { useEffect, useState } from "react";
 
 type TypewriterTitleProps = {
+  phrases?: string[];
   text?: string;
   className?: string;
 };
 
 export default function TypewriterTitle({
-  text = "Shega Generation",
+  phrases = ["Shega Generation", "ሸጋ ትውልድ"],
+  text,
   className = "",
 }: TypewriterTitleProps) {
+  // If a single text string was passed, create bilingual pair with Amharic fallback
+  const phraseList = text
+    ? [text, "ሸጋ ትውልድ"]
+    : phrases;
+
+  const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const currentPhrase = phraseList[phraseIndex % phraseList.length];
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (!isDeleting && displayText.length < text.length) {
+    if (!isDeleting && displayText.length < currentPhrase.length) {
       // Type out character by character
       timer = setTimeout(() => {
-        setDisplayText(text.slice(0, displayText.length + 1));
-      }, 90);
-    } else if (!isDeleting && displayText.length === text.length) {
-      // Hold at full text
+        setDisplayText(currentPhrase.slice(0, displayText.length + 1));
+      }, 95);
+    } else if (!isDeleting && displayText.length === currentPhrase.length) {
+      // Hold at full text for 4 seconds
       timer = setTimeout(() => {
         setIsDeleting(true);
-      }, 5500);
+      }, 4000);
     } else if (isDeleting && displayText.length > 0) {
       // Backspace character by character
       timer = setTimeout(() => {
-        setDisplayText(text.slice(0, displayText.length - 1));
+        setDisplayText(currentPhrase.slice(0, displayText.length - 1));
       }, 55);
     } else if (isDeleting && displayText.length === 0) {
-      // Hold before typing again
+      // Switch to next phrase in loop after brief pause
       timer = setTimeout(() => {
         setIsDeleting(false);
-      }, 900);
+        setPhraseIndex((prev) => (prev + 1) % phraseList.length);
+      }, 600);
     }
 
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, text]);
+  }, [displayText, isDeleting, currentPhrase, phraseList.length]);
 
   // Find space index to split into 2 distinct lines
-  const spaceIndex = text.indexOf(" ");
-  const firstWord = spaceIndex !== -1 ? text.slice(0, spaceIndex) : text;
+  const spaceIndex = currentPhrase.indexOf(" ");
+  const firstWord = spaceIndex !== -1 ? currentPhrase.slice(0, spaceIndex) : currentPhrase;
 
   const isLine1Active = displayText.length <= firstWord.length;
   const line1Text = isLine1Active ? displayText : firstWord;
@@ -52,7 +63,7 @@ export default function TypewriterTitle({
 
   return (
     <h1 className={className}>
-      {/* Line 1: SHEGA */}
+      {/* Line 1: English "Shega" / Amharic "ሸጋ" */}
       <span className="block">
         {line1Text}
         {isLine1Active && (
@@ -63,7 +74,7 @@ export default function TypewriterTitle({
         )}
       </span>
 
-      {/* Line 2: GENERATION(S) */}
+      {/* Line 2: English "Generation" / Amharic "ትውልድ" */}
       <span className="block min-h-[1em]">
         {!isLine1Active ? (
           <span className="inline-block whitespace-nowrap">
