@@ -64,10 +64,10 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl z-20 flex flex-col items-center justify-center w-full">
           
           {/* Giant Typewriter Title - Types and Backspaces in a Loop */}
-          <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[1.1em]">
+          <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[2.1em]">
             <TypewriterTitle
               text={heroTitle}
-              className="font-display font-black text-[clamp(3.5rem,11.5vw,7rem)] sm:text-[clamp(5.5rem,11vw,10.5rem)] leading-[1.02] tracking-[0.03em] sm:tracking-[0.05em] uppercase text-masked-bg text-center max-w-full drop-shadow-sm"
+              className="font-display font-black text-[clamp(3rem,10.5vw,5.8rem)] sm:text-[clamp(4.8rem,9.8vw,8.5rem)] leading-[0.95] tracking-[0.03em] sm:tracking-[0.05em] uppercase text-masked-bg text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center"
             />
           </div>
 
