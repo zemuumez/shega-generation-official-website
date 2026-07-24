@@ -10,18 +10,19 @@ type TypewriterTitleProps = {
 };
 
 export default function TypewriterTitle({
-  phrases = ["ሸጋ ትውልድ"],
+  phrases = ["Shega Generation", "ሸጋ ትውልድ"],
   text,
   className = "",
   style,
 }: TypewriterTitleProps) {
-  const phraseList = text ? [text] : phrases;
+  const phraseList = text ? [text, "ሸጋ ትውልድ"] : phrases;
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   const currentPhrase = phraseList[phraseIndex % phraseList.length];
+  const isAmharic = /[\u1200-\u137F]/.test(currentPhrase);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -42,7 +43,7 @@ export default function TypewriterTitle({
         setDisplayText(currentPhrase.slice(0, displayText.length - 1));
       }, 55);
     } else if (isDeleting && displayText.length === 0) {
-      // Re-type phrase after brief pause
+      // Switch to next phrase in loop after brief pause
       timer = setTimeout(() => {
         setIsDeleting(false);
         setPhraseIndex((prev) => (prev + 1) % phraseList.length);
@@ -52,7 +53,7 @@ export default function TypewriterTitle({
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, currentPhrase, phraseList.length]);
 
-  // Find space index to split into 2 distinct lines ("ሸጋ" on Line 1, "ትውልድ" on Line 2)
+  // Find space index to split into 2 distinct lines
   const spaceIndex = currentPhrase.indexOf(" ");
   const firstWord = spaceIndex !== -1 ? currentPhrase.slice(0, spaceIndex) : currentPhrase;
 
@@ -60,27 +61,35 @@ export default function TypewriterTitle({
   const line1Text = isLine1Active ? displayText : firstWord;
   const line2Text = !isLine1Active ? displayText.slice(firstWord.length + 1) : "";
 
+  // Extra wide tracking & horizontal scale for Amharic ("ሸጋ ትውልድ")
+  const trackingClass = isAmharic
+    ? "tracking-[0.18em] sm:tracking-[0.30em] scale-x-[1.14] origin-center"
+    : "tracking-[0.06em] sm:tracking-[0.10em] scale-x-[1.04] origin-center";
+
   return (
-    <h1 className={`${className} transition-all duration-500`} style={style}>
-      {/* Line 1: "ሸጋ" */}
+    <h1
+      className={`${className} ${trackingClass} transition-all duration-500`}
+      style={style}
+    >
+      {/* Line 1: "Shega" / "ሸጋ" */}
       <span className="block">
         {line1Text}
         {isLine1Active && (
           <span
             aria-hidden="true"
-            className="inline-block w-[4px] sm:w-[8px] h-[0.75em] bg-ochre align-baseline ml-1.5 sm:ml-2.5 rounded-full animate-pulse"
+            className="inline-block w-[5px] sm:w-[10px] h-[0.75em] bg-ochre align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
           />
         )}
       </span>
 
-      {/* Line 2: "ትውልድ" */}
+      {/* Line 2: "Generation" / "ትውልድ" */}
       <span className="block min-h-[1em]">
         {!isLine1Active ? (
           <span className="inline-block whitespace-nowrap">
             {line2Text}
             <span
               aria-hidden="true"
-              className="inline-block w-[4px] sm:w-[8px] h-[0.75em] bg-ochre align-baseline ml-1.5 sm:ml-2.5 rounded-full animate-pulse"
+              className="inline-block w-[5px] sm:w-[10px] h-[0.75em] bg-ochre align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
             />
           </span>
         ) : (

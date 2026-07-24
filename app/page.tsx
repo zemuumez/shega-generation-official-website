@@ -68,7 +68,7 @@ export default async function HomePage() {
           <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[2.1em]">
             <TypewriterTitle
               phrases={[heroTitle || "Shega Generation", "ሸጋ ትውልድ"]}
-              className="font-display font-black text-[clamp(3rem,10.5vw,5.8rem)] sm:text-[clamp(4.8rem,9.8vw,8.5rem)] leading-[0.95] tracking-[0.03em] sm:tracking-[0.05em] uppercase text-masked-bg text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center"
+              className="font-display font-black text-[clamp(3.4rem,12vw,6.8rem)] sm:text-[clamp(5.4rem,11.5vw,10rem)] leading-[0.94] uppercase text-masked-bg text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center py-2"
               style={{ backgroundImage: `linear-gradient(to bottom, rgba(46, 204, 113, 0.35), rgba(39, 174, 96, 0.45)), url('${heroTitleMaskBg}')` }}
             />
           </div>
