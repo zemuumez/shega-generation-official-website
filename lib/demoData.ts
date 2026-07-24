@@ -53,7 +53,7 @@ export const demoCourses = [
   {
     _id: "demo-course-1",
     title: "Creative Kids: Block Coding & Logic (Ages 7–10)",
-    instructor: "Samuel Geremew & Sofor Code Academy",
+    instructor: "Shega Generation",
     badgeCategory: "Tech Orientation",
     level: "Beginner • 8 Weeks (Summer Camp)",
     snippet: "Learning through play, basic computer science concepts, Scratch block coding, Minecraft logic, cooking games, and tales of kindness.",
@@ -67,7 +67,7 @@ export const demoCourses = [
   {
     _id: "demo-course-2",
     title: "Astute Teens: Web Development & Heritage (Ages 11–13)",
-    instructor: "Zemichael Tefera • Chief Coordinator",
+    instructor: "Shega Generation & Sophor Code Academy",
     badgeCategory: "Tech Orientation",
     level: "Intermediate • 8 Weeks (Summer Camp)",
     snippet: "Logical reasoning, HTML/CSS web coding, life skills, and constructing real web portals showcasing Ethiopian tourism and heritage sites.",
@@ -81,7 +81,7 @@ export const demoCourses = [
   {
     _id: "demo-course-3",
     title: "Leader Youth: Python, AI & Cybersecurity (Ages 14–18)",
-    instructor: "Thomas Hailu • Lead Technical Instructor",
+    instructor: "Sophor Code Academy",
     badgeCategory: "Tech Orientation",
     level: "Advanced • 8 Weeks (Summer Camp)",
     snippet: "Advanced Python programming, web development, cybersecurity fundamentals, AI command engineering, entrepreneurship, and leadership.",
@@ -95,7 +95,7 @@ export const demoCourses = [
   {
     _id: "demo-course-4",
     title: "Indigenous Knowledge, Ge'ez & History Secrets",
-    instructor: "Hizkeal • Core Instructor & Mentor",
+    instructor: "Shega Generation",
     badgeCategory: "Indigenous Knowledge",
     level: "All Ages • 8 Weeks",
     snippet: "Ancient Ge'ez fundamentals, Ethiopian history, engineering secrets behind historic landmarks, and traditional conflict resolution (Erq).",
@@ -109,7 +109,7 @@ export const demoCourses = [
   {
     _id: "demo-course-5",
     title: "Etiquette, Hospitality & Life Skills (የማዕድ ስነ-ስርዓት)",
-    instructor: "Gebriel Kassahun & TTI Hospitality Team",
+    instructor: "Shega Generation & TTI Hospitality",
     badgeCategory: "Life Skills",
     level: "All Ages • 8 Weeks",
     snippet: "Practical instruction in የማዕድ ስነ-ስርዓት (Dining Etiquette), ፈገግታና አዎንታዊ ተግባቦት (Positive Communication) through interactive games, mineralogy, and public speaking.",
@@ -123,7 +123,7 @@ export const demoCourses = [
   {
     _id: "demo-course-6",
     title: "Real-World Student Development Lab",
-    instructor: "Samuel Geremew & Zemichael Tefera",
+    instructor: "Shega Generation",
     badgeCategory: "Tech Orientation",
     level: "Senior Level • Year-Round",
     snippet: "Senior students execute external software development contracts for businesses—gaining portfolio experience while earning money for their contributions.",

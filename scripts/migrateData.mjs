@@ -81,7 +81,7 @@ const SHEGA_COURSES = [
     _id: "course-1",
     _type: "course",
     title: "Creative Kids: Block Coding & Logic (Ages 7–10)",
-    instructor: "Samuel Geremew & Sofor Code Academy",
+    instructor: "Shega Generation",
     badgeCategory: "Tech Orientation",
     level: "Beginner • 8 Weeks (Summer Camp)",
     snippet:
@@ -96,7 +96,7 @@ const SHEGA_COURSES = [
     _id: "course-2",
     _type: "course",
     title: "Astute Teens: Web Development & Heritage (Ages 11–13)",
-    instructor: "Zemichael Tefera • Chief Coordinator",
+    instructor: "Shega Generation & Sophor Code Academy",
     badgeCategory: "Tech Orientation",
     level: "Intermediate • 8 Weeks (Summer Camp)",
     snippet:
@@ -111,7 +111,7 @@ const SHEGA_COURSES = [
     _id: "course-3",
     _type: "course",
     title: "Leader Youth: Python, AI & Cybersecurity (Ages 14–18)",
-    instructor: "Thomas Hailu • Lead Technical Instructor",
+    instructor: "Sophor Code Academy",
     badgeCategory: "Tech Orientation",
     level: "Advanced • 8 Weeks (Summer Camp)",
     snippet:
@@ -126,7 +126,7 @@ const SHEGA_COURSES = [
     _id: "course-4",
     _type: "course",
     title: "Indigenous Knowledge, Ge'ez & History Secrets",
-    instructor: "Hizkeal • Core Instructor & Mentor",
+    instructor: "Shega Generation",
     badgeCategory: "Indigenous Knowledge",
     level: "All Ages • 8 Weeks",
     snippet:
@@ -141,7 +141,7 @@ const SHEGA_COURSES = [
     _id: "course-5",
     _type: "course",
     title: "Etiquette, Hospitality & Life Skills (የማዕድ ስነ-ስርዓት)",
-    instructor: "Gebriel Kassahun & TTI Hospitality Team",
+    instructor: "Shega Generation & TTI Hospitality",
     badgeCategory: "Life Skills",
     level: "All Ages • 8 Weeks",
     snippet:
@@ -156,7 +156,7 @@ const SHEGA_COURSES = [
     _id: "course-6",
     _type: "course",
     title: "Real-World Student Development Lab",
-    instructor: "Samuel Geremew & Zemichael Tefera",
+    instructor: "Shega Generation",
     badgeCategory: "Tech Orientation",
     level: "Senior Level • Year-Round",
     snippet:

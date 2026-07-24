@@ -38,12 +38,12 @@ export default function HorizontalRail({
       style={{ y, opacity }}
       className="relative w-full overflow-hidden"
     >
-      {/* Scroll Container extends slightly past header alignment with soft outer edge mask */}
+      {/* Scroll Container extends to match full page layout indentation */}
       <div
-        className="relative mx-auto max-w-[1240px] px-3 sm:px-6 overflow-hidden"
+        className="relative mx-auto w-full max-w-[90vw] px-4 sm:px-6 overflow-hidden"
         style={{
-          maskImage: "linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%)",
+          maskImage: "linear-gradient(to right, transparent 0%, black 1.5%, black 98.5%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 1.5%, black 98.5%, transparent 100%)",
         }}
       >
         <div

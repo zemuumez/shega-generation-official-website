@@ -3,12 +3,7 @@ import { safeImageUrl } from "@/sanity/lib/client";
 
 export function CourseCard({ course }: { course: any }) {
   return (
-    <a
-      href={course.externalLmsUrl || "#"}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="rail-item group block w-80 sm:w-96 flex-shrink-0 overflow-hidden rounded-[32px] border border-zinc-200 bg-white transition-all duration-300 hover:border-ochre/40 hover:shadow-xl hover:-translate-y-1.5 flex flex-col justify-between"
-    >
+    <div className="rail-item group block w-80 sm:w-[410px] flex-shrink-0 overflow-hidden rounded-[32px] border border-zinc-200 bg-white transition-all duration-300 hover:border-[#145A32]/40 hover:shadow-xl hover:-translate-y-1.5 flex flex-col justify-between">
       <div>
         <div className="relative aspect-[16/10] overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 z-10" />
@@ -16,31 +11,29 @@ export function CourseCard({ course }: { course: any }) {
             src={safeImageUrl(course.bannerImage)}
             alt={course.title}
             fill
-            sizes="(max-width: 640px) 320px, 384px"
+            sizes="(max-width: 640px) 320px, 410px"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
           {/* Top Badges */}
           <div className="absolute left-4 top-4 z-20 flex flex-wrap gap-2">
-            <span className="inline-block px-3 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-white/90 text-ink backdrop-blur-md font-bold shadow-sm">
+            <span className="inline-block px-3.5 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-white/90 text-ink backdrop-blur-md font-bold shadow-sm">
               {course.badgeCategory || "Course"}
             </span>
             {course.level && (
-              <span className="inline-block px-3 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-ochre/90 text-white backdrop-blur-md font-bold shadow-sm">
+              <span className="inline-block px-3.5 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-[#145A32] text-white backdrop-blur-md font-bold shadow-sm">
                 {course.level}
               </span>
             )}
           </div>
-          {/* Bottom Rating/Enrolled Info */}
-          {course.rating && (
-            <div className="absolute right-4 bottom-3 z-20 font-mono text-[10px] bg-black/70 backdrop-blur-sm text-white px-2.5 py-1 rounded-full flex items-center gap-1.5">
-              <span className="text-amber-400 font-bold">★ {course.rating}</span>
-              <span className="text-white/70">&bull; {course.enrolledCount || 100}+ enrolled</span>
-            </div>
-          )}
+          {/* Bottom LMS Coming Soon Badge */}
+          <div className="absolute right-4 bottom-3 z-20 font-mono text-[10px] bg-black/80 backdrop-blur-sm text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/10 shadow-sm">
+            <span className="text-amber-400 font-bold">★ {course.rating || "5.0"}</span>
+            <span className="text-emerald-300 font-bold">&bull; LMS Coming Soon</span>
+          </div>
         </div>
 
         <div className="p-6">
-          <h4 className="font-display text-xl leading-snug font-bold text-ink group-hover:text-ochre-dark transition-colors duration-300 uppercase">
+          <h4 className="font-display text-xl leading-snug font-bold text-ink group-hover:text-[#145A32] transition-colors duration-300 uppercase">
             {course.title}
           </h4>
           <p className="mt-2.5 text-sm text-ink-soft line-clamp-3 leading-relaxed">{course.snippet}</p>
@@ -61,13 +54,13 @@ export function CourseCard({ course }: { course: any }) {
         </div>
       </div>
 
-      <div className="px-6 pb-6 pt-2 border-t border-zinc-100 flex items-center justify-between text-xs font-mono">
-        <span className="text-ink-soft/70 truncate max-w-[200px]">by {course.instructor}</span>
-        <span className="font-bold uppercase tracking-wider text-ochre group-hover:translate-x-1 transition-transform duration-300 flex items-center gap-1">
-          Start &rarr;
-        </span>
+      <div className="px-6 pb-6 pt-3 border-t border-zinc-100 flex items-center justify-between text-xs font-mono">
+        <div className="flex flex-col">
+          <span className="text-[10px] uppercase text-zinc-400 font-bold tracking-wider">Prepared By</span>
+          <span className="text-ink font-extrabold text-xs mt-0.5">{course.instructor}</span>
+        </div>
       </div>
-    </a>
+    </div>
   );
 }
 

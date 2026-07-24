@@ -1,0 +1,1106 @@
+{
+  "meta": {
+    "exportedAt": "2026-07-24T19:28:37.127Z",
+    "projectId": "g8zdm74i",
+    "dataset": "production",
+    "totalDocuments": 45,
+    "breakdown": {
+      "contactMessage": 2,
+      "system.group": 11,
+      "system.retention": 1,
+      "course": 6,
+      "event": 4,
+      "gallery": 6,
+      "sanity.imageAsset": 5,
+      "project": 4,
+      "siteSettings": 1,
+      "testimonial": 5
+    }
+  },
+  "documents": [
+    {
+      "_createdAt": "2026-07-23T23:37:19Z",
+      "_id": "C90lXvqhCRFE4tCBdjD7mo",
+      "_rev": "C90lXvqhCRFE4tCBdjD7jy",
+      "_type": "contactMessage",
+      "_updatedAt": "2026-07-23T23:37:19Z",
+      "email": "themickmay15@gmail.com",
+      "fullName": "zed",
+      "message": "hel0o",
+      "status": "New",
+      "subject": "General Inquiry",
+      "submittedAt": "2026-07-23T23:37:18.602Z"
+    },
+    {
+      "_createdAt": "2026-07-24T09:55:12Z",
+      "_id": "C90lXvqhCRFE4tCBdka9V0",
+      "_rev": "C90lXvqhCRFE4tCBdka9SA",
+      "_type": "contactMessage",
+      "_updatedAt": "2026-07-24T09:55:12Z",
+      "email": "themickmay15@gmail.com",
+      "fullName": "test",
+      "message": "helloworld",
+      "status": "New",
+      "subject": "Tech Orientation Labs",
+      "submittedAt": "2026-07-24T09:55:09.362Z"
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.access-manager",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.administrator",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      ],
+      "members": [
+        "p65HXzLAp"
+      ]
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.blueprints-deployer",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.create-session",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.public",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"*\")",
+          "permissions": [
+            "read"
+          ]
+        }
+      ],
+      "members": [
+        "everyone"
+      ]
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.read",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.sanity.contributor",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_type == \"sanity.imageAsset\"",
+          "permissions": [
+            "create"
+          ]
+        },
+        {
+          "filter": "_type == \"sanity.fileAsset\"",
+          "permissions": [
+            "create"
+          ]
+        },
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      ],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.sanity.developer",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      ],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.sanity.editor",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read",
+            "update",
+            "create"
+          ]
+        }
+      ],
+      "members": [
+        "pUDgoCOet"
+      ]
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.sanity.viewer",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [
+        {
+          "filter": "_id in path(\"**\")",
+          "permissions": [
+            "history",
+            "read"
+          ]
+        },
+        {
+          "filter": "(_id in path(\"**\")) && (_id in path(\"drafts.**\") || _id in path(\"versions.**\"))",
+          "permissions": [
+            "history",
+            "read"
+          ]
+        }
+      ],
+      "members": []
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.groups.write",
+      "_rev": "6rm71nnTDOxtgIcQO8RSgM",
+      "_type": "system.group",
+      "_updatedAt": "2026-07-18T18:00:24Z",
+      "grants": [],
+      "members": [
+        "pUDgoCOet"
+      ]
+    },
+    {
+      "_createdAt": "2026-07-18T17:51:39Z",
+      "_id": "_.retention._maximum_project",
+      "_rev": "6rm71nnTDOxtgIcQO8QRQ6",
+      "_type": "system.retention",
+      "_updatedAt": "2026-07-18T17:51:39Z",
+      "days": 90,
+      "maximum": true,
+      "preferShorter": true
+    },
+    {
+      "_createdAt": "2026-07-24T19:27:49Z",
+      "_id": "course-1",
+      "_rev": "C90lXvqhCRFE4tCBdmeMz8",
+      "_type": "course",
+      "_updatedAt": "2026-07-24T19:27:49Z",
+      "badgeCategory": "Tech Orientation",
+      "enrolledCount": 200,
+      "externalLmsUrl": "https://shegagenerations.org/contact",
+      "instructor": "Shega Generation",
+      "level": "Beginner • 8 Weeks (Summer Camp)",
+      "rating": "5.0",
+      "sequenceOrder": 1,
+      "snippet": "Learning through play, basic computer science concepts, Scratch block coding, Minecraft logic, cooking games, and tales of kindness.",
+      "tags": [
+        "Scratch",
+        "Minecraft",
+        "Block Coding",
+        "Tales of Kindness"
+      ],
+      "title": "Creative Kids: Block Coding & Logic (Ages 7–10)"
+    },
+    {
+      "_createdAt": "2026-07-24T19:27:51Z",
+      "_id": "course-2",
+      "_rev": "kqd32DnwMDSkqBnWPv1ZH7",
+      "_type": "course",
+      "_updatedAt": "2026-07-24T19:27:51Z",
+      "badgeCategory": "Tech Orientation",
+      "enrolledCount": 180,
+      "externalLmsUrl": "https://shegagenerations.org/contact",
+      "instructor": "Shega Generation & Sophor Code Academy",
+      "level": "Intermediate • 8 Weeks (Summer Camp)",
+      "rating": "4.9",
+      "sequenceOrder": 2,
+      "snippet": "Logical reasoning, HTML/CSS web coding, life skills, and constructing real web portals showcasing Ethiopian tourism and heritage sites.",
+      "tags": [
+        "HTML5",
+        "CSS3",
+        "Tourism Web Portals",
+        "Life Skills"
+      ],
+      "title": "Astute Teens: Web Development & Heritage (Ages 11–13)"
+    },
+    {
+      "_createdAt": "2026-07-24T19:27:53Z",
+      "_id": "course-3",
+      "_rev": "eJ7skWqptDvdh6OpbQVZmo",
+      "_type": "course",
+      "_updatedAt": "2026-07-24T19:27:53Z",
+      "badgeCategory": "Tech Orientation",
+      "enrolledCount": 150,
+      "externalLmsUrl": "https://shegagenerations.org/contact",
+      "instructor": "Sophor Code Academy",
+      "level": "Advanced • 8 Weeks (Summer Camp)",
+      "rating": "5.0",
+      "sequenceOrder": 3,
+      "snippet": "Advanced Python programming, web development, cybersecurity fundamentals, AI command engineering, entrepreneurship, and leadership.",
+      "tags": [
+        "Python",
+        "AI Engineering",
+        "Cybersecurity",
+        "Full-Stack"
+      ],
+      "title": "Leader Youth: Python, AI & Cybersecurity (Ages 14–18)"
+    },
+    {
+      "_createdAt": "2026-07-24T19:27:54Z",
+      "_id": "course-4",
+      "_rev": "kqd32DnwMDSkqBnWPv1a9q",
+      "_type": "course",
+      "_updatedAt": "2026-07-24T19:27:54Z",
+      "badgeCategory": "Indigenous Knowledge",
+      "enrolledCount": 200,
+      "externalLmsUrl": "https://shegagenerations.org/contact",
+      "instructor": "Shega Generation",
+      "level": "All Ages • 8 Weeks",
+      "rating": "5.0",
+      "sequenceOrder": 4,
+      "snippet": "Ancient Ge'ez fundamentals, Ethiopian history, engineering secrets behind historic landmarks, and traditional conflict resolution (Erq).",
+      "tags": [
+        "Ge'ez",
+        "Ethiopian History",
+        "Landmark Engineering",
+        "Erq"
+      ],
+      "title": "Indigenous Knowledge, Ge'ez & History Secrets"
+    },
+    {
+      "_createdAt": "2026-07-24T19:27:56Z",
+      "_id": "course-5",
+      "_rev": "eJ7skWqptDvdh6OpbQVaPZ",
+      "_type": "course",
+      "_updatedAt": "2026-07-24T19:27:56Z",
+      "badgeCategory": "Life Skills",
+      "enrolledCount": 190,
+      "externalLmsUrl": "https://shegagenerations.org/contact",
+      "instructor": "Shega Generation & TTI Hospitality",
+      "level": "All Ages • 8 Weeks",
+      "rating": "4.9",
+      "sequenceOrder": 5,
+      "snippet": "Practical instruction in የማዕድ ስነ-ስርዓት (Dining Etiquette), ፈገግታና አዎንታዊ ተግባቦት (Positive Communication) through interactive games, mineralogy, and public speaking.",
+      "tags": [
+        "የማዕድ ስነ-ስርዓት",
+        "Dining Etiquette",
+        "Communication",
+        "Life Skills"
+      ],
+      "title": "Etiquette, Hospitality & Life Skills (የማዕድ ስነ-ስርዓት)"
+    },
+    {
+      "_createdAt": "2026-07-24T19:27:57Z",
+      "_id": "course-6",
+      "_rev": "eJ7skWqptDvdh6OpbQVb6d",
+      "_type": "course",
+      "_updatedAt": "2026-07-24T19:27:57Z",
+      "badgeCategory": "Tech Orientation",
+      "enrolledCount": 45,
+      "externalLmsUrl": "https://shegagenerations.org/contact",
+      "instructor": "Shega Generation",
+      "level": "Senior Level • Year-Round",
+      "rating": "5.0",
+      "sequenceOrder": 6,
+      "snippet": "Senior students execute external software development contracts for businesses—gaining portfolio experience while earning money for their contributions.",
+      "tags": [
+        "Commercial Contracts",
+        "Client Builds",
+        "Earn While Learning",
+        "Software Lab"
+      ],
+      "title": "Real-World Student Development Lab"
+    },
+    {
+      "_createdAt": "2026-07-24T19:27:59Z",
+      "_id": "event-1",
+      "_rev": "C90lXvqhCRFE4tCBdmeRKo",
+      "_type": "event",
+      "_updatedAt": "2026-07-24T19:27:59Z",
+      "eventDate": "2026-08-07T19:26:59.247Z",
+      "isUpcoming": true,
+      "location": "Tourism Training Institute (TTI) & Guenet Hotel Mexico, Addis Ababa",
+      "registrationLink": "https://shegagenerations.org/contact",
+      "slug": {
+        "_type": "slug",
+        "current": "shega-summer-camp-2026"
+      },
+      "title": "Shega Summer Camp 2026 Batch Intake & Assessment",
+      "type": "Tech Training"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:01Z",
+      "_id": "event-2",
+      "_rev": "eJ7skWqptDvdh6OpbQVbjO",
+      "_type": "event",
+      "_updatedAt": "2026-07-24T19:28:01Z",
+      "eventDate": "2026-08-28T19:26:59.248Z",
+      "isUpcoming": true,
+      "location": "National AI Institute & INSA Headquarters, Addis Ababa",
+      "registrationLink": "https://shegagenerations.org/contact",
+      "slug": {
+        "_type": "slug",
+        "current": "insa-ai-institute-tour"
+      },
+      "title": "INSA & Ethiopian Artificial Intelligence Institute Excursion",
+      "type": "Tour"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:02Z",
+      "_id": "event-3",
+      "_rev": "C90lXvqhCRFE4tCBdmeSne",
+      "_type": "event",
+      "_updatedAt": "2026-07-24T19:28:02Z",
+      "eventDate": "2026-07-04T19:26:59.248Z",
+      "isUpcoming": false,
+      "location": "Guenet Hotel Mexico, Addis Ababa",
+      "registrationLink": "https://shegagenerations.org/events",
+      "slug": {
+        "_type": "slug",
+        "current": "sofors-got-talent-gebeta"
+      },
+      "title": "'Sofor's Got Talent' & Gebeta Cultural Championship",
+      "type": "Charity"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:04Z",
+      "_id": "event-4",
+      "_rev": "C90lXvqhCRFE4tCBdmeTRO",
+      "_type": "event",
+      "_updatedAt": "2026-07-24T19:28:04Z",
+      "eventDate": "2026-05-25T19:26:59.248Z",
+      "isUpcoming": false,
+      "location": "Tourism Training Institute (TTI), Addis Ababa",
+      "registrationLink": "https://shegagenerations.org/events",
+      "slug": {
+        "_type": "slug",
+        "current": "corporate-ai-workshop"
+      },
+      "title": "Managed Corporate AI & Digital Literacy Workshop",
+      "type": "Tech Training"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:22Z",
+      "_id": "gallery-1",
+      "_rev": "kqd32DnwMDSkqBnWPv1itR",
+      "_type": "gallery",
+      "_updatedAt": "2026-07-24T19:28:22Z",
+      "caption": "Field trip to INSA & Ethiopian Artificial Intelligence Institute",
+      "categoryTag": "Expeditions"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:24Z",
+      "_id": "gallery-2",
+      "_rev": "kqd32DnwMDSkqBnWPv1jCJ",
+      "_type": "gallery",
+      "_updatedAt": "2026-07-24T19:28:24Z",
+      "caption": "Creative Kids (Ages 7–10) Scratch block coding session",
+      "categoryTag": "Classroom"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:25Z",
+      "_id": "gallery-3",
+      "_rev": "kqd32DnwMDSkqBnWPv1jVB",
+      "_type": "gallery",
+      "_updatedAt": "2026-07-24T19:28:25Z",
+      "caption": "Astute Teens (Ages 11–13) constructing Ethiopian tourism web portals",
+      "categoryTag": "Classroom"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:27Z",
+      "_id": "gallery-4",
+      "_rev": "eJ7skWqptDvdh6OpbQVhw6",
+      "_type": "gallery",
+      "_updatedAt": "2026-07-24T19:28:27Z",
+      "caption": "Leader Youth (Ages 14–18) AI command engineering & Python lab",
+      "categoryTag": "Hackathons"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:29Z",
+      "_id": "gallery-5",
+      "_rev": "C90lXvqhCRFE4tCBdmefcU",
+      "_type": "gallery",
+      "_updatedAt": "2026-07-24T19:28:29Z",
+      "caption": "Hands-on የማዕድ ስነ-ስርዓት (Dining Etiquette) session at TTI",
+      "categoryTag": "Classroom"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:31Z",
+      "_id": "gallery-6",
+      "_rev": "C90lXvqhCRFE4tCBdmegAY",
+      "_type": "gallery",
+      "_updatedAt": "2026-07-24T19:28:31Z",
+      "caption": "'Sofor's Got Talent' & Gebeta Championship at Guenet Hotel Mexico",
+      "categoryTag": "Volunteer-Work"
+    },
+    {
+      "_createdAt": "2026-07-18T18:13:21Z",
+      "_id": "image-0ae2cc53f605c891b20f3509b62e9ad459ed31c3-1280x1280-jpg",
+      "_rev": "aq7AUICLogGimJulQH5ok7",
+      "_type": "sanity.imageAsset",
+      "_updatedAt": "2026-07-18T18:13:21Z",
+      "assetId": "0ae2cc53f605c891b20f3509b62e9ad459ed31c3",
+      "extension": "jpg",
+      "metadata": {
+        "_type": "sanity.imageMetadata",
+        "blurHash": "eKHo8y8_NG%2M_01jDfmx[Rj_LROa%xujZS1IUjvobRjbJWBofoIRj",
+        "dimensions": {
+          "_type": "sanity.imageDimensions",
+          "aspectRatio": 1,
+          "height": 1280,
+          "width": 1280
+        },
+        "hasAlpha": false,
+        "isOpaque": true,
+        "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUABQDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAUGAwT/xAAkEAABBAIBBAIDAAAAAAAAAAABAAIDBAURBhITITEycUFDUf/EABcBAAMBAAAAAAAAAAAAAAAAAAECAwT/xAAcEQACAgIDAAAAAAAAAAAAAAAAAQIREyESQVH/2gAMAwEAAhEDEQA/AMvLQkkzRpxvb0b13PwAtfw7OvwjL1OKuZLTGaa7Ww7f8UfjGNyr44I7FdoYzqJefkd+lbx3GeQG42YWIoY43ktAGyR9pFCC3Y9ctM8UuezMjy91t1cn9YGgEVDKcBv3bXdbdLdtAP2ipnXpPEujeVIYy4u6QD78KtFG1rfARFlRU7MALfIRERFP/9k=",
+        "palette": {
+          "_type": "sanity.imagePalette",
+          "darkMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#615b3d",
+            "foreground": "#fff",
+            "population": 3.47,
+            "title": "#fff"
+          },
+          "darkVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#0f4574",
+            "foreground": "#fff",
+            "population": 0,
+            "title": "#fff"
+          },
+          "dominant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#8d8668",
+            "foreground": "#fff",
+            "population": 3.61,
+            "title": "#fff"
+          },
+          "lightMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#ccc1b1",
+            "foreground": "#000",
+            "population": 1.47,
+            "title": "#fff"
+          },
+          "lightVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#b6c8e6",
+            "foreground": "#000",
+            "population": 3.08,
+            "title": "#fff"
+          },
+          "muted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#8d8668",
+            "foreground": "#fff",
+            "population": 3.61,
+            "title": "#fff"
+          },
+          "vibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#74b4ec",
+            "foreground": "#000",
+            "population": 0,
+            "title": "#fff"
+          }
+        },
+        "thumbHash": "IggKDwJzaJlwmIdtmGiFd4d7qEb7TMIA"
+      },
+      "mimeType": "image/jpeg",
+      "originalFilename": "photo_2026-06-06 00.30.19.jpeg",
+      "path": "images/g8zdm74i/production/0ae2cc53f605c891b20f3509b62e9ad459ed31c3-1280x1280.jpg",
+      "sha1hash": "0ae2cc53f605c891b20f3509b62e9ad459ed31c3",
+      "size": 479115,
+      "uploadId": "3f13c88686768794c5a9e123868c95c68be2a611",
+      "url": "https://cdn.sanity.io/images/g8zdm74i/production/0ae2cc53f605c891b20f3509b62e9ad459ed31c3-1280x1280.jpg"
+    },
+    {
+      "_createdAt": "2026-07-23T23:33:08Z",
+      "_id": "image-33ae360e692084aa77001ed0baa6c1fed08a1232-4615x2596-jpg",
+      "_rev": "kqd32DnwMDSkqBnWPshlRW",
+      "_type": "sanity.imageAsset",
+      "_updatedAt": "2026-07-23T23:33:08Z",
+      "assetId": "33ae360e692084aa77001ed0baa6c1fed08a1232",
+      "extension": "jpg",
+      "metadata": {
+        "_type": "sanity.imageMetadata",
+        "blurHash": "M9EoVu4nELE59uTw,oM{OYD+~oIAIUNGV[",
+        "dimensions": {
+          "_type": "sanity.imageDimensions",
+          "aspectRatio": 1.7777349768875192,
+          "height": 2596,
+          "width": 4615
+        },
+        "hasAlpha": false,
+        "isOpaque": true,
+        "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAALABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAUGA//EACMQAAIBBAEDBQAAAAAAAAAAAAECAwAEBRESBhNBITNRYdH/xAAWAQEBAQAAAAAAAAAAAAAAAAAEAQL/xAAbEQACAgMBAAAAAAAAAAAAAAABAgARAxMxIf/aAAwDAQACEQMRAD8AgumcnFi8fpbppXlUdxAPaNN8X1H3rnnBPPbiYeqjyw/ay6csbZrm4BhUhpDv7qnONs0SNVt0ChtgD5oYKrdDsWqBqDcizHXGXyUTzwvchOZUbI8UVS45FghdIhxXmToUVDkN+TOpZ//Z",
+        "palette": {
+          "_type": "sanity.imagePalette",
+          "darkMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#54453c",
+            "foreground": "#fff",
+            "population": 6.85,
+            "title": "#fff"
+          },
+          "darkVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#79051b",
+            "foreground": "#fff",
+            "population": 1.54,
+            "title": "#fff"
+          },
+          "dominant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#958068",
+            "foreground": "#fff",
+            "population": 7.92,
+            "title": "#fff"
+          },
+          "lightMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#cab39f",
+            "foreground": "#000",
+            "population": 7.26,
+            "title": "#fff"
+          },
+          "lightVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#f0cbb3",
+            "foreground": "#000",
+            "population": 0.57,
+            "title": "#000"
+          },
+          "muted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#958068",
+            "foreground": "#fff",
+            "population": 7.92,
+            "title": "#fff"
+          },
+          "vibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#cbad2f",
+            "foreground": "#000",
+            "population": 0.36,
+            "title": "#fff"
+          }
+        },
+        "thumbHash": "lxgGDIJQRZd5doVfZWWe938Faw=="
+      },
+      "mimeType": "image/jpeg",
+      "originalFilename": "IMG_5044.jpg",
+      "path": "images/g8zdm74i/production/33ae360e692084aa77001ed0baa6c1fed08a1232-4615x2596.jpg",
+      "sha1hash": "33ae360e692084aa77001ed0baa6c1fed08a1232",
+      "size": 4637365,
+      "uploadId": "9caf1fa0d644cf117f5d8c9a30e5f32305e11903",
+      "url": "https://cdn.sanity.io/images/g8zdm74i/production/33ae360e692084aa77001ed0baa6c1fed08a1232-4615x2596.jpg"
+    },
+    {
+      "_createdAt": "2026-07-23T23:28:13Z",
+      "_id": "image-35aa2af10b0d9c94b2ed53fc64610e1c258f3c71-4032x2268-jpg",
+      "_rev": "kqd32DnwMDSkqBnWPshKXK",
+      "_type": "sanity.imageAsset",
+      "_updatedAt": "2026-07-23T23:28:13Z",
+      "assetId": "35aa2af10b0d9c94b2ed53fc64610e1c258f3c71",
+      "extension": "jpg",
+      "metadata": {
+        "_type": "sanity.imageMetadata",
+        "blurHash": "M4DSg#@c_MDO%LXoHt?aQ.-;0c4.xvShOF",
+        "dimensions": {
+          "_type": "sanity.imageDimensions",
+          "aspectRatio": 1.7777777777777777,
+          "height": 2268,
+          "width": 4032
+        },
+        "hasAlpha": false,
+        "isOpaque": true,
+        "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAALABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAYE/8QAIRAAAgIBBAIDAAAAAAAAAAAAAQMCBAAFEiExEWEGMlH/xAAWAQEBAQAAAAAAAAAAAAAAAAADAQL/xAAbEQACAQUAAAAAAAAAAAAAAAAAAgESEyExUf/aAAwDAQACEQMRAD8Ako6ZTZCoFMemxH7yI4IPRGZTXKUWWU3MZYXPad3AIzXpzmOV4bMyHv1gRAs+AOJdj9zENkVqWjRT/H9X1Ctpal2a9eUx0dwPGMjbTZwcYxkQMZQLa8P/2Q==",
+        "palette": {
+          "_type": "sanity.imagePalette",
+          "darkMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#5e4332",
+            "foreground": "#fff",
+            "population": 0.16,
+            "title": "#fff"
+          },
+          "darkVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#932636",
+            "foreground": "#fff",
+            "population": 0.23,
+            "title": "#fff"
+          },
+          "dominant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#90867e",
+            "foreground": "#fff",
+            "population": 7.12,
+            "title": "#fff"
+          },
+          "lightMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#d0beb2",
+            "foreground": "#000",
+            "population": 6.4,
+            "title": "#fff"
+          },
+          "lightVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#f1e7c5",
+            "foreground": "#000",
+            "population": 0.48,
+            "title": "#000"
+          },
+          "muted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#90867e",
+            "foreground": "#fff",
+            "population": 7.12,
+            "title": "#fff"
+          },
+          "vibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#cd4662",
+            "foreground": "#fff",
+            "population": 0.27,
+            "title": "#fff"
+          }
+        },
+        "thumbHash": "GAgCDILlocA0bEwCiRl9cOZWCQ=="
+      },
+      "mimeType": "image/jpeg",
+      "originalFilename": "shega1.jpg",
+      "path": "images/g8zdm74i/production/35aa2af10b0d9c94b2ed53fc64610e1c258f3c71-4032x2268.jpg",
+      "sha1hash": "35aa2af10b0d9c94b2ed53fc64610e1c258f3c71",
+      "size": 2091854,
+      "uploadId": "6cae3153c87fa63bc8a8f774b9c3f00c3b6f0812",
+      "url": "https://cdn.sanity.io/images/g8zdm74i/production/35aa2af10b0d9c94b2ed53fc64610e1c258f3c71-4032x2268.jpg"
+    },
+    {
+      "_createdAt": "2026-07-24T18:56:00Z",
+      "_id": "image-3dddd93d0d5229b2caac78ca5760a4113faef7a5-1280x960-jpg",
+      "_rev": "eJ7skWqptDvdh6OpbQPoQ7",
+      "_type": "sanity.imageAsset",
+      "_updatedAt": "2026-07-24T18:56:00Z",
+      "assetId": "3dddd93d0d5229b2caac78ca5760a4113faef7a5",
+      "extension": "jpg",
+      "metadata": {
+        "_type": "sanity.imageMetadata",
+        "blurHash": "V8FiP,E.M]%%RO00tSM{%MM_MaMvxw-TMx9xD$s,bdjY",
+        "dimensions": {
+          "_type": "sanity.imageDimensions",
+          "aspectRatio": 1.3333333333333333,
+          "height": 960,
+          "width": 1280
+        },
+        "hasAlpha": false,
+        "isOpaque": true,
+        "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAPABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAYHAwT/xAAjEAACAQQBAwUAAAAAAAAAAAACAwEABAUREgYhMRMVQVFx/8QAFgEBAQEAAAAAAAAAAAAAAAAAAwIE/8QAGhEAAwADAQAAAAAAAAAAAAAAAAECAxFRYf/aAAwDAQACEQMRAD8AWi6OsnW6xBM8zHcyO44fta2OBfhsPlZUwmm5PpDI+YLdO3tOSXcua6+AFM7kCw8zXTZ2F2xBhN8LFa0PJcbGfumdwyVNJEqViswSxlaHnExHeB+aKs1tYNUgAG4ktR3nWtzRWF4/R9rh/9k=",
+        "palette": {
+          "_type": "sanity.imagePalette",
+          "darkMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#4d402e",
+            "foreground": "#fff",
+            "population": 6.55,
+            "title": "#fff"
+          },
+          "darkVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#273c5a",
+            "foreground": "#fff",
+            "population": 1.39,
+            "title": "#fff"
+          },
+          "dominant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#aac0d9",
+            "foreground": "#000",
+            "population": 7.81,
+            "title": "#fff"
+          },
+          "lightMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#aac0d9",
+            "foreground": "#000",
+            "population": 7.81,
+            "title": "#fff"
+          },
+          "lightVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#b7e4f9",
+            "foreground": "#000",
+            "population": 0.14,
+            "title": "#000"
+          },
+          "muted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#788193",
+            "foreground": "#fff",
+            "population": 3.72,
+            "title": "#fff"
+          },
+          "vibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#5484bc",
+            "foreground": "#fff",
+            "population": 0,
+            "title": "#fff"
+          }
+        },
+        "thumbHash": "3vcJDYJ3eaaAh3dmiGeGesBGD1m1"
+      },
+      "mimeType": "image/jpeg",
+      "originalFilename": "photo_2026-06-06 00.31.56.jpeg",
+      "path": "images/g8zdm74i/production/3dddd93d0d5229b2caac78ca5760a4113faef7a5-1280x960.jpg",
+      "sha1hash": "3dddd93d0d5229b2caac78ca5760a4113faef7a5",
+      "size": 317358,
+      "uploadId": "40f6a66c44b9809521d718159abb93aee8a769cd",
+      "url": "https://cdn.sanity.io/images/g8zdm74i/production/3dddd93d0d5229b2caac78ca5760a4113faef7a5-1280x960.jpg"
+    },
+    {
+      "_createdAt": "2026-07-23T23:31:19Z",
+      "_id": "image-8fe718514ee8c94d03a4bb452245be65a6a581df-3816x2147-jpg",
+      "_rev": "kqd32DnwMDSkqBnWPshaW3",
+      "_type": "sanity.imageAsset",
+      "_updatedAt": "2026-07-23T23:31:19Z",
+      "assetId": "8fe718514ee8c94d03a4bb452245be65a6a581df",
+      "extension": "jpg",
+      "metadata": {
+        "_type": "sanity.imageMetadata",
+        "blurHash": "M5E{ReI[THIptQ00.6%MkD%g_H%gsq-q%h",
+        "dimensions": {
+          "_type": "sanity.imageDimensions",
+          "aspectRatio": 1.7773637633907777,
+          "height": 2147,
+          "width": 3816
+        },
+        "hasAlpha": false,
+        "isOpaque": true,
+        "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAALABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAQHBv/EACMQAAIBAwMEAwAAAAAAAAAAAAECAwAEEQUTUQYSFDEhMmH/xAAXAQADAQAAAAAAAAAAAAAAAAAAAgME/8QAGREAAgMBAAAAAAAAAAAAAAAAAAECEkFh/9oADAMBAAIRAxEAPwDEx6a+o3Ul02/5EjZfuXHdS9z069zeySlJNwMECuhOP0VYooo9v6D3xTKHJOceuKxOSWFVBEdl6YYvh/JJX4ykJINFWTA4opb8CiP/2Q==",
+        "palette": {
+          "_type": "sanity.imagePalette",
+          "darkMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#514930",
+            "foreground": "#fff",
+            "population": 5.76,
+            "title": "#fff"
+          },
+          "darkVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#6c4615",
+            "foreground": "#fff",
+            "population": 0.1,
+            "title": "#fff"
+          },
+          "dominant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#958b71",
+            "foreground": "#fff",
+            "population": 9.18,
+            "title": "#fff"
+          },
+          "lightMuted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#c6bba1",
+            "foreground": "#000",
+            "population": 8.73,
+            "title": "#fff"
+          },
+          "lightVibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#e7d3b5",
+            "foreground": "#000",
+            "population": 0.47,
+            "title": "#000"
+          },
+          "muted": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#958b71",
+            "foreground": "#fff",
+            "population": 9.18,
+            "title": "#fff"
+          },
+          "vibrant": {
+            "_type": "sanity.imagePaletteSwatch",
+            "background": "#cd2141",
+            "foreground": "#fff",
+            "population": 0.13,
+            "title": "#fff"
+          }
+        },
+        "thumbHash": "mQgODIKHh4iAeIiJiHeGlW8FRw=="
+      },
+      "mimeType": "image/jpeg",
+      "originalFilename": "IMG_5026.JPG",
+      "path": "images/g8zdm74i/production/8fe718514ee8c94d03a4bb452245be65a6a581df-3816x2147.jpg",
+      "sha1hash": "8fe718514ee8c94d03a4bb452245be65a6a581df",
+      "size": 4685167,
+      "uploadId": "2fc624c4da382d066cf9fc0f828a1109ee43d54e",
+      "url": "https://cdn.sanity.io/images/g8zdm74i/production/8fe718514ee8c94d03a4bb452245be65a6a581df-3816x2147.jpg"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:06Z",
+      "_id": "project-1",
+      "_rev": "eJ7skWqptDvdh6OpbQVd65",
+      "_type": "project",
+      "_updatedAt": "2026-07-24T19:28:06Z",
+      "category": "Astute Teens (Ages 11–13)",
+      "cohortLocation": "Addis Ababa Cohort",
+      "creatorName": "Astute Teens Cohort (Led by Zemichael Tefera)",
+      "description": "Interactive web portal showcasing historic Ethiopian landmarks and cultural sites, built by 11-13 year old students during the Shega Summer Camp.",
+      "impactMetric": "25 Landmarks Featured • Built by Teens",
+      "projectUrl": "https://shegagenerations.org/contact",
+      "quote": "Building real tourism portals gave our 12-year-old students confidence and pride in Ethiopian heritage.",
+      "techStack": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "Tourism Data"
+      ],
+      "title": "Ethiopian Tourism Heritage Portal"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:08Z",
+      "_id": "project-2",
+      "_rev": "eJ7skWqptDvdh6OpbQVdT3",
+      "_type": "project",
+      "_updatedAt": "2026-07-24T19:28:08Z",
+      "category": "Leader Youth (Ages 14–18)",
+      "cohortLocation": "Addis Ababa Cohort",
+      "creatorName": "Leader Youth AI Team (Led by Thomas Hailu & Samuel Geremew)",
+      "description": "Custom AI command engineering and optical character recognition model tailored for ancient Ge'ez manuscripts and Ethiopian linguistic datasets.",
+      "impactMetric": "AI Command Model • Ge'ez Script OCR",
+      "projectUrl": "https://shegagenerations.org/contact",
+      "quote": "Our youth combined AI prompt engineering with Ethiopian indigenous script preservation.",
+      "techStack": [
+        "Python",
+        "PyTorch",
+        "Ge'ez OCR",
+        "AI Command"
+      ],
+      "title": "Ge'ez AI Command & OCR Engine"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:10Z",
+      "_id": "project-3",
+      "_rev": "kqd32DnwMDSkqBnWPv1eEi",
+      "_type": "project",
+      "_updatedAt": "2026-07-24T19:28:10Z",
+      "category": "Student Project Lab",
+      "cohortLocation": "Shega Development Lab",
+      "creatorName": "Senior Student Developers",
+      "description": "External software development contracts managed by Shega Generation for external businesses. Senior students execute commercial builds and earn money for their work.",
+      "impactMetric": "8 External Contracts • Student Paid Lab",
+      "projectUrl": "https://shegagenerations.org/contact",
+      "quote": "Our student developers earn early financial independence while delivering quality software to client businesses.",
+      "techStack": [
+        "Next.js",
+        "TypeScript",
+        "TailwindCSS",
+        "PostgreSQL"
+      ],
+      "title": "Commercial Client Build Contracts"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:11Z",
+      "_id": "project-4",
+      "_rev": "eJ7skWqptDvdh6OpbQVeHI",
+      "_type": "project",
+      "_updatedAt": "2026-07-24T19:28:11Z",
+      "category": "Creative Kids (Ages 7–10)",
+      "cohortLocation": "TTI Hub, Addis Ababa",
+      "creatorName": "Creative Kids Cohort (Led by Hizkeal & Gebriel Kassahun)",
+      "description": "Interactive block coding projects, Minecraft logic structures, and digital Gebeta matrix games created by 7 to 10 year old students.",
+      "impactMetric": "Traditional Gebeta • Block Coding Logic",
+      "projectUrl": "https://shegagenerations.org/contact",
+      "quote": "Scratch logic and Gebeta patterns taught our youngest students that programming is creative play.",
+      "techStack": [
+        "Scratch",
+        "Block Coding",
+        "Gebeta Math",
+        "CSS Grids"
+      ],
+      "title": "Gebeta & Scratch Logic Engine"
+    },
+    {
+      "_createdAt": "2026-07-24T19:27:47Z",
+      "_id": "siteSettings",
+      "_rev": "kqd32DnwMDSkqBnWPv1YfN",
+      "_type": "siteSettings",
+      "_updatedAt": "2026-07-24T19:27:47Z",
+      "communityTitle": "Strategic Institutional Partners",
+      "culturalAnchoringDescription": "From ancient Ge'ez fundamentals and Ethiopian history to traditional dining etiquette (የማዕድ ስነ-ስርዓት) and positive communication (ፈገግታና አዎንታዊ ተግባቦት), we nurture technically elite, culturally grounded leaders.",
+      "culturalAnchoringSubtitle": "Rooted in Ethiopian Heritage & Character",
+      "curriculumDescription": "Combining Scratch, HTML/CSS, Python, cybersecurity, and AI command engineering with Ge'ez, mineralogy, self-defense, Gebeta, and national field trips to INSA and the AI Institute.",
+      "curriculumTitle": "Core Flagship Curriculum & Age Cohorts",
+      "heroCaption": "Sharing knowledge in kindness across generations — fusing software engineering and AI with Ethiopian heritage to empower future leaders.",
+      "heroCtaPrimary": "Apply for Summer Camp",
+      "heroCtaSecondary": "Partner & Sponsor",
+      "heroTitle": "Shega Generation",
+      "journeysDescription": "Senior student developers execute commercial software contracts for external businesses—building production portfolio experience while earning money for their contributions.",
+      "journeysTitle": "Real-World Student Project Lab",
+      "pedagogicalDescription": "A structured two-month seasonal program hosting up to 200 youth per batch, segmented into Creative Kids (Ages 7–10), Astute Teens (Ages 11–13), and Leader Youth (Ages 14–18).",
+      "pedagogicalTitle": "The Shega Summer Camp & Key Pillars",
+      "statementBannerTitle1": "Software & AI Labs",
+      "statementBannerTitle2": "Indigenous Wisdom & Erq",
+      "statementBannerTitle3": "Youth Leadership",
+      "testimonialsDescription": "Founded by Samuel Geremew and led by Chief Coordinator Zemichael Tefera, alongside mentors Thomas Hailu, Hizkeal, Gebriel Kassahun, and our student developers.",
+      "testimonialsTitle": "Team Leadership & Student Voices"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:13Z",
+      "_id": "testimonial-1",
+      "_rev": "eJ7skWqptDvdh6OpbQVeVe",
+      "_type": "testimonial",
+      "_updatedAt": "2026-07-24T19:28:13Z",
+      "author": "Samuel Geremew",
+      "location": "Addis Ababa",
+      "quote": "Shega Generation was founded to shape a well-rounded Ethiopian youth demographic—combining cutting-edge software engineering and AI with deep cultural respect and character.",
+      "role": "Founder @ Shega Generation",
+      "track": "Leadership & Vision"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:15Z",
+      "_id": "testimonial-2",
+      "_rev": "eJ7skWqptDvdh6OpbQVf1E",
+      "_type": "testimonial",
+      "_updatedAt": "2026-07-24T19:28:15Z",
+      "author": "Zemichael Tefera",
+      "location": "Addis Ababa",
+      "quote": "Our two-month summer camp hosts up to 200 students per batch. From Scratch block coding for 7-year-olds to Python, web dev, and AI for teens, every child has a structured pathway.",
+      "role": "Chief Coordinator & Senior Instructor",
+      "track": "Summer Camp Operations & Web Architecture"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:16Z",
+      "_id": "testimonial-3",
+      "_rev": "kqd32DnwMDSkqBnWPv1gfg",
+      "_type": "testimonial",
+      "_updatedAt": "2026-07-24T19:28:16Z",
+      "author": "Thomas Hailu",
+      "location": "Addis Ababa",
+      "quote": "In Leader Youth (Ages 14–18), we dive into Python, web development, cybersecurity, and AI command engineering. Our students build real commercial software systems.",
+      "role": "Core Instructor & Mentor",
+      "track": "Leader Youth & Advanced Tech"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:18Z",
+      "_id": "testimonial-4",
+      "_rev": "C90lXvqhCRFE4tCBdmea50",
+      "_type": "testimonial",
+      "_updatedAt": "2026-07-24T19:28:18Z",
+      "author": "Gebriel Kassahun",
+      "location": "Addis Ababa",
+      "quote": "Teaching የማዕድ ስነ-ስርዓት (Dining Etiquette), positive communication (ፈገግታና አዎንታዊ ተግባቦት), and self-defense ensures our students grow into respectful, well-rounded leaders.",
+      "role": "Core Instructor & Life Skills Lead",
+      "track": "Hospitality & Life Skills"
+    },
+    {
+      "_createdAt": "2026-07-24T19:28:20Z",
+      "_id": "testimonial-5",
+      "_rev": "C90lXvqhCRFE4tCBdmebMU",
+      "_type": "testimonial",
+      "_updatedAt": "2026-07-24T19:28:20Z",
+      "author": "Hizkeal",
+      "location": "Addis Ababa",
+      "quote": "Anchoring our youth in ancient Ge'ez fundamentals, Ethiopian history, and traditional conflict resolution (Erq) gives them deep pride in who they are as they master technology.",
+      "role": "Core Instructor & Mentor",
+      "track": "Indigenous Knowledge & Ge'ez"
+    }
+  ]
+}

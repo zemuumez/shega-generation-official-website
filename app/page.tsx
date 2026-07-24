@@ -157,14 +157,14 @@ export default async function HomePage() {
           <div className="mx-auto mb-10 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Learn Tech</span>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold">&bull; LMS & Program Curriculum</span>
                 <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
                 <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
-                  Hands-on engineering tracks, AI laboratories, and indigenous math modules built by practitioners.
+                  Hands-on engineering tracks, AI laboratories, and indigenous math modules prepared by Shega Generation, Sophor Code Academy, and TTI Hospitality.
                 </p>
               </div>
-              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ink-soft font-bold bg-white px-3.5 py-1.5 rounded-full border border-zinc-200 shadow-sm">
-                <span>{courseList.length} Active Modules</span>
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-[#145A32] font-bold bg-[#145A32]/10 px-4 py-2 rounded-full border border-[#145A32]/30 shadow-sm animate-pulse">
+                <span>✦ LMS Coming Soon</span>
               </div>
             </div>
           </div>
