@@ -13,16 +13,20 @@ type PartnerItem = {
   websiteUrl?: string;
 };
 
-// Render high-resolution vector brand logo mark when no image asset is uploaded
+// Render bold, high-contrast vector brand logo mark filling the box when no image asset is uploaded
 function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boolean }) {
-  const textColor = isSelected ? "text-[#145A32]" : "text-zinc-800 group-hover:text-[#145A32]";
-  const accentColor = isSelected ? "text-[#145A32]" : "text-zinc-400 group-hover:text-[#145A32]";
+  const textColor = isSelected
+    ? "text-[#145A32]"
+    : "text-zinc-900 group-hover:text-[#145A32]";
+  const accentColor = isSelected
+    ? "text-[#145A32]"
+    : "text-zinc-600 group-hover:text-[#145A32]";
 
   if (name.includes("Sofor")) {
     return (
-      <div className="flex items-center gap-2 select-none">
-        <span className={`font-mono text-xl font-bold ${accentColor}`}>&lt;/&gt;</span>
-        <span className={`font-display text-xl font-black tracking-tight ${textColor}`}>
+      <div className="flex items-center justify-center gap-2.5 select-none w-full py-2">
+        <span className={`font-mono text-2xl sm:text-3xl font-black ${accentColor}`}>&lt;/&gt;</span>
+        <span className={`font-display text-2xl sm:text-3xl font-black tracking-tight ${textColor}`}>
           SOFOR<span className="text-[#145A32]">.</span>
         </span>
       </div>
@@ -31,12 +35,12 @@ function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boole
 
   if (name.includes("Tourism") || name.includes("TTI")) {
     return (
-      <div className="flex items-center gap-2 select-none">
-        <div className="w-6 h-6 rounded-md bg-[#145A32]/10 border border-[#145A32]/30 flex items-center justify-center font-serif text-xs font-bold text-[#145A32]">
+      <div className="flex items-center justify-center gap-2.5 select-none w-full py-2">
+        <div className="w-8 h-8 rounded-lg bg-[#145A32]/15 border-2 border-[#145A32]/40 flex items-center justify-center font-serif text-sm font-black text-[#145A32] shadow-xs">
           T
         </div>
-        <span className={`font-display text-lg font-extrabold tracking-wider ${textColor}`}>
-          TTI<span className="font-mono text-xs text-zinc-400 ml-1 font-semibold">INSTITUTE</span>
+        <span className={`font-display text-xl sm:text-2xl font-black tracking-wider ${textColor}`}>
+          TTI<span className="font-mono text-xs text-zinc-600 ml-1.5 font-bold tracking-widest">INSTITUTE</span>
         </span>
       </div>
     );
@@ -44,8 +48,8 @@ function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boole
 
   if (name.includes("Guenet")) {
     return (
-      <div className="flex items-center gap-1.5 select-none">
-        <span className={`font-serif text-2xl font-black tracking-widest uppercase ${textColor}`}>
+      <div className="flex items-center justify-center gap-2 select-none w-full py-2">
+        <span className={`font-serif text-2xl sm:text-3xl font-black tracking-[0.2em] uppercase ${textColor}`}>
           GUENET
         </span>
       </div>
@@ -54,12 +58,12 @@ function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boole
 
   if (name.includes("Samilos")) {
     return (
-      <div className="flex items-center gap-2 select-none">
-        <div className="w-5 h-5 rounded-full bg-ochre/20 border border-ochre/40 flex items-center justify-center text-[10px] font-bold text-ochre-dark">
+      <div className="flex items-center justify-center gap-2.5 select-none w-full py-2">
+        <div className="w-6 h-6 rounded-full bg-ochre/25 border-2 border-ochre/50 flex items-center justify-center text-xs font-black text-ochre-dark shadow-xs">
           S
         </div>
-        <span className={`font-display text-lg font-black tracking-tight ${textColor}`}>
-          SAMILOS<span className="text-ochre">MEDIA</span>
+        <span className={`font-display text-xl sm:text-2xl font-black tracking-tight ${textColor}`}>
+          SAMILOS<span className="text-ochre font-black">MEDIA</span>
         </span>
       </div>
     );
@@ -67,9 +71,9 @@ function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boole
 
   if (name.includes("Enqu")) {
     return (
-      <div className="flex items-center gap-1.5 select-none">
-        <span className={`font-mono text-lg font-bold text-emerald-600`}>✦</span>
-        <span className={`font-display text-xl font-black tracking-wider uppercase ${textColor}`}>
+      <div className="flex items-center justify-center gap-2 select-none w-full py-2">
+        <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600">✦</span>
+        <span className={`font-display text-2xl sm:text-3xl font-black tracking-wider uppercase ${textColor}`}>
           ENQU
         </span>
       </div>
@@ -77,8 +81,8 @@ function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boole
   }
 
   return (
-    <div className="flex items-center gap-1.5 select-none">
-      <span className={`font-display text-lg font-bold tracking-tight uppercase ${textColor}`}>
+    <div className="flex items-center justify-center gap-2 select-none w-full py-2">
+      <span className={`font-display text-xl sm:text-2xl font-black tracking-tight uppercase ${textColor}`}>
         {name}
       </span>
     </div>
@@ -101,7 +105,7 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
       <div className="mx-auto w-full max-w-[90vw]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
-          {/* LEFT COLUMN: TALKING ABOUT OUR PARTNERS (Matching user reference) */}
+          {/* LEFT COLUMN: TALKING ABOUT OUR PARTNERS */}
           <div className="lg:col-span-5 flex flex-col justify-between h-full">
             <div>
               {/* Kicker Tag */}
@@ -109,7 +113,7 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
                 Our clients / partners
               </span>
 
-              {/* Large Display Title matching reference image layout */}
+              {/* Large Display Title matching user reference layout */}
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-zinc-300 tracking-tight leading-[1.05] uppercase select-none">
                 Pleasure to <br /> work with
               </h2>
@@ -119,18 +123,18 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
               </p>
             </div>
 
-            {/* INTERACTIVE SPOTLIGHT FOCUS CAPTION BOX FOR HOVERED PARTNER */}
+            {/* INTERACTIVE SPOTLIGHT FOCUS CAPTION BOX */}
             <div className="mt-10 p-6 rounded-3xl border border-zinc-200 bg-[#F7F9F7] transition-all duration-500 shadow-sm relative overflow-hidden">
               <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-[#145A32] animate-pulse" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#145A32] animate-pulse" />
                 <span className="font-mono text-[10px] uppercase tracking-widest text-[#145A32] font-bold">
                   {activePartner.role || "Strategic Partner"}
                 </span>
               </div>
-              <h3 className="font-display text-xl font-bold text-ink uppercase tracking-wide">
+              <h3 className="font-display text-2xl font-bold text-ink uppercase tracking-wide">
                 {activePartner.name}
               </h3>
-              <p className="mt-2 text-sm text-ink-soft leading-relaxed font-sans">
+              <p className="mt-2 text-sm text-ink-soft leading-relaxed font-sans font-medium">
                 {activePartner.description ||
                   "Leading institutional collaborator driving tech, hospitality, and character education with Shega Generation."}
               </p>
@@ -147,12 +151,17 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
             </div>
           </div>
 
-          {/* RIGHT COLUMN: BRAND LOGO GRID MATCHING USER REFERENCE IMAGE */}
+          {/* RIGHT COLUMN: BIGGER & HIGH-CONTRAST BRAND LOGO GRID */}
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 items-center">
               {partnerList.map((partner) => {
-                const partnerLogoUrl = partner.logo ? safeImageUrl(partner.logo, 400, "") : "";
-                const hasUploadedLogo = Boolean(partnerLogoUrl && partnerLogoUrl.length > 0 && partnerLogoUrl !== "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800");
+                const partnerLogoUrl = partner.logo ? safeImageUrl(partner.logo, 600, "") : "";
+                const hasUploadedLogo = Boolean(
+                  partnerLogoUrl &&
+                    partnerLogoUrl.length > 0 &&
+                    partnerLogoUrl !==
+                      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800"
+                );
                 const isSelected = activePartner.name === partner.name;
 
                 return (
@@ -161,23 +170,23 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
                     onMouseEnter={() => setActivePartner(partner)}
                     onFocus={() => setActivePartner(partner)}
                     onClick={() => setActivePartner(partner)}
-                    className={`group relative rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center transition-all duration-300 min-h-[120px] sm:min-h-[140px] border outline-none ${
+                    className={`group relative rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center transition-all duration-300 min-h-[135px] sm:min-h-[155px] border outline-none ${
                       isSelected
-                        ? "border-[#145A32] bg-[#F7F9F7] shadow-md scale-[1.02]"
-                        : "border-zinc-200/60 bg-white hover:border-zinc-300 hover:bg-zinc-50/80 hover:-translate-y-1"
+                        ? "border-[#145A32] bg-[#F7F9F7] shadow-md scale-[1.03] z-30"
+                        : "border-zinc-200 bg-white hover:border-[#145A32]/50 hover:bg-zinc-50/90 hover:-translate-y-1 shadow-xs z-10 hover:z-40"
                     }`}
                   >
                     {hasUploadedLogo ? (
-                      <div className="relative w-full h-12 flex items-center justify-center">
+                      <div className="relative w-full h-16 sm:h-20 flex items-center justify-center p-1">
                         <Image
                           src={partnerLogoUrl}
                           alt={partner.name}
                           fill
-                          sizes="200px"
+                          sizes="280px"
                           className={`object-contain transition-all duration-300 ${
                             isSelected
-                              ? "filter-none scale-105"
-                              : "filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
+                              ? "contrast-[1.12] opacity-100 scale-105"
+                              : "contrast-[1.08] opacity-95 group-hover:opacity-100 group-hover:scale-108 group-hover:contrast-125"
                           }`}
                         />
                       </div>
@@ -185,11 +194,12 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
                       <PartnerLogoMark name={partner.name} isSelected={isSelected} />
                     )}
 
-                    {/* HOVER TOOLTIP CAPTION PREVIEW */}
-                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 translate-y-full opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-30 hidden sm:block">
-                      <div className="bg-ink text-white font-mono text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg">
+                    {/* HOVER TOOLTIP CAPTION PREVIEW - FLOATS ABOVE CARD WITH HIGH Z-INDEX */}
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 hidden sm:block">
+                      <div className="bg-[#145A32] text-white font-mono text-[9.5px] uppercase tracking-widest px-3.5 py-1.5 rounded-lg whitespace-nowrap shadow-xl border border-emerald-400/20">
                         {partner.name}
                       </div>
+                      <div className="w-2 h-2 bg-[#145A32] rotate-45 mx-auto -mt-1 shadow-xs" />
                     </div>
                   </button>
                 );
@@ -198,12 +208,12 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
               {/* SPECIAL CALLOUT CARD FOR NEW PARTNERS */}
               <a
                 href="/contact"
-                className="rounded-2xl border border-dashed border-[#145A32]/40 bg-white hover:bg-[#F7F9F7] p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md hover:border-[#145A32] hover:-translate-y-1 transition-all duration-300 min-h-[120px] sm:min-h-[140px] group"
+                className="rounded-2xl border border-dashed border-[#145A32]/40 bg-white hover:bg-[#F7F9F7] p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-xs hover:shadow-md hover:border-[#145A32] hover:-translate-y-1 transition-all duration-300 min-h-[135px] sm:min-h-[155px] group"
               >
                 <span className="font-mono text-xs font-bold text-[#145A32] group-hover:text-[#145A32] flex items-center gap-1.5">
                   + Partner with us &rarr;
                 </span>
-                <span className="text-[10px] font-mono text-zinc-400 mt-1">
+                <span className="text-[10px] font-mono text-zinc-500 font-medium mt-1">
                   Join our ecosystem
                 </span>
               </a>
