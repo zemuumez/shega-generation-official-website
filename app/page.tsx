@@ -180,13 +180,13 @@ export default async function HomePage() {
           <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Student Journeys</span>
-                <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Student Journeys & Ventures</h2>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold">&bull; Student Projects & Achievements</span>
+                <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Cohort Builds & Student Lab</h2>
                 <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
-                  Alumni startups, open-source AI models, and regional logistics tools that started as a Shega assignment. Hover or click to explore each journey.
+                  Hands-on software projects, Ethiopian heritage portals, AI models, and commercial client builds executed by our Creative Kids, Astute Teens, Leader Youth, and Student Development Lab.
                 </p>
               </div>
-              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ochre-dark font-bold bg-ochre/10 px-3.5 py-1.5 rounded-full border border-ochre/20">
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-[#145A32] font-bold bg-[#145A32]/10 px-3.5 py-1.5 rounded-full border border-[#145A32]/20">
                 <span>✦ Real Ethiopian Impact</span>
               </div>
             </div>
