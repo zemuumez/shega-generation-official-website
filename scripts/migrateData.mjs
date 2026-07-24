@@ -368,60 +368,45 @@ const SHEGA_GALLERY = [
 ];
 
 async function migrate() {
-  console.log("🚀 Starting Shega Generation dataset migration...");
+  console.log("🚀 Starting Shega Generation non-destructive dataset migration...");
   console.log(`Targeting project [${projectId}], dataset [${dataset}]...`);
+  console.log("🛡️ SAFE MODE: Existing user documents in Sanity will NEVER be wiped or deleted.");
 
-  // Step 1: Clean out existing documents
-  const targetTypes = ["siteSettings", "course", "event", "project", "testimonial", "gallery"];
-  for (const type of targetTypes) {
-    try {
-      const existing = await client.fetch(`*[_type == "${type}"]._id`);
-      if (existing.length > 0) {
-        console.log(`🧹 Removing ${existing.length} existing document(s) of type [${type}]...`);
-        for (const docId of existing) {
-          await client.delete(docId);
-        }
-      }
-    } catch (err) {
-      console.warn(`Warning deleting ${type}:`, err.message);
-    }
-  }
+  // Step 1: Create Site Settings if not present
+  console.log("📌 Syncing Shega Generation Site Settings...");
+  await client.createIfNotExists(SHEGA_SITE_SETTINGS);
 
-  // Step 2: Create Site Settings
-  console.log("📌 Creating Shega Generation Site Settings...");
-  await client.createOrReplace(SHEGA_SITE_SETTINGS);
-
-  // Step 3: Create Courses
-  console.log("📌 Creating Courses...");
+  // Step 2: Create Courses if not present
+  console.log("📌 Syncing Courses...");
   for (const course of SHEGA_COURSES) {
-    await client.createOrReplace(course);
+    await client.createIfNotExists(course);
   }
 
-  // Step 4: Create Events
-  console.log("📌 Creating Events...");
+  // Step 3: Create Events if not present
+  console.log("📌 Syncing Events...");
   for (const event of SHEGA_EVENTS) {
-    await client.createOrReplace(event);
+    await client.createIfNotExists(event);
   }
 
-  // Step 5: Create Projects
-  console.log("📌 Creating Student Projects & Ventures...");
+  // Step 4: Create Projects if not present
+  console.log("📌 Syncing Student Projects & Ventures...");
   for (const project of SHEGA_PROJECTS) {
-    await client.createOrReplace(project);
+    await client.createIfNotExists(project);
   }
 
-  // Step 6: Create Testimonials
-  console.log("📌 Creating Testimonials & Team Quotes...");
+  // Step 5: Create Testimonials if not present
+  console.log("📌 Syncing Testimonials & Team Quotes...");
   for (const testimonial of SHEGA_TESTIMONIALS) {
-    await client.createOrReplace(testimonial);
+    await client.createIfNotExists(testimonial);
   }
 
-  // Step 7: Create Gallery Items
-  console.log("📌 Creating Gallery Items...");
+  // Step 6: Create Gallery Items if not present
+  console.log("📌 Syncing Gallery Items...");
   for (const galleryItem of SHEGA_GALLERY) {
-    await client.createOrReplace(galleryItem);
+    await client.createIfNotExists(galleryItem);
   }
 
-  console.log("🎉 Shega Generation data migration completed successfully!");
+  console.log("🎉 Shega Generation safe dataset sync completed successfully!");
 }
 
 migrate().catch((err) => {

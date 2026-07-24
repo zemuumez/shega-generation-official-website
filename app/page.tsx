@@ -215,52 +215,58 @@ export default async function HomePage() {
         </div>
 
         <HorizontalRail ariaLabel="Alumni testimonials">
-          {testimonialList.map((test: any, index: number) => (
-            <div
-              key={index}
-              className="rail-item flex-shrink-0 w-84 sm:w-[420px] rounded-[36px] border border-zinc-200 bg-white p-8 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-ochre/30 hover:-translate-y-1"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-3xl text-ochre/40 font-serif leading-none select-none">&ldquo;</span>
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-zinc-100 border border-zinc-200 px-3 py-1 text-[9px] font-mono uppercase tracking-widest text-ink-soft font-bold">
-                      {test.region} Cohort
-                    </span>
-                    <span className="rounded-full bg-ochre/10 text-ochre-dark border border-ochre/20 px-2.5 py-1 text-[9px] font-mono font-bold">
-                      {test.year}
-                    </span>
+          {testimonialList.map((test: any, index: number) => {
+            const avatarSrc = safeImageUrl(test.avatarImage || test.avatar, 300, "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300");
+            const locationTag = test.location || test.region || "Addis Ababa";
+            const trackTag = test.track || test.year || "Summer Cohort";
+
+            return (
+              <div
+                key={test._id || index}
+                className="rail-item flex-shrink-0 w-84 sm:w-[420px] rounded-[36px] border border-zinc-200 bg-white p-8 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-ochre/30 hover:-translate-y-1"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-3xl text-ochre/40 font-serif leading-none select-none">&ldquo;</span>
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-full bg-zinc-100 border border-zinc-200 px-3 py-1 text-[9px] font-mono uppercase tracking-widest text-ink-soft font-bold">
+                        {locationTag}
+                      </span>
+                      <span className="rounded-full bg-ochre/10 text-ochre-dark border border-ochre/20 px-2.5 py-1 text-[9px] font-mono font-bold">
+                        {trackTag}
+                      </span>
+                    </div>
                   </div>
+
+                  <p className="text-sm sm:text-base text-ink-soft italic leading-relaxed text-zinc-700">
+                    &ldquo;{test.quote}&rdquo;
+                  </p>
                 </div>
 
-                <p className="text-sm sm:text-base text-ink-soft italic leading-relaxed text-zinc-700">
-                  &ldquo;{test.quote}&rdquo;
-                </p>
-              </div>
-
-              <div className="mt-8 pt-5 border-t border-zinc-100 flex items-center justify-between">
-                <div className="flex items-center gap-3.5">
-                  <div className="relative w-11 h-11 rounded-full overflow-hidden border border-zinc-200 shadow-sm flex-shrink-0">
-                    <Image
-                      src={test.avatar}
-                      alt={test.author}
-                      fill
-                      sizes="44px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-display text-base font-bold text-ink uppercase tracking-wide leading-tight">
-                      {test.author}
-                    </h4>
-                    <p className="text-[11px] font-mono text-ochre-dark font-medium mt-0.5">
-                      {test.role}
-                    </p>
+                <div className="mt-8 pt-5 border-t border-zinc-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3.5">
+                    <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#145A32]/20 shadow-sm flex-shrink-0 bg-zinc-100">
+                      <Image
+                        src={avatarSrc}
+                        alt={test.author || "Testimonial author"}
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="font-display text-base font-bold text-ink uppercase tracking-wide leading-tight">
+                        {test.author}
+                      </h4>
+                      <p className="text-[11px] font-mono text-ochre-dark font-medium mt-0.5">
+                        {test.role}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </HorizontalRail>
       </section>
 
