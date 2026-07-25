@@ -68,36 +68,36 @@ export default function TypewriterTitle({
   const line1Text = isLine1Active ? displayText : line1Full;
   const line2Text = !isLine1Active ? displayText.slice(line1Full.length + 1) : "";
 
-  // Extra wide tracking & horizontal scale for Amharic
+  // Balanced tracking for Amharic vs English without horizontal scaling distortion
   const trackingClass = isAmharic
-    ? "tracking-[0.18em] sm:tracking-[0.30em] scale-x-[1.14] origin-center"
-    : "tracking-[0.06em] sm:tracking-[0.10em] scale-x-[1.04] origin-center";
+    ? "tracking-[0.10em] sm:tracking-[0.16em]"
+    : "tracking-[0.04em] sm:tracking-[0.08em]";
 
   return (
     <h1
       className={`${className} ${trackingClass} transition-all duration-500`}
       style={style}
     >
-      {/* Line 1 */}
-      <span className="block">
+      {/* Line 1 - Strict single line */}
+      <span className="block whitespace-nowrap">
         {line1Text}
         {isLine1Active && (
           <span
             aria-hidden="true"
-            className="inline-block w-[5px] sm:w-[10px] h-[0.75em] bg-[#145A32] align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
+            className="inline-block w-[4px] sm:w-[8px] h-[0.75em] bg-[#145A32] align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
           />
         )}
       </span>
 
-      {/* Line 2 (Maximum 2 lines) */}
+      {/* Line 2 - Strict single line (Maximum 2 lines total) */}
       {line2Full ? (
-        <span className="block min-h-[1em]">
+        <span className="block min-h-[1em] whitespace-nowrap">
           {!isLine1Active ? (
             <span className="inline-block whitespace-nowrap">
               {line2Text}
               <span
                 aria-hidden="true"
-                className="inline-block w-[5px] sm:w-[10px] h-[0.75em] bg-[#145A32] align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
+                className="inline-block w-[4px] sm:w-[8px] h-[0.75em] bg-[#145A32] align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
               />
             </span>
           ) : (

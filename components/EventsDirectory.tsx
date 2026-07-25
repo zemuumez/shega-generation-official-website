@@ -55,8 +55,8 @@ export default function EventsDirectory({ events }: { events: any[] }) {
 
         <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">
           <TypewriterTitle
-            phrases={["Where the generation gathers.", "የትውልዱ መገናኛ ቦታ"]}
-            className="font-display font-black text-[clamp(2.8rem,8vw,5.5rem)] sm:text-[clamp(4rem,7.5vw,7.2rem)] leading-[0.95] uppercase text-ink text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
+            phrases={["Where the generation gathers.", "የትውልዱ መገናኛ"]}
+            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ink text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
           />
         </div>
 
@@ -65,7 +65,7 @@ export default function EventsDirectory({ events }: { events: any[] }) {
         </p>
       </div>
 
-      {/* FILTER CONTROLS BAR MATCHING TEMPLATE */}
+      {/* FILTER CONTROLS BAR */}
       <div className="mt-14 mb-14 border-y border-zinc-200 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Time Segmented Pills Switcher (Left) */}
         <div className="inline-flex items-center gap-1 bg-zinc-100 p-1 rounded-full border border-zinc-200/80">
@@ -108,9 +108,9 @@ export default function EventsDirectory({ events }: { events: any[] }) {
         </div>
       </div>
 
-      {/* ELONGATED OVAL ARCH IMAGE CARDS GRID MATCHING TEMPLATE */}
+      {/* COMPACT & ELEGANT OVAL ARCH CARDS GRID */}
       {filteredEvents.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 max-w-6xl mx-auto">
           {filteredEvents.map((event) => {
             const dateDisplay = formatDate(event.eventDate);
             const targetUrl =
@@ -123,44 +123,54 @@ export default function EventsDirectory({ events }: { events: any[] }) {
                 href={targetUrl}
                 target={targetUrl.startsWith("http") ? "_blank" : "_self"}
                 rel="noopener noreferrer"
-                className="group flex flex-col items-stretch transition-all"
+                className="group flex flex-col items-center text-left transition-all"
               >
-                {/* DISTINCTIVE ELONGATED OVAL / ARCH IMAGE CONTAINER */}
-                <div className="w-full aspect-[4/5] rounded-[200px] overflow-hidden relative shadow-md group-hover:shadow-2xl transition-all duration-500 bg-zinc-100 border border-zinc-200/60">
+                {/* PROPORTIONED ELONGATED OVAL ARCH IMAGE CONTAINER */}
+                <div className="w-full max-w-[320px] aspect-[3/4] rounded-[150px] overflow-hidden relative shadow-sm group-hover:shadow-xl transition-all duration-500 bg-zinc-100 border border-zinc-200/80">
                   <Image
                     src={safeImageUrl(
                       event.coverImage,
-                      800,
+                      600,
                       "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800"
                     )}
                     alt={event.title}
                     fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
+
+                  {/* Subtle Category Pill Overlay on Top Right */}
+                  {event.type && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 shadow-xs">
+                        {event.type}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                {/* EVENT DETAILS BELOW ARCH IMAGE */}
-                <div className="mt-5 px-2">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-ink group-hover:text-[#145A32] transition-colors leading-tight">
+                {/* ELEGANT CARD TEXT LAYOUT BELOW ARCH IMAGE */}
+                <div className="mt-5 w-full max-w-[320px] px-1">
+                  {/* Title + Arrow Row */}
+                  <div className="flex items-start justify-between gap-2.5">
+                    <h3 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-ink group-hover:text-[#145A32] transition-colors leading-snug line-clamp-2">
                       {event.title}
                     </h3>
-                    <span className="text-xl text-ink-soft group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">
+                    <span className="text-base text-zinc-400 group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300 flex-shrink-0 pt-0.5">
                       &nearr;
                     </span>
                   </div>
 
                   {/* Date & Location Line */}
-                  <div className="mt-2.5 flex flex-wrap items-center gap-3 text-xs font-mono text-zinc-500 font-medium">
-                    <span className="flex items-center gap-1.5">
+                  <div className="mt-2.5 flex items-center justify-between text-xs font-mono text-zinc-500 font-medium pt-2 border-t border-zinc-100">
+                    <span className="flex items-center gap-1.5 text-zinc-600">
                       <span>📅</span>
                       <span>{dateDisplay}</span>
                     </span>
                     {event.location && (
-                      <span className="flex items-center gap-1.5 truncate max-w-[240px]">
+                      <span className="flex items-center gap-1.5 truncate max-w-[150px] text-zinc-500" title={event.location}>
                         <span>📍</span>
-                        <span className="truncate">{event.location}</span>
+                        <span className="truncate">{event.location.split(",")[0]}</span>
                       </span>
                     )}
                   </div>
