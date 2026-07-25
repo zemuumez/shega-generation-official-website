@@ -108,7 +108,7 @@ export default function InteractiveProgramExplorer() {
           {/* Section Entrance Header */}
           <div>
             <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">
-              &bull; Dynamic Curriculum
+               Dynamic Curriculum
             </span>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink uppercase tracking-wide leading-tight">
               Interactive Track Explorer

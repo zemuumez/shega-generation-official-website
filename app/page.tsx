@@ -156,7 +156,7 @@ export default async function HomePage() {
       <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center bg-fixed bg-cover bg-center select-none" style={{ backgroundImage: `url('${culturalAnchoringBg}')` }}>
         <div className="absolute inset-0 bg-black/35 z-10" />
         <div className="relative z-20 max-w-4xl text-center px-6">
-          <span className="font-mono text-xs uppercase tracking-widest text-emerald-300 font-bold drop-shadow-sm">&bull; {culturalSubtitle}</span>
+          <span className="font-mono text-xs uppercase tracking-widest text-emerald-300 font-bold drop-shadow-sm"> {culturalSubtitle}</span>
           <h2 className="mt-4 font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider leading-tight drop-shadow-md">
             We weave modern technology with cultural roots
           </h2>
@@ -181,7 +181,7 @@ export default async function HomePage() {
       {upcomingEvent && (
         <section className="px-4 py-24 sm:px-6 relative border-b border-zinc-200">
           <h2 className="mx-auto mb-10 w-full max-w-[90vw] font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">
-            &bull; {eventsKicker}
+             {eventsKicker}
           </h2>
           <UpcomingEventCard event={upcomingEvent} />
         </section>
@@ -193,7 +193,7 @@ export default async function HomePage() {
           <div className="mx-auto mb-10 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold">&bull; LMS & Program Curriculum</span>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold"> LMS & Program Curriculum</span>
                 <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
                 <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
                   Hands-on engineering tracks, AI laboratories, and indigenous math modules prepared by Shega Generation, Sophor Code Academy, and TTI Hospitality.
@@ -218,7 +218,7 @@ export default async function HomePage() {
           <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold">&bull; Student Projects & Achievements</span>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold"> Student Projects & Achievements</span>
                 <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Cohort Builds & Student Lab</h2>
                 <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
                   Hands-on software projects, Ethiopian heritage portals, AI models, and commercial client builds executed by our Creative Kids, Astute Teens, Leader Youth, and Student Development Lab.
@@ -238,7 +238,7 @@ export default async function HomePage() {
         <div className="mx-auto mb-10 w-full max-w-[90vw] px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold">&bull; Alumni Testimonials</span>
+              <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold"> Alumni Testimonials</span>
               <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Voices of Shega</h2>
               <p className="mt-2 max-w-xl text-ink-soft text-sm sm:text-base leading-relaxed">
                 Graduate stories from regional cohorts across Ethiopia — building localized software and launching real ventures.
@@ -313,7 +313,7 @@ export default async function HomePage() {
       <section className="px-4 py-24 sm:px-6 relative bg-white border-t border-zinc-200">
         <div className="mx-auto w-full max-w-[90vw]">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold block mb-2">
-            &bull; {communityKicker}
+             {communityKicker}
           </span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black text-ink uppercase tracking-wide">
             {communityTitle}

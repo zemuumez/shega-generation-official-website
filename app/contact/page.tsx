@@ -13,7 +13,7 @@ export default function ContactPage() {
         {/* Header Section */}
         <div className="text-center mb-12">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre-dark font-bold">
-            &bull; Reach Out
+             Reach Out
           </span>
           <h1 className="mt-3 font-display text-4xl sm:text-6xl font-bold uppercase tracking-wider text-ink">
             Get in Touch
@@ -48,9 +48,9 @@ export default function ContactPage() {
               <h3 className="font-display text-xl font-bold uppercase tracking-wide text-ink">Social Hubs</h3>
               <div className="mt-2 flex items-center gap-4 text-xs font-mono font-bold text-ochre-dark">
                 <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="hover:underline">Telegram</a>
-                <span>&bull;</span>
+                <span></span>
                 <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="hover:underline">X (Twitter)</a>
-                <span>&bull;</span>
+                <span></span>
                 <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:underline">YouTube</a>
               </div>
             </div>

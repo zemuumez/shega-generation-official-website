@@ -28,7 +28,7 @@ export default async function EventsPage() {
 
       <div className="mt-20 relative z-20">
         <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">&bull; Live Schedule</span>
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1"> Live Schedule</span>
           <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Upcoming Gathering</h2>
         </div>
         {upcoming.length > 0 ? (
@@ -44,7 +44,7 @@ export default async function EventsPage() {
 
       <div className="mt-20 relative z-20">
         <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">&bull; History</span>
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1"> History</span>
           <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Past Gatherings</h2>
         </div>
         <HorizontalRail ariaLabel="Past events">

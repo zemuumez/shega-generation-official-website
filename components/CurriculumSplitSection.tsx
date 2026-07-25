@@ -42,7 +42,7 @@ export default function CurriculumSplitSection() {
         {/* Left Column - Slowly positions to the vertical middle of viewport while right side scrolls */}
         <div className="md:w-1/2 md:sticky md:top-[calc(50vh-200px)] h-fit pt-2 transition-all duration-300">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">
-            &bull; Pedagogical Architecture
+             Pedagogical Architecture
           </span>
           <h2 className="font-display text-4xl sm:text-5xl font-bold text-ink uppercase tracking-wide leading-tight">
             A curriculum designed for regional leaders
