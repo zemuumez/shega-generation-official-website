@@ -5,7 +5,7 @@ import Image from "next/image";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import { safeImageUrl } from "@/sanity/lib/client";
 
-const TIME_FILTERS = ["Past", "All", "Upcoming"];
+const TIME_FILTERS = ["All", "Upcoming", "Past"];
 const CATEGORY_FILTERS = ["All", "CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"];
 
 function formatDate(dateStr: string) {
@@ -24,6 +24,7 @@ function formatDate(dateStr: string) {
 export default function EventsDirectory({ events }: { events: any[] }) {
   const [timeFilter, setTimeFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
 
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
@@ -47,12 +48,8 @@ export default function EventsDirectory({ events }: { events: any[] }) {
 
   return (
     <div className="w-full max-w-[90vw] mx-auto px-4 sm:px-6 pt-16 pb-28">
-      {/* HEADER SECTION WITH TYPEWRITER ANIMATION & MAX 2 LINES */}
+      {/* HEADER SECTION WITH TYPEWRITER ANIMATION */}
       <div className="text-center max-w-5xl mx-auto flex flex-col items-center justify-center">
-        {/* <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold block mb-3">
-          &mdash; DIRECTORY
-        </span> */}
-
         <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">
           <TypewriterTitle
             phrases={["Where the generation gathers.", "የትውልዱ መገናኛ"]}
@@ -113,17 +110,12 @@ export default function EventsDirectory({ events }: { events: any[] }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 w-full">
           {filteredEvents.map((event) => {
             const dateDisplay = formatDate(event.eventDate);
-            const targetUrl =
-              event.registrationLink ||
-              (event.slug?.current ? `/events/${event.slug.current}` : "/contact");
 
             return (
-              <a
+              <button
                 key={event._id || event.title}
-                href={targetUrl}
-                target={targetUrl.startsWith("http") ? "_blank" : "_self"}
-                rel="noopener noreferrer"
-                className="group flex flex-col items-stretch text-left transition-all w-full"
+                onClick={() => setSelectedEvent(event)}
+                className="group flex flex-col items-stretch text-left transition-all w-full cursor-pointer focus:outline-none"
               >
                 {/* RESPONSIVE ELONGATED OVAL ARCH IMAGE CONTAINER */}
                 <div className="w-full aspect-[3/4] rounded-[140px] sm:rounded-[170px] overflow-hidden relative shadow-sm group-hover:shadow-xl transition-all duration-500 bg-zinc-100 border border-zinc-200/80">
@@ -157,7 +149,7 @@ export default function EventsDirectory({ events }: { events: any[] }) {
                       {event.title}
                     </h3>
                     <span className="text-base text-zinc-400 group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300 flex-shrink-0 pt-0.5">
-                      
+                      &nearr;
                     </span>
                   </div>
 
@@ -175,7 +167,7 @@ export default function EventsDirectory({ events }: { events: any[] }) {
                     )}
                   </div>
                 </div>
-              </a>
+              </button>
             );
           })}
         </div>
@@ -194,6 +186,92 @@ export default function EventsDirectory({ events }: { events: any[] }) {
           >
             Reset Filters
           </button>
+        </div>
+      )}
+
+      {/* EVENT DETAIL MODAL DIALOG */}
+      {selectedEvent && (
+        <div
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in"
+          onClick={() => setSelectedEvent(null)}
+        >
+          <div
+            className="relative bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-zinc-200 z-50 my-auto overflow-hidden text-left"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setSelectedEvent(null)}
+              className="absolute top-4 right-4 z-20 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all cursor-pointer"
+              aria-label="Close dialog"
+            >
+              ✕
+            </button>
+
+            {/* RECTANGULAR COVER IMAGE AS REQUESTED */}
+            <div className="relative w-full h-[240px] sm:h-[320px] rounded-2xl overflow-hidden mb-6 shadow-sm border border-zinc-200/80">
+              <Image
+                src={safeImageUrl(
+                  selectedEvent.coverImage,
+                  1200,
+                  "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1200"
+                )}
+                alt={selectedEvent.title}
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            {/* Category & Date / Location Header */}
+            <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider bg-[#145A32]/10 text-[#145A32] px-3 py-1 rounded-full border border-[#145A32]/20">
+                {selectedEvent.type || "Event"}
+              </span>
+
+              <div className="flex flex-wrap items-center gap-4 text-zinc-500 font-medium">
+                <span>📅 {formatDate(selectedEvent.eventDate)}</span>
+                {selectedEvent.location && <span>📍 {selectedEvent.location}</span>}
+              </div>
+            </div>
+
+            {/* Event Title */}
+            <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase text-ink mt-4 leading-tight">
+              {selectedEvent.title}
+            </h2>
+
+            {/* Description */}
+            <p className="mt-4 text-zinc-600 text-sm sm:text-base leading-relaxed font-sans">
+              {selectedEvent.description ||
+                "Join Shega Generation students, tech leaders, and community members for an interactive gathering filled with technology demonstrations, workshops, and youth innovation."}
+            </p>
+
+            {/* Action / Registration Link (If Available) */}
+            <div className="mt-8 pt-4 border-t border-zinc-100 flex items-center justify-between gap-4">
+              <a
+                href={
+                  selectedEvent.registrationLink ||
+                  (selectedEvent.slug?.current
+                    ? `/events/${selectedEvent.slug.current}`
+                    : "/contact")
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#145A32] text-white px-7 py-3.5 rounded-full font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#0E3B21] transition-all shadow-md"
+              >
+                <span>Register &amp; Learn More</span>
+                <span>&rarr;</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => setSelectedEvent(null)}
+                className="text-xs font-mono text-zinc-500 hover:text-zinc-900 underline"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
