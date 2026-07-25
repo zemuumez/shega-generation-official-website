@@ -236,7 +236,10 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-          <ExpandingProjectCapsules projects={projectList} />
+          <ExpandingProjectCapsules
+            projects={projectList}
+            customCategories={siteSettings?.journeysCategories}
+          />
         </div>
       </section>
 

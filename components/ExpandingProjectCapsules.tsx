@@ -4,36 +4,36 @@ import { useState } from "react";
 import Image from "next/image";
 import { safeImageUrl } from "@/sanity/lib/client";
 
-const CATEGORY_ORDER = [
-  "All",
-  "Radio Interview",
-  "Podcast Feature",
-  "Facebook Spotlight",
-  "Student Build & Venture",
-  "Creative Kids (Ages 7–10)",
-  "Astute Teens (Ages 11–13)",
-  "Leader Youth (Ages 14–18)",
-  "Student Project Lab",
-];
+const DEFAULT_CATEGORIES = ["Podcasts", "Radio Programs", "Programs", "Interviews"];
 
 const getCtaLabel = (category: string) => {
   if (category?.includes("Radio")) return "Listen Broadcast";
   if (category?.includes("Podcast")) return "Listen Podcast";
-  if (category?.includes("Facebook")) return "Watch Feature";
-  if (category?.includes("TV")) return "Watch Interview";
+  if (category?.includes("Interview")) return "Watch Feature";
   return "Explore Build";
 };
 
-export default function ExpandingProjectCapsules({ projects }: { projects: any[] }) {
+export default function ExpandingProjectCapsules({
+  projects,
+  customCategories,
+}: {
+  projects: any[];
+  customCategories?: string[];
+}) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [filter, setFilter] = useState("All");
 
-  // Filter list of categories to unique items present or standard order
-  const existingCategories = Array.from(new Set(projects.map((p) => p.category)));
+  // Dynamically build filter list from siteSettings customCategories or default categories + project categories
+  const baseCategories =
+    customCategories && customCategories.length > 0
+      ? customCategories
+      : DEFAULT_CATEGORIES;
+  const existingCategories = Array.from(new Set(projects.map((p) => p.category))).filter(Boolean);
+
   const categories = [
     "All",
-    ...CATEGORY_ORDER.filter((cat) => cat !== "All" && existingCategories.includes(cat)),
-    ...existingCategories.filter((cat) => !CATEGORY_ORDER.includes(cat)),
+    ...baseCategories,
+    ...existingCategories.filter((cat) => !baseCategories.includes(cat)),
   ];
 
   const filteredProjects =
@@ -41,8 +41,8 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
 
   return (
     <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 mt-8">
-      {/* Media Coverage & Program Track Filter Pills */}
-      <div className="flex flex-wrap gap-2.5 mb-8" role="tablist" aria-label="Media Coverage & Program Filters">
+      {/* Dynamic Filter Pills customizable in Sanity CMS */}
+      <div className="flex flex-wrap gap-2.5 mb-8" role="tablist" aria-label="Media & Program Filters">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -62,7 +62,7 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
       </div>
 
       {/* Accordion / Capsules Container */}
-      <div className="flex flex-col md:flex-row gap-4 justify-center items-stretch min-h-[520px] w-full">
+      <div className="flex flex-col md:flex-row gap-4 justify-center items-stretch min-h-[500px] w-full">
         {filteredProjects.map((project, idx) => {
           const isActive = activeIdx === idx;
           const ctaText = getCtaLabel(project.category);
@@ -88,7 +88,7 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
                   className="object-cover transition-transform duration-700"
                 />
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-black/40 transition-opacity duration-500 ${
+                  className={`absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-black/35 transition-opacity duration-500 ${
                     isActive ? "opacity-95" : "opacity-75 hover:opacity-60"
                   }`}
                 />
@@ -98,47 +98,24 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
               {isActive ? (
                 <div className="absolute inset-0 flex flex-col justify-between p-8 text-white z-20 overflow-y-auto">
                   <div>
-                    {/* Category, Media Outlet & Location Badges */}
-                    <div className="flex flex-wrap gap-2 items-center mb-4">
-                      <span className="px-3.5 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-[#145A32] text-white font-bold shadow-sm">
-                        {project.category}
-                      </span>
-                      {project.mediaOutlet && (
-                        <span className="px-3.5 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-amber-400/20 text-amber-300 border border-amber-400/30 font-bold">
-                          {project.mediaOutlet}
-                        </span>
-                      )}
-                      {project.cohortLocation && !project.mediaOutlet && (
-                        <span className="px-3.5 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-white/15 backdrop-blur-md text-zinc-200 border border-white/10 font-medium">
-                          {project.cohortLocation}
-                        </span>
-                      )}
-                    </div>
-
-                    <h3 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-wide leading-tight text-white">
+                    {/* Clean Title at Top (Removed unnecessary oval pills above & below title) */}
+                    <h3 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-wide leading-tight text-white pt-1">
                       {project.title}
                     </h3>
-                    
-                    {/* Impact Metric Banner */}
-                    {project.impactMetric && (
-                      <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 font-mono text-[10px] text-amber-300 font-bold">
-                        <span>✦</span>
-                        <span>{project.impactMetric}</span>
-                      </div>
-                    )}
 
+                    {/* Summary Description */}
                     <p className="mt-4 text-xs sm:text-sm text-zinc-200 leading-relaxed max-w-lg">
                       {project.description}
                     </p>
 
-                    {/* Student / Mentor Quote */}
+                    {/* Student / Presenter Quote */}
                     {project.quote && (
                       <p className="mt-4 text-xs text-zinc-300 italic border-l-2 border-[#145A32] pl-3 py-0.5">
                         &ldquo;{project.quote}&rdquo;
                       </p>
                     )}
 
-                    {/* Tech / Topic Stack Tags */}
+                    {/* Topic Tags */}
                     {project.techStack && (
                       <div className="mt-5 flex flex-wrap gap-1.5">
                         {project.techStack.map((tech: string) => (
@@ -153,6 +130,7 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
                     )}
                   </div>
 
+                  {/* Card Bottom Row: Featured Student + Action CTA */}
                   <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between gap-4">
                     <span className="text-xs font-mono text-zinc-300 truncate">
                       Featured: <strong className="text-white font-bold">{project.creatorName}</strong>

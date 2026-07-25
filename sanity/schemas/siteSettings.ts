@@ -160,6 +160,15 @@ export default defineType({
       initialValue: "Radio interviews, podcast features, Facebook broadcasts, and software projects executed by Shega Generation students.",
       group: "journeys",
     }),
+    defineField({
+      name: "journeysCategories",
+      title: "Media Filter Categories",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: ["Podcasts", "Radio Programs", "Programs", "Interviews"],
+      description: "Custom categories for media section filter pills (e.g. Podcasts, Radio Programs, Programs, Interviews)",
+      group: "journeys",
+    }),
 
     // Testimonials Section
     defineField({

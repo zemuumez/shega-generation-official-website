@@ -37,7 +37,7 @@ export default defineType({
     }),
     defineField({
       name: "impactMetric",
-      title: "Key Highlight / Metric (e.g. Fana FM Radio Feature • 50K Listeners)",
+      title: "Key Highlight / Metric (e.g. Fana FM Radio Feature • 100K Listeners)",
       type: "string",
     }),
     defineField({
@@ -46,15 +46,11 @@ export default defineType({
       type: "string",
       options: {
         list: [
-          "Radio Interview",
-          "Podcast Feature",
-          "Facebook Spotlight",
-          "TV Broadcast",
-          "Student Build & Venture",
-          "Creative Kids (Ages 7–10)",
-          "Astute Teens (Ages 11–13)",
-          "Leader Youth (Ages 14–18)",
-          "Student Project Lab",
+          "Podcasts",
+          "Radio Programs",
+          "Programs",
+          "Interviews",
+          "Student Builds",
         ],
         layout: "dropdown",
       },

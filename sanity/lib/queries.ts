@@ -19,6 +19,7 @@ export const SITE_SETTINGS_QUERY = `
   journeysKicker,
   journeysTitle,
   journeysDescription,
+  journeysCategories,
   testimonialsTitle,
   testimonialsDescription,
   eventsSectionKicker,
