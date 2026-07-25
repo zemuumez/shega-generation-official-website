@@ -48,12 +48,12 @@ export default async function HomePage() {
   const journeysDescription = siteSettings?.journeysDescription || "Radio interviews, podcast features, Facebook broadcasts, and software projects executed by Shega Generation students.";
   const communityKicker = siteSettings?.communityKicker || "Community";
   const communityTitle = siteSettings?.communityTitle || "Follow the day to day";
-  const facebookHandle = siteSettings?.socialFacebookHandle || "@shegagenerations";
-  const facebookUrl = siteSettings?.socialFacebookUrl || "https://facebook.com/shegagenerations";
+  const facebookHandle = siteSettings?.socialFacebookHandle || "Shega Community Group";
+  const facebookUrl = siteSettings?.socialFacebookUrl || "https://web.facebook.com/share/g/18foDKzcBS/";
   const telegramHandle = siteSettings?.socialTelegramHandle || "t.me/shegagenerations";
   const telegramUrl = siteSettings?.socialTelegramUrl || "https://t.me/shegagenerations";
-  const tiktokHandle = siteSettings?.socialTikTokHandle || "@shegagenerations";
-  const tiktokUrl = siteSettings?.socialTikTokUrl || "https://tiktok.com/@shegagenerations";
+  const tiktokHandle = siteSettings?.socialTikTokHandle || "@samuelgeremew_21";
+  const tiktokUrl = siteSettings?.socialTikTokUrl || "https://www.tiktok.com/@samuelgeremew_21";
 
   const socialChannels = [
     {
