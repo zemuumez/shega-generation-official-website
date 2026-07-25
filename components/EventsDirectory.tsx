@@ -21,6 +21,24 @@ function formatDate(dateStr: string) {
   }
 }
 
+function renderDescriptionText(desc: any): string {
+  if (!desc) return "";
+  if (typeof desc === "string") return desc;
+  if (Array.isArray(desc)) {
+    return desc
+      .map((block) => {
+        if (block && typeof block === "object" && block.children) {
+          return block.children.map((c: any) => c?.text || "").join("");
+        }
+        return "";
+      })
+      .filter(Boolean)
+      .join("\n\n");
+  }
+  if (typeof desc === "object" && desc.text) return desc.text;
+  return "";
+}
+
 export default function EventsDirectory({
   events,
   customPhrases,
@@ -175,7 +193,7 @@ export default function EventsDirectory({
                       {event.title}
                     </h3>
                     <span className="text-base text-zinc-400 group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300 flex-shrink-0 pt-0.5">
-                      &nearr;
+                      
                     </span>
                   </div>
 
@@ -251,7 +269,7 @@ export default function EventsDirectory({
 
             {/* Category & Date / Location Header */}
             <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider bg-[#145A32]/10 text-[#145A32] px-3 py-1 rounded-full border border-[#145A32]/20">
+              <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-[#145A32]/10 text-[#145A32] px-3 py-1 rounded-full border border-[#145A32]/20">
                 {selectedEvent.type || "Event"}
               </span>
 
@@ -267,8 +285,8 @@ export default function EventsDirectory({
             </h2>
 
             {/* Description */}
-            <p className="mt-4 text-zinc-600 text-sm sm:text-base leading-relaxed font-sans">
-              {selectedEvent.description ||
+            <p className="mt-4 text-zinc-600 text-sm sm:text-base leading-relaxed font-sans whitespace-pre-line">
+              {renderDescriptionText(selectedEvent.description) ||
                 "Join Shega Generation students, tech leaders, and community members for an interactive gathering filled with technology demonstrations, workshops, and youth innovation."}
             </p>
 
