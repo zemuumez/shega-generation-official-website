@@ -6,11 +6,23 @@ import { safeImageUrl } from "@/sanity/lib/client";
 
 const CATEGORY_ORDER = [
   "All",
+  "Radio Interview",
+  "Podcast Feature",
+  "Facebook Spotlight",
+  "Student Build & Venture",
   "Creative Kids (Ages 7–10)",
   "Astute Teens (Ages 11–13)",
   "Leader Youth (Ages 14–18)",
   "Student Project Lab",
 ];
+
+const getCtaLabel = (category: string) => {
+  if (category?.includes("Radio")) return "Listen Broadcast";
+  if (category?.includes("Podcast")) return "Listen Podcast";
+  if (category?.includes("Facebook")) return "Watch Feature";
+  if (category?.includes("TV")) return "Watch Interview";
+  return "Explore Build";
+};
 
 export default function ExpandingProjectCapsules({ projects }: { projects: any[] }) {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -24,14 +36,13 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
     ...existingCategories.filter((cat) => !CATEGORY_ORDER.includes(cat)),
   ];
 
-  const filteredProjects = filter === "All"
-    ? projects
-    : projects.filter((p) => p.category === filter);
+  const filteredProjects =
+    filter === "All" ? projects : projects.filter((p) => p.category === filter);
 
   return (
     <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 mt-8">
-      {/* Age Cohort & Program Track Filter Pills */}
-      <div className="flex flex-wrap gap-2.5 mb-8" role="tablist" aria-label="Shega Cohort Program Filters">
+      {/* Media Coverage & Program Track Filter Pills */}
+      <div className="flex flex-wrap gap-2.5 mb-8" role="tablist" aria-label="Media Coverage & Program Filters">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -54,6 +65,8 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
       <div className="flex flex-col md:flex-row gap-4 justify-center items-stretch min-h-[520px] w-full">
         {filteredProjects.map((project, idx) => {
           const isActive = activeIdx === idx;
+          const ctaText = getCtaLabel(project.category);
+
           return (
             <div
               key={project._id || project.title || idx}
@@ -75,7 +88,7 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
                   className="object-cover transition-transform duration-700"
                 />
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/75 to-black/40 transition-opacity duration-500 ${
+                  className={`absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-black/40 transition-opacity duration-500 ${
                     isActive ? "opacity-95" : "opacity-75 hover:opacity-60"
                   }`}
                 />
@@ -85,12 +98,17 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
               {isActive ? (
                 <div className="absolute inset-0 flex flex-col justify-between p-8 text-white z-20 overflow-y-auto">
                   <div>
-                    {/* Category & Location Badges */}
+                    {/* Category, Media Outlet & Location Badges */}
                     <div className="flex flex-wrap gap-2 items-center mb-4">
                       <span className="px-3.5 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-[#145A32] text-white font-bold shadow-sm">
                         {project.category}
                       </span>
-                      {project.cohortLocation && (
+                      {project.mediaOutlet && (
+                        <span className="px-3.5 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-amber-400/20 text-amber-300 border border-amber-400/30 font-bold">
+                          {project.mediaOutlet}
+                        </span>
+                      )}
+                      {project.cohortLocation && !project.mediaOutlet && (
                         <span className="px-3.5 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest bg-white/15 backdrop-blur-md text-zinc-200 border border-white/10 font-medium">
                           {project.cohortLocation}
                         </span>
@@ -120,7 +138,7 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
                       </p>
                     )}
 
-                    {/* Tech Stack Tags */}
+                    {/* Tech / Topic Stack Tags */}
                     {project.techStack && (
                       <div className="mt-5 flex flex-wrap gap-1.5">
                         {project.techStack.map((tech: string) => (
@@ -135,13 +153,17 @@ export default function ExpandingProjectCapsules({ projects }: { projects: any[]
                     )}
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-xs font-mono text-zinc-300">by <strong className="text-white font-bold">{project.creatorName}</strong></span>
+                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between gap-4">
+                    <span className="text-xs font-mono text-zinc-300 truncate">
+                      Featured: <strong className="text-white font-bold">{project.creatorName}</strong>
+                    </span>
                     <a
-                      href={project.projectUrl || "/contact"}
-                      className="rounded-full bg-[#145A32] text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-[#0E3B21] transition-all duration-300 shadow-md flex items-center gap-1.5"
+                      href={project.projectUrl || "https://facebook.com/shegagenerations"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full bg-[#145A32] text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-[#0E3B21] transition-all duration-300 shadow-md flex items-center gap-1.5 whitespace-nowrap flex-shrink-0"
                     >
-                      <span>Explore Cohort</span>
+                      <span>{ctaText}</span>
                       <span>&rarr;</span>
                     </a>
                   </div>

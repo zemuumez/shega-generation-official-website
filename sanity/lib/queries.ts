@@ -16,6 +16,7 @@ export const SITE_SETTINGS_QUERY = `
   pedagogicalDescription,
   curriculumTitle,
   curriculumDescription,
+  journeysKicker,
   journeysTitle,
   journeysDescription,
   testimonialsTitle,
@@ -53,7 +54,7 @@ export const FEATURED_COURSES_QUERY = `
 
 export const PROJECTS_QUERY = `
 *[_type == "project"] | order(_createdAt desc) {
-  _id, title, creatorName, cohortLocation, description, impactMetric, category, projectUrl, image, quote, techStack
+  _id, title, creatorName, cohortLocation, mediaOutlet, description, impactMetric, category, projectUrl, image, quote, techStack
 }`;
 
 export const TESTIMONIALS_QUERY = `

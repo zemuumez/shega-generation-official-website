@@ -137,17 +137,27 @@ export default defineType({
     }),
 
     // Journeys Section
+    // Journeys / Media Coverage Section
+    defineField({
+      name: "journeysKicker",
+      title: "Media Coverage & Projects Section Kicker Tag",
+      type: "string",
+      initialValue: "Student Media Coverage & Achievements",
+      group: "journeys",
+    }),
     defineField({
       name: "journeysTitle",
-      title: "Journeys Section Title",
+      title: "Media Coverage Section Title",
       type: "string",
+      initialValue: "Student Interviews & Media Features",
       group: "journeys",
     }),
     defineField({
       name: "journeysDescription",
-      title: "Journeys Section Description",
+      title: "Media Coverage Section Description",
       type: "text",
       rows: 3,
+      initialValue: "Radio interviews, podcast features, Facebook broadcasts, and software projects executed by Shega Generation students.",
       group: "journeys",
     }),
 

@@ -43,6 +43,9 @@ export default async function HomePage() {
   const culturalDescription = siteSettings?.culturalAnchoringDescription || "From ancient Ge'ez fundamentals and Ethiopian history to traditional dining etiquette (የማዕድ ስነ-ስርዓት) and positive communication (ፈገግታና አዎንታዊ ተግባቦት), we nurture technically elite, culturally grounded leaders.";
   const culturalAnchoringBg = siteSettings?.culturalAnchoringImage ? safeImageUrl(siteSettings.culturalAnchoringImage, 1600, "/images/hero-bg.png") : "/images/hero-bg.png";
   const eventsKicker = siteSettings?.eventsSectionKicker || "The nearest gathering";
+  const journeysKicker = siteSettings?.journeysKicker || "Student Media Coverage & Achievements";
+  const journeysTitle = siteSettings?.journeysTitle || "Student Interviews & Media Features";
+  const journeysDescription = siteSettings?.journeysDescription || "Radio interviews, podcast features, Facebook broadcasts, and software projects executed by Shega Generation students.";
   const communityKicker = siteSettings?.communityKicker || "Community";
   const communityTitle = siteSettings?.communityTitle || "Follow the day to day";
   const facebookHandle = siteSettings?.socialFacebookHandle || "@shegagenerations";
@@ -212,20 +215,24 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* VENTURE SHOWCASE / JOURNEYS (Expanding Capsules) */}
+      {/* STUDENT MEDIA COVERAGE & ACHIEVEMENTS (Expanding Capsules) */}
       <section className="py-24 relative border-b border-zinc-200">
         <div className="relative z-10">
           <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold"> Student Projects & Achievements</span>
-                <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Cohort Builds & Student Lab</h2>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold">
+                  {journeysKicker}
+                </span>
+                <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">
+                  {journeysTitle}
+                </h2>
                 <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
-                  Hands-on software projects, Ethiopian heritage portals, AI models, and commercial client builds executed by our Creative Kids, Astute Teens, Leader Youth, and Student Development Lab.
+                  {journeysDescription}
                 </p>
               </div>
               <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-[#145A32] font-bold bg-[#145A32]/10 px-3.5 py-1.5 rounded-full border border-[#145A32]/20">
-                <span>✦ Real Ethiopian Impact</span>
+                <span>✦ Radio, Podcasts & Facebook Features</span>
               </div>
             </div>
           </div>
