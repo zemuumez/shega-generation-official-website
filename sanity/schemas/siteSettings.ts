@@ -15,6 +15,7 @@ export default defineType({
     { name: "journeys", title: "🚀 Journeys Section" },
     { name: "testimonials", title: "💬 Testimonials Section" },
     { name: "events", title: "📅 Nearest Gathering Section" },
+    { name: "gallery", title: "🖼️ Gallery Page" },
     { name: "partners", title: "🤝 Partners Section" },
     { name: "community", title: "👥 Community Section" },
   ],
@@ -223,6 +224,32 @@ export default defineType({
       of: [{ type: "string" }],
       initialValue: ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"],
       group: "events",
+    }),
+
+    // Gallery Page Settings
+    defineField({
+      name: "galleryPageTitlePhrases",
+      title: "Gallery Page Typewriter Title Phrases",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: ["The weave, in pictures.", "በስዕሎች የተሸመነው"],
+      group: "gallery",
+    }),
+    defineField({
+      name: "galleryPageSubtitle",
+      title: "Gallery Page Subtitle Description",
+      type: "text",
+      rows: 2,
+      initialValue: "Expeditions, hackathons, classrooms, and volunteer work across Ethiopia.",
+      group: "gallery",
+    }),
+    defineField({
+      name: "galleryCategories",
+      title: "Gallery Filter Categories",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: ["Expeditions", "Hackathons", "Classroom", "Volunteer-Work"],
+      group: "gallery",
     }),
 
     // Partners Section

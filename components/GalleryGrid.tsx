@@ -1,72 +1,193 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import TypewriterTitle from "@/components/TypewriterTitle";
 import { safeImageUrl } from "@/sanity/lib/client";
 
-const TAGS = ["All", "Expeditions", "Hackathons", "Classroom", "Volunteer-Work"];
+const DEFAULT_TAGS = ["Expeditions", "Hackathons", "Classroom", "Volunteer-Work"];
 
-export default function GalleryGrid({ items }: { items: any[] }) {
+export default function GalleryGrid({
+  items,
+  customPhrases,
+  customSubtitle,
+  customCategories,
+}: {
+  items: any[];
+  customPhrases?: string[];
+  customSubtitle?: string;
+  customCategories?: string[];
+}) {
   const [active, setActive] = useState("All");
+  const [lightboxItem, setLightboxItem] = useState<any | null>(null);
+
+  const categoryOptions = [
+    "All",
+    ...(customCategories && customCategories.length > 0
+      ? customCategories
+      : DEFAULT_TAGS),
+  ];
+
+  const phrases =
+    customPhrases && customPhrases.length > 0
+      ? customPhrases
+      : ["The weave, in pictures.", "በስዕሎች የተሸመነው"];
+
+  const subtitle =
+    customSubtitle ||
+    "Expeditions, hackathons, classrooms, and volunteer work across Ethiopia.";
 
   const filtered = useMemo(
-    () => (active === "All" ? items : items.filter((i) => i.categoryTag === active)),
+    () =>
+      active === "All"
+        ? items
+        : items.filter(
+            (i) =>
+              (i.categoryTag || "").toLowerCase() === active.toLowerCase() ||
+              (i.categoryTag || "").toLowerCase().includes(active.toLowerCase())
+          ),
     [active, items]
   );
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-2.5" role="tablist" aria-label="Filter gallery by category">
-        {TAGS.map((tag) => (
-          <button
-            key={tag}
-            role="tab"
-            aria-selected={active === tag}
-            onClick={() => setActive(tag)}
-            className={`px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 ${
-              active === tag
-                ? "bg-ochre text-white shadow-sm border border-ochre/25 font-bold"
-                : "border border-zinc-200 bg-zinc-50 text-ink-soft hover:border-zinc-300 hover:text-ink font-semibold"
-            }`}
-          >
-            {tag}
-          </button>
-        ))}
+    <div className="w-full max-w-[90vw] mx-auto px-4 sm:px-6 pt-16 pb-28">
+      {/* HEADER SECTION WITH TYPEWRITER ANIMATION & MAX 2 LINES */}
+      <div className="text-center max-w-5xl mx-auto flex flex-col items-center justify-center">
+        <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">
+          <TypewriterTitle
+            phrases={phrases}
+            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ink text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
+          />
+        </div>
+
+        <p className="mt-6 text-zinc-600 text-sm sm:text-base md:text-lg max-w-xl mx-auto font-sans font-medium leading-relaxed">
+          {subtitle}
+        </p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <AnimatePresence mode="popLayout">
+      {/* CENTERED FILTER NAVIGATION BAR MATCHING TEMPLATE */}
+      <div className="mt-14 mb-14 border-y border-zinc-200 py-4 flex items-center justify-center">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {categoryOptions.map((tag) => {
+            const isActive = active === tag;
+            return (
+              <button
+                key={tag}
+                onClick={() => setActive(tag)}
+                className={`px-5 py-2 rounded-full font-mono text-xs font-medium transition-all duration-300 ${
+                  isActive
+                    ? "bg-black text-white font-bold shadow-xs"
+                    : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80 hover:text-zinc-900 border border-zinc-200/50"
+                }`}
+              >
+                {tag}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* CIRCULAR / SPHERICAL IMAGE CARDS GRID MATCHING TEMPLATE */}
+      {filtered.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 w-full">
           {filtered.map((item, i) => (
-            <motion.figure
-              key={item._id}
-              layout
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35, delay: i * 0.04, ease: "easeOut" }}
-              className="overflow-hidden rounded-[32px] border border-zinc-200 bg-white group hover:border-ochre/30 transition-all duration-300 hover:shadow-md"
+            <div
+              key={item._id || i}
+              onClick={() => setLightboxItem(item)}
+              className="group flex flex-col items-center text-left transition-all w-full cursor-pointer"
             >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/20 via-transparent to-transparent z-10 opacity-40" />
+              {/* CIRCULAR / SPHERE IMAGE CONTAINER */}
+              <div className="w-full max-w-[340px] aspect-square rounded-full overflow-hidden relative shadow-sm group-hover:shadow-2xl transition-all duration-500 bg-zinc-100 border border-zinc-200/80 mx-auto">
                 <Image
-                  src={safeImageUrl(item.image)}
-                  alt={item.caption}
+                  src={safeImageUrl(
+                    item.image,
+                    800,
+                    "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800"
+                  )}
+                  alt={item.caption || "Shega Generation Gallery"}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <figcaption className="p-6 relative z-20">
-                <span className="inline-block px-3.5 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-ink/5 text-ink border border-zinc-200 font-bold">
-                  {item.categoryTag}
-                </span>
-                <p className="mt-3 text-sm text-ink-soft leading-relaxed">{item.caption}</p>
-              </figcaption>
-            </motion.figure>
+
+              {/* CAPTION DETAILS BELOW SPHERE IMAGE */}
+              <div className="mt-4 w-full max-w-[340px] px-2 flex items-start justify-between gap-3">
+                <p className="text-sm font-sans font-medium text-ink-soft group-hover:text-black transition-colors leading-snug line-clamp-2">
+                  {item.caption}
+                </p>
+                {item.categoryTag && (
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#145A32] flex-shrink-0 pt-0.5">
+                    {item.categoryTag}
+                  </span>
+                )}
+              </div>
+            </div>
           ))}
-        </AnimatePresence>
-      </div>
+        </div>
+      ) : (
+        <div className="text-center py-20 bg-zinc-50 rounded-3xl border border-dashed border-zinc-300 max-w-2xl mx-auto">
+          <p className="font-display text-xl font-bold uppercase text-zinc-700">No photos found</p>
+          <p className="mt-2 text-sm text-zinc-500 font-mono">
+            No photos match the selected &ldquo;{active}&rdquo; category tag.
+          </p>
+          <button
+            onClick={() => setActive("All")}
+            className="mt-6 px-6 py-2.5 rounded-full bg-black text-white font-mono text-xs uppercase font-bold hover:bg-zinc-800 transition-all"
+          >
+            Reset Filters
+          </button>
+        </div>
+      )}
+
+      {/* FULL IMAGE LIGHTBOX MODAL */}
+      {lightboxItem && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in"
+          onClick={() => setLightboxItem(null)}
+        >
+          <div
+            className="relative max-w-4xl w-full p-4 sm:p-6 text-white text-left z-50 my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setLightboxItem(null)}
+              className="absolute top-2 right-2 sm:-top-4 sm:-right-4 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all border border-white/20"
+              aria-label="Close photo preview"
+            >
+              ✕
+            </button>
+
+            {/* High-Res Image Container */}
+            <div className="relative w-full h-[65vh] max-h-[640px] rounded-3xl overflow-hidden shadow-2xl border border-white/15 bg-black">
+              <Image
+                src={safeImageUrl(
+                  lightboxItem.image,
+                  1600,
+                  "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1600"
+                )}
+                alt={lightboxItem.caption}
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* Caption Footer */}
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <p className="text-base sm:text-lg font-sans font-medium text-zinc-100">
+                {lightboxItem.caption}
+              </p>
+              {lightboxItem.categoryTag && (
+                <span className="font-mono text-xs font-bold uppercase tracking-wider bg-[#145A32] text-white px-3.5 py-1.5 rounded-full border border-emerald-400/40 w-fit">
+                  {lightboxItem.categoryTag}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
