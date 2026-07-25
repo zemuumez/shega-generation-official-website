@@ -21,10 +21,36 @@ function formatDate(dateStr: string) {
   }
 }
 
-export default function EventsDirectory({ events }: { events: any[] }) {
+export default function EventsDirectory({
+  events,
+  customPhrases,
+  customSubtitle,
+  customCategories,
+}: {
+  events: any[];
+  customPhrases?: string[];
+  customSubtitle?: string;
+  customCategories?: string[];
+}) {
   const [timeFilter, setTimeFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
+
+  const categoryOptions = [
+    "All",
+    ...(customCategories && customCategories.length > 0
+      ? customCategories
+      : ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"]),
+  ];
+
+  const phrases =
+    customPhrases && customPhrases.length > 0
+      ? customPhrases
+      : ["Where the generation gathers.", "የትውልዱ መገናኛ"];
+
+  const subtitle =
+    customSubtitle ||
+    "Active, incoming and historic meetups from CTFs in Addis to Simien treks.";
 
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
@@ -52,13 +78,13 @@ export default function EventsDirectory({ events }: { events: any[] }) {
       <div className="text-center max-w-5xl mx-auto flex flex-col items-center justify-center">
         <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">
           <TypewriterTitle
-            phrases={["Where the generation gathers.", "የትውልዱ መገናኛ"]}
+            phrases={phrases}
             className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ink text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
           />
         </div>
 
         <p className="mt-6 text-zinc-600 text-sm sm:text-base md:text-lg max-w-xl mx-auto font-sans font-medium leading-relaxed">
-          Active, incoming and historic meetups from CTFs in Addis to Simien treks.
+          {subtitle}
         </p>
       </div>
 
@@ -86,7 +112,7 @@ export default function EventsDirectory({ events }: { events: any[] }) {
 
         {/* Category Pills (Right) */}
         <div className="flex flex-wrap items-center justify-center gap-2">
-          {CATEGORY_FILTERS.map((cat) => {
+          {categoryOptions.map((cat) => {
             const isActive = categoryFilter === cat;
             return (
               <button

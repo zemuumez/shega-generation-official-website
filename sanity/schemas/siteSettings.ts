@@ -185,7 +185,7 @@ export default defineType({
       group: "testimonials",
     }),
 
-    // Nearest Gathering / Events Section
+    // Nearest Gathering / Events Directory Section
     defineField({
       name: "eventsSectionKicker",
       title: "Nearest Gathering Section Kicker Tag",
@@ -198,6 +198,30 @@ export default defineType({
       title: "Nearest Gathering Section Title",
       type: "string",
       initialValue: "Upcoming Gathering & Workshops",
+      group: "events",
+    }),
+    defineField({
+      name: "eventsPageTitlePhrases",
+      title: "Events Page Typewriter Title Phrases",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: ["Where the generation gathers.", "የትውልዱ መገናኛ"],
+      group: "events",
+    }),
+    defineField({
+      name: "eventsPageSubtitle",
+      title: "Events Page Subtitle Description",
+      type: "text",
+      rows: 2,
+      initialValue: "Active, incoming and historic meetups from CTFs in Addis to Simien treks.",
+      group: "events",
+    }),
+    defineField({
+      name: "eventsCategories",
+      title: "Events Filter Categories",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"],
       group: "events",
     }),
 
