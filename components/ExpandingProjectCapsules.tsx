@@ -23,21 +23,23 @@ export default function ExpandingProjectCapsules({
   const [activeIdx, setActiveIdx] = useState(0);
   const [filter, setFilter] = useState("All");
 
-  // Dynamically build filter list from siteSettings customCategories or default categories + project categories
-  const baseCategories =
-    customCategories && customCategories.length > 0
-      ? customCategories
-      : DEFAULT_CATEGORIES;
-  const existingCategories = Array.from(new Set(projects.map((p) => p.category))).filter(Boolean);
-
+  // Strictly use configured categories (or defaults: Podcasts, Radio Programs, Programs, Interviews)
   const categories = [
     "All",
-    ...baseCategories,
-    ...existingCategories.filter((cat) => !baseCategories.includes(cat)),
+    ...(customCategories && customCategories.length > 0
+      ? customCategories
+      : DEFAULT_CATEGORIES),
   ];
 
   const filteredProjects =
-    filter === "All" ? projects : projects.filter((p) => p.category === filter);
+    filter === "All"
+      ? projects
+      : projects.filter((p) => {
+          if (!p.category) return false;
+          const cat = p.category.toLowerCase();
+          const target = filter.toLowerCase();
+          return cat === target || cat.includes(target) || target.includes(cat);
+        });
 
   return (
     <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 mt-8">
