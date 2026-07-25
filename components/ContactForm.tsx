@@ -8,7 +8,7 @@ export default function ContactForm() {
   const [subject, setSubject] = useState("General Inquiry");
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
-  
+
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -57,7 +57,7 @@ export default function ContactForm() {
           </div>
           <h3 className="font-display text-xl font-bold uppercase tracking-wide">Message Received!</h3>
           <p className="text-sm text-emerald-800 leading-relaxed">
-            Thank you for reaching out. Your inquiry has been stored directly in our CMS and our team will get back to you shortly.
+            Thank you for reaching out. Your inquiry has been sent to our team and we will get back to you shortly.
           </p>
           <button
             onClick={() => setStatus("idle")}
@@ -96,7 +96,7 @@ export default function ContactForm() {
               onChange={(e) => setFullName(e.target.value)}
               placeholder="e.g. Dawit Kassaye"
               disabled={status === "submitting"}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all disabled:opacity-50"
+              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-[#145A32] focus:outline-none focus:ring-1 focus:ring-[#145A32] transition-all disabled:opacity-50"
             />
           </div>
 
@@ -111,25 +111,26 @@ export default function ContactForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
               disabled={status === "submitting"}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all disabled:opacity-50"
+              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-[#145A32] focus:outline-none focus:ring-1 focus:ring-[#145A32] transition-all disabled:opacity-50"
             />
           </div>
 
           <div>
             <label className="block text-xs font-mono uppercase tracking-widest text-ink/70 font-bold mb-1.5">
-              Subject / Cohort Interest
+              Subject / Topic
             </label>
             <select
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               disabled={status === "submitting"}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink bg-white focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all disabled:opacity-50"
+              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink bg-white focus:border-[#145A32] focus:outline-none focus:ring-1 focus:ring-[#145A32] transition-all disabled:opacity-50"
             >
               <option value="General Inquiry">General Inquiry</option>
-              <option value="Tech Orientation Labs">Tech Orientation Labs</option>
-              <option value="Indigenous Knowledge & Tibeb">Indigenous Knowledge & Tibeb</option>
-              <option value="Mentorship & Mentee Application">Mentorship & Mentee Application</option>
-              <option value="Partnership & Regional Hubs">Partnership & Regional Hubs</option>
+              <option value="Partnership & Collaboration">Partnership &amp; Collaboration</option>
+              <option value="Sponsorship">Sponsorship</option>
+              <option value="Donation & Support">Donation &amp; Support</option>
+              <option value="Media, Press & Radio Features">Media, Press &amp; Radio Features</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
@@ -142,16 +143,16 @@ export default function ContactForm() {
               required
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="How can we assist or collaborate with you?"
+              placeholder="How can we assist, partner, or collaborate with you?"
               disabled={status === "submitting"}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all disabled:opacity-50"
+              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-[#145A32] focus:outline-none focus:ring-1 focus:ring-[#145A32] transition-all disabled:opacity-50"
             />
           </div>
 
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="w-full bg-zinc-950 hover:bg-black text-white font-mono text-xs uppercase tracking-widest py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-[#145A32] hover:bg-[#0E3B21] text-white font-mono text-xs uppercase tracking-widest py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {status === "submitting" ? (
               <>

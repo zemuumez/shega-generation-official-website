@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
+  { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact" },
@@ -32,7 +33,7 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation Links: Events, Gallery, Contact */}
+        {/* Desktop Navigation Links: Home, Events, Gallery, Contact */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600">
           {NAV_LINKS.map((item) => {
             const isActive = pathname === item.href;
