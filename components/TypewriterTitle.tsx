@@ -53,15 +53,22 @@ export default function TypewriterTitle({
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, currentPhrase, phraseList.length]);
 
-  // Find space index to split into 2 distinct lines
-  const spaceIndex = currentPhrase.indexOf(" ");
-  const firstWord = spaceIndex !== -1 ? currentPhrase.slice(0, spaceIndex) : currentPhrase;
+  // Split phrase into 2 balanced lines maximum
+  const words = currentPhrase.split(" ");
+  let line1Full = currentPhrase;
+  let line2Full = "";
 
-  const isLine1Active = displayText.length <= firstWord.length;
-  const line1Text = isLine1Active ? displayText : firstWord;
-  const line2Text = !isLine1Active ? displayText.slice(firstWord.length + 1) : "";
+  if (words.length > 1) {
+    const mid = Math.ceil(words.length / 2);
+    line1Full = words.slice(0, mid).join(" ");
+    line2Full = words.slice(mid).join(" ");
+  }
 
-  // Extra wide tracking & horizontal scale for Amharic ("ሸጋ ትውልድ")
+  const isLine1Active = displayText.length <= line1Full.length;
+  const line1Text = isLine1Active ? displayText : line1Full;
+  const line2Text = !isLine1Active ? displayText.slice(line1Full.length + 1) : "";
+
+  // Extra wide tracking & horizontal scale for Amharic
   const trackingClass = isAmharic
     ? "tracking-[0.18em] sm:tracking-[0.30em] scale-x-[1.14] origin-center"
     : "tracking-[0.06em] sm:tracking-[0.10em] scale-x-[1.04] origin-center";
@@ -71,31 +78,33 @@ export default function TypewriterTitle({
       className={`${className} ${trackingClass} transition-all duration-500`}
       style={style}
     >
-      {/* Line 1: "Shega" / "ሸጋ" */}
+      {/* Line 1 */}
       <span className="block">
         {line1Text}
         {isLine1Active && (
           <span
             aria-hidden="true"
-            className="inline-block w-[5px] sm:w-[10px] h-[0.75em] bg-ochre align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
+            className="inline-block w-[5px] sm:w-[10px] h-[0.75em] bg-[#145A32] align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
           />
         )}
       </span>
 
-      {/* Line 2: "Generation" / "ትውልድ" */}
-      <span className="block min-h-[1em]">
-        {!isLine1Active ? (
-          <span className="inline-block whitespace-nowrap">
-            {line2Text}
-            <span
-              aria-hidden="true"
-              className="inline-block w-[5px] sm:w-[10px] h-[0.75em] bg-ochre align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
-            />
-          </span>
-        ) : (
-          "\u00A0"
-        )}
-      </span>
+      {/* Line 2 (Maximum 2 lines) */}
+      {line2Full ? (
+        <span className="block min-h-[1em]">
+          {!isLine1Active ? (
+            <span className="inline-block whitespace-nowrap">
+              {line2Text}
+              <span
+                aria-hidden="true"
+                className="inline-block w-[5px] sm:w-[10px] h-[0.75em] bg-[#145A32] align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
+              />
+            </span>
+          ) : (
+            "\u00A0"
+          )}
+        </span>
+      ) : null}
     </h1>
   );
 }
