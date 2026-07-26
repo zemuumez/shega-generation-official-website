@@ -26,7 +26,7 @@ export default function ContactDirectory({
         <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">
           <TypewriterTitle
             phrases={phrases}
-            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ink text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
+            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-[#145A32] text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
           />
         </div>
 

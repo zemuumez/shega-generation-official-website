@@ -97,7 +97,7 @@ export default function EventsDirectory({
         <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">
           <TypewriterTitle
             phrases={phrases}
-            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ink text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
+            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-[#145A32] text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
           />
         </div>
 
@@ -118,7 +118,7 @@ export default function EventsDirectory({
                 onClick={() => setTimeFilter(tf)}
                 className={`px-5 py-2 rounded-full font-mono text-xs font-bold transition-all duration-300 ${
                   isActive
-                    ? "bg-black text-white shadow-xs"
+                    ? "bg-[#145A32] text-white shadow-xs"
                     : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/60"
                 }`}
               >
@@ -138,7 +138,7 @@ export default function EventsDirectory({
                 onClick={() => setCategoryFilter(cat)}
                 className={`px-4 py-2 rounded-full font-mono text-xs font-medium transition-all duration-300 ${
                   isActive
-                    ? "bg-black text-white font-bold shadow-xs"
+                    ? "bg-[#145A32] text-white font-bold shadow-xs"
                     : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80 hover:text-zinc-900 border border-zinc-200/50"
                 }`}
               >
@@ -178,7 +178,7 @@ export default function EventsDirectory({
                   {/* Category Overlay Badge */}
                   {event.type && (
                     <div className="absolute top-4 right-4 z-10">
-                      <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-black/75 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 shadow-xs">
+                      <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 shadow-xs">
                         {event.type}
                       </span>
                     </div>
@@ -192,7 +192,7 @@ export default function EventsDirectory({
                     <h3 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-ink group-hover:text-[#145A32] transition-colors leading-snug line-clamp-2">
                       {event.title}
                     </h3>
-                    <span className="text-base text-zinc-400 group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300 flex-shrink-0 pt-0.5">
+                    <span className="text-base text-zinc-400 group-hover:text-[#145A32] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 flex-shrink-0 pt-0.5">
                       &nearr;
                     </span>
                   </div>
@@ -224,7 +224,7 @@ export default function EventsDirectory({
               setTimeFilter("All");
               setCategoryFilter("All");
             }}
-            className="mt-6 px-6 py-2.5 rounded-full bg-black text-white font-mono text-xs uppercase font-bold hover:bg-zinc-800 transition-all"
+            className="mt-6 px-6 py-2.5 rounded-full bg-[#145A32] text-white font-mono text-xs uppercase font-bold hover:bg-[#0E3B21] transition-all"
           >
             Reset Filters
           </button>

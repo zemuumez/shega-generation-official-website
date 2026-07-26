@@ -56,7 +56,7 @@ export default function GalleryGrid({
         <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">
           <TypewriterTitle
             phrases={phrases}
-            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ink text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
+            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-[#145A32] text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
           />
         </div>
 
@@ -76,7 +76,7 @@ export default function GalleryGrid({
                 onClick={() => setActive(tag)}
                 className={`px-5 py-2 rounded-full font-mono text-xs font-medium transition-all duration-300 ${
                   isActive
-                    ? "bg-black text-white font-bold shadow-xs"
+                    ? "bg-[#145A32] text-white font-bold shadow-xs"
                     : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80 hover:text-zinc-900 border border-zinc-200/50"
                 }`}
               >
@@ -113,7 +113,7 @@ export default function GalleryGrid({
 
               {/* CAPTION DETAILS BELOW SPHERE IMAGE */}
               <div className="mt-4 w-full max-w-[340px] px-2 flex items-start justify-between gap-3">
-                <p className="text-sm font-sans font-medium text-ink-soft group-hover:text-black transition-colors leading-snug line-clamp-2">
+                <p className="text-sm font-sans font-medium text-ink-soft group-hover:text-[#145A32] transition-colors leading-snug line-clamp-2">
                   {item.caption}
                 </p>
                 {item.categoryTag && (
@@ -133,7 +133,7 @@ export default function GalleryGrid({
           </p>
           <button
             onClick={() => setActive("All")}
-            className="mt-6 px-6 py-2.5 rounded-full bg-black text-white font-mono text-xs uppercase font-bold hover:bg-zinc-800 transition-all"
+            className="mt-6 px-6 py-2.5 rounded-full bg-[#145A32] text-white font-mono text-xs uppercase font-bold hover:bg-[#0E3B21] transition-all"
           >
             Reset Filters
           </button>

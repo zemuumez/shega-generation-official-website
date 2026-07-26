@@ -75,7 +75,7 @@ export default function TypewriterTitle({
 
   return (
     <h1
-      className={`${className} ${trackingClass} transition-all duration-500`}
+      className={`text-[#145A32] ${className} ${trackingClass} transition-all duration-500`}
       style={style}
     >
       {/* Line 1 - Strict single line */}
