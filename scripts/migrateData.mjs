@@ -27,7 +27,7 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 const token = process.env.SANITY_WRITE_TOKEN;
 
 if (!token) {
-  console.error("❌ Error: SANITY_WRITE_TOKEN is required for migration script.");
+  console.error("Error: SANITY_WRITE_TOKEN is required for migration script.");
   process.exit(1);
 }
 
@@ -411,54 +411,54 @@ const SHEGA_PARTNERS = [
 ];
 
 async function migrate() {
-  console.log("🚀 Starting Shega Generation non-destructive dataset migration...");
+  console.log("Starting Shega Generation non-destructive dataset migration...");
   console.log(`Targeting project [${projectId}], dataset [${dataset}]...`);
-  console.log("🛡️ SAFE MODE: Existing user documents in Sanity will NEVER be wiped or deleted.");
+  console.log("SAFE MODE: Existing user documents in Sanity will NEVER be wiped or deleted.");
 
   // Step 1: Create Site Settings if not present
-  console.log("📌 Syncing Shega Generation Site Settings...");
+  console.log("Syncing Shega Generation Site Settings...");
   await client.createIfNotExists(SHEGA_SITE_SETTINGS);
 
   // Step 2: Create Courses if not present
-  console.log("📌 Syncing Courses...");
+  console.log("Syncing Courses...");
   for (const course of SHEGA_COURSES) {
     await client.createIfNotExists(course);
   }
 
   // Step 3: Create Events if not present
-  console.log("📌 Syncing Events...");
+  console.log("Syncing Events...");
   for (const event of SHEGA_EVENTS) {
     await client.createIfNotExists(event);
   }
 
   // Step 4: Create Projects if not present
-  console.log("📌 Syncing Student Projects & Ventures...");
+  console.log("Syncing Student Projects & Ventures...");
   for (const project of SHEGA_PROJECTS) {
     await client.createIfNotExists(project);
   }
 
   // Step 5: Create Testimonials if not present
-  console.log("📌 Syncing Testimonials & Team Quotes...");
+  console.log("Syncing Testimonials & Team Quotes...");
   for (const testimonial of SHEGA_TESTIMONIALS) {
     await client.createIfNotExists(testimonial);
   }
 
   // Step 6: Create Gallery Items if not present
-  console.log("📌 Syncing Gallery Items...");
+  console.log("Syncing Gallery Items...");
   for (const galleryItem of SHEGA_GALLERY) {
     await client.createIfNotExists(galleryItem);
   }
 
   // Step 7: Create Partners if not present
-  console.log("📌 Syncing Strategic Partners...");
+  console.log("Syncing Strategic Partners...");
   for (const partnerItem of SHEGA_PARTNERS) {
     await client.createIfNotExists(partnerItem);
   }
 
-  console.log("🎉 Shega Generation safe dataset sync completed successfully!");
+  console.log("Shega Generation safe dataset sync completed successfully!");
 }
 
 migrate().catch((err) => {
-  console.error("❌ Migration failed:", err);
+  console.error("Migration failed:", err);
   process.exit(1);
 });

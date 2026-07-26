@@ -193,19 +193,17 @@ export default function EventsDirectory({
                       {event.title}
                     </h3>
                     <span className="text-base text-zinc-400 group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300 flex-shrink-0 pt-0.5">
-                      
+                      &nearr;
                     </span>
                   </div>
 
                   {/* Date & Location Line */}
                   <div className="mt-2.5 flex items-center justify-between text-xs font-mono text-zinc-500 font-medium pt-2 border-t border-zinc-100">
                     <span className="flex items-center gap-1.5 text-zinc-600">
-                      <span>📅</span>
                       <span>{dateDisplay}</span>
                     </span>
                     {event.location && (
                       <span className="flex items-center gap-1.5 truncate max-w-[50%] text-zinc-500" title={event.location}>
-                        <span>📍</span>
                         <span className="truncate">{event.location.split(",")[0]}</span>
                       </span>
                     )}
@@ -274,8 +272,8 @@ export default function EventsDirectory({
               </span>
 
               <div className="flex flex-wrap items-center gap-4 text-zinc-500 font-medium">
-                <span>📅 {formatDate(selectedEvent.eventDate)}</span>
-                {selectedEvent.location && <span>📍 {selectedEvent.location}</span>}
+                <span>{formatDate(selectedEvent.eventDate)}</span>
+                {selectedEvent.location && <span>{selectedEvent.location}</span>}
               </div>
             </div>
 

@@ -30,9 +30,8 @@ export default function ContactPage() {
           <div className="md:col-span-2 space-y-7 border-b md:border-b-0 md:border-r border-zinc-200 pb-6 md:pb-0 md:pr-8">
             {/* Phone Number Contact */}
             <div>
-              <h3 className="font-display text-lg font-bold uppercase tracking-wide text-ink flex items-center gap-2">
-                <span>📞</span>
-                <span>Phone / Contact</span>
+              <h3 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
+                Phone / Contact
               </h3>
               <p className="mt-2 text-sm text-ink-soft leading-relaxed font-mono font-medium">
                 <a href="tel:+251911210000" className="hover:text-[#145A32] transition-colors block">
@@ -46,9 +45,8 @@ export default function ContactPage() {
 
             {/* Email Contact */}
             <div>
-              <h3 className="font-display text-lg font-bold uppercase tracking-wide text-ink flex items-center gap-2">
-                <span>✉️</span>
-                <span>Email</span>
+              <h3 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
+                Email
               </h3>
               <p className="mt-2 text-sm text-ink-soft font-mono font-medium">
                 <a href="mailto:contact@shegagenerations.org" className="hover:text-[#145A32] transition-colors">
@@ -59,9 +57,8 @@ export default function ContactPage() {
 
             {/* Headquarters Location */}
             <div>
-              <h3 className="font-display text-lg font-bold uppercase tracking-wide text-ink flex items-center gap-2">
-                <span>📍</span>
-                <span>Headquarters</span>
+              <h3 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
+                Headquarters
               </h3>
               <p className="mt-2 text-sm text-ink-soft leading-relaxed font-sans">
                 Tourism Training Institute (TTI) &amp; Guenet Hotel Mexico, Addis Ababa, Ethiopia
@@ -70,9 +67,8 @@ export default function ContactPage() {
 
             {/* Social Channels */}
             <div>
-              <h3 className="font-display text-lg font-bold uppercase tracking-wide text-ink flex items-center gap-2">
-                <span>🌐</span>
-                <span>Social Hubs</span>
+              <h3 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
+                Social Hubs
               </h3>
               <div className="mt-2.5 flex flex-wrap items-center gap-4 text-xs font-mono font-bold text-[#145A32]">
                 <a

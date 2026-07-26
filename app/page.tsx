@@ -203,7 +203,7 @@ export default async function HomePage() {
                 </p>
               </div>
               <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-[#145A32] font-bold bg-[#145A32]/10 px-4 py-2 rounded-full border border-[#145A32]/30 shadow-sm animate-pulse">
-                <span>✦ LMS Coming Soon</span>
+                <span>LMS Coming Soon</span>
               </div>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default async function HomePage() {
                 </p>
               </div>
               <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-[#145A32] font-bold bg-[#145A32]/10 px-3.5 py-1.5 rounded-full border border-[#145A32]/20">
-                <span>✦ Radio, Podcasts & Facebook Features</span>
+                <span>Radio, Podcasts &amp; Facebook Features</span>
               </div>
             </div>
           </div>
@@ -255,7 +255,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ochre-dark font-bold bg-ochre/10 px-3.5 py-1.5 rounded-full border border-ochre/20">
-              <span>✓ Verified Graduates</span>
+              <span>Verified Graduates</span>
             </div>
           </div>
         </div>

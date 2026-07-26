@@ -27,7 +27,7 @@ export function CourseCard({ course }: { course: any }) {
           </div>
           {/* Bottom LMS Coming Soon Badge */}
           <div className="absolute right-4 bottom-3 z-20 font-mono text-[10px] bg-black/80 backdrop-blur-sm text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/10 shadow-sm">
-            <span className="text-amber-400 font-bold">★ {course.rating || "5.0"}</span>
+            <span className="text-amber-400 font-bold">{course.rating || "5.0"}</span>
             <span className="text-emerald-300 font-bold"> LMS Coming Soon</span>
           </div>
         </div>

@@ -99,11 +99,11 @@ export default function GoogleTranslator() {
       
       <button
         onClick={toggleLanguage}
-        className="flex items-center justify-center border border-ink/20 hover:border-ink rounded-full w-10 h-10 text-lg text-ink bg-white/40 hover:bg-zinc-100/50 transition-all duration-300 shadow-sm"
+        className="flex items-center justify-center border border-zinc-300 hover:border-zinc-900 rounded-full px-3 py-1.5 text-xs font-mono font-bold text-ink bg-white hover:bg-zinc-100 transition-all duration-300 shadow-xs"
         title={lang === "en" ? "Translate to አማርኛ" : "Switch to English"}
         aria-label="Translate website"
       >
-        🌐
+        {lang === "en" ? "አማ" : "EN"}
       </button>
     </div>
   );

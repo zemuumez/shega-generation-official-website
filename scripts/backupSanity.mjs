@@ -27,11 +27,11 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 const token = process.env.SANITY_WRITE_TOKEN;
 
 if (!projectId) {
-  console.error("❌ Error: NEXT_PUBLIC_SANITY_PROJECT_ID environment variable is missing.");
+  console.error("Error: NEXT_PUBLIC_SANITY_PROJECT_ID environment variable is missing.");
   process.exit(1);
 }
 
-console.log(`📦 Starting backup for Sanity project [${projectId}], dataset [${dataset}]...`);
+console.log(`Starting backup for Sanity project [${projectId}], dataset [${dataset}]...`);
 
 const client = createClient({
   projectId,
@@ -45,7 +45,7 @@ async function runBackup() {
   try {
     // Fetch all published documents in dataset
     const documents = await client.fetch(`*[]`);
-    console.log(`✅ Successfully fetched ${documents.length} document(s) from Sanity.`);
+    console.log(`Successfully fetched ${documents.length} document(s) from Sanity.`);
 
     // Group document counts by type
     const counts = {};
@@ -54,7 +54,7 @@ async function runBackup() {
       counts[type] = (counts[type] || 0) + 1;
     }
 
-    console.log("\n📊 Document Breakdown:");
+    console.log("\nDocument Breakdown:");
     console.table(counts);
 
     // Prepare backups directory
@@ -84,11 +84,11 @@ async function runBackup() {
     const stats = fs.statSync(backupFilePath);
     const sizeInKB = (stats.size / 1024).toFixed(2);
 
-    console.log(`\n🎉 Backup snapshot created successfully!`);
-    console.log(`📁 File location: ${backupFilePath}`);
-    console.log(`💾 Size: ${sizeInKB} KB`);
+    console.log(`\nBackup snapshot created successfully!`);
+    console.log(`File location: ${backupFilePath}`);
+    console.log(`Size: ${sizeInKB} KB`);
   } catch (err) {
-    console.error("❌ Backup failed:", err);
+    console.error("Backup failed:", err);
     process.exit(1);
   }
 }
