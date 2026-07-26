@@ -16,6 +16,7 @@ export default defineType({
     { name: "testimonials", title: "Testimonials Section" },
     { name: "events", title: "Nearest Gathering Section" },
     { name: "gallery", title: "Gallery Page" },
+    { name: "contact", title: "Contact Page" },
     { name: "partners", title: "Partners Section" },
     { name: "community", title: "Community Section" },
   ],
@@ -250,6 +251,24 @@ export default defineType({
       of: [{ type: "string" }],
       initialValue: ["Expeditions", "Hackathons", "Classroom", "Volunteer-Work"],
       group: "gallery",
+    }),
+
+    // Contact Page Settings
+    defineField({
+      name: "contactPageTitlePhrases",
+      title: "Contact Page Typewriter Title Phrases",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: ["Get in touch, with Shega.", "ከሸጋ ጋር, ይገናኙ"],
+      group: "contact",
+    }),
+    defineField({
+      name: "contactPageSubtitle",
+      title: "Contact Page Subtitle Description",
+      type: "text",
+      rows: 2,
+      initialValue: "Reach out to our leadership team for general inquiries, partnerships, sponsorships, media features, or donations.",
+      group: "contact",
     }),
 
     // Partners Section

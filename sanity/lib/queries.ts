@@ -30,6 +30,8 @@ export const SITE_SETTINGS_QUERY = `
   galleryPageTitlePhrases,
   galleryPageSubtitle,
   galleryCategories,
+  contactPageTitlePhrases,
+  contactPageSubtitle,
   partnersKicker,
   partnersHeadline,
   partnersDescription,
