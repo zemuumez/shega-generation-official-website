@@ -13,7 +13,7 @@ export default function ContactDirectory({
   const phrases =
     customPhrases && customPhrases.length > 0
       ? customPhrases
-      : ["Get in touch, with Shega Generation.", "ከሸጋ ትውልድ ጋር ይገናኙ"];
+      : ["Get in touch with us!", "ከሸጋ ትውልድ ጋር ይገናኙ!"];
 
   const subtitle =
     customSubtitle ||
