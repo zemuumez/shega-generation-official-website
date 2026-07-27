@@ -1,6 +1,7 @@
 import ContactDirectory from "@/components/ContactDirectory";
 import { safeFetch } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import SideFramingPatterns from "@/components/SideFramingPatterns";
 
 export const metadata = {
   title: "Contact Us | Shega Generations",
@@ -14,11 +15,14 @@ export default async function ContactPage() {
   const siteSettings = await safeFetch<any>(SITE_SETTINGS_QUERY, {}, null);
 
   return (
-    <main className="min-h-screen bg-white relative overflow-hidden">
-      <ContactDirectory
-        customPhrases={siteSettings?.contactPageTitlePhrases}
-        customSubtitle={siteSettings?.contactPageSubtitle}
-      />
+    <main className="min-h-screen bg-[#F4F3EE] relative overflow-hidden">
+      <SideFramingPatterns />
+      <div className="relative z-10">
+        <ContactDirectory
+          customPhrases={siteSettings?.contactPageTitlePhrases}
+          customSubtitle={siteSettings?.contactPageSubtitle}
+        />
+      </div>
     </main>
   );
 }
