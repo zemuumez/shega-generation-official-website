@@ -7,9 +7,12 @@ import type { Image } from "sanity";
 // must never be able to mutate content. Mutations only happen through
 // /api/onboarding/apply, using a separate write token that is never
 // exposed to this client.
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "g8zdm74i";
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
+
 export const sanityClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
+  projectId,
+  dataset,
   apiVersion: "2024-06-01",
   useCdn: false,
   perspective: "published",
