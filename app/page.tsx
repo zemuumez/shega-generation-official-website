@@ -8,6 +8,7 @@ import LeafPattern from "@/components/LeafPattern";
 import CurriculumSplitSection from "@/components/CurriculumSplitSection";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import PartnersSection from "@/components/PartnersSection";
+import ThemeProvider from "@/components/ThemeProvider";
 import Image from "next/image";
 import { safeFetch, safeImageUrl } from "@/sanity/lib/client";
 import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY, SITE_SETTINGS_QUERY, TESTIMONIALS_QUERY, PARTNERS_QUERY } from "@/sanity/lib/queries";
@@ -82,6 +83,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <ThemeProvider siteSettings={siteSettings} />
+
       {/* HERO PORTAL */}
       <section className="relative min-h-[calc(100dvh-76px)] flex flex-col justify-center items-center overflow-hidden px-6 py-12 md:py-20 bg-[#F4F3EE]">
         {/* Left Side Framing border ribbon */}

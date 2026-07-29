@@ -4,6 +4,14 @@
 
 :root {
   color-scheme: light;
+  --color-primary: #EA580C;
+  --color-primary-light: #F97316;
+  --color-primary-dark: #C2410C;
+  --color-secondary: #0A192F;
+  --color-secondary-light: #1E293B;
+  --color-bg: #F4F3EE;
+  --color-text: #1C1E1B;
+  --color-text-soft: #5A5E5B;
 }
 
 * {
@@ -11,13 +19,13 @@
 }
 
 body {
-  background-color: #F4F3EE;
-  color: #1C1E1B;
+  background-color: var(--color-bg, #F4F3EE);
+  color: var(--color-text, #1C1E1B);
 }
 
 /* Visible keyboard focus everywhere, never suppressed */
 :focus-visible {
-  outline: 2px solid #EA580C;
+  outline: 2px solid var(--color-primary, #EA580C);
   outline-offset: 3px;
 }
 

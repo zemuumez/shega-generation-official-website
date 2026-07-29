@@ -10,29 +10,34 @@ const config: Config = {
     extend: {
       colors: {
         ivory: {
-          DEFAULT: "#F4F3EE", // Editorial sand background
-          dim: "#FFFFFF",    // Solid card white
-          light: "#E4E3DD",  // Sand border
+          DEFAULT: "var(--color-bg, #F4F3EE)",
+          dim: "#FFFFFF",
+          light: "#E4E3DD",
         },
         ink: {
-          DEFAULT: "#1C1E1B", // Dark pine charcoal text
-          soft: "#5A5E5B",    // Muted slate text
+          DEFAULT: "var(--color-text, #1C1E1B)",
+          soft: "var(--color-text-soft, #5A5E5B)",
         },
         ochre: {
-          DEFAULT: "#EA580C", // Warm vibrant orange accent
-          light: "#F97316",   // Supporting bright orange
-          dark: "#C2410C",    // Deep burnt orange
+          DEFAULT: "var(--color-primary, #EA580C)",
+          light: "var(--color-primary-light, #F97316)",
+          dark: "var(--color-primary-dark, #C2410C)",
+        },
+        navy: {
+          DEFAULT: "var(--color-secondary, #0A192F)",
+          light: "var(--color-secondary-light, #1E293B)",
+          dark: "#030A16",
         },
         indigo: {
-          DEFAULT: "#2A6F6B", // Secondary slate green/teal
+          DEFAULT: "#2A6F6B",
           light: "#4A9F9A",
         },
         brick: {
-          DEFAULT: "#B2533E", // Supporting earthy terracotta
+          DEFAULT: "#B2533E",
           light: "#D78370",
         },
         moss: {
-          DEFAULT: "#EA580C", // Primary orange accent
+          DEFAULT: "var(--color-primary, #EA580C)",
         },
       },
       fontFamily: {

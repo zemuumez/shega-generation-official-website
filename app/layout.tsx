@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Syne, Plus_Jakarta_Sans, Space_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ThemeProvider from "@/components/ThemeProvider";
 import "./globals.css";
 
 const syne = Syne({
@@ -34,6 +35,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${syne.variable} ${plusJakarta.variable} ${spaceMono.variable}`}>
+      <head>
+        <ThemeProvider />
+      </head>
       <body className="font-body bg-ivory text-ink antialiased min-h-screen relative overflow-x-hidden selection:bg-ochre/20 selection:text-ochre-dark">
         <Navbar />
 

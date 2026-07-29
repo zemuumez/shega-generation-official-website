@@ -3,6 +3,8 @@ import { safeFetch } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import SideFramingPatterns from "@/components/SideFramingPatterns";
 
+import ThemeProvider from "@/components/ThemeProvider";
+
 export const metadata = {
   title: "Contact Us | Shega Generations",
   description:
@@ -16,6 +18,7 @@ export default async function ContactPage() {
 
   return (
     <main className="min-h-screen bg-[#F4F3EE] relative overflow-hidden">
+      <ThemeProvider siteSettings={siteSettings} />
       <SideFramingPatterns />
       <div className="relative z-10">
         <ContactDirectory

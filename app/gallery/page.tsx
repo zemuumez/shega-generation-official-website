@@ -4,6 +4,8 @@ import { GALLERY_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import { demoGallery } from "@/lib/demoData";
 import SideFramingPatterns from "@/components/SideFramingPatterns";
 
+import ThemeProvider from "@/components/ThemeProvider";
+
 export const metadata = { title: "Gallery | Shega Generations" };
 export const revalidate = 0;
 
@@ -15,6 +17,7 @@ export default async function GalleryPage() {
 
   return (
     <main className="min-h-screen bg-[#F4F3EE] relative overflow-hidden">
+      <ThemeProvider siteSettings={siteSettings} />
       <SideFramingPatterns />
       <div className="relative z-10">
         <GalleryGrid

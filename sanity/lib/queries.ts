@@ -1,5 +1,13 @@
 export const SITE_SETTINGS_QUERY = `
 *[_type == "siteSettings"][0] {
+  themePreset,
+  customPrimaryColor,
+  customPrimaryLightColor,
+  customPrimaryDarkColor,
+  customSecondaryColor,
+  customSecondaryLightColor,
+  customBgColor,
+  customTextColor,
   heroTitle,
   heroCaption,
   heroCtaPrimary,

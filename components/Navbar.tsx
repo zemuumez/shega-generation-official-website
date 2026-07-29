@@ -29,7 +29,7 @@ export default function Navbar() {
         >
           <div className="flex items-baseline gap-1.5 text-lg sm:text-xl leading-none text-center">
             <span className="font-extrabold text-ochre font-display tracking-wide">ሸጋ</span>
-            <span className="font-semibold text-zinc-700 font-sans tracking-wider">ትውልድ</span>
+            <span className="font-bold text-navy font-sans tracking-wider">ትውልድ</span>
           </div>
         </Link>
 
