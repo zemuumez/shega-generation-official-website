@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import ShegaJourneyExplorer from "@/components/ShegaJourneyExplorer";
+import TibebPattern from "@/components/TibebPattern";
 import { safeImageUrl } from "@/sanity/lib/client";
 
 export default function AboutDirectory({
@@ -93,34 +94,37 @@ export default function AboutDirectory({
 
   return (
     <div className="relative">
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO SECTION WITH TYPEWRITER */}
       <section className="pt-16 pb-12 md:pt-24 md:pb-16 bg-[#F4F3EE] relative overflow-hidden">
-        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-6">
+        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center flex flex-col items-center justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-6 shadow-xs">
             <span>እኛ ማን ነን • About Shega Generations</span>
           </div>
 
           {/* Typewriter Title */}
-          <div className="max-w-4xl mx-auto mb-6">
-            <TypewriterTitle phrases={phrases} />
+          <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2 max-w-5xl mx-auto">
+            <TypewriterTitle
+              phrases={phrases}
+              className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ochre text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
+            />
           </div>
 
-          <p className="max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-ink/80 font-sans leading-relaxed">
+          <p className="mt-6 text-zinc-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-sans font-medium leading-relaxed">
             {customSubtitle ||
               "Shega Generations (ሽጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia."}
           </p>
 
           {/* Stat Counter Bar */}
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto w-full">
             {stats.map((st, i) => (
               <div
                 key={i}
-                className="glass-card rounded-2xl p-5 text-center bg-white/80 border border-zinc-200/80 shadow-sm"
+                className="glass-card rounded-2xl p-5 text-center bg-white/90 border border-zinc-200/80 shadow-xs hover:-translate-y-1 transition-all duration-300"
               >
                 <div className={`text-3xl sm:text-4xl font-extrabold font-display ${st.color} mb-1`}>
                   {st.value}
                 </div>
-                <div className="text-xs sm:text-sm font-sans text-ink/70 font-medium">
+                <div className="text-xs sm:text-sm font-sans text-zinc-600 font-medium">
                   {st.label}
                 </div>
               </div>
@@ -129,14 +133,20 @@ export default function AboutDirectory({
         </div>
       </section>
 
+      {/* TIBEB SEPARATOR STRIPE */}
+      <TibebPattern variant="border-horizontal" tone="ochre" className="w-full h-8 opacity-30 my-4" />
+
       {/* 2. INTERACTIVE STORY JOURNEY EXPLORER */}
       <ShegaJourneyExplorer milestones={milestones} />
+
+      {/* TIBEB SEPARATOR STRIPE */}
+      <TibebPattern variant="border-horizontal" tone="indigo" className="w-full h-8 opacity-30 my-4" />
 
       {/* 3. CORE PILLARS & PHILOSOPHY */}
       <section className="py-16 md:py-24 bg-[#F4F3EE] relative">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-navy/10 border border-navy/20 text-navy text-xs font-mono font-bold uppercase tracking-widest mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-navy/10 border border-navy/20 text-navy text-xs font-mono font-bold uppercase tracking-widest mb-3 shadow-xs">
               <span>የስርዓተ-ትምህርቱ አራት አእማዶች • Our 4 Pillars</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-ink font-display tracking-tight">
@@ -148,7 +158,7 @@ export default function AboutDirectory({
             {pillars.map((pil, idx) => (
               <div
                 key={idx}
-                className="glass-card rounded-3xl p-6 sm:p-8 bg-white border border-zinc-200/90 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                className="glass-card rounded-3xl p-6 sm:p-8 bg-white border border-zinc-200/90 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -163,7 +173,7 @@ export default function AboutDirectory({
                   </h3>
                   <div className="text-xs font-sans text-ochre font-bold mb-3">{pil.titleAmharic}</div>
 
-                  <p className="text-sm text-ink/75 font-sans leading-relaxed mb-6">
+                  <p className="text-sm text-zinc-600 font-sans leading-relaxed mb-6 font-medium">
                     {pil.description}
                   </p>
                 </div>
@@ -172,7 +182,7 @@ export default function AboutDirectory({
                   {pil.tags.map((t, i) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg bg-zinc-100 text-zinc-700 text-xs font-mono"
+                      className="px-2.5 py-1 rounded-lg bg-zinc-100 text-zinc-700 text-xs font-mono font-medium"
                     >
                       {t}
                     </span>
@@ -184,17 +194,20 @@ export default function AboutDirectory({
         </div>
       </section>
 
+      {/* TIBEB SEPARATOR STRIPE */}
+      <TibebPattern variant="border-horizontal" tone="brick" className="w-full h-8 opacity-30 my-4" />
+
       {/* 4. ORGANIZATIONAL & TEAM DIRECTORY */}
       <section className="py-16 md:py-24 bg-white relative border-t border-zinc-200/80">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-3">
-              <span>መሪዎችና መምህራን • Leadership & Mentors</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-3 shadow-xs">
+              <span>መሪዎችና መምህራን • Leadership &amp; Mentors</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-ink font-display tracking-tight mb-4">
               The Minds Behind <span className="text-ochre">Shega</span> <span className="text-navy">Generations</span>
             </h2>
-            <p className="text-base text-ink/75 font-sans">
+            <p className="text-base text-zinc-600 font-sans font-medium">
               Meet our team of higher education lecturers, AI engineers, cultural heritage scholars, hospitality leaders, and senior student mentors.
             </p>
           </div>
@@ -213,9 +226,9 @@ export default function AboutDirectory({
                 <button
                   key={tab.id}
                   onClick={() => setSelectedDept(tab.id)}
-                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-mono font-bold transition-all ${
+                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-mono font-bold transition-all duration-300 ${
                     isActive
-                      ? "bg-navy text-white shadow-sm"
+                      ? "bg-navy text-white shadow-xs"
                       : "bg-ivory text-zinc-600 hover:text-ink hover:bg-zinc-200/70 border border-zinc-200/80"
                   }`}
                 >
@@ -231,12 +244,12 @@ export default function AboutDirectory({
               <div
                 key={member._id}
                 onClick={() => setSelectedMember(member)}
-                className="glass-card rounded-3xl p-6 bg-white border border-zinc-200/90 hover:border-ochre/40 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col justify-between"
+                className="glass-card rounded-3xl p-6 bg-white border border-zinc-200/90 hover:border-ochre/40 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between"
               >
                 <div>
                   {/* Avatar & Role Header */}
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden shadow-sm border border-zinc-200 flex-shrink-0">
+                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden shadow-xs border border-zinc-200 flex-shrink-0">
                       <Image
                         src={safeImageUrl(member.avatar, 200)}
                         alt={member.name}
@@ -256,7 +269,7 @@ export default function AboutDirectory({
                   </div>
 
                   {/* Bio Snippet */}
-                  <p className="text-xs sm:text-sm text-ink/75 font-sans line-clamp-3 leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm text-zinc-600 font-sans line-clamp-3 leading-relaxed mb-4 font-medium">
                     {member.bio}
                   </p>
                 </div>
@@ -268,7 +281,7 @@ export default function AboutDirectory({
                       {member.organizationAffiliations.slice(0, 3).map((tag: string, idx: number) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded-md bg-ivory text-zinc-700 text-[10px] font-mono border border-zinc-200"
+                          className="px-2 py-0.5 rounded-md bg-ivory text-zinc-700 text-[10px] font-mono border border-zinc-200 font-medium"
                         >
                           {tag}
                         </span>
@@ -292,7 +305,7 @@ export default function AboutDirectory({
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-ochre/20 via-transparent to-transparent pointer-events-none" />
 
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center max-w-4xl">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-6 shadow-xs">
             <span>የወደፊት ራእይ • Future Campus Vision</span>
           </div>
 
@@ -300,7 +313,7 @@ export default function AboutDirectory({
             Building the Permanent <span className="text-ochre">Shega Innovation Campus</span>
           </h2>
 
-          <p className="text-base sm:text-lg md:text-xl text-white/80 font-sans leading-relaxed mb-10">
+          <p className="text-base sm:text-lg md:text-xl text-white/80 font-sans leading-relaxed mb-10 font-medium">
             {customCampusVision ||
               "Our ultimate goal is building our own dedicated 24/7 innovation campus in Addis Ababa—equipped with overnight coding laboratories, hardware workshops, incubation spaces, rest facilities, and multi-tier cohort capacity reachable from every corner of Ethiopia."}
           </p>
@@ -308,13 +321,13 @@ export default function AboutDirectory({
           <div className="flex flex-wrap items-center justify-center gap-4">
             <a
               href="/donate"
-              className="bg-ochre hover:bg-ochre-dark text-white rounded-full px-8 py-3.5 text-sm font-mono font-bold uppercase tracking-wider transition-all shadow-lg hover:scale-105"
+              className="bg-ochre hover:bg-ochre-dark text-white rounded-full px-8 py-3.5 text-sm font-mono font-bold uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105"
             >
               Support the Campus Build →
             </a>
             <a
               href="/contact"
-              className="bg-white/10 hover:bg-white/20 text-white rounded-full px-8 py-3.5 text-sm font-mono font-bold uppercase tracking-wider border border-white/20 transition-all"
+              className="bg-white/10 hover:bg-white/20 text-white rounded-full px-8 py-3.5 text-sm font-mono font-bold uppercase tracking-wider border border-white/20 transition-all duration-300"
             >
               Partner With Us
             </a>
@@ -325,7 +338,7 @@ export default function AboutDirectory({
       {/* 6. MEMBER PROFILE MODAL DIALOG */}
       {selectedMember && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto animate-in fade-in duration-200"
           onClick={() => setSelectedMember(null)}
         >
           <div
@@ -355,19 +368,19 @@ export default function AboutDirectory({
               <div>
                 <h3 className="text-2xl font-extrabold text-ink font-display">{selectedMember.name}</h3>
                 <div className="text-sm font-mono font-bold text-ochre mb-1">{selectedMember.role}</div>
-                <div className="text-xs font-sans text-zinc-500 capitalize">{selectedMember.department} Division</div>
+                <div className="text-xs font-sans text-zinc-500 capitalize font-medium">{selectedMember.department} Division</div>
               </div>
             </div>
 
             {/* Bio */}
             <div className="mb-6">
               <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2">Biography</h4>
-              <p className="text-sm text-ink/80 font-sans leading-relaxed">{selectedMember.bio}</p>
+              <p className="text-sm text-zinc-700 font-sans leading-relaxed font-medium">{selectedMember.bio}</p>
             </div>
 
             {/* Quote */}
             {selectedMember.quote && (
-              <div className="p-4 rounded-2xl bg-ivory border-l-4 border-navy mb-6 text-sm italic text-ink/90">
+              <div className="p-4 rounded-2xl bg-ivory border-l-4 border-navy mb-6 text-sm italic text-zinc-800 font-sans">
                 &ldquo;{selectedMember.quote}&rdquo;
               </div>
             )}
@@ -378,7 +391,7 @@ export default function AboutDirectory({
                 <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2">Affiliations &amp; Roles</h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedMember.organizationAffiliations.map((tag: string, i: number) => (
-                    <span key={i} className="px-3 py-1 rounded-xl bg-zinc-100 text-zinc-700 text-xs font-mono">
+                    <span key={i} className="px-3 py-1 rounded-xl bg-zinc-100 text-zinc-700 text-xs font-mono font-medium">
                       ✓ {tag}
                     </span>
                   ))}
