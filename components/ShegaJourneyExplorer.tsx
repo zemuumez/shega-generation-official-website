@@ -42,21 +42,21 @@ export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: 
           </div>
 
           {/* Timeline Pills */}
-          <div className="flex items-center justify-between gap-2 overflow-x-auto pb-4 scrollbar-none snap-x">
+          <div className="flex items-center justify-between gap-3 overflow-x-auto px-2 py-3 scrollbar-none snap-x">
             {milestones.map((m, idx) => {
               const isActive = idx === activeIndex;
               return (
                 <button
                   key={m._id || idx}
                   onClick={() => setActiveIndex(idx)}
-                  className={`flex-shrink-0 px-4.5 py-2.5 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 snap-center flex items-center gap-2 border ${
+                  className={`flex-shrink-0 whitespace-nowrap px-5 py-3 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 snap-center flex items-center gap-2.5 border select-none ${
                     isActive
                       ? "bg-navy text-white border-navy shadow-md scale-105"
-                      : "bg-ivory/80 text-zinc-700 hover:text-ink border-zinc-200/80 hover:bg-white"
+                      : "bg-ivory/90 text-zinc-700 hover:text-ink border-zinc-200/90 hover:bg-white"
                   }`}
                 >
-                  <span className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-ochre" : "bg-zinc-400"}`} />
-                  <span>{m.year}</span>
+                  <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isActive ? "bg-ochre" : "bg-zinc-400"}`} />
+                  <span className="whitespace-nowrap leading-none">{m.year}</span>
                 </button>
               );
             })}
