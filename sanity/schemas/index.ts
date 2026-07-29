@@ -8,6 +8,8 @@ import siteSettings from "./siteSettings";
 import contactMessage from "./contactMessage";
 import partner from "./partner";
 import donationRecord from "./donationRecord";
+import teamMember from "./teamMember";
+import storyMilestone from "./storyMilestone";
 
 export const schemaTypes = [
   event,
@@ -20,5 +22,7 @@ export const schemaTypes = [
   contactMessage,
   partner,
   donationRecord,
+  teamMember,
+  storyMilestone,
 ];
 

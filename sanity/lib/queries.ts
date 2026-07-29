@@ -51,7 +51,10 @@ export const SITE_SETTINGS_QUERY = `
   socialTelegramHandle,
   socialTelegramUrl,
   socialTikTokHandle,
-  socialTikTokUrl
+  socialTikTokUrl,
+  aboutPageTitlePhrases,
+  aboutPageSubtitle,
+  aboutCampusVisionText
 }`;
 
 export const UPCOMING_EVENT_QUERY = `
@@ -88,3 +91,14 @@ export const PARTNERS_QUERY = `
 *[_type == "partner"] | order(order asc, _createdAt asc) {
   _id, name, role, description, logo, websiteUrl, order
 }`;
+
+export const TEAM_MEMBERS_QUERY = `
+*[_type == "teamMember"] | order(order asc, _createdAt asc) {
+  _id, name, role, department, bio, quote, avatar, organizationAffiliations, socialLinks, order
+}`;
+
+export const STORY_MILESTONES_QUERY = `
+*[_type == "storyMilestone"] | order(stepNumber asc) {
+  _id, stepNumber, year, title, location, description, quote, image, highlights
+}`;
+

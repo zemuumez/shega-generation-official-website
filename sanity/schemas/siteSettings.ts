@@ -18,6 +18,8 @@ export default defineType({
     { name: "events", title: "Nearest Gathering Section" },
     { name: "gallery", title: "Gallery Page" },
     { name: "contact", title: "Contact Page" },
+    // About Us Page Group
+    { name: "about", title: "About Us Page" },
     { name: "partners", title: "Partners Section" },
     { name: "community", title: "Community Section" },
   ],
@@ -435,6 +437,29 @@ export default defineType({
       type: "url",
       initialValue: "https://www.tiktok.com/@samuelgeremew_21",
       group: "community",
+    }),
+
+    // About Us Page Copy
+    defineField({
+      name: "aboutPageTitlePhrases",
+      title: "About Page Title Phrases (Typewriter)",
+      type: "array",
+      of: [{ type: "string" }],
+      group: "about",
+    }),
+    defineField({
+      name: "aboutPageSubtitle",
+      title: "About Page Subtitle",
+      type: "text",
+      rows: 3,
+      group: "about",
+    }),
+    defineField({
+      name: "aboutCampusVisionText",
+      title: "Shega Innovation Campus Vision Text",
+      type: "text",
+      rows: 4,
+      group: "about",
     }),
   ],
   preview: {
