@@ -52,8 +52,8 @@ export default async function HomePage() {
   const facebookUrl = siteSettings?.socialFacebookUrl || "https://web.facebook.com/share/g/18foDKzcBS/";
   const telegramHandle = siteSettings?.socialTelegramHandle || "t.me/shegagenerations";
   const telegramUrl = siteSettings?.socialTelegramUrl || "https://t.me/shegagenerations";
-  const tiktokHandle = siteSettings?.socialTikTokHandle || "@samuelgeremew_21";
   const tiktokUrl = siteSettings?.socialTikTokUrl || "https://www.tiktok.com/@samuelgeremew_21";
+  const curriculumOverview = siteSettings?.curriculumOverview;
 
   const socialChannels = [
     {
@@ -159,7 +159,7 @@ export default async function HomePage() {
       <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center bg-fixed bg-cover bg-center select-none" style={{ backgroundImage: `url('${culturalAnchoringBg}')` }}>
         <div className="absolute inset-0 bg-black/35 z-10" />
         <div className="relative z-20 max-w-4xl text-center px-6">
-          <span className="font-mono text-xs uppercase tracking-widest text-emerald-300 font-bold drop-shadow-sm"> {culturalSubtitle}</span>
+          <span className="font-mono text-xs uppercase tracking-widest text-orange-300 font-bold drop-shadow-sm"> {culturalSubtitle}</span>
           <h2 className="mt-4 font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider leading-tight drop-shadow-md">
             We weave modern technology with cultural roots
           </h2>
@@ -173,12 +173,28 @@ export default async function HomePage() {
       <section className="py-24 border-b border-zinc-200 relative">
         {/* Background Geometric Line Pattern - Bleeds outward without breaking section entrance scroll */}
         <div className="absolute inset-y-0 -right-8 md:-right-14 w-96 pointer-events-none opacity-60 z-0 hidden lg:block [mask-image:linear-gradient(to_left,white_50%,transparent_100%)]">
-          <LeafPattern tone="gray" variant="arches" id="explorer-leaf" opacity="0.3" />
+          <TibebPattern variant="watermark" tone="ochre" className="opacity-15 w-full h-full object-cover" />
         </div>
-        <div className="relative z-10">
-          <InteractiveProgramExplorer />
-        </div>
+
+        <InteractiveProgramExplorer />
       </section>
+
+      {/* CURRICULUM OVERVIEW BREAKOUT */}
+      {curriculumOverview && (
+        <section className="py-24 border-b border-zinc-200 bg-white/40">
+          <div className="mx-auto max-w-[90vw] px-4 sm:px-6 text-center max-w-4xl">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre font-bold block mb-4">
+              Comprehensive Curriculum
+            </span>
+            <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">
+              {curriculumOverview.title || "Full Educational Roadmap"}
+            </h2>
+            <p className="mt-6 text-base sm:text-lg text-ink-soft leading-relaxed max-w-2xl mx-auto font-sans font-medium">
+              {curriculumOverview.description}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* UPCOMING EVENT ACCENT HERO */}
       {upcomingEvent && (
@@ -196,13 +212,13 @@ export default async function HomePage() {
           <div className="mx-auto mb-10 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold"> LMS & Program Curriculum</span>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre font-bold"> LMS & Program Curriculum</span>
                 <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
                 <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
                   Hands-on engineering tracks, AI laboratories, and indigenous math modules prepared by Shega Generation, Sophor Code Academy, and TTI Hospitality.
                 </p>
               </div>
-              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-[#145A32] font-bold bg-[#145A32]/10 px-4 py-2 rounded-full border border-[#145A32]/30 shadow-sm animate-pulse">
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ochre font-bold bg-ochre/10 px-4 py-2 rounded-full border border-ochre/30 shadow-sm animate-pulse">
                 <span>LMS Coming Soon</span>
               </div>
             </div>
@@ -221,7 +237,7 @@ export default async function HomePage() {
           <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold">
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre font-bold">
                   {journeysKicker}
                 </span>
                 <h2 className="mt-2 font-display text-display-md font-bold text-ink uppercase tracking-wide">
@@ -231,7 +247,7 @@ export default async function HomePage() {
                   {journeysDescription}
                 </p>
               </div>
-              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-[#145A32] font-bold bg-[#145A32]/10 px-3.5 py-1.5 rounded-full border border-[#145A32]/20">
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ochre font-bold bg-ochre/10 px-3.5 py-1.5 rounded-full border border-ochre/20">
                 <span>Radio, Podcasts &amp; Facebook Features</span>
               </div>
             </div>
@@ -291,7 +307,7 @@ export default async function HomePage() {
 
                 <div className="mt-8 pt-5 border-t border-zinc-100 flex items-center justify-between">
                   <div className="flex items-center gap-3.5">
-                    <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#145A32]/20 shadow-sm flex-shrink-0 bg-zinc-100">
+                    <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-ochre/20 shadow-sm flex-shrink-0 bg-zinc-100">
                       <Image
                         src={avatarSrc}
                         alt={test.author || "Testimonial author"}
@@ -322,7 +338,7 @@ export default async function HomePage() {
       {/* SOCIAL MEDIA INTERACTION MODULE */}
       <section className="px-4 py-24 sm:px-6 relative bg-white border-t border-zinc-200">
         <div className="mx-auto w-full max-w-[90vw]">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#145A32] font-bold block mb-2">
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre font-bold block mb-2">
              {communityKicker}
           </span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black text-ink uppercase tracking-wide">
@@ -336,26 +352,26 @@ export default async function HomePage() {
                 href={channel.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-3xl border border-zinc-200/90 bg-white p-7 group hover:border-[#145A32]/40 hover:-translate-y-1.5 transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between"
+                className="rounded-3xl border border-zinc-200/90 bg-white p-7 group hover:border-ochre/40 hover:-translate-y-1.5 transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between">
                     <span className={`font-mono text-[10px] uppercase tracking-widest px-3 py-1 rounded-full border font-bold ${channel.badgeColor}`}>
                       {channel.name}
                     </span>
-                    <span className="font-mono text-xs font-bold text-zinc-400 group-hover:text-[#145A32] transition-colors">
+                    <span className="font-mono text-xs font-bold text-zinc-400 group-hover:text-ochre transition-colors">
                       Follow &rarr;
                     </span>
                   </div>
 
-                  <p className="mt-5 font-display text-xl font-extrabold text-ink group-hover:text-[#145A32] transition-colors duration-300">
+                  <p className="mt-5 font-display text-xl font-extrabold text-ink group-hover:text-ochre transition-colors duration-300">
                     {channel.handle}
                   </p>
                 </div>
 
                 <div className="mt-8 pt-4 border-t border-zinc-100 flex items-center justify-between font-mono text-xs text-zinc-400 font-semibold group-hover:text-zinc-600 transition-colors">
                   <span>Connect on {channel.name}</span>
-                  <span className="text-[#145A32] font-bold">● Live</span>
+                  <span className="text-ochre font-bold">● Live</span>
                 </div>
               </a>
             ))}

@@ -30,10 +30,6 @@ export async function sendDiagnosticEmail(params: {
   const subject = SUBJECT_BY_LOCALE[locale];
   const body = BODY_BY_LOCALE[locale].replace("{{name}}", params.name);
 
-  // This call is fire-and-forget from the caller's perspective (see route
-  // handler), but errors are still surfaced to the caller for logging.
-  // A failed email must never roll back the already-persisted
-  // application record; the two are intentionally decoupled.
   return resend.emails.send({
     from: "Shega Generations <onboarding@shegagenerations.org>",
     to: params.to,
@@ -41,3 +37,36 @@ export async function sendDiagnosticEmail(params: {
     text: body,
   });
 }
+
+export async function sendDonationReceiptEmail(params: {
+  to: string;
+  name: string;
+  amount: number;
+  currency: string;
+  txRef: string;
+  gateway: string;
+}) {
+  const subject = `Donation Receipt: ${params.currency} ${params.amount} | Shega Generations`;
+  const body = `Dear ${params.name || "Supporter"},
+
+Thank you deeply for supporting Shega Generations! Your contribution fuels transport, food, lodging, and computational resources for underprivileged tech talent in Ethiopia.
+
+Receipt Details:
+- Amount: ${params.currency} ${params.amount}
+- Transaction Reference: ${params.txRef}
+- Payment Gateway: ${params.gateway.toUpperCase()}
+- Date: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+
+If you have any questions, feel free to contact us at support@shegagenerations.org.
+
+With gratitude,
+The Shega Generations Team`;
+
+  return resend.emails.send({
+    from: "Shega Generations <donations@shegagenerations.org>",
+    to: params.to,
+    subject,
+    text: body,
+  });
+}
+

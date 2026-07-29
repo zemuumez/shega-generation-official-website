@@ -3,7 +3,7 @@ import { safeImageUrl } from "@/sanity/lib/client";
 
 export function CourseCard({ course }: { course: any }) {
   return (
-    <div className="rail-item group block w-80 sm:w-[410px] flex-shrink-0 overflow-hidden rounded-[32px] border border-zinc-200 bg-white transition-all duration-300 hover:border-[#145A32]/40 hover:shadow-xl hover:-translate-y-1.5 flex flex-col justify-between">
+    <div className="rail-item group block w-80 sm:w-[410px] flex-shrink-0 overflow-hidden rounded-[32px] border border-zinc-200 bg-white transition-all duration-300 hover:border-ochre/40 hover:shadow-xl hover:-translate-y-1.5 flex flex-col justify-between">
       <div>
         <div className="relative aspect-[16/10] overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 z-10" />
@@ -20,7 +20,7 @@ export function CourseCard({ course }: { course: any }) {
               {course.badgeCategory || "Course"}
             </span>
             {course.level && (
-              <span className="inline-block px-3.5 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-[#145A32] text-white backdrop-blur-md font-bold shadow-sm">
+              <span className="inline-block px-3.5 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-ochre text-white backdrop-blur-md font-bold shadow-sm">
                 {course.level}
               </span>
             )}
@@ -28,12 +28,12 @@ export function CourseCard({ course }: { course: any }) {
           {/* Bottom LMS Coming Soon Badge */}
           <div className="absolute right-4 bottom-3 z-20 font-mono text-[10px] bg-black/80 backdrop-blur-sm text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/10 shadow-sm">
             <span className="text-amber-400 font-bold">{course.rating || "5.0"}</span>
-            <span className="text-emerald-300 font-bold"> LMS Coming Soon</span>
+            <span className="text-orange-300 font-bold"> LMS Coming Soon</span>
           </div>
         </div>
 
         <div className="p-6">
-          <h4 className="font-display text-xl leading-snug font-bold text-ink group-hover:text-[#145A32] transition-colors duration-300 uppercase">
+          <h4 className="font-display text-xl leading-snug font-bold text-ink group-hover:text-ochre transition-colors duration-300 uppercase">
             {course.title}
           </h4>
           <p className="mt-2.5 text-sm text-ink-soft line-clamp-3 leading-relaxed">{course.snippet}</p>

@@ -18,7 +18,7 @@ const toneMap = {
   gold: "#C59B27",
   ink: "#1E293B",
   gray: "#475569", // Rich slate gray for clear vector line visibility
-  ochre: "#27AE60",
+  ochre: "#EA580C",
   teal: "#0D9488",
   brick: "#B2533E",
 };

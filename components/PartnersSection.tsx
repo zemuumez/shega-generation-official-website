@@ -16,18 +16,18 @@ type PartnerItem = {
 // Render bold, high-contrast vector brand logo mark filling the box when no image asset is uploaded
 function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boolean }) {
   const textColor = isSelected
-    ? "text-[#145A32]"
-    : "text-zinc-900 group-hover:text-[#145A32]";
+    ? "text-ochre"
+    : "text-zinc-900 group-hover:text-ochre";
   const accentColor = isSelected
-    ? "text-[#145A32]"
-    : "text-zinc-600 group-hover:text-[#145A32]";
+    ? "text-ochre"
+    : "text-zinc-600 group-hover:text-ochre";
 
   if (name.includes("Sofor")) {
     return (
       <div className="flex items-center justify-center gap-2.5 select-none w-full py-2">
         <span className={`font-mono text-2xl sm:text-3xl font-black ${accentColor}`}>&lt;/&gt;</span>
         <span className={`font-display text-2xl sm:text-3xl font-black tracking-tight ${textColor}`}>
-          SOFOR<span className="text-[#145A32]">.</span>
+          SOFOR<span className="text-ochre">.</span>
         </span>
       </div>
     );
@@ -36,7 +36,7 @@ function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boole
   if (name.includes("Tourism") || name.includes("TTI")) {
     return (
       <div className="flex items-center justify-center gap-2.5 select-none w-full py-2">
-        <div className="w-8 h-8 rounded-lg bg-[#145A32]/15 border-2 border-[#145A32]/40 flex items-center justify-center font-serif text-sm font-black text-[#145A32] shadow-xs">
+        <div className="w-8 h-8 rounded-lg bg-ochre/15 border-2 border-ochre/40 flex items-center justify-center font-serif text-sm font-black text-ochre shadow-xs">
           T
         </div>
         <span className={`font-display text-xl sm:text-2xl font-black tracking-wider ${textColor}`}>
@@ -72,7 +72,7 @@ function PartnerLogoMark({ name, isSelected }: { name: string; isSelected: boole
   if (name.includes("Enqu")) {
     return (
       <div className="flex items-center justify-center gap-2 select-none w-full py-2">
-        <span className="font-mono text-xl sm:text-2xl font-black text-emerald-600">✦</span>
+        <span className="font-mono text-xl sm:text-2xl font-black text-orange-600">✦</span>
         <span className={`font-display text-2xl sm:text-3xl font-black tracking-wider uppercase ${textColor}`}>
           ENQU
         </span>
@@ -126,8 +126,8 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
             {/* INTERACTIVE SPOTLIGHT FOCUS CAPTION BOX */}
             <div className="mt-10 p-6 rounded-3xl border border-zinc-200 bg-[#F7F9F7] transition-all duration-500 shadow-sm relative overflow-hidden">
               <div className="flex items-center gap-2 mb-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#145A32] animate-pulse" />
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#145A32] font-bold">
+                <span className="w-2.5 h-2.5 rounded-full bg-ochre animate-pulse" />
+                <span className="font-mono text-[10px] uppercase tracking-widest text-ochre font-bold">
                   {activePartner.role || "Strategic Partner"}
                 </span>
               </div>
@@ -143,7 +143,7 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
                   href={activePartner.websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 font-mono text-xs font-bold text-[#145A32] hover:underline"
+                  className="mt-4 inline-flex items-center gap-1.5 font-mono text-xs font-bold text-ochre hover:underline"
                 >
                   Learn More &rarr;
                 </a>
@@ -172,8 +172,8 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
                     onClick={() => setActivePartner(partner)}
                     className={`group relative rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center transition-all duration-300 min-h-[135px] sm:min-h-[155px] border outline-none ${
                       isSelected
-                        ? "border-[#145A32] bg-[#F7F9F7] shadow-md scale-[1.03] z-30"
-                        : "border-zinc-200 bg-white hover:border-[#145A32]/50 hover:bg-zinc-50/90 hover:-translate-y-1 shadow-xs z-10 hover:z-40"
+                        ? "border-ochre bg-[#F7F9F7] shadow-md scale-[1.03] z-30"
+                        : "border-zinc-200 bg-white hover:border-ochre/50 hover:bg-zinc-50/90 hover:-translate-y-1 shadow-xs z-10 hover:z-40"
                     }`}
                   >
                     {hasUploadedLogo ? (
@@ -196,10 +196,10 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
 
                     {/* HOVER TOOLTIP CAPTION PREVIEW - FLOATS ABOVE CARD WITH HIGH Z-INDEX */}
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 hidden sm:block">
-                      <div className="bg-[#145A32] text-white font-mono text-[9.5px] uppercase tracking-widest px-3.5 py-1.5 rounded-lg whitespace-nowrap shadow-xl border border-emerald-400/20">
+                      <div className="bg-ochre text-white font-mono text-[9.5px] uppercase tracking-widest px-3.5 py-1.5 rounded-lg whitespace-nowrap shadow-xl border border-orange-400/20">
                         {partner.name}
                       </div>
-                      <div className="w-2 h-2 bg-[#145A32] rotate-45 mx-auto -mt-1 shadow-xs" />
+                      <div className="w-2 h-2 bg-ochre rotate-45 mx-auto -mt-1 shadow-xs" />
                     </div>
                   </button>
                 );
@@ -208,9 +208,9 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
               {/* SPECIAL CALLOUT CARD FOR NEW PARTNERS */}
               <a
                 href="/contact"
-                className="rounded-2xl border border-dashed border-[#145A32]/40 bg-white hover:bg-[#F7F9F7] p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-xs hover:shadow-md hover:border-[#145A32] hover:-translate-y-1 transition-all duration-300 min-h-[135px] sm:min-h-[155px] group"
+                className="rounded-2xl border border-dashed border-ochre/40 bg-white hover:bg-[#F7F9F7] p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-xs hover:shadow-md hover:border-ochre hover:-translate-y-1 transition-all duration-300 min-h-[135px] sm:min-h-[155px] group"
               >
-                <span className="font-mono text-xs font-bold text-[#145A32] group-hover:text-[#145A32] flex items-center gap-1.5">
+                <span className="font-mono text-xs font-bold text-ochre group-hover:text-ochre flex items-center gap-1.5">
                   + Partner with us &rarr;
                 </span>
                 <span className="text-[10px] font-mono text-zinc-500 font-medium mt-1">

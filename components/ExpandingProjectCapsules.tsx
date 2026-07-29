@@ -79,7 +79,7 @@ export default function ExpandingProjectCapsules({
             }}
             className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-300 border ${
               filter === cat
-                ? "bg-[#145A32] border-[#145A32] text-white font-bold shadow-md scale-[1.02]"
+                ? "bg-ochre border-ochre text-white font-bold shadow-md scale-[1.02]"
                 : "bg-white border-zinc-200 text-ink-soft hover:border-zinc-300 hover:text-ink"
             }`}
           >
@@ -114,7 +114,7 @@ export default function ExpandingProjectCapsules({
               onClick={() => setActiveIdx(idx)}
               className={`relative overflow-hidden rounded-[36px] border border-zinc-200 bg-zinc-900 transition-all duration-500 ease-out cursor-pointer flex-shrink-0 ${
                 isActive
-                  ? "w-full md:w-[560px] grow shadow-2xl border-[#145A32]/60 ring-2 ring-[#145A32]/30"
+                  ? "w-full md:w-[560px] grow shadow-2xl border-ochre/60 ring-2 ring-ochre/30"
                   : "w-full md:w-[120px] h-[120px] md:h-auto hover:w-[140px] shadow-sm border-zinc-200/80"
               }`}
             >
@@ -167,7 +167,7 @@ export default function ExpandingProjectCapsules({
 
                     {/* Student / Presenter Quote */}
                     {project.quote && (
-                      <p className="mt-4 text-xs text-zinc-200 italic border-l-2 border-[#145A32] pl-3 py-0.5 font-sans">
+                      <p className="mt-4 text-xs text-zinc-200 italic border-l-2 border-ochre pl-3 py-0.5 font-sans">
                         &ldquo;{project.quote}&rdquo;
                       </p>
                     )}
@@ -200,9 +200,9 @@ export default function ExpandingProjectCapsules({
                           e.stopPropagation();
                           setPlayingVideoId(project._id || project.title || String(idx));
                         }}
-                        className="rounded-full bg-[#145A32] text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-[#0E3B21] transition-all duration-300 shadow-md flex items-center gap-2 whitespace-nowrap flex-shrink-0 cursor-pointer border border-emerald-400/30"
+                        className="rounded-full bg-ochre text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-ochre-dark transition-all duration-300 shadow-md flex items-center gap-2 whitespace-nowrap flex-shrink-0 cursor-pointer border border-orange-400/30"
                       >
-                        <span className="w-2 h-2 rounded-full bg-emerald-300 animate-ping" />
+                        <span className="w-2 h-2 rounded-full bg-orange-300 animate-ping" />
                         <span>▶ Watch YouTube Video</span>
                       </button>
                     ) : (
@@ -210,7 +210,7 @@ export default function ExpandingProjectCapsules({
                         href={project.projectUrl || "https://facebook.com/shegagenerations"}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full bg-[#145A32] text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-[#0E3B21] transition-all duration-300 shadow-md flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 border border-emerald-400/30"
+                        className="rounded-full bg-ochre text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-ochre-dark transition-all duration-300 shadow-md flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 border border-orange-400/30"
                       >
                         <span>{ctaText}</span>
                         <span>&rarr;</span>
@@ -243,7 +243,7 @@ export default function ExpandingProjectCapsules({
                   </span>
 
                   {/* PROMINENT PLAY BADGE */}
-                  <div className="w-10 h-10 rounded-full bg-[#145A32] border-2 border-emerald-400/60 flex items-center justify-center text-white text-sm shadow-xl my-4 transform group-hover:scale-110 transition-transform">
+                  <div className="w-10 h-10 rounded-full bg-ochre border-2 border-orange-400/60 flex items-center justify-center text-white text-sm shadow-xl my-4 transform group-hover:scale-110 transition-transform">
                     ▶
                   </div>
 
@@ -252,7 +252,7 @@ export default function ExpandingProjectCapsules({
                     {project.title}
                   </p>
 
-                  <span className="text-sm font-bold text-emerald-400">&rarr;</span>
+                  <span className="text-sm font-bold text-orange-400">&rarr;</span>
                 </div>
               )}
 
@@ -260,11 +260,11 @@ export default function ExpandingProjectCapsules({
               {!isActive && (
                 <div className="absolute inset-0 md:hidden flex items-center justify-between p-6 text-white z-20">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[#145A32] border border-emerald-400/50 flex items-center justify-center text-white text-xs font-bold shadow-md">
+                    <div className="w-9 h-9 rounded-full bg-ochre border border-orange-400/50 flex items-center justify-center text-white text-xs font-bold shadow-md">
                       ▶
                     </div>
                     <div>
-                      <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-300 font-bold block mb-0.5">
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-orange-300 font-bold block mb-0.5">
                         {project.category || "Media Highlight"}
                       </span>
                       <p className="font-display font-bold uppercase tracking-wider text-sm text-white drop-shadow-xs line-clamp-1">
@@ -272,7 +272,7 @@ export default function ExpandingProjectCapsules({
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs font-mono text-emerald-400 font-bold">&rarr;</span>
+                  <span className="text-xs font-mono text-orange-400 font-bold">&rarr;</span>
                 </div>
               )}
             </div>

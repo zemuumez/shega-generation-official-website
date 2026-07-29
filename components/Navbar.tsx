@@ -25,10 +25,10 @@ export default function Navbar() {
         {/* Brand Logo: Exclusively Amharic "ሸጋ ትውልድ" */}
         <Link
           href="/"
-          className="flex items-center justify-center border-2 border-[#145A32] rounded-2xl px-4 h-10 tracking-tight transition-all duration-300 hover:bg-[#145A32]/5 select-none shadow-sm flex-shrink-0"
+          className="flex items-center justify-center border-2 border-ochre rounded-2xl px-4 h-10 tracking-tight transition-all duration-300 hover:bg-ochre/5 select-none shadow-sm flex-shrink-0"
         >
           <div className="flex items-baseline gap-1.5 text-lg sm:text-xl leading-none text-center">
-            <span className="font-extrabold text-[#145A32] font-display tracking-wide">ሸጋ</span>
+            <span className="font-extrabold text-ochre font-display tracking-wide">ሸጋ</span>
             <span className="font-semibold text-zinc-700 font-sans tracking-wider">ትውልድ</span>
           </div>
         </Link>
@@ -51,11 +51,11 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Far Right Action: #145A32 Green Donate Pill Button */}
+        {/* Far Right Action: Orange Donate Pill Button */}
         <div className="hidden md:flex items-center">
           <Link
             href="/donate"
-            className="bg-[#145A32] hover:bg-[#0E3B21] text-white rounded-full px-5 py-2 text-xs sm:text-sm font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.03] active:scale-[0.98]"
+            className="bg-ochre hover:bg-ochre-dark text-white rounded-full px-5 py-2 text-xs sm:text-sm font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.03] active:scale-[0.98]"
           >
             <span>Donate</span>
             <svg className="w-3.5 h-3.5 text-white/90 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@ export default function Navbar() {
         <div className="flex md:hidden items-center gap-3">
           <Link
             href="/donate"
-            className="bg-[#145A32] text-white rounded-full px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5"
+            className="bg-ochre text-white rounded-full px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5"
           >
             <span>Donate</span>
             <svg className="w-3.5 h-3.5 text-white/90 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

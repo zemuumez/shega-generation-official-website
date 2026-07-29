@@ -56,7 +56,7 @@ export default function GalleryGrid({
         <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">
           <TypewriterTitle
             phrases={phrases}
-            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-[#145A32] text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
+            className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ochre text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
           />
         </div>
 
@@ -76,7 +76,7 @@ export default function GalleryGrid({
                 onClick={() => setActive(tag)}
                 className={`px-5 py-2 rounded-full font-mono text-xs font-medium transition-all duration-300 ${
                   isActive
-                    ? "bg-[#145A32] text-white font-bold shadow-xs"
+                    ? "bg-ochre text-white font-bold shadow-xs"
                     : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80 hover:text-zinc-900 border border-zinc-200/50"
                 }`}
               >
@@ -113,11 +113,11 @@ export default function GalleryGrid({
 
               {/* CAPTION DETAILS BELOW SPHERE IMAGE */}
               <div className="mt-4 w-full max-w-[340px] px-2 flex items-start justify-between gap-3">
-                <p className="text-sm font-sans font-medium text-ink-soft group-hover:text-[#145A32] transition-colors leading-snug line-clamp-2">
+                <p className="text-sm font-sans font-medium text-ink-soft group-hover:text-ochre transition-colors leading-snug line-clamp-2">
                   {item.caption}
                 </p>
                 {item.categoryTag && (
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#145A32] flex-shrink-0 pt-0.5">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-ochre flex-shrink-0 pt-0.5">
                     {item.categoryTag}
                   </span>
                 )}
@@ -133,7 +133,7 @@ export default function GalleryGrid({
           </p>
           <button
             onClick={() => setActive("All")}
-            className="mt-6 px-6 py-2.5 rounded-full bg-[#145A32] text-white font-mono text-xs uppercase font-bold hover:bg-[#0E3B21] transition-all"
+            className="mt-6 px-6 py-2.5 rounded-full bg-ochre text-white font-mono text-xs uppercase font-bold hover:bg-ochre-dark transition-all"
           >
             Reset Filters
           </button>
@@ -180,7 +180,7 @@ export default function GalleryGrid({
                 {lightboxItem.caption}
               </p>
               {lightboxItem.categoryTag && (
-                <span className="font-mono text-xs font-bold uppercase tracking-wider bg-[#145A32] text-white px-3.5 py-1.5 rounded-full border border-emerald-400/40 w-fit">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider bg-ochre text-white px-3.5 py-1.5 rounded-full border border-orange-400/40 w-fit">
                   {lightboxItem.categoryTag}
                 </span>
               )}

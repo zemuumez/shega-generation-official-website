@@ -7,6 +7,7 @@ import testimonial from "./testimonial";
 import siteSettings from "./siteSettings";
 import contactMessage from "./contactMessage";
 import partner from "./partner";
+import donationRecord from "./donationRecord";
 
 export const schemaTypes = [
   event,
@@ -18,4 +19,6 @@ export const schemaTypes = [
   siteSettings,
   contactMessage,
   partner,
+  donationRecord,
 ];
+

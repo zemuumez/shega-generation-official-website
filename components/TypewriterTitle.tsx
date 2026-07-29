@@ -75,7 +75,7 @@ export default function TypewriterTitle({
 
   return (
     <h1
-      className={`text-[#145A32] ${className} ${trackingClass} transition-all duration-500`}
+      className={`text-ochre ${className} ${trackingClass} transition-all duration-500`}
       style={style}
     >
       {/* Line 1 - Strict single line */}
@@ -84,7 +84,7 @@ export default function TypewriterTitle({
         {isLine1Active && (
           <span
             aria-hidden="true"
-            className="inline-block w-[4px] sm:w-[8px] h-[0.75em] bg-[#145A32] align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
+            className="inline-block w-[4px] sm:w-[8px] h-[0.75em] bg-ochre align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
           />
         )}
       </span>
@@ -97,7 +97,7 @@ export default function TypewriterTitle({
               {line2Text}
               <span
                 aria-hidden="true"
-                className="inline-block w-[4px] sm:w-[8px] h-[0.75em] bg-[#145A32] align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
+                className="inline-block w-[4px] sm:w-[8px] h-[0.75em] bg-ochre align-baseline ml-2 sm:ml-3 rounded-full animate-pulse"
               />
             </span>
           ) : (

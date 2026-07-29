@@ -25,23 +25,15 @@ no code changes needed on the frontend.
 ## What is real vs. stubbed here
 
 **Real, production-track:**
-- All five Sanity schemas, App Router pages, GROQ queries, and the
-  onboarding API (`/api/onboarding/apply`) with validation, rate limiting,
-  a honeypot field, and a write-scoped Sanity token.
-- The Tibeb pattern system, horizontal rails, countdown card, and gallery
-  filter are fully functional, not mockups.
+- All Sanity schemas (including `donationRecord`), App Router pages, GROQ queries, the onboarding API (`/api/onboarding/apply`), and payment processing endpoints (`/api/payments/initialize`, `/api/payments/verify`, `/api/payments/webhook`) with Zod validation, rate limiting, honeypot protection, and write-scoped Sanity client.
+- The donation portal (`/donate`) supports both local Ethiopian payments (**Chapa**, covering Telebirr, CBE Birr, cards) and global payments (**Stripe**). When live provider keys (`CHAPA_SECRET_KEY`, `STRIPE_SECRET_KEY`) are set in `.env`, transactions route directly to live payment rails; when absent, an interactive Sandbox Simulation mode processes payments end-to-end for testing.
+- The Tibeb pattern system, horizontal rails, countdown card, and gallery filter are fully functional.
 
-**Deliberately stubbed, and why:**
-- The donation portal (`/donate`) is UI-only. Telebirr, CBE Birr, Chapa,
-  and Stripe all require live merchant agreements, webhook signature
-  verification, and reconciliation logic that cannot exist until you have
-  provider accounts. Wiring in a payment intent without those pieces would
-  be worse than an honest "pending setup" state, it would be a security
-  hole dressed up as a feature.
-- Email sending assumes Resend. Swap `lib/email.ts` if you use a different
-  provider, the interface is a single function.
-- Rate limiting assumes Upstash Redis (serverless-friendly, works on
-  Vercel's edge network). Swap `lib/rateLimit.ts` if you host elsewhere.
+**External Provider Configurations:**
+- Email sending uses Resend (`lib/email.ts`).
+- Rate limiting uses Upstash Redis (`lib/rateLimit.ts`).
+- Local ETB Payments use Chapa (`lib/chapa.ts`).
+- Global USD Payments use Stripe (`lib/stripe.ts`).
 
 ## Security model, specifically
 

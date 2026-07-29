@@ -13,6 +13,7 @@ import {
   EnvelopeIcon,
   AddCommentIcon,
   UsersIcon,
+  CreditCardIcon,
 } from "@sanity/icons";
 
 export const deskStructure: StructureResolver = (S) =>
@@ -240,9 +241,49 @@ export const deskStructure: StructureResolver = (S) =>
             ])
         ),
 
+      // 6. DONATIONS & PAYMENTS
+      S.listItem()
+        .title("Donation Records")
+        .icon(CreditCardIcon)
+        .child(
+          S.list()
+            .title("Donations by Status")
+            .items([
+              S.listItem()
+                .title("Successful / Completed")
+                .child(
+                  S.documentList()
+                    .title("Successful Donations")
+                    .filter('_type == "donationRecord" && status == "success"')
+                ),
+              S.listItem()
+                .title("Pending")
+                .child(
+                  S.documentList()
+                    .title("Pending Donations")
+                    .filter('_type == "donationRecord" && status == "pending"')
+                ),
+              S.listItem()
+                .title("Failed")
+                .child(
+                  S.documentList()
+                    .title("Failed Donations")
+                    .filter('_type == "donationRecord" && status == "failed"')
+                ),
+              S.divider(),
+              S.listItem()
+                .title("All Donation Records")
+                .icon(FolderIcon)
+                .child(
+                  S.documentTypeList("donationRecord")
+                    .title("All Donations")
+                ),
+            ])
+        ),
+
       S.divider(),
 
-      // 6. ALL CONTENT COLLECTIONS
+      // 7. ALL CONTENT COLLECTIONS
       S.listItem()
         .title("All Content Collections")
         .icon(FolderIcon)
@@ -258,6 +299,7 @@ export const deskStructure: StructureResolver = (S) =>
               S.documentTypeListItem("partner").title("Strategic Partners").icon(UsersIcon),
               S.documentTypeListItem("studentApplication").title("Student Applications").icon(UserIcon),
               S.documentTypeListItem("contactMessage").title("Contact Messages").icon(EnvelopeIcon),
+              S.documentTypeListItem("donationRecord").title("Donation Records").icon(CreditCardIcon),
             ])
         ),
 

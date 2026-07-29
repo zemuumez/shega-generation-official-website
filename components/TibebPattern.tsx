@@ -19,7 +19,7 @@ type TibebPatternProps = {
 };
 
 const toneMap = {
-  ochre: "#27AE60",
+  ochre: "#EA580C",
   indigo: "#2A6F6B",
   brick: "#B2533E",
   ink: "#1C1E1B",

@@ -51,17 +51,17 @@ export default function ContactForm() {
   return (
     <div className="space-y-4">
       {status === "success" ? (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl p-6 text-center space-y-3">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 font-bold text-xl">
+        <div className="bg-orange-50 border border-orange-200 text-orange-950 rounded-2xl p-6 text-center space-y-3">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-orange-100 text-orange-600 font-bold text-xl">
             ✓
           </div>
           <h3 className="font-display text-xl font-bold uppercase tracking-wide">Message Received!</h3>
-          <p className="text-sm text-emerald-800 leading-relaxed">
+          <p className="text-sm text-orange-800 leading-relaxed">
             Thank you for reaching out. Your inquiry has been sent to our team and we will get back to you shortly.
           </p>
           <button
             onClick={() => setStatus("idle")}
-            className="mt-2 text-xs font-mono font-bold uppercase tracking-widest text-emerald-700 hover:text-emerald-900 underline"
+            className="mt-2 text-xs font-mono font-bold uppercase tracking-widest text-orange-700 hover:text-orange-900 underline"
           >
             Send another message
           </button>
@@ -96,7 +96,7 @@ export default function ContactForm() {
               onChange={(e) => setFullName(e.target.value)}
               placeholder="e.g. Dawit Kassaye"
               disabled={status === "submitting"}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-[#145A32] focus:outline-none focus:ring-1 focus:ring-[#145A32] transition-all disabled:opacity-50"
+              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all disabled:opacity-50"
             />
           </div>
 
@@ -111,7 +111,7 @@ export default function ContactForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
               disabled={status === "submitting"}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-[#145A32] focus:outline-none focus:ring-1 focus:ring-[#145A32] transition-all disabled:opacity-50"
+              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all disabled:opacity-50"
             />
           </div>
 
@@ -123,7 +123,7 @@ export default function ContactForm() {
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               disabled={status === "submitting"}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink bg-white focus:border-[#145A32] focus:outline-none focus:ring-1 focus:ring-[#145A32] transition-all disabled:opacity-50"
+              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink bg-white focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all disabled:opacity-50"
             >
               <option value="General Inquiry">General Inquiry</option>
               <option value="Partnership & Collaboration">Partnership &amp; Collaboration</option>
@@ -145,14 +145,14 @@ export default function ContactForm() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="How can we assist, partner, or collaborate with you?"
               disabled={status === "submitting"}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-[#145A32] focus:outline-none focus:ring-1 focus:ring-[#145A32] transition-all disabled:opacity-50"
+              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-ink placeholder:text-zinc-400 focus:border-ochre focus:outline-none focus:ring-1 focus:ring-ochre transition-all disabled:opacity-50"
             />
           </div>
 
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="w-full bg-[#145A32] hover:bg-[#0E3B21] text-white font-mono text-xs uppercase tracking-widest py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono text-xs uppercase tracking-widest py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {status === "submitting" ? (
               <>

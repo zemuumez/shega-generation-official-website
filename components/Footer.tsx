@@ -28,7 +28,7 @@ export default function Footer() {
               href="https://youtube.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#145A32] transition-colors"
+              className="hover:text-ochre transition-colors"
             >
               YouTube
             </a>
@@ -36,7 +36,7 @@ export default function Footer() {
               href="https://www.tiktok.com/@samuelgeremew_21"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#145A32] transition-colors"
+              className="hover:text-ochre transition-colors"
             >
               TikTok
             </a>
@@ -44,7 +44,7 @@ export default function Footer() {
               href="https://web.facebook.com/share/g/18foDKzcBS/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#145A32] transition-colors"
+              className="hover:text-ochre transition-colors"
             >
               Facebook
             </a>
