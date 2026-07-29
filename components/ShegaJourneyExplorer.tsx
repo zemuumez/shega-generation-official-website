@@ -20,10 +20,7 @@ export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: 
 
       <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-3">
-            <span>ታሪካችን • Our Journey</span>
-          </div>
+        <div className="text-center max-w-4xl mx-auto mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight leading-tight mb-4">
             From <span className="text-ochre">Weyn Coffee</span> to the <span className="text-navy">Future Campus</span>
           </h2>
@@ -33,7 +30,7 @@ export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: 
         </div>
 
         {/* Timeline Navigation Bar */}
-        <div className="mb-10 max-w-5xl mx-auto">
+        <div className="mb-10 max-w-7xl mx-auto w-full">
           {/* Progress Bar Container */}
           <div className="relative mb-6">
             <div className="h-1.5 w-full bg-zinc-200 rounded-full overflow-hidden">
@@ -52,13 +49,13 @@ export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: 
                 <button
                   key={m._id || idx}
                   onClick={() => setActiveIndex(idx)}
-                  className={`flex-shrink-0 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 snap-center flex items-center gap-2 border ${
+                  className={`flex-shrink-0 px-4.5 py-2.5 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 snap-center flex items-center gap-2 border ${
                     isActive
                       ? "bg-navy text-white border-navy shadow-md scale-105"
                       : "bg-ivory/80 text-zinc-700 hover:text-ink border-zinc-200/80 hover:bg-white"
                   }`}
                 >
-                  <span className={`w-2 h-2 rounded-full ${isActive ? "bg-ochre" : "bg-zinc-400"}`} />
+                  <span className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-ochre" : "bg-zinc-400"}`} />
                   <span>{m.year}</span>
                 </button>
               );
@@ -67,7 +64,7 @@ export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: 
         </div>
 
         {/* Interactive Content Card */}
-        <div className="max-w-5xl mx-auto glass-card rounded-3xl p-6 sm:p-8 md:p-10 border border-zinc-200/90 shadow-lg relative bg-white">
+        <div className="max-w-7xl mx-auto w-full glass-card rounded-3xl p-6 sm:p-8 md:p-10 border border-zinc-200/90 shadow-lg relative bg-white">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left Column: Image Card */}
             <div className="lg:col-span-5 relative group">

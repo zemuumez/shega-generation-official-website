@@ -97,31 +97,27 @@ export default function AboutDirectory({
       {/* 1. HERO SECTION WITH TYPEWRITER */}
       <section className="pt-16 pb-12 md:pt-24 md:pb-16 bg-[#F4F3EE] relative overflow-hidden">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center flex flex-col items-center justify-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-6 shadow-xs">
-            <span>እኛ ማን ነን • About Shega Generations</span>
-          </div>
-
           {/* Typewriter Title */}
-          <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2 max-w-5xl mx-auto">
+          <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2 max-w-7xl mx-auto">
             <TypewriterTitle
               phrases={phrases}
               className="font-display font-black text-[clamp(2.4rem,7vw,4.8rem)] sm:text-[clamp(3.8rem,7vw,6.5rem)] leading-[0.96] uppercase text-ochre text-center max-w-full drop-shadow-xs flex flex-col items-center justify-center"
             />
           </div>
 
-          <p className="mt-6 text-zinc-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-sans font-medium leading-relaxed">
+          <p className="mt-6 text-zinc-600 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-sans font-medium leading-relaxed">
             {customSubtitle ||
               "Shega Generations (ሽጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia."}
           </p>
 
           {/* Stat Counter Bar */}
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto w-full">
+          <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto w-full">
             {stats.map((st, i) => (
               <div
                 key={i}
-                className="glass-card rounded-2xl p-5 text-center bg-white/90 border border-zinc-200/80 shadow-xs hover:-translate-y-1 transition-all duration-300"
+                className="glass-card rounded-2xl p-6 text-center bg-white/90 border border-zinc-200/80 shadow-xs hover:-translate-y-1 transition-all duration-300"
               >
-                <div className={`text-3xl sm:text-4xl font-extrabold font-display ${st.color} mb-1`}>
+                <div className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display ${st.color} mb-1`}>
                   {st.value}
                 </div>
                 <div className="text-xs sm:text-sm font-sans text-zinc-600 font-medium">
@@ -133,32 +129,23 @@ export default function AboutDirectory({
         </div>
       </section>
 
-      {/* TIBEB SEPARATOR STRIPE */}
-      <TibebPattern variant="border-horizontal" tone="ochre" className="w-full h-8 opacity-30 my-4" />
-
       {/* 2. INTERACTIVE STORY JOURNEY EXPLORER */}
       <ShegaJourneyExplorer milestones={milestones} />
-
-      {/* TIBEB SEPARATOR STRIPE */}
-      <TibebPattern variant="border-horizontal" tone="indigo" className="w-full h-8 opacity-30 my-4" />
 
       {/* 3. CORE PILLARS & PHILOSOPHY */}
       <section className="py-16 md:py-24 bg-[#F4F3EE] relative">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-navy/10 border border-navy/20 text-navy text-xs font-mono font-bold uppercase tracking-widest mb-3 shadow-xs">
-              <span>የስርዓተ-ትምህርቱ አራት አእማዶች • Our 4 Pillars</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink font-display tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight">
               Holistic Education: <span className="text-ochre">Tech</span> &amp; <span className="text-navy">Character</span>
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
             {pillars.map((pil, idx) => (
               <div
                 key={idx}
-                className="glass-card rounded-3xl p-6 sm:p-8 bg-white border border-zinc-200/90 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                className="glass-card rounded-3xl p-6 sm:p-7 bg-white border border-zinc-200/90 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -168,21 +155,21 @@ export default function AboutDirectory({
                     <span className="text-xs font-mono font-bold text-zinc-400">Pillar 0{idx + 1}</span>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-bold text-ink font-display mb-1">
+                  <h3 className="text-lg sm:text-xl font-bold text-ink font-display mb-1">
                     {pil.title}
                   </h3>
                   <div className="text-xs font-sans text-ochre font-bold mb-3">{pil.titleAmharic}</div>
 
-                  <p className="text-sm text-zinc-600 font-sans leading-relaxed mb-6 font-medium">
+                  <p className="text-xs sm:text-sm text-zinc-600 font-sans leading-relaxed mb-6 font-medium">
                     {pil.description}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pt-4 border-t border-zinc-100">
+                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-zinc-100">
                   {pil.tags.map((t, i) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg bg-zinc-100 text-zinc-700 text-xs font-mono font-medium"
+                      className="px-2 py-0.5 rounded-lg bg-zinc-100 text-zinc-700 text-[11px] font-mono font-medium"
                     >
                       {t}
                     </span>
@@ -194,17 +181,11 @@ export default function AboutDirectory({
         </div>
       </section>
 
-      {/* TIBEB SEPARATOR STRIPE */}
-      <TibebPattern variant="border-horizontal" tone="brick" className="w-full h-8 opacity-30 my-4" />
-
       {/* 4. ORGANIZATIONAL & TEAM DIRECTORY */}
       <section className="py-16 md:py-24 bg-white relative border-t border-zinc-200/80">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ochre/10 border border-ochre/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-3 shadow-xs">
-              <span>መሪዎችና መምህራን • Leadership &amp; Mentors</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink font-display tracking-tight mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight mb-4">
               The Minds Behind <span className="text-ochre">Shega</span> <span className="text-navy">Generations</span>
             </h2>
             <p className="text-base text-zinc-600 font-sans font-medium">
@@ -226,7 +207,7 @@ export default function AboutDirectory({
                 <button
                   key={tab.id}
                   onClick={() => setSelectedDept(tab.id)}
-                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-mono font-bold transition-all duration-300 ${
+                  className={`px-4.5 py-2.5 rounded-full text-xs sm:text-sm font-mono font-bold transition-all duration-300 ${
                     isActive
                       ? "bg-navy text-white shadow-xs"
                       : "bg-ivory text-zinc-600 hover:text-ink hover:bg-zinc-200/70 border border-zinc-200/80"
@@ -239,7 +220,7 @@ export default function AboutDirectory({
           </div>
 
           {/* Team Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
             {filteredTeam.map((member) => (
               <div
                 key={member._id}
@@ -304,11 +285,7 @@ export default function AboutDirectory({
       <section className="py-16 md:py-24 bg-gradient-to-br from-navy via-slate-900 to-navy text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-ochre/20 via-transparent to-transparent pointer-events-none" />
 
-        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center max-w-4xl">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-ochre text-xs font-mono font-bold uppercase tracking-widest mb-6 shadow-xs">
-            <span>የወደፊት ራእይ • Future Campus Vision</span>
-          </div>
-
+        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center max-w-5xl">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight mb-6 leading-tight">
             Building the Permanent <span className="text-ochre">Shega Innovation Campus</span>
           </h2>
