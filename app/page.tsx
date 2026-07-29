@@ -52,6 +52,7 @@ export default async function HomePage() {
   const facebookUrl = siteSettings?.socialFacebookUrl || "https://web.facebook.com/share/g/18foDKzcBS/";
   const telegramHandle = siteSettings?.socialTelegramHandle || "t.me/shegagenerations";
   const telegramUrl = siteSettings?.socialTelegramUrl || "https://t.me/shegagenerations";
+  const tiktokHandle = siteSettings?.socialTikTokHandle || "@samuelgeremew_21";
   const tiktokUrl = siteSettings?.socialTikTokUrl || "https://www.tiktok.com/@samuelgeremew_21";
   const curriculumOverview = siteSettings?.curriculumOverview;
 
