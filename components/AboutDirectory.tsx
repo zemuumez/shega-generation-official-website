@@ -194,7 +194,7 @@ export default function AboutDirectory({
           </div>
 
           {/* Department Filter Tabs */}
-          <div className="flex items-center justify-center gap-2 flex-wrap mb-12">
+          <div className="flex items-center justify-center gap-3 flex-wrap mb-12 px-2 py-2">
             {[
               { id: "all", label: "All Members" },
               { id: "leadership", label: "Executive Leadership" },
@@ -207,13 +207,14 @@ export default function AboutDirectory({
                 <button
                   key={tab.id}
                   onClick={() => setSelectedDept(tab.id)}
-                  className={`px-4.5 py-2.5 rounded-full text-xs sm:text-sm font-mono font-bold transition-all duration-300 ${
+                  className={`flex-shrink-0 whitespace-nowrap px-5 py-3 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 flex items-center gap-2 border select-none leading-none min-w-max ${
                     isActive
-                      ? "bg-navy text-white shadow-xs"
-                      : "bg-ivory text-zinc-600 hover:text-ink hover:bg-zinc-200/70 border border-zinc-200/80"
+                      ? "bg-navy text-white border-navy shadow-md scale-105"
+                      : "bg-ivory/90 text-zinc-700 hover:text-ink border-zinc-200/90 hover:bg-white"
                   }`}
                 >
-                  {tab.label}
+                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${isActive ? "bg-ochre" : "bg-zinc-400"}`} />
+                  <span className="whitespace-nowrap leading-none">{tab.label}</span>
                 </button>
               );
             })}

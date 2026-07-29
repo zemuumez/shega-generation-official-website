@@ -114,7 +114,44 @@ export const deskStructure: StructureResolver = (S) =>
             ])
         ),
 
-      // 3. GALLERY PAGE
+      // 3. ABOUT PAGE
+      S.listItem()
+        .title("About Us Page")
+        .icon(UserIcon)
+        .child(
+          S.list()
+            .title("About Page Content")
+            .items([
+              S.listItem()
+                .title("About Page Settings")
+                .icon(CogIcon)
+                .child(
+                  S.document()
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
+                    .title("About Page Settings")
+                ),
+              S.divider(),
+              S.listItem()
+                .title("Journey & Story Milestones (2021-2026+)")
+                .icon(RocketIcon)
+                .child(
+                  S.documentTypeList("storyMilestone")
+                    .title("Journey Milestones")
+                    .defaultOrdering([{ field: "stepNumber", direction: "asc" }])
+                ),
+              S.listItem()
+                .title("Team Members & Leadership")
+                .icon(UsersIcon)
+                .child(
+                  S.documentTypeList("teamMember")
+                    .title("Team Members & Leadership")
+                    .defaultOrdering([{ field: "order", direction: "asc" }])
+                ),
+            ])
+        ),
+
+      // 4. GALLERY PAGE
       S.listItem()
         .title("Gallery Page")
         .icon(ImageIcon)
@@ -296,7 +333,8 @@ export const deskStructure: StructureResolver = (S) =>
               S.documentTypeListItem("gallery").title("Gallery Items").icon(ImageIcon),
               S.documentTypeListItem("project").title("Student Projects").icon(RocketIcon),
               S.documentTypeListItem("testimonial").title("Alumni Testimonials").icon(CommentIcon),
-              S.documentTypeListItem("partner").title("Strategic Partners").icon(UsersIcon),
+              S.documentTypeListItem("teamMember").title("Team Members & Leadership").icon(UsersIcon),
+              S.documentTypeListItem("storyMilestone").title("Journey & Story Milestones").icon(RocketIcon),
               S.documentTypeListItem("studentApplication").title("Student Applications").icon(UserIcon),
               S.documentTypeListItem("contactMessage").title("Contact Messages").icon(EnvelopeIcon),
               S.documentTypeListItem("donationRecord").title("Donation Records").icon(CreditCardIcon),
