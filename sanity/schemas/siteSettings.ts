@@ -26,6 +26,20 @@ export default defineType({
   fields: [
     // Theme & Brand Colors
     defineField({
+      name: "siteName",
+      title: "Site Name",
+      type: "string",
+      group: "theme",
+      initialValue: "Shega Generations",
+    }),
+    defineField({
+      name: "siteTagline",
+      title: "Site Tagline / Slogan",
+      type: "string",
+      group: "theme",
+      initialValue: "Nurturing Tech Geniuses & Indigenous Leadership in Ethiopia",
+    }),
+    defineField({
       name: "themePreset",
       title: "Color Theme Preset",
       description: "Select a curated color palette preset, or choose 'Custom Colors' to define custom hex codes below.",
@@ -42,6 +56,32 @@ export default defineType({
         ],
         layout: "radio",
       },
+    }),
+    defineField({
+      name: "primaryColor",
+      title: "Primary Color (Hex)",
+      type: "string",
+      group: "theme",
+      description: "Main brand color (e.g. #D97706 or #EA580C)",
+    }),
+    defineField({
+      name: "secondaryColor",
+      title: "Secondary Color (Hex)",
+      type: "string",
+      group: "theme",
+      description: "Secondary brand color (e.g. #0F172A or #0A192F)",
+    }),
+    defineField({
+      name: "accentColor",
+      title: "Accent Color (Hex)",
+      type: "string",
+      group: "theme",
+    }),
+    defineField({
+      name: "colorPreset",
+      title: "Color Preset Identifier",
+      type: "string",
+      group: "theme",
     }),
     defineField({
       name: "customPrimaryColor",

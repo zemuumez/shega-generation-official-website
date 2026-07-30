@@ -53,15 +53,15 @@ export const THEME_PRESETS: Record<string, ThemeVariables> = {
 };
 
 export function resolveTheme(siteSettings?: any): ThemeVariables {
-  const presetKey = siteSettings?.themePreset || "orange-navy";
+  const presetKey = siteSettings?.themePreset || siteSettings?.colorPreset || "orange-navy";
   const defaultPreset = THEME_PRESETS["orange-navy"];
 
   if (presetKey === "custom" && siteSettings) {
     return {
-      primary: siteSettings.customPrimaryColor || defaultPreset.primary,
+      primary: siteSettings.customPrimaryColor || siteSettings.primaryColor || siteSettings.accentColor || defaultPreset.primary,
       primaryLight: siteSettings.customPrimaryLightColor || defaultPreset.primaryLight,
       primaryDark: siteSettings.customPrimaryDarkColor || defaultPreset.primaryDark,
-      secondary: siteSettings.customSecondaryColor || defaultPreset.secondary,
+      secondary: siteSettings.customSecondaryColor || siteSettings.secondaryColor || defaultPreset.secondary,
       secondaryLight: siteSettings.customSecondaryLightColor || defaultPreset.secondaryLight,
       bg: siteSettings.customBgColor || defaultPreset.bg,
       text: siteSettings.customTextColor || defaultPreset.text,
@@ -69,7 +69,14 @@ export function resolveTheme(siteSettings?: any): ThemeVariables {
     };
   }
 
-  return THEME_PRESETS[presetKey] || defaultPreset;
+  const preset = THEME_PRESETS[presetKey] || defaultPreset;
+
+  // Override primary or secondary if explicitly set in siteSettings
+  if (siteSettings?.primaryColor) {
+    return { ...preset, primary: siteSettings.primaryColor };
+  }
+
+  return preset;
 }
 
 export function generateThemeCssVariables(theme: ThemeVariables): string {
