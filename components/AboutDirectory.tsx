@@ -7,6 +7,15 @@ import ShegaJourneyExplorer from "@/components/ShegaJourneyExplorer";
 import TibebPattern from "@/components/TibebPattern";
 import { safeImageUrl } from "@/sanity/lib/client";
 
+const teamFallbackAvatars: Record<string, string> = {
+  "Samuel Geremew": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
+  "Dawit Kassaye": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
+  "Bethlehem Tadesse": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600",
+  "Yonas Bekele": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600",
+  "Selamawit Abrha": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=600",
+  "Kaleb Tesfaye": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=600",
+};
+
 export default function AboutDirectory({
   teamMembers = [],
   milestones = [],
@@ -233,7 +242,7 @@ export default function AboutDirectory({
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative w-16 h-16 rounded-2xl overflow-hidden shadow-xs border border-zinc-200 flex-shrink-0">
                       <Image
-                        src={safeImageUrl(member.avatar, 200)}
+                        src={safeImageUrl(member.avatar, 200, teamFallbackAvatars[member.name] || teamFallbackAvatars["Samuel Geremew"])}
                         alt={member.name}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -336,7 +345,7 @@ export default function AboutDirectory({
             <div className="flex items-center gap-5 mb-6">
               <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-md border border-zinc-200 flex-shrink-0">
                 <Image
-                  src={safeImageUrl(selectedMember.avatar, 300)}
+                  src={safeImageUrl(selectedMember.avatar, 300, teamFallbackAvatars[selectedMember.name] || teamFallbackAvatars["Samuel Geremew"])}
                   alt={selectedMember.name}
                   fill
                   className="object-cover"

@@ -4,6 +4,16 @@ import { useState } from "react";
 import Image from "next/image";
 import { safeImageUrl } from "@/sanity/lib/client";
 
+const milestoneFallbackImages: Record<number | string, string> = {
+  1: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=80&w=800",
+  2: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800",
+  3: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
+  4: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800",
+  5: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800",
+  6: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=800",
+  7: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800",
+};
+
 export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: any[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -11,6 +21,7 @@ export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: 
 
   const current = milestones[activeIndex] || milestones[0];
   const progressPercent = ((activeIndex + 1) / milestones.length) * 100;
+  const fallbackImg = milestoneFallbackImages[current.stepNumber] || milestoneFallbackImages[1];
 
   return (
     <section className="py-16 md:py-24 bg-white/70 backdrop-blur-md border-y border-zinc-200/80 relative overflow-hidden">
@@ -70,7 +81,7 @@ export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: 
             <div className="lg:col-span-5 relative group">
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-zinc-200/80 bg-zinc-100">
                 <Image
-                  src={safeImageUrl(current.image, 800)}
+                  src={safeImageUrl(current.image, 800, fallbackImg)}
                   alt={current.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
