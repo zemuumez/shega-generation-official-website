@@ -105,6 +105,24 @@ export default function AboutDirectory({
     <div className="relative">
       {/* 1. HERO SECTION WITH TYPEWRITER */}
       <section className="pt-16 pb-12 md:pt-24 md:pb-16 bg-[#F4F3EE] relative overflow-hidden">
+        {/* Left Side Framing border ribbon */}
+        <div className="absolute left-0 top-0 bottom-0 w-[42vw] max-w-2xl z-0 pointer-events-none opacity-20 hidden md:block [mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)] [-webkit-mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)] select-none">
+          <img
+            src="/images/pattern1.svg"
+            alt=""
+            className="h-full w-full object-cover object-left scale-x-[-1]"
+          />
+        </div>
+
+        {/* Right Side Framing border ribbon */}
+        <div className="absolute right-0 top-0 bottom-0 w-[42vw] max-w-2xl z-0 pointer-events-none opacity-20 hidden md:block [mask-image:linear-gradient(to_left,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)] [-webkit-mask-image:linear-gradient(to_left,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_35%,rgba(0,0,0,0)_85%)] select-none">
+          <img
+            src="/images/pattern1.svg"
+            alt=""
+            className="h-full w-full object-cover object-left"
+          />
+        </div>
+
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center flex flex-col items-center justify-center">
           {/* Typewriter Title */}
           <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2 max-w-7xl mx-auto">
