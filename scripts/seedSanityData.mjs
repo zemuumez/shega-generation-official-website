@@ -43,10 +43,90 @@ const siteSettings = {
   _type: "siteSettings",
   siteName: "Shega Generations",
   siteTagline: "Nurturing Tech Geniuses & Indigenous Leadership in Ethiopia",
-  accentColor: "#D97706",
-  primaryColor: "#D97706",
-  secondaryColor: "#0F172A",
-  colorPreset: "shega-ochre",
+  themePreset: "orange-navy",
+  primaryColor: "#EA580C",
+  secondaryColor: "#0A192F",
+  accentColor: "#EA580C",
+  colorPreset: "orange-navy",
+
+  // Hero Section
+  heroTitle: "Shega Generations",
+  heroCaption: "Free high-tier software engineering, AI, indigenous Ethiopian history, and character training for talented youth.",
+  heroCtaPrimary: "Join the Generation",
+  heroCtaSecondary: "Support the Mission",
+
+  // Statement Banner Section
+  statementBannerTitle1: "NURTURING TECH GENIUSES",
+  statementBannerTitle2: "FOR ETHIOPIA & AFRICA",
+  statementBannerTitle3: "FREE COHORT TRAINING & MENTORSHIP",
+
+  // Cultural Anchoring Section
+  culturalAnchoringSubtitle: "Rooted in Indigenous Excellence",
+  culturalAnchoringDescription: "We combine modern computer science with Ge'ez linguistic logic, Ethiopian history, and hospitality character development.",
+
+  // Pedagogical Section
+  pedagogicalTitle: "Peer Mentorship & Hands-On Engineering",
+  pedagogicalDescription: "Students learn full-stack development, AI model integration, hardware tinkering, and project management in real commercial client software labs.",
+
+  // Curriculum Section
+  curriculumTitle: "Complete Engineering & Leadership Curriculum",
+  curriculumDescription: "From foundational computer science and web dev to advanced artificial intelligence and indigenous ethics.",
+
+  // Journeys Section
+  journeysKicker: "Student Media Coverage & Achievements",
+  journeysTitle: "Student Interviews & Media Features",
+  journeysDescription: "Radio interviews, podcast features, Facebook broadcasts, and software projects executed by Shega Generation students.",
+  journeysCategories: ["Podcasts", "Radio Programs", "Programs", "Interviews"],
+
+  // Testimonials Section
+  testimonialsTitle: "Voices of the Generation",
+  testimonialsDescription: "Hear from our students, alumni, and community mentors about their transformational journey at Shega Generations.",
+
+  // Events Section
+  eventsSectionKicker: "The nearest gathering",
+  eventsSectionTitle: "Upcoming Gathering & Workshops",
+  eventsPageTitlePhrases: [
+    "Where the generation gathers.",
+    "የትውልዱ መገናኛ",
+    "UPCOMING CTFs & WORKSHOPS",
+  ],
+  eventsPageSubtitle: "Active, incoming and historic meetups from CTFs in Addis to Simien treks.",
+  eventsCategories: ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"],
+
+  // Gallery Section
+  galleryPageTitlePhrases: [
+    "The weave, in pictures.",
+    "በስዕሎች የተሸመነው",
+    "STUDENT COHORTS & EXPEDITIONS",
+  ],
+  galleryPageSubtitle: "Expeditions, hackathons, classrooms, and volunteer work across Ethiopia.",
+  galleryCategories: ["Expeditions", "Hackathons", "Classroom", "Volunteer-Work"],
+
+  // Contact Section
+  contactPageTitlePhrases: [
+    "Get in touch, with Shega.",
+    "ከሸጋ ጋር, ይገናኙ",
+    "PARTNERSHIPS & INQUIRIES",
+  ],
+  contactPageSubtitle: "Reach out to our leadership team for general inquiries, partnerships, sponsorships, media features, or donations.",
+
+  // Partners Section
+  partnersKicker: "Our clients / partners",
+  partnersHeadline: "Pleasure to work with",
+  partnersDescription: "Shega Generation collaborates with Ethiopia's premier educational academies, hospitality centers, media houses, and venue operators across Addis Ababa.",
+
+  // Community Section
+  communityKicker: "Community",
+  communityTitle: "Follow the day to day",
+  communityDescription: "Stay connected with our daily student builds, summer camp moments, and community updates.",
+  socialFacebookHandle: "Shega Community Group",
+  socialFacebookUrl: "https://web.facebook.com/share/g/18foDKzcBS/",
+  socialTelegramHandle: "t.me/shegagenerations",
+  socialTelegramUrl: "https://t.me/shegagenerations",
+  socialTikTokHandle: "@samuelgeremew_21",
+  socialTikTokUrl: "https://www.tiktok.com/@samuelgeremew_21",
+
+  // About Us Page Section
   aboutPageTitlePhrases: [
     "እኛ ማን ነን",
     "ABOUT SHEGA GENERATIONS",

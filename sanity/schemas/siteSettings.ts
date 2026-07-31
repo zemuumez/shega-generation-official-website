@@ -152,7 +152,56 @@ export default defineType({
       title: "Hero Caption",
       type: "text",
       rows: 3,
+      initialValue: "Free high-tier software engineering, AI, indigenous Ethiopian history, and character training for talented youth.",
       group: "hero",
+    }),
+
+    // Testimonials Section
+    defineField({
+      name: "testimonialsTitle",
+      title: "Testimonials Section Title",
+      type: "string",
+      initialValue: "Voices of the Generation",
+      group: "testimonials",
+    }),
+    defineField({
+      name: "testimonialsDescription",
+      title: "Testimonials Section Description",
+      type: "text",
+      rows: 3,
+      initialValue: "Hear from our students, alumni, and community mentors about their transformational journey at Shega Generations.",
+      group: "testimonials",
+    }),
+
+    // About Us Page Copy
+    defineField({
+      name: "aboutPageTitlePhrases",
+      title: "About Page Title Phrases (Typewriter)",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: [
+        "እኛ ማን ነን",
+        "ABOUT SHEGA GENERATIONS",
+        "OUR ORIGIN STORY",
+        "OUR MISSION & VISION",
+      ],
+      group: "about",
+    }),
+    defineField({
+      name: "aboutPageSubtitle",
+      title: "About Page Subtitle",
+      type: "text",
+      rows: 3,
+      initialValue: "Shega Generations (ሽጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia.",
+      group: "about",
+    }),
+    defineField({
+      name: "aboutCampusVisionText",
+      title: "Shega Innovation Campus Vision Text",
+      type: "text",
+      rows: 4,
+      initialValue: "Our ultimate goal is building our own dedicated 24/7 innovation campus in Addis Ababa—equipped with overnight coding laboratories, hardware workshops, incubation spaces, rest facilities, and multi-tier cohort capacity reachable from every corner of Ethiopia.",
+      group: "about",
     }),
     defineField({
       name: "heroCtaPrimary",
@@ -182,18 +231,21 @@ export default defineType({
       name: "statementBannerTitle1",
       title: "Banner Line 1",
       type: "string",
+      initialValue: "NURTURING TECH GENIUSES",
       group: "statement",
     }),
     defineField({
       name: "statementBannerTitle2",
       title: "Banner Line 2 (Outlined Stroke)",
       type: "string",
+      initialValue: "FOR ETHIOPIA & AFRICA",
       group: "statement",
     }),
     defineField({
       name: "statementBannerTitle3",
       title: "Banner Line 3",
       type: "string",
+      initialValue: "FREE COHORT TRAINING & MENTORSHIP",
       group: "statement",
     }),
     defineField({
@@ -209,6 +261,7 @@ export default defineType({
       name: "culturalAnchoringSubtitle",
       title: "Cultural Anchoring Subtitle",
       type: "string",
+      initialValue: "Rooted in Indigenous Excellence",
       group: "cultural",
     }),
     defineField({
@@ -216,6 +269,7 @@ export default defineType({
       title: "Cultural Anchoring Description",
       type: "text",
       rows: 3,
+      initialValue: "We combine modern computer science with Ge'ez linguistic logic, Ethiopian history, and hospitality character development.",
       group: "cultural",
     }),
     defineField({
@@ -231,6 +285,7 @@ export default defineType({
       name: "pedagogicalTitle",
       title: "Pedagogical Section Title",
       type: "string",
+      initialValue: "Peer Mentorship & Hands-On Engineering",
       group: "pedagogical",
     }),
     defineField({
@@ -238,6 +293,7 @@ export default defineType({
       title: "Pedagogical Section Description",
       type: "text",
       rows: 3,
+      initialValue: "Students learn full-stack development, AI model integration, hardware tinkering, and project management in real commercial client software labs.",
       group: "pedagogical",
     }),
 
@@ -246,6 +302,7 @@ export default defineType({
       name: "curriculumTitle",
       title: "Curriculum Section Title",
       type: "string",
+      initialValue: "Complete Engineering & Leadership Curriculum",
       group: "curriculum",
     }),
     defineField({
@@ -253,6 +310,7 @@ export default defineType({
       title: "Curriculum Section Description",
       type: "text",
       rows: 3,
+      initialValue: "From foundational computer science and web dev to advanced artificial intelligence and indigenous ethics.",
       group: "curriculum",
     }),
 
