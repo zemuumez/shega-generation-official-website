@@ -140,7 +140,14 @@ export default async function HomePage() {
 
       {/* FULL-WIDTH PHOTO OVERLAY STATEMENT BANNER WITH PARALLAX EFFECT */}
       <section className="relative w-full h-[55vh] min-h-[420px] overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 bg-fixed bg-cover bg-center" style={{ backgroundImage: `url('${statementBannerBg}')` }} />
+        <Image
+          src={statementBannerBg}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+          priority
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/45 to-black/35 z-10" />
         
         <div className="relative z-20 flex flex-col items-center justify-center text-center p-6 select-none leading-[0.95]">
@@ -160,8 +167,15 @@ export default async function HomePage() {
       <CurriculumSplitSection />
 
       {/* PARALLAX PHILOSOPHY BANNER */}
-      <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center bg-fixed bg-cover bg-center select-none" style={{ backgroundImage: `url('${culturalAnchoringBg}')` }}>
-        <div className="absolute inset-0 bg-black/35 z-10" />
+      <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center select-none">
+        <Image
+          src={culturalAnchoringBg}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-black/45 z-10" />
         <div className="relative z-20 max-w-4xl text-center px-6">
           <span className="font-mono text-xs uppercase tracking-widest text-orange-300 font-bold drop-shadow-sm"> {culturalSubtitle}</span>
           <h2 className="mt-4 font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider leading-tight drop-shadow-md">
