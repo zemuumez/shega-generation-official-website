@@ -36,9 +36,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("homeSiteSettingsDoc")
-                    .schemaType("siteSettings")
-                    .documentId("siteSettings")
+                    .id("homePageSettingsDoc")
+                    .schemaType("homePageSettings")
+                    .documentId("homePageSettings")
                     .title("Home Page Copy & Settings")
                 ),
               S.divider(),
@@ -148,14 +148,14 @@ export const deskStructure: StructureResolver = (S) =>
             .items([
               S.listItem()
                 .id("aboutHeroSectionItem")
-                .title("About Hero & Mission Copy")
-                .icon(SparklesIcon)
+                .title("About Page Settings & Hero Copy")
+                .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("aboutHeroSettingsDoc")
-                    .schemaType("siteSettings")
-                    .documentId("siteSettings")
-                    .title("About Hero & Mission Copy")
+                    .id("aboutPageSettingsDoc")
+                    .schemaType("aboutPageSettings")
+                    .documentId("aboutPageSettings")
+                    .title("About Page Copy & Settings")
                 ),
               S.listItem()
                 .id("storyMilestonesItem")
@@ -245,6 +245,18 @@ export const deskStructure: StructureResolver = (S) =>
             .id("galleryPageList")
             .title("Gallery Sections by Category")
             .items([
+              S.listItem()
+                .id("galleryPageSettingsItem")
+                .title("Gallery Page Copy & Subtitle")
+                .icon(CogIcon)
+                .child(
+                  S.document()
+                    .id("galleryPageSettingsDoc")
+                    .schemaType("galleryPageSettings")
+                    .documentId("galleryPageSettings")
+                    .title("Gallery Page Copy & Settings")
+                ),
+              S.divider(),
               S.listItem()
                 .id("expeditionsGalleryItem")
                 .title("Expeditions Gallery")

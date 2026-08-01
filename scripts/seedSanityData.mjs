@@ -542,14 +542,74 @@ const educationalPillars = [
   },
 ];
 
+const homePageSettingsDoc = {
+  _id: "homePageSettings",
+  _type: "homePageSettings",
+  heroTitle: "Shega Generation",
+  heroCaption: "Sharing knowledge in kindness across generations — fusing software engineering and AI with Ethiopian heritage to empower future leaders.",
+  heroCtaPrimary: "Apply for Summer Camp",
+  heroCtaSecondary: "Partner & Sponsor",
+  statementBannerTitle1: "Software & AI Labs",
+  statementBannerTitle2: "Indigenous Wisdom & Erq",
+  statementBannerTitle3: "Youth Leadership",
+  culturalAnchoringSubtitle: "Rooted in Ethiopian Heritage & Character",
+  culturalAnchoringDescription: "From ancient Ge'ez fundamentals and Ethiopian history to traditional dining etiquette (የማዕድ ስነ-ስርዓት) and positive communication (ፈገግታና አዎንታዊ ተግባቦት), we nurture technically elite, culturally grounded leaders.",
+  pedagogicalTitle: "Peer Mentorship & Hands-On Engineering",
+  pedagogicalDescription: "Students learn full-stack development, AI model integration, hardware tinkering, and project management in real commercial client software labs.",
+  curriculumTitle: "Complete Engineering & Leadership Curriculum",
+  curriculumDescription: "From foundational computer science and web dev to advanced artificial intelligence and indigenous ethics.",
+};
+
+const aboutPageSettingsDoc = {
+  _id: "aboutPageSettings",
+  _type: "aboutPageSettings",
+  aboutHeroKicker: "OUR MISSION & ORIGIN STORY",
+  aboutPageTitlePhrases: [
+    "እኛ ማን ነን",
+    "ABOUT SHEGA GENERATIONS",
+    "OUR ORIGIN STORY",
+    "OUR MISSION & VISION",
+  ],
+  aboutPageSubtitle:
+    "Shega Generations (ሸጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia.",
+  aboutHeroStats: [
+    { value: "500+", label: "Talented Geniuses Trained" },
+    { value: "100% Free", label: "Tuition Cost to Students" },
+    { value: "12+", label: "Summer & Annual Cohorts" },
+    { value: "15+", label: "Institutional Partners" },
+  ],
+  aboutPillarsTitle: "Our 4 Pillars of Holistic Education",
+  aboutPillarsSubtitle:
+    "Combining elite computational software engineering with indigenous Ethiopian heritage, dining etiquette, and youth peer mentorship.",
+  aboutCampusVisionText:
+    "Our ultimate goal is building our own dedicated 24/7 innovation campus in Addis Ababa—equipped with overnight coding laboratories, hardware workshops, incubation spaces, rest facilities, and multi-tier cohort capacity reachable from every corner of Ethiopia.",
+  orgStructureTitle: "Role & Responsibilities Breakdown",
+  orgStructureSubtitle: "Organizational breakdown & governance framework for Shega Generation.",
+};
+
+const galleryPageSettingsDoc = {
+  _id: "galleryPageSettings",
+  _type: "galleryPageSettings",
+  galleryPageTitlePhrases: [
+    "The weave, in pictures.",
+    "በስዕሎች የተሸመነው",
+    "STUDENT COHORTS & EXPEDITIONS",
+  ],
+  galleryPageSubtitle: "Expeditions, hackathons, classrooms, and volunteer work across Ethiopia.",
+  galleryCategories: ["Expeditions", "Hackathons", "Classroom", "Volunteer-Work"],
+};
+
 async function seed() {
   console.log("🚀 Starting Sanity CMS Data Seeding...");
   console.log(`Project ID: ${projectId}, Dataset: ${dataset}`);
 
   try {
-    // 1. Site Settings
-    console.log("Seeding Global Site Settings...");
+    // 1. Site Settings & Page Settings Singletons
+    console.log("Seeding Global Site Settings & Isolated Page Settings...");
     await client.createIfNotExists(siteSettings);
+    await client.createIfNotExists(homePageSettingsDoc);
+    await client.createIfNotExists(aboutPageSettingsDoc);
+    await client.createIfNotExists(galleryPageSettingsDoc);
 
     // 2. Story Milestones
     console.log("Seeding Story Milestones...");
