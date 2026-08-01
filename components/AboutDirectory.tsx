@@ -64,6 +64,7 @@ const teamFallbackAvatars: Record<string, string> = {
 export default function AboutDirectory({
   teamMembers = [],
   milestones = [],
+  pillars = [],
   customPhrases,
   customSubtitle,
   customCampusVision,
@@ -71,6 +72,7 @@ export default function AboutDirectory({
 }: {
   teamMembers?: any[];
   milestones?: any[];
+  pillars?: any[];
   customPhrases?: string[];
   customSubtitle?: string;
   customCampusVision?: string;
@@ -150,14 +152,21 @@ export default function AboutDirectory({
     return allMembersSorted;
   }, [selectedDept, boardMembers, teacherMembers, execMembers, allMembersSorted]);
 
-  const stats = [
+  const defaultStats = [
     { label: "Talented Geniuses Trained", value: "500+", color: "text-ochre" },
     { label: "Tuition Cost to Students", value: "100% Free", color: "text-navy" },
     { label: "Summer & Annual Cohorts", value: "12+", color: "text-ochre" },
     { label: "Institutional Partners", value: "15+", color: "text-navy" },
   ];
 
-  const pillars = [
+  const stats = (siteSettings?.aboutHeroStats && siteSettings.aboutHeroStats.length > 0)
+    ? siteSettings.aboutHeroStats.map((st: any, i: number) => ({
+        ...st,
+        color: i % 2 === 0 ? "text-ochre" : "text-navy",
+      }))
+    : defaultStats;
+
+  const defaultPillars = [
     {
       title: "Computational Supremacy",
       titleAmharic: "የኮምፒውተርና አይ-ኦቲ ትምህርት",
@@ -203,6 +212,22 @@ export default function AboutDirectory({
       tags: ["Peer Mentorship", "Commercial Lab", "Client Projects", "Incubation"],
     },
   ];
+
+  const activePillarsList = (pillars && pillars.length > 0)
+    ? pillars
+    : (siteSettings?.aboutPillarsList && siteSettings.aboutPillarsList.length > 0)
+      ? siteSettings.aboutPillarsList
+      : null;
+
+  const resolvedPillars = activePillarsList
+    ? activePillarsList.map((p: any, idx: number) => ({
+        title: p.title || defaultPillars[idx % defaultPillars.length].title,
+        titleAmharic: p.titleAmharic || defaultPillars[idx % defaultPillars.length].titleAmharic,
+        description: p.description || defaultPillars[idx % defaultPillars.length].description,
+        tags: (p.tags && p.tags.length > 0) ? p.tags : defaultPillars[idx % defaultPillars.length].tags,
+        icon: defaultPillars[idx % defaultPillars.length].icon,
+      }))
+    : defaultPillars;
 
   const renderMemberCard = (member: any, index = 0) => {
     const isBoard = member.department === "board";
@@ -373,7 +398,7 @@ export default function AboutDirectory({
 
           {/* Stat Counter Bar */}
           <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto w-full">
-            {stats.map((st, i) => (
+            {stats.map((st: any, i: number) => (
               <div
                 key={i}
                 className="glass-card rounded-2xl p-6 text-center bg-white/90 border border-zinc-200/80 shadow-xs hover:-translate-y-1 transition-all duration-300"
@@ -397,13 +422,16 @@ export default function AboutDirectory({
       <section className="py-16 md:py-24 bg-[#F4F3EE] relative">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight">
-              Holistic Education: <span className="text-ochre">Tech</span> &amp; <span className="text-navy">Character</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight mb-3">
+              {siteSettings?.aboutPillarsTitle || "Our 4 Pillars of Holistic Education"}
             </h2>
+            <p className="text-sm sm:text-base text-zinc-600 font-sans leading-relaxed font-medium">
+              {siteSettings?.aboutPillarsSubtitle || "Combining elite computational software engineering with indigenous Ethiopian heritage, dining etiquette, and youth peer mentorship."}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
-            {pillars.map((pil, idx) => (
+            {resolvedPillars.map((pil: any, idx: number) => (
               <div
                 key={idx}
                 className="glass-card rounded-3xl p-6 sm:p-7 bg-white border border-zinc-200/90 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
@@ -427,7 +455,7 @@ export default function AboutDirectory({
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 pt-4 border-t border-zinc-100">
-                  {pil.tags.map((t, i) => (
+                  {pil.tags.map((t: any, i: number) => (
                     <span
                       key={i}
                       className="px-2 py-0.5 rounded-lg bg-zinc-100 text-zinc-700 text-[11px] font-mono font-medium"
@@ -448,11 +476,10 @@ export default function AboutDirectory({
           {/* Header */}
           <div className="text-center max-w-4xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight mb-4">
-              {siteSettings?.orgStructureTitle || "Organization Structure & Governance"}
+              {siteSettings?.orgStructureTitle || "Role & Responsibilities Breakdown"}
             </h2>
-            <p className="text-base text-zinc-600 font-sans font-medium max-w-2xl mx-auto">
-              {siteSettings?.orgStructureSubtitle ||
-                "Role & Responsibilities breakdown for the Board of Directors, Executive Leadership, and Operational Coordinators."}
+            <p className="text-base sm:text-lg text-zinc-600 font-sans leading-relaxed max-w-2xl mx-auto font-medium">
+              {siteSettings?.orgStructureSubtitle || "Organizational breakdown & governance framework for Shega Generation."}
             </p>
           </div>
 
@@ -479,7 +506,7 @@ export default function AboutDirectory({
                     {isActive && (
                       <motion.div
                         layoutId="activeTabPillAbout"
-                        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-navy via-slate-900 to-navy shadow-md z-0"
+                        className="absolute inset-0 rounded-2xl bg-navy shadow-md z-0"
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       />
                     )}
@@ -509,9 +536,7 @@ export default function AboutDirectory({
       </section>
 
       {/* 5. FUTURE INNOVATION CAMPUS VISION CALLOUT */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-navy via-slate-900 to-navy text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-ochre/20 via-transparent to-transparent pointer-events-none" />
-
+      <section className="py-16 md:py-24 bg-[#0A192F] text-white relative overflow-hidden">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center max-w-5xl">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight mb-6 leading-tight">
             Building the Permanent <span className="text-ochre">Shega Innovation Campus</span>

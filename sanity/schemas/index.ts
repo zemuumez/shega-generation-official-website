@@ -10,6 +10,7 @@ import partner from "./partner";
 import donationRecord from "./donationRecord";
 import teamMember from "./teamMember";
 import storyMilestone from "./storyMilestone";
+import educationalPillar from "./educationalPillar";
 
 export const schemaTypes = [
   event,
@@ -24,5 +25,6 @@ export const schemaTypes = [
   donationRecord,
   teamMember,
   storyMilestone,
+  educationalPillar,
 ];
 

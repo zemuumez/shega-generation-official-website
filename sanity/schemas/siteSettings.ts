@@ -490,7 +490,14 @@ export default defineType({
       group: "community",
     }),
 
-    // About Us Page Copy
+    // About Us Page Copy & Hero
+    defineField({
+      name: "aboutHeroKicker",
+      title: "About Hero Kicker / Badge Notice",
+      type: "string",
+      initialValue: "OUR MISSION & ORIGIN STORY",
+      group: "about",
+    }),
     defineField({
       name: "aboutPageTitlePhrases",
       title: "About Page Title Phrases (Typewriter)",
@@ -506,11 +513,66 @@ export default defineType({
     }),
     defineField({
       name: "aboutPageSubtitle",
-      title: "About Page Subtitle",
+      title: "About Page Subtitle / Mission Statement",
       type: "text",
       rows: 3,
-      initialValue: "Shega Generations (ሽጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia.",
+      initialValue: "Shega Generations (ሸጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia.",
       group: "about",
+    }),
+    defineField({
+      name: "aboutHeroStats",
+      title: "About Hero Key Impact Statistics",
+      type: "array",
+      group: "about",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "value", title: "Stat Value (e.g. 500+)", type: "string" },
+            { name: "label", title: "Stat Label", type: "string" },
+          ],
+        },
+      ],
+      initialValue: [
+        { value: "500+", label: "Talented Geniuses Trained" },
+        { value: "100% Free", label: "Tuition Cost to Students" },
+        { value: "12+", label: "Summer & Annual Cohorts" },
+        { value: "15+", label: "Institutional Partners" },
+      ],
+    }),
+
+    // Holistic Education Pillars
+    defineField({
+      name: "aboutPillarsTitle",
+      title: "Holistic Education Section Title",
+      type: "string",
+      initialValue: "Our 4 Pillars of Holistic Education",
+      group: "about",
+    }),
+    defineField({
+      name: "aboutPillarsSubtitle",
+      title: "Holistic Education Section Subtitle",
+      type: "text",
+      rows: 2,
+      initialValue: "Combining elite computational software engineering with indigenous Ethiopian heritage, dining etiquette, and youth peer mentorship.",
+      group: "about",
+    }),
+    defineField({
+      name: "aboutPillarsList",
+      title: "Educational Pillars Breakdown",
+      type: "array",
+      group: "about",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "title", title: "Pillar Title (English)", type: "string" },
+            { name: "titleAmharic", title: "Pillar Title (Amharic)", type: "string" },
+            { name: "description", title: "Description", type: "text", rows: 3 },
+            { name: "tags", title: "Tags / Key Highlights", type: "array", of: [{ type: "string" }] },
+          ],
+        },
+      ],
     }),
     defineField({
       name: "aboutCampusVisionText",

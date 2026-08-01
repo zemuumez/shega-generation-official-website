@@ -52,8 +52,13 @@ export const SITE_SETTINGS_QUERY = `
   socialTelegramUrl,
   socialTikTokHandle,
   socialTikTokUrl,
+  aboutHeroKicker,
   aboutPageTitlePhrases,
   aboutPageSubtitle,
+  aboutHeroStats,
+  aboutPillarsTitle,
+  aboutPillarsSubtitle,
+  aboutPillarsList,
   aboutCampusVisionText,
   orgStructureTitle,
   orgStructureSubtitle,
@@ -107,5 +112,10 @@ export const TEAM_MEMBERS_QUERY = `
 export const STORY_MILESTONES_QUERY = `
 *[_type == "storyMilestone"] | order(stepNumber asc) {
   _id, stepNumber, year, title, location, description, quote, image, highlights
+}`;
+
+export const EDUCATIONAL_PILLARS_QUERY = `
+*[_type == "educationalPillar"] | order(pillarNumber asc) {
+  _id, pillarNumber, title, titleAmharic, description, tags, iconType
 }`;
 

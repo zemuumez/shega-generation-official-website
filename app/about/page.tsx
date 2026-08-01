@@ -1,5 +1,5 @@
 import { safeFetch } from "@/sanity/lib/client";
-import { TEAM_MEMBERS_QUERY, STORY_MILESTONES_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import { TEAM_MEMBERS_QUERY, STORY_MILESTONES_QUERY, SITE_SETTINGS_QUERY, EDUCATIONAL_PILLARS_QUERY } from "@/sanity/lib/queries";
 import { demoTeamMembers, demoStoryMilestones } from "@/lib/demoData";
 import AboutDirectory from "@/components/AboutDirectory";
 import SideFramingPatterns from "@/components/SideFramingPatterns";
@@ -14,10 +14,11 @@ export const metadata = {
 export const revalidate = 0;
 
 export default async function AboutPage() {
-  const [teamMembers, milestones, siteSettings] = await Promise.all([
+  const [teamMembers, milestones, siteSettings, pillars] = await Promise.all([
     safeFetch(TEAM_MEMBERS_QUERY, {}, demoTeamMembers),
     safeFetch(STORY_MILESTONES_QUERY, {}, demoStoryMilestones),
     safeFetch<any>(SITE_SETTINGS_QUERY, {}, null),
+    safeFetch<any[]>(EDUCATIONAL_PILLARS_QUERY, {}, []),
   ]);
 
   return (
@@ -28,6 +29,7 @@ export default async function AboutPage() {
         <AboutDirectory
           teamMembers={teamMembers && teamMembers.length > 0 ? teamMembers : demoTeamMembers}
           milestones={milestones && milestones.length > 0 ? milestones : demoStoryMilestones}
+          pillars={pillars}
           customPhrases={siteSettings?.aboutPageTitlePhrases}
           customSubtitle={siteSettings?.aboutPageSubtitle}
           customCampusVision={siteSettings?.aboutCampusVisionText}

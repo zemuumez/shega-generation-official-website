@@ -127,6 +127,7 @@ const siteSettings = {
   socialTikTokUrl: "https://www.tiktok.com/@samuelgeremew_21",
 
   // About Us Page Section
+  aboutHeroKicker: "OUR MISSION & ORIGIN STORY",
   aboutPageTitlePhrases: [
     "እኛ ማን ነን",
     "ABOUT SHEGA GENERATIONS",
@@ -134,7 +135,42 @@ const siteSettings = {
     "OUR MISSION & VISION",
   ],
   aboutPageSubtitle:
-    "Shega Generations (ሽጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia.",
+    "Shega Generations (ሸጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia.",
+  aboutHeroStats: [
+    { value: "500+", label: "Talented Geniuses Trained" },
+    { value: "100% Free", label: "Tuition Cost to Students" },
+    { value: "12+", label: "Summer & Annual Cohorts" },
+    { value: "15+", label: "Institutional Partners" },
+  ],
+  aboutPillarsTitle: "Our 4 Pillars of Holistic Education",
+  aboutPillarsSubtitle:
+    "Combining elite computational software engineering with indigenous Ethiopian heritage, dining etiquette, and youth peer mentorship.",
+  aboutPillarsList: [
+    {
+      title: "Computational Supremacy",
+      titleAmharic: "የኮምፒውተርና አይ-ኦቲ ትምህርት",
+      description: "From Scratch & Python to AI Command Engineering, Full-Stack web development, cybersecurity, and robotics.",
+      tags: ["Python", "AI Engineering", "Web Dev", "Robotics"],
+    },
+    {
+      title: "Indigenous Heritage & Ge'ez",
+      titleAmharic: "ሀገር በቀል እውቀትና ግዕዝ",
+      description: "Unlocking ancient Ge'ez numeral systems, traditional architectural secrets, Ethiopian history, and Erq conflict resolution.",
+      tags: ["Ge'ez", "Ethiopian History", "Architecture Secrets", "Erq"],
+    },
+    {
+      title: "Etiquette & Hospitality",
+      titleAmharic: "የማዕድ ስነ-ስርዓትና ስነ-ምግባር",
+      description: "Practical instruction in የማዕድ ስነ-ስርዓት (Dining Etiquette), ፈገግታና አዎንታዊ ተግባቦት (Positive Communication) in partnership with TTI.",
+      tags: ["የማዕድ ስነ-ስርዓት", "Hospitality", "Public Speaking", "Character"],
+    },
+    {
+      title: "Youth Mentorship & Software Lab",
+      titleAmharic: "የተማሪዎች ሶፍትዌር ላብ",
+      description: "Senior students mentor junior cohorts and execute commercial client software contracts—gaining real industry experience.",
+      tags: ["Peer Mentorship", "Commercial Lab", "Client Projects", "Incubation"],
+    },
+  ],
   aboutCampusVisionText:
     "Our ultimate goal is building our own dedicated 24/7 innovation campus in Addis Ababa—equipped with overnight coding laboratories, hardware workshops, incubation spaces, rest facilities, and multi-tier cohort capacity reachable from every corner of Ethiopia.",
   orgStructureTitle: "Role & Responsibilities Breakdown",
@@ -463,6 +499,49 @@ const teamMembers = [
   },
 ];
 
+const educationalPillars = [
+  {
+    _id: "pillar-1",
+    _type: "educationalPillar",
+    pillarNumber: 1,
+    title: "Computational Supremacy",
+    titleAmharic: "የኮምፒውተርና አይ-ኦቲ ትምህርት",
+    description: "From Scratch & Python to AI Command Engineering, Full-Stack web development, cybersecurity, and robotics.",
+    tags: ["Python", "AI Engineering", "Web Dev", "Robotics"],
+    iconType: "code",
+  },
+  {
+    _id: "pillar-2",
+    _type: "educationalPillar",
+    pillarNumber: 2,
+    title: "Indigenous Heritage & Ge'ez",
+    titleAmharic: "ሀገር በቀል እውቀትና ግዕዝ",
+    description: "Unlocking ancient Ge'ez numeral systems, traditional architectural secrets, Ethiopian history, and Erq conflict resolution.",
+    tags: ["Ge'ez", "Ethiopian History", "Architecture Secrets", "Erq"],
+    iconType: "heritage",
+  },
+  {
+    _id: "pillar-3",
+    _type: "educationalPillar",
+    pillarNumber: 3,
+    title: "Etiquette & Hospitality",
+    titleAmharic: "የማዕድ ስነ-ስርዓትና ስነ-ምግባር",
+    description: "Practical instruction in የማዕድ ስነ-ስርዓት (Dining Etiquette), ፈገግታና አዎንታዊ ተግባቦት (Positive Communication) in partnership with TTI.",
+    tags: ["የማዕድ ስነ-ስርዓት", "Hospitality", "Public Speaking", "Character"],
+    iconType: "hospitality",
+  },
+  {
+    _id: "pillar-4",
+    _type: "educationalPillar",
+    pillarNumber: 4,
+    title: "Youth Mentorship & Software Lab",
+    titleAmharic: "የተማሪዎች ሶፍትዌር ላብ",
+    description: "Senior students mentor junior cohorts and execute commercial client software contracts—gaining real industry experience.",
+    tags: ["Peer Mentorship", "Commercial Lab", "Client Projects", "Incubation"],
+    iconType: "mentorship",
+  },
+];
+
 async function seed() {
   console.log("🚀 Starting Sanity CMS Data Seeding...");
   console.log(`Project ID: ${projectId}, Dataset: ${dataset}`);
@@ -479,7 +558,14 @@ async function seed() {
       console.log(`  ✓ Milestone: ${milestone.year} - ${milestone.title}`);
     }
 
-    // 3. Team Members
+    // 3. Educational Pillars
+    console.log("Seeding Educational Pillars...");
+    for (const pillar of educationalPillars) {
+      await client.createIfNotExists(pillar);
+      console.log(`  ✓ Educational Pillar 0${pillar.pillarNumber}: ${pillar.title}`);
+    }
+
+    // 4. Team Members
     console.log("Seeding Team Members...");
     for (const member of teamMembers) {
       await client.createIfNotExists(member);

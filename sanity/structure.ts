@@ -147,17 +147,16 @@ export const deskStructure: StructureResolver = (S) =>
             .title("About Page Content")
             .items([
               S.listItem()
-                .id("aboutPageSettingsItem")
-                .title("About Page Settings")
-                .icon(CogIcon)
+                .id("aboutHeroSectionItem")
+                .title("About Hero & Mission Copy")
+                .icon(SparklesIcon)
                 .child(
                   S.document()
-                    .id("aboutSiteSettingsDoc")
+                    .id("aboutHeroSettingsDoc")
                     .schemaType("siteSettings")
                     .documentId("siteSettings")
-                    .title("About Page Settings")
+                    .title("About Hero & Mission Copy")
                 ),
-              S.divider(),
               S.listItem()
                 .id("storyMilestonesItem")
                 .title("Journey & Story Milestones (2021-2026+)")
@@ -167,6 +166,16 @@ export const deskStructure: StructureResolver = (S) =>
                     .id("storyMilestonesTypeList")
                     .title("Journey Milestones")
                     .defaultOrdering([{ field: "stepNumber", direction: "asc" }])
+                ),
+              S.listItem()
+                .id("educationalPillarsItem")
+                .title("Holistic Education (4 Pillars)")
+                .icon(BookIcon)
+                .child(
+                  S.documentTypeList("educationalPillar")
+                    .id("educationalPillarsTypeList")
+                    .title("Holistic Educational Pillars")
+                    .defaultOrdering([{ field: "pillarNumber", direction: "asc" }])
                 ),
               S.listItem()
                 .id("teamMembersItem")
@@ -185,7 +194,7 @@ export const deskStructure: StructureResolver = (S) =>
                           S.documentList()
                             .id("boardMembersDocList")
                             .title("Board of Directors / Council Governance")
-                            .filter('_type == "teamMember" && department == "board"')
+                            .filter('_type == "teamMember" && (isBoardMember == true || "board" in departments || department == "board")')
                             .defaultOrdering([{ field: "order", direction: "asc" }])
                         ),
                       S.listItem()
@@ -196,7 +205,18 @@ export const deskStructure: StructureResolver = (S) =>
                           S.documentList()
                             .id("execMembersDocList")
                             .title("Executive & Operational Leadership")
-                            .filter('_type == "teamMember" && department == "executive"')
+                            .filter('_type == "teamMember" && (isExecutiveLeader == true || "executive" in departments || department == "executive")')
+                            .defaultOrdering([{ field: "order", direction: "asc" }])
+                        ),
+                      S.listItem()
+                        .id("teacherMembersItem")
+                        .title("3. Instructors & Teachers")
+                        .icon(BookIcon)
+                        .child(
+                          S.documentList()
+                            .id("teacherMembersDocList")
+                            .title("Instructors & Teachers")
+                            .filter('_type == "teamMember" && (isTeacher == true || "tech" in departments || department == "tech")')
                             .defaultOrdering([{ field: "order", direction: "asc" }])
                         ),
                       S.divider(),
