@@ -105,25 +105,35 @@ export default function AboutDirectory({
 
   const phrases = customPhrases && customPhrases.length > 0 ? customPhrases : defaultPhrases;
 
-  // Filter Team Members
-  const filteredTeam =
-    selectedDept === "all"
-      ? teamMembers
-      : teamMembers.filter((m) => {
-          if (selectedDept === "board") return m.department === "board";
-          if (selectedDept === "executive")
-            return m.department === "executive" || m.department === "leadership";
-          return m.department === selectedDept;
-        });
+  // Filter and Sort Team Members by numerical order
+  const boardMembers = useMemo(() => {
+    return teamMembers
+      .filter((m) => m.isBoardMember || m.department === "board")
+      .sort((a, b) => (a.order || 99) - (b.order || 99));
+  }, [teamMembers]);
 
-  // Grouped members for structured breakdown when viewing "all"
-  const boardMembers = teamMembers.filter((m) => m.department === "board");
-  const execMembers = teamMembers.filter(
-    (m) => m.department === "executive" || m.department === "leadership"
-  );
-  const otherMembers = teamMembers.filter(
-    (m) => m.department !== "board" && m.department !== "executive" && m.department !== "leadership"
-  );
+  const execMembers = useMemo(() => {
+    return teamMembers
+      .filter((m) => m.isExecutiveLeader || m.department === "executive" || m.department === "leadership")
+      .sort((a, b) => (a.order || 99) - (b.order || 99));
+  }, [teamMembers]);
+
+  const teacherMembers = useMemo(() => {
+    return teamMembers
+      .filter((m) => m.isTeacher || m.department === "tech" || Boolean(m.teachingSubject))
+      .sort((a, b) => (a.order || 99) - (b.order || 99));
+  }, [teamMembers]);
+
+  const allMembersSorted = useMemo(() => {
+    return [...teamMembers].sort((a, b) => (a.order || 99) - (b.order || 99));
+  }, [teamMembers]);
+
+  const filteredTeam = useMemo(() => {
+    if (selectedDept === "board") return boardMembers;
+    if (selectedDept === "teachers" || selectedDept === "tech") return teacherMembers;
+    if (selectedDept === "executive") return execMembers;
+    return allMembersSorted;
+  }, [selectedDept, boardMembers, teacherMembers, execMembers, allMembersSorted]);
 
   const stats = [
     { label: "Talented Geniuses Trained", value: "500+", color: "text-ochre" },
@@ -266,6 +276,17 @@ export default function AboutDirectory({
             <p className={`mt-2 font-serif italic text-xs sm:text-sm font-semibold tracking-wide ${roleColor}`}>
               {member.role}
             </p>
+
+            {/* Teacher / Instructor Specialization Badging */}
+            {(member.teachingSubject || member.isTeacher) && (
+              <div className="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/30 border border-amber-300/40 text-amber-200 text-[11px] font-mono font-bold leading-tight">
+                <span>🎓 Instructor:</span>
+                <span>{member.teachingSubject || "Technical & Coding Instruction"}</span>
+                {member.teachingPeriod && (
+                  <span className="text-white/70 font-normal">({member.teachingPeriod})</span>
+                )}
+              </div>
+            )}
 
             {/* Description / Responsibilities */}
             <p className="mt-4 text-xs text-white/85 font-sans leading-relaxed font-normal line-clamp-3">
@@ -432,19 +453,20 @@ export default function AboutDirectory({
           </div>
 
           {/* Department Filter Tabs */}
-          <div className="w-full max-w-4xl mx-auto mb-14 px-4">
+          <div className="w-full max-w-5xl mx-auto mb-14 px-4">
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full">
               {[
                 { id: "executive", label: "Executive Leadership", count: execMembers.length },
                 { id: "board", label: "Board of Directors", count: boardMembers.length },
-                { id: "all", label: "All Members & Governance", count: teamMembers.length },
+                { id: "teachers", label: "Teachers & Instructors", count: teacherMembers.length },
+                { id: "all", label: "All Members & Governance", count: allMembersSorted.length },
               ].map((tab) => {
                 const isActive = selectedDept === tab.id;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setSelectedDept(tab.id)}
-                    className={`relative whitespace-nowrap px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 flex items-center justify-center gap-2.5 border select-none leading-none outline-none ${
+                    className={`relative whitespace-nowrap px-5 sm:px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 flex items-center justify-center gap-2.5 border select-none leading-none outline-none ${
                       isActive
                         ? "text-white border-navy bg-navy shadow-lg"
                         : "text-zinc-700 bg-ivory/90 hover:bg-white hover:text-ochre border-zinc-200/90 shadow-xs"
@@ -475,73 +497,10 @@ export default function AboutDirectory({
             </div>
           </div>
 
-          {/* Structured 2-Column Split Card Layout (Matching Reference Screenshot) */}
-          {selectedDept === "all" ? (
-            <div className="space-y-16 max-w-7xl mx-auto w-full">
-              {/* GROUP 1: BOARD OF DIRECTORS */}
-              {boardMembers.length > 0 && (
-                <div>
-                  <div className="mb-8 pb-3 border-b border-amber-200/80">
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
-                      {siteSettings?.boardSectionTitle || "Board of Directors & Governance"}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium mt-1">
-                      {siteSettings?.boardSectionDescription ||
-                        "Provides strategic vision, high-level governance, and institutional oversight for the organization."}
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-                    {boardMembers.map((m, i) => renderMemberCard(m, i))}
-                  </div>
-                </div>
-              )}
-
-              {/* GROUP 2: EXECUTIVE & OPERATIONAL LEADERSHIP */}
-              {execMembers.length > 0 && (
-                <div>
-                  <div className="mb-8 pb-3 border-b border-sky-200/80">
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
-                      {siteSettings?.executiveSectionTitle || "Executive & Operational Leadership"}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium mt-1">
-                      {siteSettings?.executiveSectionDescription ||
-                        "Drives core vision, talent development, PR, and day-to-day training execution across cohorts."}
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-                    {execMembers.map((m, i) => renderMemberCard(m, i + boardMembers.length))}
-                  </div>
-                </div>
-              )}
-
-              {/* GROUP 3: TECHNICAL, CULTURAL & STUDENT MENTORS */}
-              {otherMembers.length > 0 && (
-                <div>
-                  <div className="mb-8 pb-3 border-b border-zinc-200">
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
-                      Technical Instructors, Cultural Advisors &amp; Mentors
-                    </h3>
-                    <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium mt-1">
-                      Mentors leading AI programming, Ge'ez heritage, character etiquette, and student council operations.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-                    {otherMembers.map((m, i) =>
-                      renderMemberCard(m, i + boardMembers.length + execMembers.length)
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            /* Grid View when filtering by specific tab */
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 max-w-7xl mx-auto w-full">
-              {filteredTeam.map((m, i) => renderMemberCard(m, i))}
-            </div>
-          )}
+          {/* Unified 2-Column Split Card Grid Sorted strictly by Display Order */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 max-w-7xl mx-auto w-full">
+            {filteredTeam.map((m, i) => renderMemberCard(m, i))}
+          </div>
         </div>
       </section>
 

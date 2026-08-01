@@ -1,6 +1,7 @@
 import { createClient } from "@sanity/client";
 import fs from "fs";
 import path from "path";
+import https from "https";
 
 // Simple .env parser using Node fs
 try {
@@ -33,19 +34,55 @@ const client = createClient({
   useCdn: false,
 });
 
+function downloadFile(url, destPath) {
+  return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(destPath);
+    https
+      .get(url, (response) => {
+        if (
+          response.statusCode >= 300 &&
+          response.statusCode < 400 &&
+          response.headers.location
+        ) {
+          return downloadFile(response.headers.location, destPath)
+            .then(resolve)
+            .catch(reject);
+        }
+        if (response.statusCode !== 200) {
+          return reject(
+            new Error(`Failed to download asset: HTTP ${response.statusCode}`)
+          );
+        }
+        response.pipe(file);
+        file.on("finish", () => {
+          file.close(() => resolve(destPath));
+        });
+      })
+      .on("error", (err) => {
+        fs.unlink(destPath, () => reject(err));
+      });
+  });
+}
+
 async function exportBackup() {
-  console.log("📦 Starting Sanity CMS Full Backup Export...");
+  console.log("📦 Starting Sanity CMS Full Backup Export (Documents + Media Assets)...");
   console.log(`Project ID: ${projectId}, Dataset: ${dataset}`);
 
   try {
-    // Fetch ALL documents in dataset
+    // Fetch ALL documents in dataset including image assets
     const allDocs = await client.fetch('*[!(_type match "system.**")]');
-    console.log(`\n✅ Fetched ${allDocs.length} total CMS documents from dataset "${dataset}".`);
+    console.log(
+      `\n✅ Fetched ${allDocs.length} total CMS documents from dataset "${dataset}".`
+    );
 
     // Ensure backups directory exists
     const backupsDir = path.resolve(process.cwd(), "backups");
+    const mediaDir = path.join(backupsDir, "media_assets");
     if (!fs.existsSync(backupsDir)) {
       fs.mkdirSync(backupsDir, { recursive: true });
+    }
+    if (!fs.existsSync(mediaDir)) {
+      fs.mkdirSync(mediaDir, { recursive: true });
     }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -68,12 +105,53 @@ async function exportBackup() {
     fs.writeFileSync(filepathTimestamp, payload, "utf8");
     fs.writeFileSync(filepathLatest, payload, "utf8");
 
-    console.log(`\n🎉 CMS Backup Successfully Exported!`);
+    console.log(`\n📄 Saved JSON Documents Backup:`);
+    console.log(`  - Latest: ${filepathLatest}`);
+    console.log(`  - Archive: ${filepathTimestamp}`);
+
+    // Filter image assets with download URLs
+    const imageAssets = allDocs.filter(
+      (doc) => doc._type === "sanity.imageAsset" && doc.url
+    );
+
+    console.log(
+      `\n🖼️  Downloading ${imageAssets.length} media assets into backups/media_assets/...`
+    );
+
+    let downloadedCount = 0;
+    let failedCount = 0;
+
+    for (let i = 0; i < imageAssets.length; i++) {
+      const asset = imageAssets[i];
+      const ext = asset.extension || "jpg";
+      const cleanId = asset._id.replace(/^image-/, "");
+      const assetFileName = `${cleanId}.${ext}`;
+      const destPath = path.join(mediaDir, assetFileName);
+
+      try {
+        await downloadFile(asset.url, destPath);
+        downloadedCount++;
+        process.stdout.write(
+          `  [${downloadedCount}/${imageAssets.length}] Downloaded ${assetFileName}\r`
+        );
+      } catch (err) {
+        failedCount++;
+        console.error(`\n  ❌ Error downloading asset ${asset._id}:`, err.message);
+      }
+    }
+
+    console.log(
+      `\n\n🎉 Full CMS Backup Completed Successfully!`
+    );
     console.log(`--------------------------------------------------`);
-    console.log(`1. Timestamp Backup File: ${filepathTimestamp}`);
-    console.log(`2. Latest Backup Pointer: ${filepathLatest}`);
+    console.log(`1. Documents Backup JSON: ${filepathLatest}`);
+    console.log(`2. Media Assets Directory: ${mediaDir}`);
+    console.log(`   Total Images Downloaded: ${downloadedCount}`);
+    if (failedCount > 0) {
+      console.log(`   Failed Images: ${failedCount}`);
+    }
     console.log(`--------------------------------------------------`);
-    console.log(`You can download or save this file to Google Drive anytime.`);
+    console.log(`You can copy or upload the whole 'backups/' directory directly to Google Drive!`);
 
     // Summary of document counts by type
     const countsByType = allDocs.reduce((acc, doc) => {

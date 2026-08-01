@@ -67,6 +67,25 @@ export default defineType({
       description: "Toggle ON if this member belongs to Executive & Operational Leadership.",
     }),
     defineField({
+      name: "isTeacher",
+      title: "Is Teacher / Instructor? (Switch)",
+      type: "boolean",
+      initialValue: false,
+      description: "Toggle ON if this member is a Teacher, Technical Instructor, or Mentor.",
+    }),
+    defineField({
+      name: "teachingSubject",
+      title: "Teaching Subject / Specialization",
+      type: "string",
+      description: "e.g. Python Programming, AI Command Engineering, Ge'ez Linguistics, Full-Stack Web Dev",
+    }),
+    defineField({
+      name: "teachingPeriod",
+      title: "Teaching Period / Tenure",
+      type: "string",
+      description: "e.g. 2021 – Present or Summer 2023 – 2025",
+    }),
+    defineField({
       name: "isFeatured",
       title: "Featured Showcase (Switch)",
       type: "boolean",
