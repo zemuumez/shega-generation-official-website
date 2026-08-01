@@ -195,16 +195,6 @@ export default function AboutDirectory({
           />
 
           <div>
-            {/* Header Tag & Order Number */}
-            <div className="flex items-center justify-between mb-4">
-              <span className="px-2.5 py-0.5 rounded text-[9px] font-mono font-bold tracking-widest uppercase bg-white/15 text-white backdrop-blur-md border border-white/20">
-                {isBoard ? "Governance" : isExec ? "Executive" : member.department}
-              </span>
-              <span className="text-[10px] font-mono text-white/60 font-semibold">
-                #{String(member.order || index + 1).padStart(2, "0")}
-              </span>
-            </div>
-
             {/* NAME (SAMPLE NAME style) */}
             <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-wider text-white leading-tight drop-shadow-sm group-hover:text-amber-300 transition-colors">
               {member.name}
@@ -368,13 +358,8 @@ export default function AboutDirectory({
       {/* 4. ORGANIZATIONAL STRUCTURE & GOVERNANCE BREAKDOWN */}
       <section className="py-16 md:py-24 bg-white relative border-t border-zinc-200/80">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
-          {/* Header & CMS Editable Draft Callout Banner */}
-          <div className="text-center max-w-4xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-ochre-dark text-xs font-mono font-bold uppercase tracking-wider mb-4 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-ochre animate-pulse" />
-              <span>{siteSettings?.orgStructureNotice || "Role & Responsibilities Breakdown (Draft • Editable in CMS)"}</span>
-            </div>
-
+          {/* Header */}
+          <div className="text-center max-w-4xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight mb-4">
               {siteSettings?.orgStructureTitle || "Organization Structure & Governance"}
             </h2>
@@ -393,8 +378,8 @@ export default function AboutDirectory({
             <div className="overflow-x-auto no-scrollbar py-2 px-4 flex items-center justify-center gap-2 sm:gap-3">
               {[
                 { id: "all", label: "All Members & Governance", count: teamMembers.length },
-                { id: "board", label: "1. Board of Directors", count: boardMembers.length },
-                { id: "executive", label: "2. Executive Leadership", count: execMembers.length },
+                { id: "board", label: "Board of Directors", count: boardMembers.length },
+                { id: "executive", label: "Executive Leadership", count: execMembers.length },
                 { id: "tech", label: "Technical & AI Mentors", count: teamMembers.filter((m) => m.department === "tech").length },
                 { id: "cultural", label: "Cultural Advisors", count: teamMembers.filter((m) => m.department === "cultural").length },
                 { id: "student-mentors", label: "Student Council", count: teamMembers.filter((m) => m.department === "student-mentors").length },
@@ -418,7 +403,6 @@ export default function AboutDirectory({
                       />
                     )}
                     <span className="relative z-10 flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${isActive ? "bg-ochre animate-pulse" : "bg-zinc-400"}`} />
                       <span>{tab.label}</span>
                       {tab.count > 0 && (
                         <span
@@ -442,19 +426,14 @@ export default function AboutDirectory({
               {/* GROUP 1: BOARD OF DIRECTORS */}
               {boardMembers.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-4 mb-8 pb-3 border-b border-amber-200/80">
-                    <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-ochre font-bold font-mono text-lg">
-                      01
-                    </div>
-                    <div>
-                      <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
-                        {siteSettings?.boardSectionTitle || "1. Board of Directors / Council Governance"}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium">
-                        {siteSettings?.boardSectionDescription ||
-                          "Provides strategic vision, high-level governance, and institutional oversight for the organization."}
-                      </p>
-                    </div>
+                  <div className="mb-8 pb-3 border-b border-amber-200/80">
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
+                      {siteSettings?.boardSectionTitle || "Board of Directors & Governance"}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium mt-1">
+                      {siteSettings?.boardSectionDescription ||
+                        "Provides strategic vision, high-level governance, and institutional oversight for the organization."}
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
@@ -466,19 +445,14 @@ export default function AboutDirectory({
               {/* GROUP 2: EXECUTIVE & OPERATIONAL LEADERSHIP */}
               {execMembers.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-4 mb-8 pb-3 border-b border-sky-200/80">
-                    <div className="p-3 rounded-2xl bg-sky-50 border border-sky-200 text-navy font-bold font-mono text-lg">
-                      02
-                    </div>
-                    <div>
-                      <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
-                        {siteSettings?.executiveSectionTitle || "2. Executive & Operational Leadership"}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium">
-                        {siteSettings?.executiveSectionDescription ||
-                          "Drives core vision, talent development, PR, and day-to-day training execution across cohorts."}
-                      </p>
-                    </div>
+                  <div className="mb-8 pb-3 border-b border-sky-200/80">
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
+                      {siteSettings?.executiveSectionTitle || "Executive & Operational Leadership"}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium mt-1">
+                      {siteSettings?.executiveSectionDescription ||
+                        "Drives core vision, talent development, PR, and day-to-day training execution across cohorts."}
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
@@ -490,18 +464,13 @@ export default function AboutDirectory({
               {/* GROUP 3: TECHNICAL, CULTURAL & STUDENT MENTORS */}
               {otherMembers.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-4 mb-8 pb-3 border-b border-zinc-200">
-                    <div className="p-3 rounded-2xl bg-ivory border border-zinc-200 text-zinc-700 font-bold font-mono text-lg">
-                      03
-                    </div>
-                    <div>
-                      <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
-                        3. Technical Instructors, Cultural Advisors & Mentors
-                      </h3>
-                      <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium">
-                        Mentors leading AI programming, Ge'ez heritage, character etiquette, and student council operations.
-                      </p>
-                    </div>
+                  <div className="mb-8 pb-3 border-b border-zinc-200">
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
+                      Technical Instructors, Cultural Advisors &amp; Mentors
+                    </h3>
+                    <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium mt-1">
+                      Mentors leading AI programming, Ge'ez heritage, character etiquette, and student council operations.
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">

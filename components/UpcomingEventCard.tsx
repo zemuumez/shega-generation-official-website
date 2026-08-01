@@ -71,12 +71,8 @@ export default function UpcomingEventCard({ event }: { event: EventDoc | null })
       </div>
       <div className="flex flex-col justify-between p-8 sm:p-10 relative z-20">
         <div>
-          <span className="inline-block px-3.5 py-1 rounded-full font-mono text-[9px] uppercase tracking-widest bg-ink/5 text-ink border border-zinc-200 font-bold">
-            Next up &middot; {event.type}
-          </span>
-          <h3 className="mt-4 font-display text-display-md font-bold text-ink leading-tight uppercase">{event.title}</h3>
-          <p className="mt-2 text-sm text-ink-soft flex items-center gap-1.5 font-medium">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-ochre animate-pulse" />
+          <h3 className="font-display text-display-md font-bold text-ink leading-tight uppercase">{event.title}</h3>
+          <p className="mt-2 text-sm text-ink-soft font-medium">
             {event.location}
           </p>
         </div>

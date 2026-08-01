@@ -156,7 +156,6 @@ export default function EventsDirectory({
                   />
                 )}
                 <span className="relative z-10 flex items-center gap-1.5">
-                  <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-ochre animate-pulse" : "bg-zinc-400"}`} />
                   <span>{cat}</span>
                 </span>
               </button>

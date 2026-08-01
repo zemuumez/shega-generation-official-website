@@ -108,11 +108,6 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
           {/* LEFT COLUMN: TALKING ABOUT OUR PARTNERS */}
           <div className="lg:col-span-5 flex flex-col justify-between h-full">
             <div>
-              {/* Kicker Tag */}
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink font-bold block mb-6">
-                Our clients / partners
-              </span>
-
               {/* Large Display Title matching user reference layout */}
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-zinc-300 tracking-tight leading-[1.05] uppercase select-none">
                 Pleasure to <br /> work with
@@ -125,9 +120,8 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
 
             {/* INTERACTIVE SPOTLIGHT FOCUS CAPTION BOX */}
             <div className="mt-10 p-6 rounded-3xl border border-zinc-200 bg-[#F7F9F7] transition-all duration-500 shadow-sm relative overflow-hidden">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-ochre animate-pulse" />
-                <span className="font-mono text-[10px] uppercase tracking-widest text-ochre font-bold">
+              <div className="mb-2">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-ochre">
                   {activePartner.role || "Strategic Partner"}
                 </span>
               </div>

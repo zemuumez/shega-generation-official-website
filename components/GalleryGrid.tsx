@@ -93,7 +93,6 @@ export default function GalleryGrid({
                   />
                 )}
                 <span className="relative z-10 flex items-center gap-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-white animate-pulse" : "bg-zinc-400"}`} />
                   <span>{tag}</span>
                 </span>
               </button>
