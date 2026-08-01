@@ -36,9 +36,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("homePageSettingsDoc")
-                    .schemaType("homePageSettings")
-                    .documentId("homePageSettings")
+                    .id("homeSiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
                     .title("Home Page Copy & Settings")
                 ),
               S.divider(),
@@ -104,6 +104,18 @@ export const deskStructure: StructureResolver = (S) =>
             .title("Events Page Sections")
             .items([
               S.listItem()
+                .id("eventsPageCopySettings")
+                .title("Page Copy & Titles")
+                .icon(CogIcon)
+                .child(
+                  S.document()
+                    .id("eventsSiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
+                    .title("Events Page Copy & Settings")
+                ),
+              S.divider(),
+              S.listItem()
                 .id("upcomingEventsItem")
                 .title("Upcoming Events")
                 .icon(SparklesIcon)
@@ -148,14 +160,14 @@ export const deskStructure: StructureResolver = (S) =>
             .items([
               S.listItem()
                 .id("aboutHeroSectionItem")
-                .title("About Page Settings & Hero Copy")
+                .title("Page Copy & Section Titles")
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("aboutPageSettingsDoc")
-                    .schemaType("aboutPageSettings")
-                    .documentId("aboutPageSettings")
-                    .title("About Page Copy & Settings")
+                    .id("aboutHeroSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
+                    .title("About Us Page Copy & Settings")
                 ),
               S.listItem()
                 .id("storyMilestonesItem")
@@ -246,14 +258,14 @@ export const deskStructure: StructureResolver = (S) =>
             .title("Gallery Sections by Category")
             .items([
               S.listItem()
-                .id("galleryPageSettingsItem")
-                .title("Gallery Page Copy & Subtitle")
+                .id("galleryPageCopySettings")
+                .title("Page Copy & Settings")
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("galleryPageSettingsDoc")
-                    .schemaType("galleryPageSettings")
-                    .documentId("galleryPageSettings")
+                    .id("gallerySiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
                     .title("Gallery Page Copy & Settings")
                 ),
               S.divider(),

@@ -11,9 +11,6 @@ import donationRecord from "./donationRecord";
 import teamMember from "./teamMember";
 import storyMilestone from "./storyMilestone";
 import educationalPillar from "./educationalPillar";
-import homePageSettings from "./homePageSettings";
-import aboutPageSettings from "./aboutPageSettings";
-import galleryPageSettings from "./galleryPageSettings";
 
 export const schemaTypes = [
   event,
@@ -29,8 +26,5 @@ export const schemaTypes = [
   teamMember,
   storyMilestone,
   educationalPillar,
-  homePageSettings,
-  aboutPageSettings,
-  galleryPageSettings,
 ];
 
