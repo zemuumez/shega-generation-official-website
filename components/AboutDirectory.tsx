@@ -108,19 +108,19 @@ export default function AboutDirectory({
   // Filter and Sort Team Members by numerical order
   const boardMembers = useMemo(() => {
     return teamMembers
-      .filter((m) => m.isBoardMember || m.department === "board")
+      .filter((m) => m.isBoardMember === true || (m.isBoardMember === undefined && m.department === "board"))
       .sort((a, b) => (a.order || 99) - (b.order || 99));
   }, [teamMembers]);
 
   const execMembers = useMemo(() => {
     return teamMembers
-      .filter((m) => m.isExecutiveLeader || m.department === "executive" || m.department === "leadership")
+      .filter((m) => m.isExecutiveLeader === true || (m.isExecutiveLeader === undefined && (m.department === "executive" || m.department === "leadership")))
       .sort((a, b) => (a.order || 99) - (b.order || 99));
   }, [teamMembers]);
 
   const teacherMembers = useMemo(() => {
     return teamMembers
-      .filter((m) => m.isTeacher || m.department === "tech" || Boolean(m.teachingSubject))
+      .filter((m) => m.isTeacher === true || (m.isTeacher === undefined && (m.department === "tech" || Boolean(m.teachingSubject))))
       .sort((a, b) => (a.order || 99) - (b.order || 99));
   }, [teamMembers]);
 
