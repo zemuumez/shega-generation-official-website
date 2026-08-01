@@ -15,13 +15,17 @@ export default function TypewriterTitle({
   className = "",
   style,
 }: TypewriterTitleProps) {
-  const phraseList = text ? [text, "ሸጋ ትውልድ"] : phrases;
+  const rawPhrases = text ? [text, "ሸጋ ትውልድ"] : phrases;
+  const sanitizedPhrases = rawPhrases && Array.isArray(rawPhrases)
+    ? rawPhrases.filter((p) => typeof p === "string" && p.trim().length > 0)
+    : [];
+  const phraseList = sanitizedPhrases.length > 0 ? sanitizedPhrases : ["Shega Generation", "ሸጋ ትውልድ"];
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const currentPhrase = phraseList[phraseIndex % phraseList.length];
+  const currentPhrase = phraseList[phraseIndex % phraseList.length] || "Shega Generation";
   const isAmharic = /[\u1200-\u137F]/.test(currentPhrase);
 
   useEffect(() => {

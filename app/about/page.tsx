@@ -1,5 +1,5 @@
 import { safeFetch } from "@/sanity/lib/client";
-import { TEAM_MEMBERS_QUERY, STORY_MILESTONES_QUERY, SITE_SETTINGS_QUERY, EDUCATIONAL_PILLARS_QUERY } from "@/sanity/lib/queries";
+import { TEAM_MEMBERS_QUERY, STORY_MILESTONES_QUERY, SITE_SETTINGS_QUERY, ABOUT_PAGE_SETTINGS_QUERY, EDUCATIONAL_PILLARS_QUERY } from "@/sanity/lib/queries";
 import { demoTeamMembers, demoStoryMilestones } from "@/lib/demoData";
 import AboutDirectory from "@/components/AboutDirectory";
 import SideFramingPatterns from "@/components/SideFramingPatterns";
@@ -14,12 +14,15 @@ export const metadata = {
 export const revalidate = 0;
 
 export default async function AboutPage() {
-  const [teamMembers, milestones, siteSettings, pillars] = await Promise.all([
+  const [teamMembers, milestones, siteSettings, aboutSettings, pillars] = await Promise.all([
     safeFetch(TEAM_MEMBERS_QUERY, {}, demoTeamMembers),
     safeFetch(STORY_MILESTONES_QUERY, {}, demoStoryMilestones),
     safeFetch<any>(SITE_SETTINGS_QUERY, {}, null),
+    safeFetch<any>(ABOUT_PAGE_SETTINGS_QUERY, {}, null),
     safeFetch<any[]>(EDUCATIONAL_PILLARS_QUERY, {}, []),
   ]);
+
+  const activeAboutSettings = aboutSettings || siteSettings;
 
   return (
     <main className="min-h-screen bg-[#F4F3EE] relative overflow-hidden">
@@ -30,10 +33,10 @@ export default async function AboutPage() {
           teamMembers={teamMembers && teamMembers.length > 0 ? teamMembers : demoTeamMembers}
           milestones={milestones && milestones.length > 0 ? milestones : demoStoryMilestones}
           pillars={pillars}
-          customPhrases={siteSettings?.aboutPageTitlePhrases}
-          customSubtitle={siteSettings?.aboutPageSubtitle}
-          customCampusVision={siteSettings?.aboutCampusVisionText}
-          siteSettings={siteSettings}
+          customPhrases={activeAboutSettings?.aboutPageTitlePhrases}
+          customSubtitle={activeAboutSettings?.aboutPageSubtitle}
+          customCampusVision={activeAboutSettings?.aboutCampusVisionText}
+          siteSettings={activeAboutSettings}
         />
       </div>
     </main>

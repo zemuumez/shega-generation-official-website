@@ -36,9 +36,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("homeSiteSettingsDoc")
-                    .schemaType("siteSettings")
-                    .documentId("siteSettings")
+                    .id("homePageSettingsDoc")
+                    .schemaType("homePageSettings")
+                    .documentId("homePageSettings")
                     .title("Home Page Copy & Settings")
                 ),
               S.divider(),
@@ -105,13 +105,13 @@ export const deskStructure: StructureResolver = (S) =>
             .items([
               S.listItem()
                 .id("eventsPageCopySettings")
-                .title("Page Copy & Titles")
+                .title("Page Copy & Section Titles")
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("eventsSiteSettingsDoc")
-                    .schemaType("siteSettings")
-                    .documentId("siteSettings")
+                    .id("eventsPageSettingsDoc")
+                    .schemaType("eventsPageSettings")
+                    .documentId("eventsPageSettings")
                     .title("Events Page Copy & Settings")
                 ),
               S.divider(),
@@ -164,9 +164,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("aboutHeroSettingsDoc")
-                    .schemaType("siteSettings")
-                    .documentId("siteSettings")
+                    .id("aboutPageSettingsDoc")
+                    .schemaType("aboutPageSettings")
+                    .documentId("aboutPageSettings")
                     .title("About Us Page Copy & Settings")
                 ),
               S.listItem()
@@ -259,13 +259,13 @@ export const deskStructure: StructureResolver = (S) =>
             .items([
               S.listItem()
                 .id("galleryPageCopySettings")
-                .title("Page Copy & Settings")
+                .title("Page Copy & Section Titles")
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("gallerySiteSettingsDoc")
-                    .schemaType("siteSettings")
-                    .documentId("siteSettings")
+                    .id("galleryPageSettingsDoc")
+                    .schemaType("galleryPageSettings")
+                    .documentId("galleryPageSettings")
                     .title("Gallery Page Copy & Settings")
                 ),
               S.divider(),
@@ -379,6 +379,18 @@ export const deskStructure: StructureResolver = (S) =>
             .title("Messages by Status")
             .items([
               S.listItem()
+                .id("contactPageCopySettings")
+                .title("Page Copy & Section Titles")
+                .icon(CogIcon)
+                .child(
+                  S.document()
+                    .id("contactPageSettingsDoc")
+                    .schemaType("contactPageSettings")
+                    .documentId("contactPageSettings")
+                    .title("Contact Page Copy & Settings")
+                ),
+              S.divider(),
+              S.listItem()
                 .id("newMessagesItem")
                 .title("New Messages")
                 .child(
@@ -487,6 +499,7 @@ export const deskStructure: StructureResolver = (S) =>
               S.documentTypeListItem("testimonial").id("dtTestimonial").title("Alumni Testimonials").icon(CommentIcon),
               S.documentTypeListItem("teamMember").id("dtTeamMember").title("Team Members & Leadership").icon(UsersIcon),
               S.documentTypeListItem("storyMilestone").id("dtStoryMilestone").title("Journey & Story Milestones").icon(RocketIcon),
+              S.documentTypeListItem("educationalPillar").id("dtEducationalPillar").title("Educational Pillars").icon(BookIcon),
               S.documentTypeListItem("studentApplication").id("dtStudentApplication").title("Student Applications").icon(UserIcon),
               S.documentTypeListItem("contactMessage").id("dtContactMessage").title("Contact Messages").icon(EnvelopeIcon),
               S.documentTypeListItem("donationRecord").id("dtDonationRecord").title("Donation Records").icon(CreditCardIcon),
@@ -496,13 +509,13 @@ export const deskStructure: StructureResolver = (S) =>
       // 9. GLOBAL SITE SETTINGS
       S.listItem()
         .id("globalSiteSettingsSection")
-        .title("Global Site Settings")
+        .title("Global Theme & Brand Colors")
         .icon(CogIcon)
         .child(
           S.document()
-            .id("globalSiteSettingsDoc")
-            .schemaType("siteSettings")
-            .documentId("siteSettings")
-            .title("Global Site Settings")
+            .id("themeSettingsDoc")
+            .schemaType("themeSettings")
+            .documentId("themeSettings")
+            .title("Global Theme & Brand Colors")
         ),
     ]);

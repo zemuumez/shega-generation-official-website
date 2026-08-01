@@ -1,13 +1,22 @@
 export const SITE_SETTINGS_QUERY = `
-*[_type == "siteSettings"][0] {
-  themePreset,
-  customPrimaryColor,
-  customPrimaryLightColor,
-  customPrimaryDarkColor,
-  customSecondaryColor,
-  customSecondaryLightColor,
-  customBgColor,
-  customTextColor,
+*[_type in ["siteSettings", "homePageSettings", "aboutPageSettings", "themeSettings", "eventsPageSettings", "galleryPageSettings", "contactPageSettings"]] {
+  ...
+}[0]`;
+
+export const ABOUT_PAGE_SETTINGS_QUERY = `
+*[_type in ["aboutPageSettings", "siteSettings"]] | order(_type asc)[0] {
+  aboutHeroKicker,
+  aboutPageTitlePhrases,
+  aboutPageSubtitle,
+  aboutHeroStats,
+  aboutCampusVisionTitle,
+  aboutCampusVisionText,
+  orgStructureTitle,
+  orgStructureSubtitle
+}`;
+
+export const HOME_PAGE_SETTINGS_QUERY = `
+*[_type in ["homePageSettings", "siteSettings"]] | order(_type asc)[0] {
   heroTitle,
   heroCaption,
   heroCtaPrimary,
@@ -27,19 +36,8 @@ export const SITE_SETTINGS_QUERY = `
   journeysKicker,
   journeysTitle,
   journeysDescription,
-  journeysCategories,
   testimonialsTitle,
   testimonialsDescription,
-  eventsSectionKicker,
-  eventsSectionTitle,
-  eventsPageTitlePhrases,
-  eventsPageSubtitle,
-  eventsCategories,
-  galleryPageTitlePhrases,
-  galleryPageSubtitle,
-  galleryCategories,
-  contactPageTitlePhrases,
-  contactPageSubtitle,
   partnersKicker,
   partnersHeadline,
   partnersDescription,
@@ -51,22 +49,7 @@ export const SITE_SETTINGS_QUERY = `
   socialTelegramHandle,
   socialTelegramUrl,
   socialTikTokHandle,
-  socialTikTokUrl,
-  aboutHeroKicker,
-  aboutPageTitlePhrases,
-  aboutPageSubtitle,
-  aboutHeroStats,
-  aboutPillarsTitle,
-  aboutPillarsSubtitle,
-  aboutPillarsList,
-  aboutCampusVisionText,
-  orgStructureTitle,
-  orgStructureSubtitle,
-  orgStructureNotice,
-  boardSectionTitle,
-  boardSectionDescription,
-  executiveSectionTitle,
-  executiveSectionDescription
+  socialTikTokUrl
 }`;
 
 export const UPCOMING_EVENT_QUERY = `

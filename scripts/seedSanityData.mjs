@@ -118,15 +118,11 @@ const siteSettings = {
   // Community Section
   communityKicker: "Community",
   communityTitle: "Follow the day to day",
-  communityDescription: "Stay connected with our daily student builds, summer camp moments, and community updates.",
-  socialFacebookHandle: "Shega Community Group",
-  socialFacebookUrl: "https://web.facebook.com/share/g/18foDKzcBS/",
-  socialTelegramHandle: "t.me/shegagenerations",
-  socialTelegramUrl: "https://t.me/shegagenerations",
-  socialTikTokHandle: "@samuelgeremew_21",
-  socialTikTokUrl: "https://www.tiktok.com/@samuelgeremew_21",
+};
 
-  // About Us Page Section
+const aboutPageSettingsObj = {
+  _id: "aboutPageSettings",
+  _type: "aboutPageSettings",
   aboutHeroKicker: "OUR MISSION & ORIGIN STORY",
   aboutPageTitlePhrases: [
     "እኛ ማን ነን",
@@ -142,44 +138,94 @@ const siteSettings = {
     { value: "12+", label: "Summer & Annual Cohorts" },
     { value: "15+", label: "Institutional Partners" },
   ],
-  aboutPillarsTitle: "Our 4 Pillars of Holistic Education",
-  aboutPillarsSubtitle:
-    "Combining elite computational software engineering with indigenous Ethiopian heritage, dining etiquette, and youth peer mentorship.",
-  aboutPillarsList: [
-    {
-      title: "Computational Supremacy",
-      titleAmharic: "የኮምፒውተርና አይ-ኦቲ ትምህርት",
-      description: "From Scratch & Python to AI Command Engineering, Full-Stack web development, cybersecurity, and robotics.",
-      tags: ["Python", "AI Engineering", "Web Dev", "Robotics"],
-    },
-    {
-      title: "Indigenous Heritage & Ge'ez",
-      titleAmharic: "ሀገር በቀል እውቀትና ግዕዝ",
-      description: "Unlocking ancient Ge'ez numeral systems, traditional architectural secrets, Ethiopian history, and Erq conflict resolution.",
-      tags: ["Ge'ez", "Ethiopian History", "Architecture Secrets", "Erq"],
-    },
-    {
-      title: "Etiquette & Hospitality",
-      titleAmharic: "የማዕድ ስነ-ስርዓትና ስነ-ምግባር",
-      description: "Practical instruction in የማዕድ ስነ-ስርዓት (Dining Etiquette), ፈገግታና አዎንታዊ ተግባቦት (Positive Communication) in partnership with TTI.",
-      tags: ["የማዕድ ስነ-ስርዓት", "Hospitality", "Public Speaking", "Character"],
-    },
-    {
-      title: "Youth Mentorship & Software Lab",
-      titleAmharic: "የተማሪዎች ሶፍትዌር ላብ",
-      description: "Senior students mentor junior cohorts and execute commercial client software contracts—gaining real industry experience.",
-      tags: ["Peer Mentorship", "Commercial Lab", "Client Projects", "Incubation"],
-    },
-  ],
+  aboutCampusVisionTitle: "Building the Permanent Shega Innovation Campus",
   aboutCampusVisionText:
     "Our ultimate goal is building our own dedicated 24/7 innovation campus in Addis Ababa—equipped with overnight coding laboratories, hardware workshops, incubation spaces, rest facilities, and multi-tier cohort capacity reachable from every corner of Ethiopia.",
   orgStructureTitle: "Role & Responsibilities Breakdown",
-  orgStructureSubtitle: "Draft organizational breakdown & governance framework for Shega Generation.",
-  orgStructureNotice: "Draft Proposal • Editable via Sanity CMS",
-  boardSectionTitle: "1. Board of Directors / Council Governance",
-  boardSectionDescription: "Provides strategic vision, high-level governance, and institutional oversight for the organization.",
-  executiveSectionTitle: "2. Executive & Operational Leadership",
-  executiveSectionDescription: "Drives core vision, talent development, PR, and day-to-day training execution across cohorts.",
+  orgStructureSubtitle: "Organizational breakdown & governance framework for Shega Generation.",
+};
+
+const homePageSettingsObj = {
+  _id: "homePageSettings",
+  _type: "homePageSettings",
+  heroTitle: "Shega Generation",
+  heroCaption: "Sharing knowledge in kindness across generations — fusing software engineering and AI with Ethiopian heritage to empower future leaders.",
+  heroCtaPrimary: "Apply for Summer Camp",
+  heroCtaSecondary: "Partner & Sponsor",
+  statementBannerTitle1: "Software & AI Labs",
+  statementBannerTitle2: "Indigenous Wisdom & Erq",
+  statementBannerTitle3: "Youth Leadership",
+  culturalAnchoringSubtitle: "Rooted in Ethiopian Heritage & Character",
+  culturalAnchoringDescription: "From ancient Ge'ez fundamentals and Ethiopian history to traditional dining etiquette (የማዕድ ስነ-ስርዓት) and positive communication (ፈገግታና አዎንታዊ ተግባቦት), we nurture technically elite, culturally grounded leaders.",
+  pedagogicalTitle: "Peer Mentorship & Hands-On Engineering",
+  pedagogicalDescription: "Students learn full-stack development, AI model integration, hardware tinkering, and project management in real commercial client software labs.",
+  curriculumTitle: "Complete Engineering & Leadership Curriculum",
+  curriculumDescription: "From foundational computer science and web dev to advanced artificial intelligence and indigenous ethics.",
+  journeysKicker: "Student Media Coverage & Achievements",
+  journeysTitle: "Student Interviews & Media Features",
+  journeysDescription: "Radio interviews, podcast features, Facebook broadcasts, and software projects executed by Shega Generation students.",
+  testimonialsTitle: "Voices of the Generation",
+  testimonialsDescription: "Hear from our students, alumni, and community mentors about their transformational journey at Shega Generations.",
+  partnersKicker: "Our clients / partners",
+  partnersHeadline: "Pleasure to work with",
+  partnersDescription: "Shega Generation collaborates with Ethiopia's premier educational academies, hospitality centers, media houses, and venue operators across Addis Ababa.",
+  communityKicker: "Community",
+  communityTitle: "Follow the day to day",
+  communityDescription: "Stay connected with our daily student builds, summer camp moments, and community updates.",
+  socialFacebookHandle: "Shega Community Group",
+  socialFacebookUrl: "https://web.facebook.com/share/g/18foDKzcBS/",
+  socialTelegramHandle: "t.me/shegagenerations",
+  socialTelegramUrl: "https://t.me/shegagenerations",
+  socialTikTokHandle: "@samuelgeremew_21",
+  socialTikTokUrl: "https://www.tiktok.com/@samuelgeremew_21",
+};
+
+const eventsPageSettingsObj = {
+  _id: "eventsPageSettings",
+  _type: "eventsPageSettings",
+  eventsSectionKicker: "The nearest gathering",
+  eventsSectionTitle: "Upcoming Gathering & Workshops",
+  eventsPageTitlePhrases: [
+    "Where the generation gathers.",
+    "የትውልዱ መገናኛ",
+    "UPCOMING CTFs & WORKSHOPS",
+  ],
+  eventsPageSubtitle: "Active, incoming and historic meetups from CTFs in Addis to Simien treks.",
+  eventsCategories: ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"],
+};
+
+const galleryPageSettingsObj = {
+  _id: "galleryPageSettings",
+  _type: "galleryPageSettings",
+  galleryPageTitlePhrases: [
+    "The weave, in pictures.",
+    "በስዕሎች የተሸመነው",
+    "STUDENT COHORTS & EXPEDITIONS",
+  ],
+  galleryPageSubtitle: "Expeditions, hackathons, classrooms, and volunteer work across Ethiopia.",
+  galleryCategories: ["Expeditions", "Hackathons", "Classroom", "Volunteer-Work"],
+};
+
+const contactPageSettingsObj = {
+  _id: "contactPageSettings",
+  _type: "contactPageSettings",
+  contactPageTitlePhrases: [
+    "Get in touch, with Shega.",
+    "ከሸጋ ጋር, ይገናኙ",
+    "PARTNERSHIPS & INQUIRIES",
+  ],
+  contactPageSubtitle: "Reach out to our leadership team for general inquiries, partnerships, sponsorships, media features, or donations.",
+};
+
+const themeSettingsObj = {
+  _id: "themeSettings",
+  _type: "themeSettings",
+  siteName: "Shega Generations",
+  siteTagline: "Nurturing Tech Geniuses & Indigenous Leadership in Ethiopia",
+  themePreset: "orange-navy",
+  primaryColor: "#EA580C",
+  secondaryColor: "#0A192F",
+  accentColor: "#EA580C",
 };
 
 const storyMilestones = [
@@ -548,8 +594,14 @@ async function seed() {
 
   try {
     // 1. Site Settings
-    console.log("Seeding Global Site Settings...");
-    await client.createIfNotExists(siteSettings);
+    console.log("Seeding Global Site Settings & Dedicated Page Settings...");
+    await client.createOrReplace(siteSettings);
+    await client.createOrReplace(aboutPageSettingsObj);
+    await client.createOrReplace(homePageSettingsObj);
+    await client.createOrReplace(eventsPageSettingsObj);
+    await client.createOrReplace(galleryPageSettingsObj);
+    await client.createOrReplace(contactPageSettingsObj);
+    await client.createOrReplace(themeSettingsObj);
 
     // 2. Story Milestones
     console.log("Seeding Story Milestones...");
