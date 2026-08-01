@@ -23,7 +23,8 @@ export default defineType({
       title: "Contact Page Subtitle",
       type: "text",
       rows: 3,
-      initialValue: "Reach out to our leadership team for general inquiries, partnerships, sponsorships, media features, or donations.",
+      initialValue:
+        "Reach out to our leadership team for general inquiries, partnerships, sponsorships, media features, or donations.",
     }),
   ],
   preview: {

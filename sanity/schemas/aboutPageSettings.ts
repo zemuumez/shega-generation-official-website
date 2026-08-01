@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 import { UserIcon } from "@sanity/icons";
 
 export default defineType({
@@ -15,8 +15,7 @@ export default defineType({
     }),
     defineField({
       name: "aboutPageTitlePhrases",
-      title: "About Hero Title Phrases (Typewriter)",
-      description: "Phrases typed out in a loop at the top of the About Us page hero section.",
+      title: "About Page Title Phrases (Typewriter)",
       type: "array",
       of: [{ type: "string" }],
       initialValue: [
@@ -28,41 +27,60 @@ export default defineType({
     }),
     defineField({
       name: "aboutPageSubtitle",
-      title: "About Hero Subtitle / Mission Statement",
+      title: "About Page Subtitle / Mission Statement",
       type: "text",
-      rows: 4,
+      rows: 3,
       initialValue:
         "Shega Generations (ሸጋ ትውልድ) is a pioneering non-profit educational movement dedicated to providing free, high-tier software engineering, AI technology, indigenous Ethiopian history, and hospitality character training to talented youth across Ethiopia.",
     }),
     defineField({
       name: "aboutHeroStats",
-      title: "About Hero Key Impact Statistics",
+      title: "About Hero Key Impact Statistics (4 Hero Boxes)",
       type: "array",
       of: [
-        {
+        defineArrayMember({
           type: "object",
+          name: "heroStatItem",
+          title: "Impact Stat Box",
           fields: [
-            { name: "value", title: "Stat Value (e.g. 500+)", type: "string" },
-            { name: "label", title: "Stat Label", type: "string" },
+            defineField({ name: "value", title: "Stat Value (e.g. 500+)", type: "string" }),
+            defineField({ name: "label", title: "Stat Label (e.g. Talented Geniuses Trained)", type: "string" }),
           ],
-        },
+          preview: {
+            select: { title: "value", subtitle: "label" },
+          },
+        }),
       ],
       initialValue: [
-        { value: "500+", label: "Talented Geniuses Trained" },
-        { value: "100% Free", label: "Tuition Cost to Students" },
-        { value: "12+", label: "Summer & Annual Cohorts" },
-        { value: "15+", label: "Institutional Partners" },
+        { _key: "stat1", value: "500+", label: "Talented Geniuses Trained" },
+        { _key: "stat2", value: "100% Free", label: "Tuition Cost to Students" },
+        { _key: "stat3", value: "12+", label: "Summer & Annual Cohorts" },
+        { _key: "stat4", value: "15+", label: "Institutional Partners" },
       ],
     }),
     defineField({
+      name: "aboutPillarsTitle",
+      title: "Holistic Education Section Title",
+      type: "string",
+      initialValue: "Our 4 Pillars of Holistic Education",
+    }),
+    defineField({
+      name: "aboutPillarsSubtitle",
+      title: "Holistic Education Section Subtitle",
+      type: "text",
+      rows: 2,
+      initialValue:
+        "Combining elite computational software engineering with indigenous Ethiopian heritage, dining etiquette, and youth peer mentorship.",
+    }),
+    defineField({
       name: "aboutCampusVisionTitle",
-      title: "Shega Campus Vision Section Title",
+      title: "Shega Innovation Campus Vision Title",
       type: "string",
       initialValue: "Building the Permanent Shega Innovation Campus",
     }),
     defineField({
       name: "aboutCampusVisionText",
-      title: "Shega Campus Vision Section Description",
+      title: "Shega Innovation Campus Vision Text",
       type: "text",
       rows: 4,
       initialValue:
@@ -70,16 +88,15 @@ export default defineType({
     }),
     defineField({
       name: "orgStructureTitle",
-      title: "Organization Structure Section Title",
+      title: "Org Structure Section Title",
       type: "string",
       initialValue: "Role & Responsibilities Breakdown",
     }),
     defineField({
       name: "orgStructureSubtitle",
-      title: "Organization Structure Section Subtitle",
-      type: "text",
-      rows: 2,
-      initialValue: "Organizational breakdown & governance framework for Shega Generation.",
+      title: "Org Structure Section Subtitle",
+      type: "string",
+      initialValue: "Draft organizational breakdown & governance framework for Shega Generation.",
     }),
   ],
   preview: {

@@ -12,13 +12,13 @@ import PartnersSection from "@/components/PartnersSection";
 import ThemeProvider from "@/components/ThemeProvider";
 import Image from "next/image";
 import { safeFetch, safeImageUrl } from "@/sanity/lib/client";
-import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY, SITE_SETTINGS_QUERY, TESTIMONIALS_QUERY, PARTNERS_QUERY } from "@/sanity/lib/queries";
+import { UPCOMING_EVENT_QUERY, FEATURED_COURSES_QUERY, PROJECTS_QUERY, HOME_PAGE_SETTINGS_QUERY, TESTIMONIALS_QUERY, PARTNERS_QUERY } from "@/sanity/lib/queries";
 import { demoUpcomingEvent, demoCourses, demoProjects, demoTestimonials, demoPartners } from "@/lib/demoData";
 
 export const revalidate = 0;
 
 export default async function HomePage() {
-  const siteSettings = await safeFetch(SITE_SETTINGS_QUERY, {}, {} as any);
+  const siteSettings = await safeFetch(HOME_PAGE_SETTINGS_QUERY, {}, {} as any);
   const upcomingEvent = await safeFetch(UPCOMING_EVENT_QUERY, {}, demoUpcomingEvent);
   const fetchedCourses = await safeFetch(FEATURED_COURSES_QUERY, {}, demoCourses);
   const fetchedProjects = await safeFetch(PROJECTS_QUERY, {}, demoProjects);

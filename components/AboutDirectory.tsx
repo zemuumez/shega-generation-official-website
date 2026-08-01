@@ -105,7 +105,13 @@ export default function AboutDirectory({
     "KINDNESS & KNOWLEDGE IN ACTION",
   ];
 
-  const phrases = customPhrases && customPhrases.length > 0 ? customPhrases : defaultPhrases;
+  const validCustomPhrases = customPhrases?.filter(
+    (p: any) => typeof p === "string" && p.trim().length > 0
+  );
+  const phrases =
+    validCustomPhrases && validCustomPhrases.length > 0
+      ? validCustomPhrases
+      : defaultPhrases;
 
   // Filter and Sort Team Members by numerical order
   const boardMembers = useMemo(() => {

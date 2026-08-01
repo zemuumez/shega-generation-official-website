@@ -15,7 +15,7 @@ export default defineType({
     }),
     defineField({
       name: "eventsSectionTitle",
-      title: "Nearest Gathering Title",
+      title: "Events Section Title",
       type: "string",
       initialValue: "Upcoming Gathering & Workshops",
     }),
@@ -39,7 +39,7 @@ export default defineType({
     }),
     defineField({
       name: "eventsCategories",
-      title: "Event Filter Categories",
+      title: "Events Filter Categories",
       type: "array",
       of: [{ type: "string" }],
       initialValue: ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"],
