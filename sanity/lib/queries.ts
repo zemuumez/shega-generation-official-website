@@ -74,7 +74,26 @@ export const FEATURED_COURSES_QUERY = `
 
 export const PROJECTS_QUERY = `
 *[_type == "project"] | order(_createdAt desc) {
-  _id, title, subtitle, kicker, category, description, mainImage { asset-> }, link, tags, isFeatured, date
+  _id,
+  title,
+  subtitle,
+  kicker,
+  category,
+  description,
+  mainImage { asset-> },
+  image { asset-> },
+  coverImage { asset-> },
+  link,
+  projectUrl,
+  tags,
+  techStack,
+  isFeatured,
+  date,
+  creatorName,
+  cohortLocation,
+  mediaOutlet,
+  quote,
+  impactMetric
 }`;
 
 export const TESTIMONIALS_QUERY = `

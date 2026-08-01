@@ -1,44 +1,69 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
-export default function PageLoader() {
+interface PageLoaderProps {
+  forceShow?: boolean;
+}
+
+export default function PageLoader({ forceShow = false }: PageLoaderProps) {
+  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
   const [isFading, setIsFading] = useState(false);
 
+  // Function to hide loader with smooth fade transition
+  const hideLoader = () => {
+    setIsFading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 400); // 400ms smooth fade transition
+    return () => clearTimeout(timer);
+  };
+
+  // Trigger loader on initial page load
   useEffect(() => {
-    // Check if document and window images are already complete
-    const handleLoad = () => {
-      // Start smooth fade out
-      setIsFading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 600); // 600ms fade transition
-    };
+    if (forceShow) {
+      setIsLoading(true);
+      setIsFading(false);
+      return;
+    }
 
     if (document.readyState === "complete") {
-      // Small tick to ensure smooth transition
-      const timer = setTimeout(handleLoad, 300);
+      const timer = setTimeout(hideLoader, 250);
       return () => clearTimeout(timer);
     } else {
+      const handleLoad = () => hideLoader();
       window.addEventListener("load", handleLoad);
-      // Safety fallback max timeout of 3.5s in case of slow external networks
-      const fallbackTimer = setTimeout(handleLoad, 3500);
+      const fallback = setTimeout(handleLoad, 3000);
 
       return () => {
         window.removeEventListener("load", handleLoad);
-        clearTimeout(fallbackTimer);
+        clearTimeout(fallback);
       };
     }
-  }, []);
+  }, [forceShow]);
+
+  // Trigger loader on client-side route changes
+  useEffect(() => {
+    if (forceShow) return;
+
+    // Trigger full screen loader when route changes
+    setIsLoading(true);
+    setIsFading(false);
+
+    const timer = setTimeout(hideLoader, 350);
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   if (!isLoading) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#F4F3EE] dark:bg-[#0A192F] transition-opacity duration-600 ease-out select-none ${
+      className={`fixed inset-0 w-screen h-screen z-[99999999] flex items-center justify-center bg-[#F4F3EE] dark:bg-[#0A192F] transition-opacity duration-400 ease-out select-none ${
         isFading ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
+      style={{ top: 0, left: 0, right: 0, bottom: 0, width: "100vw", height: "100vh" }}
     >
       {/* 1. LEFT SIDE ANIMATED HERO PATTERN RIBBON */}
       <div className="absolute left-0 top-0 bottom-0 w-[30vw] max-w-sm z-0 pointer-events-none opacity-20 hidden sm:block [mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.7)_40%,rgba(0,0,0,0)_100%)] [-webkit-mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.7)_40%,rgba(0,0,0,0)_100%)]">

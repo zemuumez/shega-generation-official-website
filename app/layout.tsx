@@ -51,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PageLoader />
         <Navbar />
 
-        <main className="relative z-10">{children}</main>
+        <main className="relative z-10 min-h-[85vh]">{children}</main>
 
         <Footer />
       </body>

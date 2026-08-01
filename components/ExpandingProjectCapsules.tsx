@@ -94,18 +94,19 @@ export default function ExpandingProjectCapsules({
           const isActive = activeIdx === idx;
           const ctaText = getCtaLabel(project.category);
           
-          // Check if link provided is a YouTube video URL
-          const ytInfo = parseYouTubeVideo(project.projectUrl);
+          const projectLink = project.projectUrl || project.link;
+          const ytInfo = parseYouTubeVideo(projectLink);
           const isPlayingVideo = playingVideoId === (project._id || project.title || String(idx));
 
-          // LOGIC: If YouTube URL -> fetch YouTube thumbnail image. If NOT YouTube -> use user-uploaded image from CMS!
-          const bgImageSrc = ytInfo
-            ? ytInfo.thumbnailUrl
-            : safeImageUrl(
-                project.image,
-                800,
-                "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=800"
-              );
+          // LOGIC: If user uploaded a custom image in CMS, ALWAYS use it! If not, fallback to YouTube thumbnail or Unsplash fallback.
+          const cmsUploadedImage = safeImageUrl(
+            project.mainImage || project.image || project.coverImage,
+            800,
+            ""
+          );
+          const bgImageSrc =
+            cmsUploadedImage ||
+            (ytInfo ? ytInfo.thumbnailUrl : "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=800");
 
           return (
             <div
@@ -207,7 +208,7 @@ export default function ExpandingProjectCapsules({
                       </button>
                     ) : (
                       <a
-                        href={project.projectUrl || "https://facebook.com/shegagenerations"}
+                        href={projectLink || "https://facebook.com/shegagenerations"}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="rounded-full bg-ochre text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-ochre-dark transition-all duration-300 shadow-md flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 border border-orange-400/30"
