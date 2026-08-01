@@ -13,13 +13,22 @@ export default function Footer() {
     <footer className="border-t border-zinc-200 bg-white/40 relative z-10">
       <div className="mx-auto w-full max-w-[90vw] px-4 py-14 sm:px-6">
         <div className="flex flex-col justify-between gap-10 sm:flex-row items-start sm:items-center">
-          <div>
-            <p className="font-display text-2xl font-bold uppercase tracking-wider text-ink">
-              Shega Generations
-            </p>
-            <p className="mt-2 text-sm text-ink-soft font-sans">
-              ሽጋ ትውልድ built by the generation it teaches.
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-white p-1 shadow-sm border border-zinc-200/80 flex items-center justify-center">
+              <img
+                src="/images/logo.png"
+                alt="Shega Generation Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div>
+              <p className="font-display text-2xl font-bold uppercase tracking-wider text-ink">
+                Shega Generations <span className="text-ochre">| ሸጋ ትውልድ</span>
+              </p>
+              <p className="mt-1 text-xs sm:text-sm text-ink-soft font-sans">
+                Nurturing Tech Geniuses & Indigenous Leadership in Ethiopia.
+              </p>
+            </div>
           </div>
 
           {/* Social Links: YouTube, TikTok, Facebook */}

@@ -30,6 +30,14 @@ export const metadata: Metadata = {
   title: "Shega Generations | ሽጋ ትውልድ",
   description:
     "Free tech orientation, life skills, and indigenous knowledge for underprivileged geniuses across Ethiopia.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

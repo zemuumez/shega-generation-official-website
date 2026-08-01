@@ -36,9 +36,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("homePageSettingsDoc")
-                    .schemaType("homePageSettings")
-                    .documentId("homePageSettings")
+                    .id("homeSiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
                     .title("Home Page Copy & Settings")
                 ),
               S.divider(),
@@ -109,9 +109,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("eventsPageSettingsDoc")
-                    .schemaType("eventsPageSettings")
-                    .documentId("eventsPageSettings")
+                    .id("eventsSiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
                     .title("Events Page Copy & Settings")
                 ),
               S.divider(),
@@ -164,9 +164,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("aboutPageSettingsDoc")
-                    .schemaType("aboutPageSettings")
-                    .documentId("aboutPageSettings")
+                    .id("aboutSiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
                     .title("About Us Page Copy & Settings")
                 ),
               S.listItem()
@@ -263,9 +263,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("galleryPageSettingsDoc")
-                    .schemaType("galleryPageSettings")
-                    .documentId("galleryPageSettings")
+                    .id("gallerySiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
                     .title("Gallery Page Copy & Settings")
                 ),
               S.divider(),
@@ -384,9 +384,9 @@ export const deskStructure: StructureResolver = (S) =>
                 .icon(CogIcon)
                 .child(
                   S.document()
-                    .id("contactPageSettingsDoc")
-                    .schemaType("contactPageSettings")
-                    .documentId("contactPageSettings")
+                    .id("contactSiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
                     .title("Contact Page Copy & Settings")
                 ),
               S.divider(),
@@ -513,9 +513,9 @@ export const deskStructure: StructureResolver = (S) =>
         .icon(CogIcon)
         .child(
           S.document()
-            .id("themeSettingsDoc")
-            .schemaType("themeSettings")
-            .documentId("themeSettings")
+            .id("globalThemeSettingsDoc")
+            .schemaType("siteSettings")
+            .documentId("siteSettings")
             .title("Global Theme & Brand Colors")
         ),
     ]);

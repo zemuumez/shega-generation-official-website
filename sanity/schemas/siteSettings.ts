@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 import { CogIcon } from "@sanity/icons";
 
 export default defineType({
@@ -7,7 +7,7 @@ export default defineType({
   type: "document",
   icon: CogIcon,
   groups: [
-    { name: "about", title: "About Us Page" },
+    { name: "about", title: "About Us Page", default: true },
     { name: "hero", title: "Home Hero Section" },
     { name: "statement", title: "Statement Banner" },
     { name: "cultural", title: "Cultural Anchoring" },
@@ -525,19 +525,24 @@ export default defineType({
       type: "array",
       group: "about",
       of: [
-        {
+        defineArrayMember({
           type: "object",
+          name: "heroStatItem",
+          title: "Impact Stat Box",
           fields: [
-            { name: "value", title: "Stat Value (e.g. 500+)", type: "string" },
-            { name: "label", title: "Stat Label", type: "string" },
+            defineField({ name: "value", title: "Stat Value (e.g. 500+)", type: "string" }),
+            defineField({ name: "label", title: "Stat Label (e.g. Talented Geniuses Trained)", type: "string" }),
           ],
-        },
+          preview: {
+            select: { title: "value", subtitle: "label" },
+          },
+        }),
       ],
       initialValue: [
-        { value: "500+", label: "Talented Geniuses Trained" },
-        { value: "100% Free", label: "Tuition Cost to Students" },
-        { value: "12+", label: "Summer & Annual Cohorts" },
-        { value: "15+", label: "Institutional Partners" },
+        { _key: "stat_box_1", value: "500+", label: "Talented Geniuses Trained" },
+        { _key: "stat_box_2", value: "100% Free", label: "Tuition Cost to Students" },
+        { _key: "stat_box_3", value: "12+", label: "Summer & Annual Cohorts" },
+        { _key: "stat_box_4", value: "15+", label: "Institutional Partners" },
       ],
     }),
 
@@ -575,6 +580,13 @@ export default defineType({
       ],
     }),
     defineField({
+      name: "aboutCampusVisionTitle",
+      title: "Shega Innovation Campus Vision Title",
+      type: "string",
+      initialValue: "Building the Permanent Shega Innovation Campus",
+      group: "about",
+    }),
+    defineField({
       name: "aboutCampusVisionText",
       title: "Shega Innovation Campus Vision Text",
       type: "text",
@@ -598,48 +610,10 @@ export default defineType({
       initialValue: "Draft organizational breakdown & governance framework for Shega Generation.",
       group: "about",
     }),
-    defineField({
-      name: "orgStructureNotice",
-      title: "Org Structure Draft Badge Notice",
-      type: "string",
-      initialValue: "Draft Proposal • Editable via Sanity CMS",
-      group: "about",
-    }),
-    defineField({
-      name: "boardSectionTitle",
-      title: "Board of Directors Section Title",
-      type: "string",
-      initialValue: "1. Board of Directors / Council Governance",
-      group: "about",
-    }),
-    defineField({
-      name: "boardSectionDescription",
-      title: "Board Section Description",
-      type: "text",
-      rows: 2,
-      initialValue: "Provides strategic vision, high-level governance, and institutional oversight for the organization.",
-      group: "about",
-    }),
-    defineField({
-      name: "executiveSectionTitle",
-      title: "Executive Section Title",
-      type: "string",
-      initialValue: "2. Executive & Operational Leadership",
-      group: "about",
-    }),
-    defineField({
-      name: "executiveSectionDescription",
-      title: "Executive Section Description",
-      type: "text",
-      rows: 2,
-      initialValue: "Drives core vision, talent development, PR, and day-to-day training execution across cohorts.",
-      group: "about",
-    }),
   ],
   preview: {
-    select: { title: "heroTitle" },
-    prepare({ title }) {
-      return { title: title || "Site Settings & Page Copy" };
+    prepare() {
+      return { title: "Global Site Settings & Page Copy" };
     },
   },
 });

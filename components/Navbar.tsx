@@ -23,14 +23,26 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-[#F4F3EE]/95 backdrop-blur-md border-b border-zinc-200/80 shadow-sm">
       <div className="mx-auto flex w-full max-w-[90vw] items-center justify-between px-4 py-3.5 sm:px-6">
-        {/* Brand Logo: Exclusively Amharic "ሸጋ ትውልድ" */}
+        {/* Brand Logo: Official Shega Generation Emblem */}
         <Link
           href="/"
-          className="flex items-center justify-center border-2 border-ochre rounded-2xl px-4 h-10 tracking-tight transition-all duration-300 hover:bg-ochre/5 select-none shadow-sm flex-shrink-0"
+          className="flex items-center gap-2.5 transition-all duration-300 hover:opacity-90 select-none flex-shrink-0 group"
         >
-          <div className="flex items-baseline gap-1.5 text-lg sm:text-xl leading-none text-center">
-            <span className="font-extrabold text-ochre font-display tracking-wide">ሸጋ</span>
-            <span className="font-bold text-navy font-sans tracking-wider">ትውልድ</span>
+          <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white p-1 shadow-sm border border-zinc-200/80 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+            <img
+              src="/images/logo.png"
+              alt="Shega Generation"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="flex flex-col justify-center leading-none">
+            <div className="flex items-baseline gap-1 text-lg sm:text-xl">
+              <span className="font-extrabold text-ochre font-display tracking-wide">ሸጋ</span>
+              <span className="font-bold text-navy font-sans tracking-wider">ትውልድ</span>
+            </div>
+            <span className="text-[9px] font-sans font-bold tracking-widest text-zinc-500 uppercase mt-0.5">
+              Shega Generation
+            </span>
           </div>
         </Link>
 
