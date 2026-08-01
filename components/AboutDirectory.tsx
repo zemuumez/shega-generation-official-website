@@ -108,19 +108,34 @@ export default function AboutDirectory({
   // Filter and Sort Team Members by numerical order
   const boardMembers = useMemo(() => {
     return teamMembers
-      .filter((m) => m.isBoardMember === true || (m.isBoardMember === undefined && m.department === "board"))
+      .filter((m) => {
+        if (m.isBoardMember === true) return true;
+        if (Array.isArray(m.departments) && m.departments.includes("board")) return true;
+        if (m.department === "board") return true;
+        return false;
+      })
       .sort((a, b) => (a.order || 99) - (b.order || 99));
   }, [teamMembers]);
 
   const execMembers = useMemo(() => {
     return teamMembers
-      .filter((m) => m.isExecutiveLeader === true || (m.isExecutiveLeader === undefined && (m.department === "executive" || m.department === "leadership")))
+      .filter((m) => {
+        if (m.isExecutiveLeader === true) return true;
+        if (Array.isArray(m.departments) && (m.departments.includes("executive") || m.departments.includes("leadership"))) return true;
+        if (m.department === "executive" || m.department === "leadership") return true;
+        return false;
+      })
       .sort((a, b) => (a.order || 99) - (b.order || 99));
   }, [teamMembers]);
 
   const teacherMembers = useMemo(() => {
     return teamMembers
-      .filter((m) => m.isTeacher === true || (m.isTeacher === undefined && (m.department === "tech" || Boolean(m.teachingSubject))))
+      .filter((m) => {
+        if (m.isTeacher === true) return true;
+        if (Array.isArray(m.departments) && m.departments.includes("tech")) return true;
+        if (m.department === "tech" || Boolean(m.teachingSubject)) return true;
+        return false;
+      })
       .sort((a, b) => (a.order || 99) - (b.order || 99));
   }, [teamMembers]);
 
@@ -198,7 +213,7 @@ export default function AboutDirectory({
     const isTextLeft = index % 2 === 0;
 
     // Palette assignment matching website color theme & reference screenshot
-    let bannerBg = "bg-[#0F172A]"; // Deep Navy
+    let bannerBg = "bg-[#0F172A] group-hover:bg-[#1E293B]"; // Deep Navy -> Slate
     let foldBg = "#020617";
     let roleColor = "text-sky-300";
 
@@ -207,19 +222,19 @@ export default function AboutDirectory({
       member.role?.includes("Founder") ||
       member.role?.includes("Executive Director")
     ) {
-      bannerBg = "bg-[#C2410C]"; // Ochre / Terracotta
+      bannerBg = "bg-[#C2410C] group-hover:bg-[#9A3412]"; // Ochre -> Rich Terracotta
       foldBg = "#7C2D12";
       roleColor = "text-amber-200";
     } else if (isBoard) {
-      bannerBg = "bg-[#0A192F]"; // Royal Navy
+      bannerBg = "bg-[#0A192F] group-hover:bg-[#0F2847]"; // Royal Navy -> Vibrant Deep Navy
       foldBg = "#020617";
       roleColor = "text-sky-200";
     } else if (isTech) {
-      bannerBg = "bg-[#1E293B]"; // Slate Blue
+      bannerBg = "bg-[#1E293B] group-hover:bg-[#0F172A]"; // Slate Blue -> Dark Slate
       foldBg = "#0F172A";
       roleColor = "text-amber-300";
     } else {
-      bannerBg = "bg-[#475569]"; // Slate Grey
+      bannerBg = "bg-[#475569] group-hover:bg-[#334155]"; // Slate Grey -> Darker Slate
       foldBg = "#1E293B";
       roleColor = "text-orange-200";
     }
@@ -245,7 +260,7 @@ export default function AboutDirectory({
       >
         {/* TEXT BANNER SECTION */}
         <div
-          className={`w-full sm:w-1/2 p-6 sm:p-7 text-white flex flex-col justify-between relative z-20 ${bannerBg} ${
+          className={`w-full sm:w-1/2 p-6 sm:p-7 text-white flex flex-col justify-between relative z-20 ${bannerBg} transition-colors duration-500 ${
             isTextLeft ? "order-1" : "order-2"
           }`}
         >
@@ -277,17 +292,6 @@ export default function AboutDirectory({
               {member.role}
             </p>
 
-            {/* Teacher / Instructor Specialization Badging */}
-            {(member.teachingSubject || member.isTeacher) && (
-              <div className="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/30 border border-amber-300/40 text-amber-200 text-[11px] font-mono font-bold leading-tight">
-                <span>🎓 Instructor:</span>
-                <span>{member.teachingSubject || "Technical & Coding Instruction"}</span>
-                {member.teachingPeriod && (
-                  <span className="text-white/70 font-normal">({member.teachingPeriod})</span>
-                )}
-              </div>
-            )}
-
             {/* Description / Responsibilities */}
             <p className="mt-4 text-xs text-white/85 font-sans leading-relaxed font-normal line-clamp-3">
               {member.responsibilities || member.bio}
@@ -312,7 +316,7 @@ export default function AboutDirectory({
           </div>
         </div>
 
-        {/* PHOTO SECTION */}
+        {/* PHOTO SECTION (Normal Full-Color Image at all times) */}
         <div
           className={`w-full sm:w-1/2 relative min-h-[260px] sm:min-h-[300px] overflow-hidden bg-zinc-900 ${
             isTextLeft ? "order-2" : "order-1"
@@ -323,9 +327,9 @@ export default function AboutDirectory({
             alt={member.name}
             fill
             sizes="(max-width: 640px) 100vw, 50vw"
-            className="object-cover object-top grayscale contrast-125 brightness-95 group-hover:grayscale-0 group-hover:scale-108 group-hover:brightness-105 transition-all duration-700 ease-out"
+            className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none opacity-60 group-hover:opacity-20 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none opacity-40 group-hover:opacity-10 transition-opacity" />
         </div>
       </motion.div>
     );
@@ -595,6 +599,24 @@ export default function AboutDirectory({
                 );
               })()}
             </div>
+
+            {/* Teaching Specialization & Tenure Callout */}
+            {(selectedMember.teachingSubject || selectedMember.isTeacher) && (
+              <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 shadow-xs">
+                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-ochre mb-1.5 flex items-center gap-1.5">
+                  <span>🎓</span>
+                  <span>Teaching Specialization &amp; Course Tenure</span>
+                </h4>
+                <div className="text-sm font-sans font-bold text-ink">
+                  {selectedMember.teachingSubject || "Technical & Coding Instruction"}
+                </div>
+                {selectedMember.teachingPeriod && (
+                  <div className="text-xs font-mono font-semibold text-zinc-600 mt-1">
+                    Tenure / Period: {selectedMember.teachingPeriod}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Core Responsibilities Breakdown Callout */}
             <div className="mb-6 p-4 rounded-2xl bg-[#F8F7F2] border border-amber-200/90 shadow-xs">

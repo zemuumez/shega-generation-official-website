@@ -34,10 +34,11 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "department",
-      title: "Department / Governance Category",
-      type: "string",
-      initialValue: "executive",
+      name: "departments",
+      title: "Departments & Governance Categories (Select Multiple Checkboxes)",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "Check all governance categories & departments that apply to this member.",
       options: {
         list: [
           { title: "1. Board of Directors / Council Governance", value: "board" },
@@ -50,7 +51,6 @@ export default defineType({
           { title: "8. External Advisory Board", value: "advisory" },
         ],
       },
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "isBoardMember",

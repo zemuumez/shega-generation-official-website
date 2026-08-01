@@ -101,7 +101,7 @@ export const PARTNERS_QUERY = `
 
 export const TEAM_MEMBERS_QUERY = `
 *[_type == "teamMember"] | order(order asc, _createdAt asc) {
-  _id, name, role, department, responsibilities, bio, quote, avatar, organizationAffiliations, socialLinks, order
+  _id, name, englishName, amharicName, role, department, departments, isBoardMember, isExecutiveLeader, isTeacher, teachingSubject, teachingPeriod, responsibilities, bio, quote, avatar, organizationAffiliations, socialLinks, order
 }`;
 
 export const STORY_MILESTONES_QUERY = `
