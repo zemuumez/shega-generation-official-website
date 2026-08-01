@@ -31,13 +31,25 @@ export function safeImageUrl(
   width = 800,
   fallback = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800"
 ): string {
-  if (typeof source === "string" && source.startsWith("http")) return source;
-  if (!source?.asset) return fallback;
-  try {
-    return builder.image(source).width(width).auto("format").url();
-  } catch {
-    return fallback;
+  if (!source) return fallback;
+  if (typeof source === "string") {
+    if (source.startsWith("http") || source.startsWith("/")) return source;
   }
+
+  const directUrl = source?.asset?.url || source?.url;
+  if (directUrl && typeof directUrl === "string") return directUrl;
+
+  const hasRef = source?.asset?._ref || source?.asset?._id || source?._ref || source?._id;
+  if (hasRef || source?.asset) {
+    try {
+      const url = builder.image(source).width(width).auto("format").url();
+      if (url) return url;
+    } catch {
+      // ignore
+    }
+  }
+
+  return fallback;
 }
 
 /**
