@@ -1,3 +1,4 @@
+import ParallaxBanner from "@/components/ParallaxBanner";
 import HorizontalRail from "@/components/HorizontalRail";
 import UpcomingEventCard from "@/components/UpcomingEventCard";
 import { CourseCard } from "@/components/Cards";
@@ -139,18 +140,12 @@ export default async function HomePage() {
       </section>
 
       {/* FULL-WIDTH PHOTO OVERLAY STATEMENT BANNER WITH PARALLAX EFFECT */}
-      <section className="relative w-full h-[55vh] min-h-[420px] overflow-hidden flex items-center justify-center">
-        <Image
-          src={statementBannerBg}
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/45 to-black/35 z-10" />
-        
-        <div className="relative z-20 flex flex-col items-center justify-center text-center p-6 select-none leading-[0.95]">
+      <ParallaxBanner
+        src={statementBannerBg}
+        heightClass="h-[55vh] min-h-[420px]"
+        overlayOpacity="bg-gradient-to-t from-black/65 via-black/45 to-black/35"
+      >
+        <div className="flex flex-col items-center justify-center text-center p-6 select-none leading-[0.95]">
           <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider drop-shadow-md">
             {statement1}
           </h2>
@@ -161,22 +156,18 @@ export default async function HomePage() {
             {statement3}
           </h2>
         </div>
-      </section>
+      </ParallaxBanner>
 
       {/* HALF-PAGE SPLIT SCROLL CURRICULUM SECTION */}
       <CurriculumSplitSection />
 
       {/* PARALLAX PHILOSOPHY BANNER */}
-      <section className="relative h-[65vh] min-h-[440px] w-full overflow-hidden flex items-center justify-center select-none">
-        <Image
-          src={culturalAnchoringBg}
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-black/45 z-10" />
-        <div className="relative z-20 max-w-4xl text-center px-6">
+      <ParallaxBanner
+        src={culturalAnchoringBg}
+        heightClass="h-[65vh] min-h-[440px]"
+        overlayOpacity="bg-black/45"
+      >
+        <div className="max-w-4xl text-center px-6">
           <h2 className="font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider leading-tight drop-shadow-md">
             We weave modern technology with cultural roots
           </h2>
@@ -184,7 +175,7 @@ export default async function HomePage() {
             {culturalDescription}
           </p>
         </div>
-      </section>
+      </ParallaxBanner>
 
       {/* INTERACTIVE TRACK EXPLORER */}
       <section className="py-24 border-b border-zinc-200 relative">
