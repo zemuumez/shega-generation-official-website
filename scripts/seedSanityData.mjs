@@ -374,19 +374,19 @@ async function seed() {
   try {
     // 1. Site Settings
     console.log("Seeding Global Site Settings...");
-    await client.createOrReplace(siteSettings);
+    await client.createIfNotExists(siteSettings);
 
     // 2. Story Milestones
     console.log("Seeding Story Milestones...");
     for (const milestone of storyMilestones) {
-      await client.createOrReplace(milestone);
+      await client.createIfNotExists(milestone);
       console.log(`  ✓ Milestone: ${milestone.year} - ${milestone.title}`);
     }
 
     // 3. Team Members
     console.log("Seeding Team Members...");
     for (const member of teamMembers) {
-      await client.createOrReplace(member);
+      await client.createIfNotExists(member);
       console.log(`  ✓ Team Member: ${member.name}`);
     }
 

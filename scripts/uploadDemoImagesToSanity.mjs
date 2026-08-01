@@ -85,6 +85,12 @@ async function uploadAssetsAndLink() {
   console.log("\n📸 Uploading Story Milestone Images to Sanity Asset Store...");
   for (const [docId, url] of Object.entries(milestoneImageUrls)) {
     try {
+      const existingDoc = await client.getDocument(docId);
+      if (existingDoc?.image?.asset?._ref) {
+        console.log(`  ⏩ Skipping ${docId}: Custom CMS image already exists (${existingDoc.image.asset._ref})`);
+        continue;
+      }
+
       console.log(`  Downloading image for ${docId}...`);
       const buffer = await fetchBuffer(url);
       console.log(`  Uploading asset for ${docId} to Sanity...`);
@@ -116,6 +122,12 @@ async function uploadAssetsAndLink() {
   console.log("\n👤 Uploading Team Member Profile Photos to Sanity Asset Store...");
   for (const [docId, url] of Object.entries(teamAvatarUrls)) {
     try {
+      const existingDoc = await client.getDocument(docId);
+      if (existingDoc?.avatar?.asset?._ref) {
+        console.log(`  ⏩ Skipping ${docId}: Custom CMS avatar already exists (${existingDoc.avatar.asset._ref})`);
+        continue;
+      }
+
       console.log(`  Downloading avatar for ${docId}...`);
       const buffer = await fetchBuffer(url);
       console.log(`  Uploading asset for ${docId} to Sanity...`);
