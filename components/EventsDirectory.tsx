@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import { safeImageUrl } from "@/sanity/lib/client";
 
@@ -106,23 +107,28 @@ export default function EventsDirectory({
         </p>
       </div>
 
-      {/* FILTER CONTROLS BAR */}
+      {/* FILTER CONTROLS BAR WITH ANIMATED SLIDER PILLS */}
       <div className="mt-14 mb-14 border-y border-zinc-200 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Time Segmented Pills Switcher (Left) */}
-        <div className="inline-flex items-center gap-1 bg-zinc-100 p-1 rounded-full border border-zinc-200/80">
+        {/* Time Segmented Switcher (Left) */}
+        <div className="inline-flex items-center gap-1 bg-zinc-100 p-1.5 rounded-full border border-zinc-200/80 relative">
           {TIME_FILTERS.map((tf) => {
             const isActive = timeFilter === tf;
             return (
               <button
                 key={tf}
                 onClick={() => setTimeFilter(tf)}
-                className={`px-5 py-2 rounded-full font-mono text-xs font-bold transition-all duration-300 ${
-                  isActive
-                    ? "bg-ochre text-white shadow-xs"
-                    : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/60"
+                className={`relative px-5 py-2 rounded-full font-mono text-xs font-bold transition-all duration-300 outline-none select-none ${
+                  isActive ? "text-white" : "text-zinc-600 hover:text-zinc-900"
                 }`}
               >
-                {tf}
+                {isActive && (
+                  <motion.div
+                    layoutId="eventTimeTabPill"
+                    className="absolute inset-0 rounded-full bg-ochre shadow-xs z-0"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{tf}</span>
               </button>
             );
           })}
@@ -136,13 +142,23 @@ export default function EventsDirectory({
               <button
                 key={cat}
                 onClick={() => setCategoryFilter(cat)}
-                className={`px-4 py-2 rounded-full font-mono text-xs font-medium transition-all duration-300 ${
+                className={`relative px-4 py-2 rounded-full font-mono text-xs font-bold transition-all duration-300 outline-none select-none border ${
                   isActive
-                    ? "bg-ochre text-white font-bold shadow-xs"
-                    : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80 hover:text-zinc-900 border border-zinc-200/50"
+                    ? "text-white border-navy bg-navy shadow-xs"
+                    : "text-zinc-600 bg-zinc-100 hover:bg-zinc-200/80 hover:text-zinc-900 border-zinc-200/60"
                 }`}
               >
-                {cat}
+                {isActive && (
+                  <motion.div
+                    layoutId="eventCategoryTabPill"
+                    className="absolute inset-0 rounded-full bg-navy shadow-xs z-0"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-1.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-ochre animate-pulse" : "bg-zinc-400"}`} />
+                  <span>{cat}</span>
+                </span>
               </button>
             );
           })}

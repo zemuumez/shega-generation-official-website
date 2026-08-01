@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import ShegaJourneyExplorer from "@/components/ShegaJourneyExplorer";
 import TibebPattern from "@/components/TibebPattern";
@@ -125,96 +126,135 @@ export default function AboutDirectory({
     },
   ];
 
-  const renderMemberCard = (member: any) => {
+  const renderMemberCard = (member: any, index = 0) => {
     const isBoard = member.department === "board";
     const isExec = member.department === "executive" || member.department === "leadership";
+    const isTech = member.department === "tech";
+
+    // Alternate layout direction: Even index = Text on Left, Photo on Right. Odd index = Photo on Left, Text on Right.
+    const isTextLeft = index % 2 === 0;
+
+    // Palette assignment matching website color theme & reference screenshot
+    let bannerBg = "bg-[#0F172A]"; // Deep Navy
+    let foldBg = "#020617";
+    let roleColor = "text-sky-300";
+
+    if (
+      member.role?.includes("President") ||
+      member.role?.includes("Founder") ||
+      member.role?.includes("Executive Director")
+    ) {
+      bannerBg = "bg-[#C2410C]"; // Ochre / Terracotta
+      foldBg = "#7C2D12";
+      roleColor = "text-amber-200";
+    } else if (isBoard) {
+      bannerBg = "bg-[#0A192F]"; // Royal Navy
+      foldBg = "#020617";
+      roleColor = "text-sky-200";
+    } else if (isTech) {
+      bannerBg = "bg-[#1E293B]"; // Slate Blue
+      foldBg = "#0F172A";
+      roleColor = "text-amber-300";
+    } else {
+      bannerBg = "bg-[#475569]"; // Slate Grey
+      foldBg = "#1E293B";
+      roleColor = "text-orange-200";
+    }
+
+    const avatarUrl = safeImageUrl(
+      member.avatar,
+      600,
+      teamFallbackAvatars[member.name] || teamFallbackAvatars["Samuel Geremew"]
+    );
 
     return (
-      <div
-        key={member._id}
+      <motion.div
+        key={member._id || index}
+        layout
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.5, delay: (index % 4) * 0.08, ease: "easeOut" }}
         onClick={() => setSelectedMember(member)}
-        className={`glass-card rounded-3xl p-6 bg-white border transition-all duration-300 cursor-pointer group flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 ${
-          isBoard
-            ? "border-amber-200 hover:border-ochre shadow-xs"
-            : isExec
-            ? "border-navy/20 hover:border-navy shadow-xs"
-            : "border-zinc-200/90 hover:border-ochre/40 shadow-xs"
-        }`}
+        className="group relative cursor-pointer overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 bg-white border border-zinc-200/90 flex flex-col sm:flex-row hover:-translate-y-1.5 min-h-[300px]"
       >
-        <div>
-          {/* Header Badge */}
-          <div className="flex items-center justify-between mb-4">
-            <span
-              className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase border ${
-                isBoard
-                  ? "bg-amber-50 text-ochre-dark border-amber-200"
-                  : isExec
-                  ? "bg-sky-50 text-navy border-sky-200"
-                  : "bg-zinc-100 text-zinc-600 border-zinc-200"
-              }`}
-            >
-              {isBoard ? "Council Governance" : isExec ? "Executive Leadership" : member.department}
-            </span>
+        {/* TEXT BANNER SECTION */}
+        <div
+          className={`w-full sm:w-1/2 p-6 sm:p-7 text-white flex flex-col justify-between relative z-20 ${bannerBg} ${
+            isTextLeft ? "order-1" : "order-2"
+          }`}
+        >
+          {/* 3D Folded Ribbon Pointer leading to Photo */}
+          <div
+            className={`hidden sm:block absolute top-1/2 -translate-y-1/2 w-5 h-10 z-30 pointer-events-none transition-transform duration-300 group-hover:scale-110 ${
+              isTextLeft
+                ? "right-0 translate-x-1/2 [clip-path:polygon(0_0,100%_50%,0_100%)]"
+                : "left-0 -translate-x-1/2 [clip-path:polygon(100%_0,0_50%,100%_100%)]"
+            }`}
+            style={{ backgroundColor: foldBg }}
+          />
 
-            <span className="text-[11px] font-mono text-zinc-400 font-medium">Order 0{member.order || 1}</span>
-          </div>
-
-          {/* Avatar & Name */}
-          <div className="flex items-center gap-4 mb-4">
-            <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl overflow-hidden shadow-xs border border-zinc-200 flex-shrink-0 bg-ivory">
-              <Image
-                src={safeImageUrl(
-                  member.avatar,
-                  200,
-                  teamFallbackAvatars[member.name] || teamFallbackAvatars["Samuel Geremew"]
-                )}
-                alt={member.name}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
+          <div>
+            {/* Header Tag & Order Number */}
+            <div className="flex items-center justify-between mb-4">
+              <span className="px-2.5 py-0.5 rounded text-[9px] font-mono font-bold tracking-widest uppercase bg-white/15 text-white backdrop-blur-md border border-white/20">
+                {isBoard ? "Governance" : isExec ? "Executive" : member.department}
+              </span>
+              <span className="text-[10px] font-mono text-white/60 font-semibold">
+                #{String(member.order || index + 1).padStart(2, "0")}
+              </span>
             </div>
 
-            <div>
-              <h3 className="text-base sm:text-lg font-extrabold text-ink font-display group-hover:text-ochre transition-colors leading-tight">
-                {member.name}
-              </h3>
-              <div className="text-xs font-mono font-bold text-navy mt-1">{member.role}</div>
-            </div>
-          </div>
+            {/* NAME (SAMPLE NAME style) */}
+            <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-wider text-white leading-tight drop-shadow-sm group-hover:text-amber-300 transition-colors">
+              {member.name}
+            </h3>
 
-          {/* Role & Responsibilities Breakdown Box */}
-          <div className="p-3.5 rounded-2xl bg-[#F8F7F2] border border-zinc-200/80 mb-4">
-            <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-ochre mb-1 flex items-center gap-1.5">
-              <span>📋</span>
-              <span>Responsibilities Breakdown</span>
-            </div>
-            <p className="text-xs text-zinc-700 font-sans leading-relaxed font-medium line-clamp-3">
+            {/* Designation / Role (Italic style) */}
+            <p className={`mt-1 font-serif italic text-sm font-semibold tracking-wide ${roleColor}`}>
+              {member.role}
+            </p>
+
+            {/* Description / Responsibilities */}
+            <p className="mt-4 text-xs text-white/85 font-sans leading-relaxed font-normal line-clamp-3">
               {member.responsibilities || member.bio}
             </p>
           </div>
-        </div>
 
-        <div>
-          {/* Affiliation Tags */}
-          {member.organizationAffiliations && member.organizationAffiliations.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {member.organizationAffiliations.slice(0, 3).map((tag: string, idx: number) => (
+          {/* Footer & Action */}
+          <div className="mt-6 pt-4 border-t border-white/15 flex items-center justify-between">
+            <div className="flex flex-wrap gap-1">
+              {(member.organizationAffiliations || []).slice(0, 2).map((tag: string, idx: number) => (
                 <span
                   key={idx}
-                  className="px-2 py-0.5 rounded-md bg-ivory text-zinc-700 text-[10px] font-mono border border-zinc-200 font-medium"
+                  className="px-2 py-0.5 rounded text-[9px] font-mono bg-black/25 text-white/90 border border-white/10"
                 >
                   {tag}
                 </span>
               ))}
             </div>
-          )}
-
-          <div className="text-xs font-mono font-bold text-ochre flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-            <span>View Full Governance Profile</span>
-            <span>→</span>
+            <span className="text-xs font-mono font-bold text-amber-300 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Profile &rarr;
+            </span>
           </div>
         </div>
-      </div>
+
+        {/* PHOTO SECTION */}
+        <div
+          className={`w-full sm:w-1/2 relative min-h-[260px] sm:min-h-[300px] overflow-hidden bg-zinc-900 ${
+            isTextLeft ? "order-2" : "order-1"
+          }`}
+        >
+          <Image
+            src={avatarUrl}
+            alt={member.name}
+            fill
+            sizes="(max-width: 640px) 100vw, 50vw"
+            className="object-cover object-top grayscale contrast-125 brightness-95 group-hover:grayscale-0 group-hover:scale-108 group-hover:brightness-105 transition-all duration-700 ease-out"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none opacity-60 group-hover:opacity-20 transition-opacity" />
+        </div>
+      </motion.div>
     );
   };
 
@@ -345,40 +385,64 @@ export default function AboutDirectory({
           </div>
 
           {/* Department Filter Tabs */}
-          <div className="flex items-center justify-center gap-3 flex-wrap mb-12 px-2 py-2">
-            {[
-              { id: "all", label: "All Members & Governance" },
-              { id: "board", label: "1. Board of Directors" },
-              { id: "executive", label: "2. Executive Leadership" },
-              { id: "tech", label: "Technical & AI Mentors" },
-              { id: "cultural", label: "Cultural Advisors" },
-              { id: "student-mentors", label: "Student Council" },
-            ].map((tab) => {
-              const isActive = selectedDept === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setSelectedDept(tab.id)}
-                  className={`flex-shrink-0 whitespace-nowrap px-5 py-3 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 flex items-center gap-2 border select-none leading-none min-w-max ${
-                    isActive
-                      ? "bg-navy text-white border-navy shadow-md scale-105"
-                      : "bg-ivory/90 text-zinc-700 hover:text-ink border-zinc-200/90 hover:bg-white"
-                  }`}
-                >
-                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${isActive ? "bg-ochre" : "bg-zinc-400"}`} />
-                  <span className="whitespace-nowrap leading-none">{tab.label}</span>
-                </button>
-              );
-            })}
+          <div className="relative max-w-4xl mx-auto mb-14">
+            {/* Left & Right Fade Gradients */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-20" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-20" />
+
+            <div className="overflow-x-auto no-scrollbar py-2 px-4 flex items-center justify-center gap-2 sm:gap-3">
+              {[
+                { id: "all", label: "All Members & Governance", count: teamMembers.length },
+                { id: "board", label: "1. Board of Directors", count: boardMembers.length },
+                { id: "executive", label: "2. Executive Leadership", count: execMembers.length },
+                { id: "tech", label: "Technical & AI Mentors", count: teamMembers.filter((m) => m.department === "tech").length },
+                { id: "cultural", label: "Cultural Advisors", count: teamMembers.filter((m) => m.department === "cultural").length },
+                { id: "student-mentors", label: "Student Council", count: teamMembers.filter((m) => m.department === "student-mentors").length },
+              ].map((tab) => {
+                const isActive = selectedDept === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setSelectedDept(tab.id)}
+                    className={`relative flex-shrink-0 whitespace-nowrap px-5 py-3 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 flex items-center gap-2 border select-none leading-none outline-none ${
+                      isActive
+                        ? "text-white border-navy bg-navy shadow-lg"
+                        : "text-zinc-700 bg-ivory/90 hover:bg-white hover:text-ochre border-zinc-200/90 shadow-xs"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeTabPillAbout"
+                        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-navy via-slate-900 to-navy shadow-md z-0"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${isActive ? "bg-ochre animate-pulse" : "bg-zinc-400"}`} />
+                      <span>{tab.label}</span>
+                      {tab.count > 0 && (
+                        <span
+                          className={`px-1.5 py-0.5 rounded text-[10px] ${
+                            isActive ? "bg-white/20 text-white font-semibold" : "bg-zinc-200/80 text-zinc-600"
+                          }`}
+                        >
+                          {tab.count}
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Structured Layout: Grouped when viewing "all" */}
+          {/* Structured 2-Column Split Card Layout (Matching Reference Screenshot) */}
           {selectedDept === "all" ? (
             <div className="space-y-16 max-w-7xl mx-auto w-full">
               {/* GROUP 1: BOARD OF DIRECTORS */}
               {boardMembers.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-4 mb-6 pb-3 border-b border-amber-200/80">
+                  <div className="flex items-center gap-4 mb-8 pb-3 border-b border-amber-200/80">
                     <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-ochre font-bold font-mono text-lg">
                       01
                     </div>
@@ -393,8 +457,8 @@ export default function AboutDirectory({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {boardMembers.map(renderMemberCard)}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
+                    {boardMembers.map((m, i) => renderMemberCard(m, i))}
                   </div>
                 </div>
               )}
@@ -402,7 +466,7 @@ export default function AboutDirectory({
               {/* GROUP 2: EXECUTIVE & OPERATIONAL LEADERSHIP */}
               {execMembers.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-4 mb-6 pb-3 border-b border-sky-200/80">
+                  <div className="flex items-center gap-4 mb-8 pb-3 border-b border-sky-200/80">
                     <div className="p-3 rounded-2xl bg-sky-50 border border-sky-200 text-navy font-bold font-mono text-lg">
                       02
                     </div>
@@ -417,8 +481,8 @@ export default function AboutDirectory({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {execMembers.map(renderMemberCard)}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
+                    {execMembers.map((m, i) => renderMemberCard(m, i + boardMembers.length))}
                   </div>
                 </div>
               )}
@@ -426,7 +490,7 @@ export default function AboutDirectory({
               {/* GROUP 3: TECHNICAL, CULTURAL & STUDENT MENTORS */}
               {otherMembers.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-4 mb-6 pb-3 border-b border-zinc-200">
+                  <div className="flex items-center gap-4 mb-8 pb-3 border-b border-zinc-200">
                     <div className="p-3 rounded-2xl bg-ivory border border-zinc-200 text-zinc-700 font-bold font-mono text-lg">
                       03
                     </div>
@@ -440,16 +504,18 @@ export default function AboutDirectory({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {otherMembers.map(renderMemberCard)}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
+                    {otherMembers.map((m, i) =>
+                      renderMemberCard(m, i + boardMembers.length + execMembers.length)
+                    )}
                   </div>
                 </div>
               )}
             </div>
           ) : (
             /* Grid View when filtering by specific tab */
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
-              {filteredTeam.map(renderMemberCard)}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 max-w-7xl mx-auto w-full">
+              {filteredTeam.map((m, i) => renderMemberCard(m, i))}
             </div>
           )}
         </div>

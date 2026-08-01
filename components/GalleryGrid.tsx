@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import { safeImageUrl } from "@/sanity/lib/client";
 
@@ -65,22 +66,36 @@ export default function GalleryGrid({
         </p>
       </div>
 
-      {/* CENTERED FILTER NAVIGATION BAR MATCHING TEMPLATE */}
-      <div className="mt-14 mb-14 border-y border-zinc-200 py-4 flex items-center justify-center">
-        <div className="flex flex-wrap items-center justify-center gap-2">
+      {/* CENTERED FILTER NAVIGATION BAR WITH ANIMATED SLIDER PILL */}
+      <div className="relative max-w-4xl mx-auto mt-12 mb-14">
+        {/* Fade Gradients for Horizontal Scroll */}
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-20" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-20" />
+
+        <div className="overflow-x-auto no-scrollbar py-2 px-4 flex items-center justify-center gap-2 sm:gap-3">
           {categoryOptions.map((tag) => {
             const isActive = active === tag;
             return (
               <button
                 key={tag}
                 onClick={() => setActive(tag)}
-                className={`px-5 py-2 rounded-full font-mono text-xs font-medium transition-all duration-300 ${
+                className={`relative flex-shrink-0 whitespace-nowrap px-5 py-2.5 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center gap-2 border select-none outline-none ${
                   isActive
-                    ? "bg-ochre text-white font-bold shadow-xs"
-                    : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80 hover:text-zinc-900 border border-zinc-200/50"
+                    ? "text-white border-ochre bg-ochre shadow-md"
+                    : "text-zinc-600 bg-zinc-100 hover:bg-zinc-200/80 hover:text-zinc-900 border-zinc-200/60 shadow-xs"
                 }`}
               >
-                {tag}
+                {isActive && (
+                  <motion.div
+                    layoutId="galleryTabPill"
+                    className="absolute inset-0 rounded-full bg-ochre shadow-md z-0"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-2">
+                  <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-white animate-pulse" : "bg-zinc-400"}`} />
+                  <span>{tag}</span>
+                </span>
               </button>
             );
           })}
