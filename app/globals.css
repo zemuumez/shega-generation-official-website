@@ -179,3 +179,40 @@ iframe.goog-te-banner-frame {
   background-color: transparent !important;
   box-shadow: none !important;
 }
+
+/* Hero Pattern & Loader Animations */
+@keyframes pattern-scroll {
+  0% { transform: translateY(0%); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes pattern-scroll-reverse {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0%); }
+}
+
+@keyframes progress-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-pattern-scroll {
+  animation: pattern-scroll 25s linear infinite;
+}
+
+.animate-pattern-scroll-reverse {
+  animation: pattern-scroll-reverse 25s linear infinite;
+}
+
+.animate-progress-slide {
+  animation: progress-slide 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
