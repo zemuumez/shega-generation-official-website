@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import TypewriterTitle from "@/components/TypewriterTitle";
@@ -21,6 +21,23 @@ export default function GalleryGrid({
 }) {
   const [active, setActive] = useState("All");
   const [lightboxItem, setLightboxItem] = useState<any | null>(null);
+
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = tabsRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 10);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 10);
+  }, []);
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [checkScroll]);
 
   const categoryOptions = [
     "All",
@@ -67,12 +84,20 @@ export default function GalleryGrid({
       </div>
 
       {/* CENTERED FILTER NAVIGATION BAR WITH ANIMATED SLIDER PILL */}
-      <div className="relative max-w-4xl mx-auto mt-12 mb-14">
-        {/* Fade Gradients for Horizontal Scroll */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-20" />
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-20" />
+      <div className="relative w-full max-w-7xl mx-auto mt-12 mb-14">
+        {/* Dynamic Fade Gradients - Only visible when actually scrollable */}
+        {canScrollLeft && (
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent z-20 transition-opacity duration-300" />
+        )}
+        {canScrollRight && (
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent z-20 transition-opacity duration-300" />
+        )}
 
-        <div className="overflow-x-auto no-scrollbar py-2 px-4 flex items-center justify-center gap-2 sm:gap-3">
+        <div
+          ref={tabsRef}
+          onScroll={checkScroll}
+          className="overflow-x-auto no-scrollbar py-2 px-1 flex items-center justify-start sm:justify-center gap-2 sm:gap-3 w-full"
+        >
           {categoryOptions.map((tag) => {
             const isActive = active === tag;
             return (

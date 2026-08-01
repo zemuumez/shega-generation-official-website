@@ -108,7 +108,7 @@ export default function EventsDirectory({
       </div>
 
       {/* FILTER CONTROLS BAR WITH ANIMATED SLIDER PILLS */}
-      <div className="mt-14 mb-14 border-y border-zinc-200 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="w-full max-w-7xl mx-auto mt-14 mb-14 border-y border-zinc-200 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Time Segmented Switcher (Left) */}
         <div className="inline-flex items-center gap-1 bg-zinc-100 p-1.5 rounded-full border border-zinc-200/80 relative">
           {TIME_FILTERS.map((tf) => {

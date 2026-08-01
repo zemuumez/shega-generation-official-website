@@ -279,7 +279,7 @@ const teamMembers = [
   {
     _id: "team-member-sahret",
     _type: "teamMember",
-    name: "ወ/ሮ ሳህረት ሰፋ",
+    name: "Sahret Sefa (ወ/ሮ ሳህረት ሰፋ)",
     role: "Board Council President",
     department: "board",
     responsibilities: "Provides strategic vision, high-level governance, and institutional oversight for the organization.",
@@ -292,7 +292,7 @@ const teamMembers = [
   {
     _id: "team-member-selamawit-prof",
     _type: "teamMember",
-    name: "ፕሮፌሰር ሰላማዊት መኮንን",
+    name: "Prof. Selamawit Mekonnen (ፕሮፌሰር ሰላማዊት መኮንን)",
     role: "Board Secretary",
     department: "board",
     responsibilities: "Manages board communications, governance documentation, and official policy compliance.",
@@ -305,7 +305,7 @@ const teamMembers = [
   {
     _id: "team-member-henok",
     _type: "teamMember",
-    name: "ዶክተር ሄኖክ ሙሉጌታ",
+    name: "Dr. Henok Mulugeta (ዶክተር ሄኖክ ሙሉጌታ)",
     role: "Board Member",
     department: "board",
     responsibilities: "Provides advisory support, strategic direction, and institutional oversight across organizational initiatives.",
@@ -318,7 +318,7 @@ const teamMembers = [
   {
     _id: "team-member-tibebu",
     _type: "teamMember",
-    name: "ጥበቡ በለጠ",
+    name: "Tibebu Belete (ጥበቡ በለጠ)",
     role: "Board Member",
     department: "board",
     responsibilities: "Provides advisory support, strategic direction, and institutional oversight across organizational initiatives.",
@@ -333,7 +333,7 @@ const teamMembers = [
   {
     _id: "team-member-samuel",
     _type: "teamMember",
-    name: "ሳሙኤል ገረመው",
+    name: "Samuel Geremew (ሳሙኤል ገረመው)",
     role: "Founder, Executive Director & Board Member",
     department: "executive",
     responsibilities: "Drives the core vision, strategic partnerships, and overall operations of Shega Generation.",
@@ -356,7 +356,7 @@ const teamMembers = [
   {
     _id: "team-member-zemichael",
     _type: "teamMember",
-    name: "አቶ ዘሚካኤል ተፈራ",
+    name: "Zemichael Tefera (አቶ ዘሚካኤል ተፈራ)",
     role: "Board Member & Talent Head (Chief Coordinator)",
     department: "executive",
     responsibilities: "Oversees talent development, student mentorship frameworks, cohort placements, and technical instruction.",
@@ -376,7 +376,7 @@ const teamMembers = [
   {
     _id: "team-member-tedros",
     _type: "teamMember",
-    name: "አቶ ቴድሮስ ሞላ",
+    name: "Tedros Molla (አቶ ቴድሮስ ሞላ)",
     role: "Public Relations (PR)",
     department: "executive",
     responsibilities: "Manages media relations, public engagement, and organizational communications.",
@@ -391,7 +391,7 @@ const teamMembers = [
   {
     _id: "team-member-thomas",
     _type: "teamMember",
-    name: "አቶ ቶማስ ሃይሉ",
+    name: "Thomas Hailu (አቶ ቶማስ ሃይሉ)",
     role: "Training Coordinator",
     department: "executive",
     responsibilities: "Directs day-to-day training logistics, curriculum execution, and instructor management across cohorts.",
@@ -408,7 +408,7 @@ const teamMembers = [
   {
     _id: "team-member-dawit",
     _type: "teamMember",
-    name: "Dawit Kassaye",
+    name: "Dawit Kassaye (ዳዊት ካሳዬ)",
     role: "Senior AI & Full-Stack Mentor",
     department: "tech",
     responsibilities: "Leads Leader Youth (Ages 14-18) tracks and manages Commercial Student Software Lab.",
@@ -421,7 +421,7 @@ const teamMembers = [
   {
     _id: "team-member-bethlehem",
     _type: "teamMember",
-    name: "Bethlehem Tadesse",
+    name: "Bethlehem Tadesse (ቤተልሔም ታደሰ)",
     role: "Director of Hospitality & Character Etiquette",
     department: "cultural",
     responsibilities: "Leads የማዕድ ስነ-ስርዓት (Dining Etiquette) & positive communication modules with TTI.",
@@ -434,7 +434,7 @@ const teamMembers = [
   {
     _id: "team-member-yonas",
     _type: "teamMember",
-    name: "Yonas Bekele",
+    name: "Yonas Bekele (ዮናስ በቀለ)",
     role: "Robotics & Hardware Lab Instructor",
     department: "tech",
     responsibilities: "Directs robotics, Arduino, and interactive electronics modules.",
@@ -447,7 +447,7 @@ const teamMembers = [
   {
     _id: "team-member-kaleb",
     _type: "teamMember",
-    name: "Kaleb Tesfaye",
+    name: "Kaleb Tesfaye (ካሌብ ተስፋዬ)",
     role: "Senior Peer Mentor & Student Council Lead",
     department: "student-mentors",
     responsibilities: "Coordinates student council activities and junior cohort mentorship.",

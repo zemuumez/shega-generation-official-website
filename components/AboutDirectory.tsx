@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import ShegaJourneyExplorer from "@/components/ShegaJourneyExplorer";
 import TibebPattern from "@/components/TibebPattern";
@@ -40,8 +40,25 @@ export default function AboutDirectory({
   customCampusVision?: string;
   siteSettings?: any;
 }) {
-  const [selectedDept, setSelectedDept] = useState<string>("all");
+  const [selectedDept, setSelectedDept] = useState<string>("executive");
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
+
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    const el = tabsRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 25);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 25);
+  }, []);
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [checkScroll]);
 
   const defaultPhrases = [
     "OUR MISSION & STORY",
@@ -167,6 +184,10 @@ export default function AboutDirectory({
       teamFallbackAvatars[member.name] || teamFallbackAvatars["Samuel Geremew"]
     );
 
+    const nameMatch = (member.name || "").match(/^(.*?)\s*\((.*?)\)$/);
+    const mainEnglishName = nameMatch ? nameMatch[1] : member.name;
+    const amharicSubName = nameMatch ? nameMatch[2] : null;
+
     return (
       <motion.div
         key={member._id || index}
@@ -195,13 +216,20 @@ export default function AboutDirectory({
           />
 
           <div>
-            {/* NAME (SAMPLE NAME style) */}
-            <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-wider text-white leading-tight drop-shadow-sm group-hover:text-amber-300 transition-colors">
-              {member.name}
-            </h3>
+            {/* NAME (English Version with Amharic Version in Modern Style) */}
+            <div>
+              <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-wider text-white leading-tight drop-shadow-sm group-hover:text-amber-300 transition-colors">
+                {mainEnglishName}
+              </h3>
+              {amharicSubName && (
+                <div className="mt-1 font-sans text-xs sm:text-sm font-semibold text-white/85 tracking-wide">
+                  ({amharicSubName})
+                </div>
+              )}
+            </div>
 
             {/* Designation / Role (Italic style) */}
-            <p className={`mt-1 font-serif italic text-sm font-semibold tracking-wide ${roleColor}`}>
+            <p className={`mt-2 font-serif italic text-xs sm:text-sm font-semibold tracking-wide ${roleColor}`}>
               {member.role}
             </p>
 
@@ -370,26 +398,19 @@ export default function AboutDirectory({
           </div>
 
           {/* Department Filter Tabs */}
-          <div className="relative max-w-4xl mx-auto mb-14">
-            {/* Left & Right Fade Gradients */}
-            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-20" />
-            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-20" />
-
-            <div className="overflow-x-auto no-scrollbar py-2 px-4 flex items-center justify-center gap-2 sm:gap-3">
+          <div className="w-full max-w-4xl mx-auto mb-14 px-4">
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full">
               {[
-                { id: "all", label: "All Members & Governance", count: teamMembers.length },
-                { id: "board", label: "Board of Directors", count: boardMembers.length },
                 { id: "executive", label: "Executive Leadership", count: execMembers.length },
-                { id: "tech", label: "Technical & AI Mentors", count: teamMembers.filter((m) => m.department === "tech").length },
-                { id: "cultural", label: "Cultural Advisors", count: teamMembers.filter((m) => m.department === "cultural").length },
-                { id: "student-mentors", label: "Student Council", count: teamMembers.filter((m) => m.department === "student-mentors").length },
+                { id: "board", label: "Board of Directors", count: boardMembers.length },
+                { id: "all", label: "All Members & Governance", count: teamMembers.length },
               ].map((tab) => {
                 const isActive = selectedDept === tab.id;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setSelectedDept(tab.id)}
-                    className={`relative flex-shrink-0 whitespace-nowrap px-5 py-3 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 flex items-center gap-2 border select-none leading-none outline-none ${
+                    className={`relative whitespace-nowrap px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 flex items-center justify-center gap-2.5 border select-none leading-none outline-none ${
                       isActive
                         ? "text-white border-navy bg-navy shadow-lg"
                         : "text-zinc-700 bg-ivory/90 hover:bg-white hover:text-ochre border-zinc-200/90 shadow-xs"
@@ -406,8 +427,8 @@ export default function AboutDirectory({
                       <span>{tab.label}</span>
                       {tab.count > 0 && (
                         <span
-                          className={`px-1.5 py-0.5 rounded text-[10px] ${
-                            isActive ? "bg-white/20 text-white font-semibold" : "bg-zinc-200/80 text-zinc-600"
+                          className={`px-2 py-0.5 rounded-full text-[10px] ${
+                            isActive ? "bg-white/20 text-white font-semibold" : "bg-zinc-200/80 text-zinc-600 font-semibold"
                           }`}
                         >
                           {tab.count}
@@ -541,12 +562,7 @@ export default function AboutDirectory({
               </svg>
             </button>
 
-            {/* Editable Draft Notice inside Modal */}
-            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-ochre text-[11px] font-mono font-bold">
-              <span>✍️ Editable Sanity CMS Profile</span>
-            </div>
-
-            <div className="flex items-center gap-5 mb-6">
+            <div className="flex items-center gap-5 mb-6 pt-2">
               <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-md border border-zinc-200 flex-shrink-0 bg-ivory">
                 <Image
                   src={safeImageUrl(
@@ -561,11 +577,25 @@ export default function AboutDirectory({
               </div>
 
               <div>
-                <h3 className="text-2xl font-extrabold text-ink font-display">{selectedMember.name}</h3>
-                <div className="text-sm font-mono font-bold text-ochre mb-1">{selectedMember.role}</div>
+                {(() => {
+                  const mMatch = (selectedMember.name || "").match(/^(.*?)\s*\((.*?)\)$/);
+                  const engName = mMatch ? mMatch[1] : selectedMember.name;
+                  const amhName = mMatch ? mMatch[2] : null;
+                  return (
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">{engName}</h3>
+                      {amhName && (
+                        <div className="text-sm font-sans font-semibold text-zinc-600 mb-1">
+                          ({amhName})
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+                <div className="text-sm font-mono font-bold text-ochre mt-1 mb-1">{selectedMember.role}</div>
                 <div className="text-xs font-sans text-navy font-semibold uppercase tracking-wider">
                   {selectedMember.department === "board"
-                    ? "Board of Directors / Council Governance"
+                    ? "Board of Directors & Governance"
                     : selectedMember.department === "executive"
                     ? "Executive & Operational Leadership"
                     : `${selectedMember.department} Division`}
