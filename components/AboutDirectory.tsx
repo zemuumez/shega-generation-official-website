@@ -8,20 +8,56 @@ import ShegaJourneyExplorer from "@/components/ShegaJourneyExplorer";
 import TibebPattern from "@/components/TibebPattern";
 import { safeImageUrl } from "@/sanity/lib/client";
 
+const NAME_MAP: Record<string, { english: string; amharic: string }> = {
+  "ወ/ሮ ሳህረት ሰፋ": { english: "Sahret Sefa", amharic: "ወ/ሮ ሳህረት ሰፋ" },
+  "Sahret Sefa": { english: "Sahret Sefa", amharic: "ወ/ሮ ሳህረት ሰፋ" },
+  "ፕሮፌሰር ሰላማዊት መኮንን": { english: "Prof. Selamawit Mekonnen", amharic: "ፕሮፌሰር ሰላማዊት መኮንን" },
+  "Prof. Selamawit Mekonnen": { english: "Prof. Selamawit Mekonnen", amharic: "ፕሮፌሰር ሰላማዊት መኮንን" },
+  "ዶክተር ሄኖክ ሙሉጌታ": { english: "Dr. Henok Mulugeta", amharic: "ዶክተር ሄኖክ ሙሉጌታ" },
+  "Dr. Henok Mulugeta": { english: "Dr. Henok Mulugeta", amharic: "ዶክተር ሄኖክ ሙሉጌታ" },
+  "ጥበቡ በለጠ": { english: "Tibebu Belete", amharic: "ጥበቡ በለጠ" },
+  "Tibebu Belete": { english: "Tibebu Belete", amharic: "ጥበቡ በለጠ" },
+  "ሳሙኤል ገረመው": { english: "Samuel Geremew", amharic: "ሳሙኤል ገረመው" },
+  "Samuel Geremew": { english: "Samuel Geremew", amharic: "ሳሙኤል ገረመው" },
+  "አቶ ዘሚካኤል ተፈራ": { english: "Zemichael Tefera", amharic: "አቶ ዘሚካኤል ተፈራ" },
+  "Zemichael Tefera": { english: "Zemichael Tefera", amharic: "አቶ ዘሚካኤል ተፈራ" },
+  "አቶ ቴድሮስ ሞላ": { english: "Tedros Molla", amharic: "አቶ ቴድሮስ ሞላ" },
+  "Tedros Molla": { english: "Tedros Molla", amharic: "አቶ ቴድሮስ ሞላ" },
+  "አቶ ቶማስ ሃይሉ": { english: "Thomas Hailu", amharic: "አቶ ቶማስ ሃይሉ" },
+  "Thomas Hailu": { english: "Thomas Hailu", amharic: "አቶ ቶማስ ሃይሉ" },
+  "Dawit Kassaye": { english: "Dawit Kassaye", amharic: "ዳዊት ካሳዬ" },
+  "Bethlehem Tadesse": { english: "Bethlehem Tadesse", amharic: "ቤተልሔም ታደሰ" },
+  "Yonas Bekele": { english: "Yonas Bekele", amharic: "ዮናስ በቀለ" },
+  "Kaleb Tesfaye": { english: "Kaleb Tesfaye", amharic: "ካሌብ ተስፋዬ" },
+  "Gebriel Kassahun": { english: "Gebriel Kassahun", amharic: "ገብርኤል ካሳሁን" },
+  "Hizkeal": { english: "Hizkeal", amharic: "ሕዝቅኤል" },
+};
+
+function parseMemberName(rawName: string = ""): { english: string; amharic: string | null } {
+  if (!rawName) return { english: "", amharic: null };
+  const match = rawName.match(/^(.*?)\s*\((.*?)\)$/);
+  if (match) {
+    return { english: match[1].trim(), amharic: match[2].trim() };
+  }
+  const mapped = NAME_MAP[rawName.trim()];
+  if (mapped) {
+    return mapped;
+  }
+  return { english: rawName, amharic: null };
+}
+
 const teamFallbackAvatars: Record<string, string> = {
-  "ወ/ሮ ሳህረት ሰፋ": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600",
-  "ፕሮፌሰር ሰላማዊት መኮንን": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=600",
-  "ዶክተር ሄኖክ ሙሉጌታ": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
-  "ጥበቡ በለጠ": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600",
-  "ሳሙኤል ገረመው": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
-  "አቶ ዘሚካኤል ተፈራ": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=600",
-  "አቶ ቴድሮስ ሞላ": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600",
-  "አቶ ቶማስ ሃይሉ": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600",
+  "Sahret Sefa": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600",
+  "Prof. Selamawit Mekonnen": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=600",
+  "Dr. Henok Mulugeta": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
+  "Tibebu Belete": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600",
   "Samuel Geremew": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
+  "Zemichael Tefera": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=600",
+  "Tedros Molla": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600",
+  "Thomas Hailu": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600",
   "Dawit Kassaye": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
   "Bethlehem Tadesse": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600",
   "Yonas Bekele": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600",
-  "Selamawit Abrha": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=600",
   "Kaleb Tesfaye": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=600",
 };
 
@@ -178,15 +214,13 @@ export default function AboutDirectory({
       roleColor = "text-orange-200";
     }
 
+    const { english: mainEnglishName, amharic: amharicSubName } = parseMemberName(member.name);
+
     const avatarUrl = safeImageUrl(
       member.avatar,
       600,
-      teamFallbackAvatars[member.name] || teamFallbackAvatars["Samuel Geremew"]
+      teamFallbackAvatars[mainEnglishName] || teamFallbackAvatars["Samuel Geremew"]
     );
-
-    const nameMatch = (member.name || "").match(/^(.*?)\s*\((.*?)\)$/);
-    const mainEnglishName = nameMatch ? nameMatch[1] : member.name;
-    const amharicSubName = nameMatch ? nameMatch[2] : null;
 
     return (
       <motion.div
@@ -563,25 +597,25 @@ export default function AboutDirectory({
             </button>
 
             <div className="flex items-center gap-5 mb-6 pt-2">
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-md border border-zinc-200 flex-shrink-0 bg-ivory">
-                <Image
-                  src={safeImageUrl(
-                    selectedMember.avatar,
-                    300,
-                    teamFallbackAvatars[selectedMember.name] || teamFallbackAvatars["Samuel Geremew"]
-                  )}
-                  alt={selectedMember.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              {(() => {
+                const { english: engName, amharic: amhName } = parseMemberName(selectedMember.name);
+                const modalAvatarUrl = safeImageUrl(
+                  selectedMember.avatar,
+                  300,
+                  teamFallbackAvatars[engName] || teamFallbackAvatars["Samuel Geremew"]
+                );
 
-              <div>
-                {(() => {
-                  const mMatch = (selectedMember.name || "").match(/^(.*?)\s*\((.*?)\)$/);
-                  const engName = mMatch ? mMatch[1] : selectedMember.name;
-                  const amhName = mMatch ? mMatch[2] : null;
-                  return (
+                return (
+                  <>
+                    <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-md border border-zinc-200 flex-shrink-0 bg-ivory">
+                      <Image
+                        src={modalAvatarUrl}
+                        alt={engName}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
                     <div>
                       <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">{engName}</h3>
                       {amhName && (
@@ -589,18 +623,18 @@ export default function AboutDirectory({
                           ({amhName})
                         </div>
                       )}
+                      <div className="text-sm font-mono font-bold text-ochre mt-1 mb-1">{selectedMember.role}</div>
+                      <div className="text-xs font-sans text-navy font-semibold uppercase tracking-wider">
+                        {selectedMember.department === "board"
+                          ? "Board of Directors & Governance"
+                          : selectedMember.department === "executive"
+                          ? "Executive & Operational Leadership"
+                          : `${selectedMember.department} Division`}
+                      </div>
                     </div>
-                  );
-                })()}
-                <div className="text-sm font-mono font-bold text-ochre mt-1 mb-1">{selectedMember.role}</div>
-                <div className="text-xs font-sans text-navy font-semibold uppercase tracking-wider">
-                  {selectedMember.department === "board"
-                    ? "Board of Directors & Governance"
-                    : selectedMember.department === "executive"
-                    ? "Executive & Operational Leadership"
-                    : `${selectedMember.department} Division`}
-                </div>
-              </div>
+                  </>
+                );
+              })()}
             </div>
 
             {/* Core Responsibilities Breakdown Callout */}
