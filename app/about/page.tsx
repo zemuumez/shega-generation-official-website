@@ -31,6 +31,7 @@ export default async function AboutPage() {
           customPhrases={siteSettings?.aboutPageTitlePhrases}
           customSubtitle={siteSettings?.aboutPageSubtitle}
           customCampusVision={siteSettings?.aboutCampusVisionText}
+          siteSettings={siteSettings}
         />
       </div>
     </main>

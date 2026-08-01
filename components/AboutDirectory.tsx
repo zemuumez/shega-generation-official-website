@@ -8,6 +8,14 @@ import TibebPattern from "@/components/TibebPattern";
 import { safeImageUrl } from "@/sanity/lib/client";
 
 const teamFallbackAvatars: Record<string, string> = {
+  "ወ/ሮ ሳህረት ሰፋ": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600",
+  "ፕሮፌሰር ሰላማዊት መኮንን": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=600",
+  "ዶክተር ሄኖክ ሙሉጌታ": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
+  "ጥበቡ በለጠ": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600",
+  "ሳሙኤል ገረመው": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
+  "አቶ ዘሚካኤል ተፈራ": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=600",
+  "አቶ ቴድሮስ ሞላ": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600",
+  "አቶ ቶማስ ሃይሉ": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600",
   "Samuel Geremew": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
   "Dawit Kassaye": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
   "Bethlehem Tadesse": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600",
@@ -22,12 +30,14 @@ export default function AboutDirectory({
   customPhrases,
   customSubtitle,
   customCampusVision,
+  siteSettings,
 }: {
   teamMembers?: any[];
   milestones?: any[];
   customPhrases?: string[];
   customSubtitle?: string;
   customCampusVision?: string;
+  siteSettings?: any;
 }) {
   const [selectedDept, setSelectedDept] = useState<string>("all");
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
@@ -45,7 +55,21 @@ export default function AboutDirectory({
   const filteredTeam =
     selectedDept === "all"
       ? teamMembers
-      : teamMembers.filter((m) => m.department === selectedDept);
+      : teamMembers.filter((m) => {
+          if (selectedDept === "board") return m.department === "board";
+          if (selectedDept === "executive")
+            return m.department === "executive" || m.department === "leadership";
+          return m.department === selectedDept;
+        });
+
+  // Grouped members for structured breakdown when viewing "all"
+  const boardMembers = teamMembers.filter((m) => m.department === "board");
+  const execMembers = teamMembers.filter(
+    (m) => m.department === "executive" || m.department === "leadership"
+  );
+  const otherMembers = teamMembers.filter(
+    (m) => m.department !== "board" && m.department !== "executive" && m.department !== "leadership"
+  );
 
   const stats = [
     { label: "Talented Geniuses Trained", value: "500+", color: "text-ochre" },
@@ -100,6 +124,99 @@ export default function AboutDirectory({
       tags: ["Peer Mentorship", "Commercial Lab", "Client Projects", "Incubation"],
     },
   ];
+
+  const renderMemberCard = (member: any) => {
+    const isBoard = member.department === "board";
+    const isExec = member.department === "executive" || member.department === "leadership";
+
+    return (
+      <div
+        key={member._id}
+        onClick={() => setSelectedMember(member)}
+        className={`glass-card rounded-3xl p-6 bg-white border transition-all duration-300 cursor-pointer group flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 ${
+          isBoard
+            ? "border-amber-200 hover:border-ochre shadow-xs"
+            : isExec
+            ? "border-navy/20 hover:border-navy shadow-xs"
+            : "border-zinc-200/90 hover:border-ochre/40 shadow-xs"
+        }`}
+      >
+        <div>
+          {/* Header Badge */}
+          <div className="flex items-center justify-between mb-4">
+            <span
+              className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase border ${
+                isBoard
+                  ? "bg-amber-50 text-ochre-dark border-amber-200"
+                  : isExec
+                  ? "bg-sky-50 text-navy border-sky-200"
+                  : "bg-zinc-100 text-zinc-600 border-zinc-200"
+              }`}
+            >
+              {isBoard ? "Council Governance" : isExec ? "Executive Leadership" : member.department}
+            </span>
+
+            <span className="text-[11px] font-mono text-zinc-400 font-medium">Order 0{member.order || 1}</span>
+          </div>
+
+          {/* Avatar & Name */}
+          <div className="flex items-center gap-4 mb-4">
+            <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl overflow-hidden shadow-xs border border-zinc-200 flex-shrink-0 bg-ivory">
+              <Image
+                src={safeImageUrl(
+                  member.avatar,
+                  200,
+                  teamFallbackAvatars[member.name] || teamFallbackAvatars["Samuel Geremew"]
+                )}
+                alt={member.name}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+            </div>
+
+            <div>
+              <h3 className="text-base sm:text-lg font-extrabold text-ink font-display group-hover:text-ochre transition-colors leading-tight">
+                {member.name}
+              </h3>
+              <div className="text-xs font-mono font-bold text-navy mt-1">{member.role}</div>
+            </div>
+          </div>
+
+          {/* Role & Responsibilities Breakdown Box */}
+          <div className="p-3.5 rounded-2xl bg-[#F8F7F2] border border-zinc-200/80 mb-4">
+            <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-ochre mb-1 flex items-center gap-1.5">
+              <span>📋</span>
+              <span>Responsibilities Breakdown</span>
+            </div>
+            <p className="text-xs text-zinc-700 font-sans leading-relaxed font-medium line-clamp-3">
+              {member.responsibilities || member.bio}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          {/* Affiliation Tags */}
+          {member.organizationAffiliations && member.organizationAffiliations.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {member.organizationAffiliations.slice(0, 3).map((tag: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="px-2 py-0.5 rounded-md bg-ivory text-zinc-700 text-[10px] font-mono border border-zinc-200 font-medium"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className="text-xs font-mono font-bold text-ochre flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+            <span>View Full Governance Profile</span>
+            <span>→</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="relative">
@@ -208,23 +325,31 @@ export default function AboutDirectory({
         </div>
       </section>
 
-      {/* 4. ORGANIZATIONAL & TEAM DIRECTORY */}
+      {/* 4. ORGANIZATIONAL STRUCTURE & GOVERNANCE BREAKDOWN */}
       <section className="py-16 md:py-24 bg-white relative border-t border-zinc-200/80">
         <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto mb-10">
+          {/* Header & CMS Editable Draft Callout Banner */}
+          <div className="text-center max-w-4xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-ochre-dark text-xs font-mono font-bold uppercase tracking-wider mb-4 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-ochre animate-pulse" />
+              <span>{siteSettings?.orgStructureNotice || "Role & Responsibilities Breakdown (Draft • Editable in CMS)"}</span>
+            </div>
+
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight mb-4">
-              The Minds Behind <span className="text-ochre">Shega</span> <span className="text-navy">Generations</span>
+              {siteSettings?.orgStructureTitle || "Organization Structure & Governance"}
             </h2>
-            <p className="text-base text-zinc-600 font-sans font-medium">
-              Meet our team of higher education lecturers, AI engineers, cultural heritage scholars, hospitality leaders, and senior student mentors.
+            <p className="text-base text-zinc-600 font-sans font-medium max-w-2xl mx-auto">
+              {siteSettings?.orgStructureSubtitle ||
+                "Role & Responsibilities breakdown for the Board of Directors, Executive Leadership, and Operational Coordinators."}
             </p>
           </div>
 
           {/* Department Filter Tabs */}
           <div className="flex items-center justify-center gap-3 flex-wrap mb-12 px-2 py-2">
             {[
-              { id: "all", label: "All Members" },
-              { id: "leadership", label: "Executive Leadership" },
+              { id: "all", label: "All Members & Governance" },
+              { id: "board", label: "1. Board of Directors" },
+              { id: "executive", label: "2. Executive Leadership" },
               { id: "tech", label: "Technical & AI Mentors" },
               { id: "cultural", label: "Cultural Advisors" },
               { id: "student-mentors", label: "Student Council" },
@@ -247,65 +372,86 @@ export default function AboutDirectory({
             })}
           </div>
 
-          {/* Team Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
-            {filteredTeam.map((member) => (
-              <div
-                key={member._id}
-                onClick={() => setSelectedMember(member)}
-                className="glass-card rounded-3xl p-6 bg-white border border-zinc-200/90 hover:border-ochre/40 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between"
-              >
+          {/* Structured Layout: Grouped when viewing "all" */}
+          {selectedDept === "all" ? (
+            <div className="space-y-16 max-w-7xl mx-auto w-full">
+              {/* GROUP 1: BOARD OF DIRECTORS */}
+              {boardMembers.length > 0 && (
                 <div>
-                  {/* Avatar & Role Header */}
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden shadow-xs border border-zinc-200 flex-shrink-0">
-                      <Image
-                        src={safeImageUrl(member.avatar, 200, teamFallbackAvatars[member.name] || teamFallbackAvatars["Samuel Geremew"])}
-                        alt={member.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
+                  <div className="flex items-center gap-4 mb-6 pb-3 border-b border-amber-200/80">
+                    <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-ochre font-bold font-mono text-lg">
+                      01
                     </div>
-
                     <div>
-                      <h3 className="text-lg font-bold text-ink font-display group-hover:text-ochre transition-colors">
-                        {member.name}
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
+                        {siteSettings?.boardSectionTitle || "1. Board of Directors / Council Governance"}
                       </h3>
-                      <div className="text-xs font-mono font-semibold text-navy">
-                        {member.role}
-                      </div>
+                      <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium">
+                        {siteSettings?.boardSectionDescription ||
+                          "Provides strategic vision, high-level governance, and institutional oversight for the organization."}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Bio Snippet */}
-                  <p className="text-xs sm:text-sm text-zinc-600 font-sans line-clamp-3 leading-relaxed mb-4 font-medium">
-                    {member.bio}
-                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {boardMembers.map(renderMemberCard)}
+                  </div>
                 </div>
+              )}
 
+              {/* GROUP 2: EXECUTIVE & OPERATIONAL LEADERSHIP */}
+              {execMembers.length > 0 && (
                 <div>
-                  {/* Affiliation Tags */}
-                  {member.organizationAffiliations && member.organizationAffiliations.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {member.organizationAffiliations.slice(0, 3).map((tag: string, idx: number) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-0.5 rounded-md bg-ivory text-zinc-700 text-[10px] font-mono border border-zinc-200 font-medium"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                  <div className="flex items-center gap-4 mb-6 pb-3 border-b border-sky-200/80">
+                    <div className="p-3 rounded-2xl bg-sky-50 border border-sky-200 text-navy font-bold font-mono text-lg">
+                      02
                     </div>
-                  )}
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
+                        {siteSettings?.executiveSectionTitle || "2. Executive & Operational Leadership"}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium">
+                        {siteSettings?.executiveSectionDescription ||
+                          "Drives core vision, talent development, PR, and day-to-day training execution across cohorts."}
+                      </p>
+                    </div>
+                  </div>
 
-                  <div className="text-xs font-mono font-bold text-ochre flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    <span>View Profile &amp; Story</span>
-                    <span>→</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {execMembers.map(renderMemberCard)}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              )}
+
+              {/* GROUP 3: TECHNICAL, CULTURAL & STUDENT MENTORS */}
+              {otherMembers.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-4 mb-6 pb-3 border-b border-zinc-200">
+                    <div className="p-3 rounded-2xl bg-ivory border border-zinc-200 text-zinc-700 font-bold font-mono text-lg">
+                      03
+                    </div>
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-ink font-display">
+                        3. Technical Instructors, Cultural Advisors & Mentors
+                      </h3>
+                      <p className="text-xs sm:text-sm text-zinc-600 font-sans font-medium">
+                        Mentors leading AI programming, Ge'ez heritage, character etiquette, and student council operations.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {otherMembers.map(renderMemberCard)}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Grid View when filtering by specific tab */
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
+              {filteredTeam.map(renderMemberCard)}
+            </div>
+          )}
         </div>
       </section>
 
@@ -360,10 +506,19 @@ export default function AboutDirectory({
               </svg>
             </button>
 
+            {/* Editable Draft Notice inside Modal */}
+            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-ochre text-[11px] font-mono font-bold">
+              <span>✍️ Editable Sanity CMS Profile</span>
+            </div>
+
             <div className="flex items-center gap-5 mb-6">
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-md border border-zinc-200 flex-shrink-0">
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-md border border-zinc-200 flex-shrink-0 bg-ivory">
                 <Image
-                  src={safeImageUrl(selectedMember.avatar, 300, teamFallbackAvatars[selectedMember.name] || teamFallbackAvatars["Samuel Geremew"])}
+                  src={safeImageUrl(
+                    selectedMember.avatar,
+                    300,
+                    teamFallbackAvatars[selectedMember.name] || teamFallbackAvatars["Samuel Geremew"]
+                  )}
                   alt={selectedMember.name}
                   fill
                   className="object-cover"
@@ -373,15 +528,34 @@ export default function AboutDirectory({
               <div>
                 <h3 className="text-2xl font-extrabold text-ink font-display">{selectedMember.name}</h3>
                 <div className="text-sm font-mono font-bold text-ochre mb-1">{selectedMember.role}</div>
-                <div className="text-xs font-sans text-zinc-500 capitalize font-medium">{selectedMember.department} Division</div>
+                <div className="text-xs font-sans text-navy font-semibold uppercase tracking-wider">
+                  {selectedMember.department === "board"
+                    ? "Board of Directors / Council Governance"
+                    : selectedMember.department === "executive"
+                    ? "Executive & Operational Leadership"
+                    : `${selectedMember.department} Division`}
+                </div>
               </div>
             </div>
 
-            {/* Bio */}
-            <div className="mb-6">
-              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2">Biography</h4>
-              <p className="text-sm text-zinc-700 font-sans leading-relaxed font-medium">{selectedMember.bio}</p>
+            {/* Core Responsibilities Breakdown Callout */}
+            <div className="mb-6 p-4 rounded-2xl bg-[#F8F7F2] border border-amber-200/90 shadow-xs">
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-ochre mb-2 flex items-center gap-1.5">
+                <span>📋</span>
+                <span>Role &amp; Responsibilities Breakdown</span>
+              </h4>
+              <p className="text-sm text-zinc-800 font-sans leading-relaxed font-medium">
+                {selectedMember.responsibilities || selectedMember.bio}
+              </p>
             </div>
+
+            {/* Bio */}
+            {selectedMember.bio && (
+              <div className="mb-6">
+                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2">Biography &amp; Background</h4>
+                <p className="text-sm text-zinc-700 font-sans leading-relaxed font-medium">{selectedMember.bio}</p>
+              </div>
+            )}
 
             {/* Quote */}
             {selectedMember.quote && (

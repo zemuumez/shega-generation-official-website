@@ -170,13 +170,47 @@ export const deskStructure: StructureResolver = (S) =>
                 ),
               S.listItem()
                 .id("teamMembersItem")
-                .title("Team Members & Leadership")
+                .title("Organization & Governance Directory")
                 .icon(UsersIcon)
                 .child(
-                  S.documentTypeList("teamMember")
-                    .id("teamMembersTypeList")
-                    .title("Team Members & Leadership")
-                    .defaultOrdering([{ field: "order", direction: "asc" }])
+                  S.list()
+                    .id("teamMembersListSub")
+                    .title("Organization Directory Categories")
+                    .items([
+                      S.listItem()
+                        .id("boardMembersItem")
+                        .title("1. Board of Directors / Council Governance")
+                        .icon(UserIcon)
+                        .child(
+                          S.documentList()
+                            .id("boardMembersDocList")
+                            .title("Board of Directors / Council Governance")
+                            .filter('_type == "teamMember" && department == "board"')
+                            .defaultOrdering([{ field: "order", direction: "asc" }])
+                        ),
+                      S.listItem()
+                        .id("execMembersItem")
+                        .title("2. Executive & Operational Leadership")
+                        .icon(UserIcon)
+                        .child(
+                          S.documentList()
+                            .id("execMembersDocList")
+                            .title("Executive & Operational Leadership")
+                            .filter('_type == "teamMember" && department == "executive"')
+                            .defaultOrdering([{ field: "order", direction: "asc" }])
+                        ),
+                      S.divider(),
+                      S.listItem()
+                        .id("allTeamMembersItem")
+                        .title("All Leadership, Instructors & Mentors")
+                        .icon(FolderIcon)
+                        .child(
+                          S.documentTypeList("teamMember")
+                            .id("teamMembersTypeList")
+                            .title("All Team Members & Leadership")
+                            .defaultOrdering([{ field: "order", direction: "asc" }])
+                        ),
+                    ])
                 ),
             ])
         ),
