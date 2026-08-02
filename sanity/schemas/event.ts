@@ -45,9 +45,14 @@ export default defineType({
       name: "coverImage",
       title: "Cover Image (Rectangular & Oval Thumbnail)",
       type: "image",
+      description: "Upload a JPG, PNG, WEBP, or SVG file. (Note: convert iPhone .HEIC photos to JPG/PNG first).",
       options: { hotspot: true },
-      fields: [{ name: "alt", type: "string", title: "Alt text" }],
+      fields: [
+        defineField({ name: "alt", type: "string", title: "Alt text" }),
+      ],
     }),
+
+
     defineField({
       name: "description",
       title: "Full Event Description (Shows in Modal Popup)",

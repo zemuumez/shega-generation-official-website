@@ -66,8 +66,11 @@ export default defineType({
       title: "Cover Image / Studio Photo",
       type: "image",
       options: { hotspot: true },
-      fields: [{ name: "alt", type: "string", title: "Alt text" }],
+      fields: [
+        defineField({ name: "alt", type: "string", title: "Alt text" }),
+      ],
     }),
+
     defineField({
       name: "quote",
       title: "Student / Interviewee Quote",

@@ -26,8 +26,11 @@ export default defineType({
       title: "Banner image",
       type: "image",
       options: { hotspot: true },
-      fields: [{ name: "alt", type: "string", title: "Alt text" }],
+      fields: [
+        defineField({ name: "alt", type: "string", title: "Alt text" }),
+      ],
     }),
+
     defineField({
       name: "externalLmsUrl",
       title: "External LMS URL",
