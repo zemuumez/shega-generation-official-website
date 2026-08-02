@@ -42,8 +42,8 @@ const config: Config = {
       },
       fontFamily: {
         display: ["var(--font-oswald)", "sans-serif"],
-        cinzel: ["var(--font-cinzel)", "serif"],
-        hero: ["var(--font-cinzel)", "var(--font-oswald)", "serif"],
+        bodoni: ["var(--font-bodoni)", "serif"],
+        hero: ["var(--font-bodoni)", "serif"],
         body: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-plex-mono)", "monospace"],
       },

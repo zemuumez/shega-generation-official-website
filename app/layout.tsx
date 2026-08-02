@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Cinzel, Syne, Plus_Jakarta_Sans, Space_Mono } from "next/font/google";
+import { Bodoni_Moda, Syne, Plus_Jakarta_Sans, Space_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import PageLoader from "@/components/PageLoader";
 import "./globals.css";
 
-const cinzel = Cinzel({
+const bodoniModa = Bodoni_Moda({
   subsets: ["latin"],
-  variable: "--font-cinzel",
+  variable: "--font-bodoni",
   weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
 });
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`is-page-loading ${cinzel.variable} ${syne.variable} ${plusJakarta.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`is-page-loading ${bodoniModa.variable} ${syne.variable} ${plusJakarta.variable} ${spaceMono.variable}`}>
       <head>
         <ThemeProvider />
       </head>

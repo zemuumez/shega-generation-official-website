@@ -54,11 +54,14 @@ export default function Navbar() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`transition-colors py-1 ${
+                className={`relative py-1 transition-colors ${
                   isActive ? "text-zinc-950 font-semibold" : "text-zinc-600 hover:text-zinc-950"
                 }`}
               >
                 {item.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-zinc-950 rounded-full" />
+                )}
               </Link>
             );
           })}
