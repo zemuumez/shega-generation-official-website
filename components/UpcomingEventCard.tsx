@@ -58,7 +58,7 @@ export default function UpcomingEventCard({ event }: { event: EventDoc | null })
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="mx-auto grid w-full max-w-[90vw] grid-cols-1 overflow-hidden rounded-[40px] border border-zinc-200 bg-white sm:grid-cols-2 shadow-lg"
+      className="mx-auto grid w-full max-w-7xl grid-cols-1 overflow-hidden rounded-[32px] sm:rounded-[40px] border border-zinc-200 bg-white sm:grid-cols-2 shadow-lg"
     >
       <div className="relative aspect-[4/3] sm:aspect-auto overflow-hidden">
         <Image

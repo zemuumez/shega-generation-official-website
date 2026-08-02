@@ -178,7 +178,7 @@ export default async function HomePage() {
       </ParallaxBanner>
 
       {/* INTERACTIVE TRACK EXPLORER */}
-      <section className="py-24 border-b border-zinc-200 relative">
+      <section className="py-16 sm:py-24 border-b border-zinc-200 relative overflow-hidden">
         {/* Background Geometric Line Pattern - Bleeds outward without breaking section entrance scroll */}
         <div className="absolute inset-y-0 -right-8 md:-right-14 w-96 pointer-events-none opacity-60 z-0 hidden lg:block [mask-image:linear-gradient(to_left,white_50%,transparent_100%)]">
           <TibebPattern variant="watermark" tone="ochre" className="opacity-15 w-full h-full object-cover" />
@@ -189,8 +189,8 @@ export default async function HomePage() {
 
       {/* CURRICULUM OVERVIEW BREAKOUT */}
       {curriculumOverview && (
-        <section className="py-24 border-b border-zinc-200 bg-white/40">
-          <div className="mx-auto max-w-[90vw] px-4 sm:px-6 text-center max-w-4xl">
+        <section className="py-16 sm:py-24 border-b border-zinc-200 bg-white/40 overflow-hidden">
+          <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 text-center">
             <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">
               {curriculumOverview.title || "Full Educational Roadmap"}
             </h2>
@@ -203,15 +203,15 @@ export default async function HomePage() {
 
       {/* UPCOMING EVENT ACCENT HERO */}
       {upcomingEvent && (
-        <section className="px-4 py-24 sm:px-6 relative border-b border-zinc-200">
+        <section className="px-4 py-16 sm:py-24 sm:px-6 relative border-b border-zinc-200 overflow-hidden">
           <UpcomingEventCard event={upcomingEvent} />
         </section>
       )}
 
       {/* LMS FEATURED COURSE CAROUSEL */}
-      <section className="py-24 relative border-b border-zinc-200 overflow-hidden">
+      <section className="py-16 sm:py-24 relative border-b border-zinc-200 overflow-hidden">
         <div className="relative z-10">
-          <div className="mx-auto mb-10 w-full max-w-[90vw] px-4 sm:px-6">
+          <div className="mx-auto mb-8 sm:mb-10 w-full max-w-7xl px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
                 <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
@@ -233,9 +233,9 @@ export default async function HomePage() {
       </section>
 
       {/* STUDENT MEDIA COVERAGE & ACHIEVEMENTS (Expanding Capsules) */}
-      <section className="py-24 relative border-b border-zinc-200">
+      <section className="py-16 sm:py-24 relative border-b border-zinc-200 overflow-hidden">
         <div className="relative z-10">
-          <div className="mx-auto mb-6 w-full max-w-[90vw] px-4 sm:px-6">
+          <div className="mx-auto mb-6 w-full max-w-7xl px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
                 <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">
@@ -258,8 +258,8 @@ export default async function HomePage() {
       </section>
 
       {/* TESTIMONIALS HORIZONTAL RAIL */}
-      <section className="py-24 relative overflow-hidden bg-white/20 border-b border-zinc-200">
-        <div className="mx-auto mb-10 w-full max-w-[90vw] px-4 sm:px-6">
+      <section className="py-16 sm:py-24 relative overflow-hidden bg-white/20 border-b border-zinc-200">
+        <div className="mx-auto mb-8 sm:mb-10 w-full max-w-7xl px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
               <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Voices of Shega</h2>
@@ -333,8 +333,8 @@ export default async function HomePage() {
       <PartnersSection partners={partnerList} />
 
       {/* SOCIAL MEDIA INTERACTION MODULE */}
-      <section className="px-4 py-24 sm:px-6 relative bg-white border-t border-zinc-200">
-        <div className="mx-auto w-full max-w-[90vw]">
+      <section className="px-4 py-16 sm:py-24 sm:px-6 relative bg-white border-t border-zinc-200 overflow-hidden">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-ochre font-bold block mb-2">
              {communityKicker}
           </span>

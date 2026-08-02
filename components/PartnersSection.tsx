@@ -102,7 +102,7 @@ export default function PartnersSection({ partners }: { partners: PartnerItem[] 
 
   return (
     <section className="px-4 py-24 sm:px-6 relative bg-white border-t border-zinc-200 overflow-hidden">
-      <div className="mx-auto w-full max-w-[90vw]">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
           {/* LEFT COLUMN: TALKING ABOUT OUR PARTNERS */}

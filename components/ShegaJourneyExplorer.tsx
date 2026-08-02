@@ -29,7 +29,7 @@ export default function ShegaJourneyExplorer({ milestones = [] }: { milestones: 
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-ochre/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-navy/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight leading-tight mb-4">

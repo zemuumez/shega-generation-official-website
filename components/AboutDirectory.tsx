@@ -388,7 +388,7 @@ export default function AboutDirectory({
           />
         </div>
 
-        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center flex flex-col items-center justify-center">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 relative z-10 text-center flex flex-col items-center justify-center">
           {/* Typewriter Title */}
           <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2 max-w-7xl mx-auto">
             <TypewriterTitle
@@ -426,7 +426,7 @@ export default function AboutDirectory({
 
       {/* 3. CORE PILLARS & PHILOSOPHY */}
       <section className="py-16 md:py-24 bg-[#F4F3EE] relative">
-        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight mb-3">
               {siteSettings?.aboutPillarsTitle || "Our 4 Pillars of Holistic Education"}
@@ -478,7 +478,7 @@ export default function AboutDirectory({
 
       {/* 4. ORGANIZATIONAL STRUCTURE & GOVERNANCE BREAKDOWN */}
       <section className="py-16 md:py-24 bg-white relative border-t border-zinc-200/80">
-        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
           {/* Header */}
           <div className="text-center max-w-4xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink font-display tracking-tight mb-4">
@@ -543,7 +543,7 @@ export default function AboutDirectory({
 
       {/* 5. FUTURE INNOVATION CAMPUS VISION CALLOUT */}
       <section className="py-16 md:py-24 bg-[#0A192F] text-white relative overflow-hidden">
-        <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 relative z-10 text-center max-w-5xl">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 relative z-10 text-center max-w-5xl">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight mb-6 leading-tight">
             Building the Permanent <span className="text-ochre">Shega Innovation Campus</span>
           </h2>

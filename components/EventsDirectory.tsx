@@ -92,7 +92,7 @@ export default function EventsDirectory({
   }, [events, timeFilter, categoryFilter]);
 
   return (
-    <div className="w-full max-w-[90vw] mx-auto px-4 sm:px-6 pt-16 pb-28">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-28">
       {/* HEADER SECTION WITH TYPEWRITER ANIMATION */}
       <div className="text-center max-w-5xl mx-auto flex flex-col items-center justify-center">
         <div className="w-full flex items-center justify-center text-center min-h-[2.4em] select-none py-2">

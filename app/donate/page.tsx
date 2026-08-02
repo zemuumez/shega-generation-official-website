@@ -5,7 +5,7 @@ export const metadata = { title: "Donate | Shega Generations" };
 export default function DonatePage() {
   return (
     <div className="relative pb-28 pt-20 overflow-hidden">
-      <div className="relative mx-auto w-full max-w-[90vw] px-4 sm:px-6 z-20">
+      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 z-20">
         <span className="inline-block px-3.5 py-1 rounded-full font-mono text-xs uppercase tracking-[0.2em] bg-ink/5 text-ink border border-zinc-200 font-bold">
           Financing Interface
         </span>

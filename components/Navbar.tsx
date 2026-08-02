@@ -22,7 +22,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-[#F4F3EE]/95 backdrop-blur-md border-b border-zinc-200/80 ">
-      <div className="mx-auto flex w-full max-w-[90vw] items-center justify-between px-4 py-3.5 sm:px-6">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6">
         {/* Brand Logo: Official Shega Generation Emblem */}
         <Link
           href="/"

@@ -40,7 +40,7 @@ export default function HorizontalRail({
     >
       {/* Scroll Container extends to match full page layout indentation */}
       <div
-        className="relative mx-auto w-full max-w-[90vw] px-4 sm:px-6 overflow-hidden"
+        className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 overflow-hidden"
         style={{
           maskImage: "linear-gradient(to right, transparent 0%, black 1.5%, black 98.5%, transparent 100%)",
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 1.5%, black 98.5%, transparent 100%)",
@@ -57,8 +57,8 @@ export default function HorizontalRail({
         </div>
       </div>
 
-      {/* Aligned Footer Controls matching 90vw layout line */}
-      <div className="mx-auto w-full max-w-[90vw] mt-4 px-4 sm:px-6 flex items-center justify-between">
+      {/* Aligned Footer Controls matching layout line */}
+      <div className="mx-auto w-full max-w-7xl mt-4 px-4 sm:px-6 flex items-center justify-between">
         <p className="text-xs text-ink-soft/60 font-mono">
           scroll or drag to explore &rarr;
         </p>

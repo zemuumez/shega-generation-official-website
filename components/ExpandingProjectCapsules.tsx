@@ -21,7 +21,6 @@ function parseYouTubeVideo(url?: string) {
     return {
       videoId,
       embedUrl: `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`,
-      // Fetch high-resolution YouTube video thumbnail
       thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
     };
   }
@@ -45,7 +44,7 @@ export default function ExpandingProjectCapsules({
 }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [filter, setFilter] = useState("All");
-  const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
+  const [activeVideoModal, setActiveVideoModal] = useState<any | null>(null);
 
   // Filter list from siteSettings customCategories or defaults
   const categories = [
@@ -65,19 +64,39 @@ export default function ExpandingProjectCapsules({
           return cat === target || cat.includes(target) || target.includes(cat);
         });
 
+  const handleCardClick = (idx: number, project: any, e: React.MouseEvent) => {
+    setActiveIdx(idx);
+  };
+
+  const handleWatchVideo = (project: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const projectLink = project.projectUrl || project.link;
+    const ytInfo = parseYouTubeVideo(projectLink);
+
+    if (ytInfo) {
+      setActiveVideoModal({
+        title: project.title,
+        creatorName: project.creatorName,
+        embedUrl: ytInfo.embedUrl,
+        projectLink,
+      });
+    } else if (projectLink) {
+      window.open(projectLink, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
-    <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 mt-8">
+    <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 mt-6 sm:mt-8">
       {/* Filter Pills: Scrollable rail on mobile, wrapped flex on desktop */}
-      <div className="overflow-x-auto no-scrollbar flex sm:flex-wrap items-center gap-2 sm:gap-2.5 pb-3 sm:pb-0 mb-6 sm:mb-8" role="tablist" aria-label="Media & Program Filters">
+      <div className="overflow-x-auto no-scrollbar flex sm:flex-wrap items-center gap-2 sm:gap-2.5 pb-2 sm:pb-0 mb-6 sm:mb-8" role="tablist" aria-label="Media & Program Filters">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => {
               setFilter(cat);
               setActiveIdx(0);
-              setPlayingVideoId(null);
             }}
-            className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 border flex-shrink-0 min-h-[38px] ${
+            className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 border flex-shrink-0 min-h-[38px] cursor-pointer ${
               filter === cat
                 ? "bg-ochre border-ochre text-white font-bold shadow-md scale-[1.02]"
                 : "bg-white border-zinc-200 text-ink-soft hover:border-zinc-300 hover:text-ink font-semibold"
@@ -96,9 +115,7 @@ export default function ExpandingProjectCapsules({
           
           const projectLink = project.projectUrl || project.link;
           const ytInfo = parseYouTubeVideo(projectLink);
-          const isPlayingVideo = playingVideoId === (project._id || project.title || String(idx));
 
-          // LOGIC: If user uploaded a custom image in CMS, ALWAYS use it! If not, fallback to YouTube thumbnail or Unsplash fallback.
           const cmsUploadedImage = safeImageUrl(
             project.mainImage || project.image || project.coverImage,
             800,
@@ -112,74 +129,69 @@ export default function ExpandingProjectCapsules({
             <div
               key={project._id || project.title || idx}
               onMouseEnter={() => setActiveIdx(idx)}
-              onClick={() => setActiveIdx(idx)}
-              className={`relative overflow-hidden rounded-[28px] sm:rounded-[36px] border border-zinc-200 bg-zinc-900 transition-all duration-500 ease-out cursor-pointer flex-shrink-0 ${
+              onClick={(e) => handleCardClick(idx, project, e)}
+              className={`relative overflow-hidden rounded-[24px] sm:rounded-[36px] border border-zinc-200 bg-zinc-900 transition-all duration-500 ease-out cursor-pointer flex-shrink-0 ${
                 isActive
-                  ? "w-full md:w-[560px] min-h-[380px] sm:min-h-[460px] grow shadow-2xl border-ochre/60 ring-2 ring-ochre/30"
+                  ? "w-full md:w-[560px] min-h-[400px] sm:min-h-[460px] grow shadow-2xl border-ochre/60 ring-2 ring-ochre/30"
                   : "w-full md:w-[120px] h-[90px] sm:h-[110px] md:h-auto hover:w-[140px] shadow-sm border-zinc-200/80"
               }`}
             >
-              {/* Background Thumbnail Image or Active YouTube Video Player */}
+              {/* Background Image */}
               <div className="absolute inset-0 z-0">
-                {isActive && isPlayingVideo && ytInfo ? (
-                  <iframe
-                    src={ytInfo.embedUrl}
-                    title={project.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full border-0 z-10 relative"
-                  />
-                ) : (
-                  <>
-                    <Image
-                      src={bgImageSrc}
-                      alt={project.title}
-                      fill
-                      sizes={isActive ? "560px" : "140px"}
-                      className="object-cover transition-transform duration-700 hover:scale-105"
-                      priority={idx === 0}
-                      unoptimized={bgImageSrc.includes("youtube.com") || bgImageSrc.includes("ytimg.com")}
-                    />
-                    {/* Subtle Overlay */}
-                    <div
-                      className={`absolute inset-0 transition-opacity duration-500 ${
-                        isActive
-                          ? "bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-black/30"
-                          : "bg-gradient-to-t from-zinc-950/90 via-zinc-950/30 to-black/20 hover:opacity-75"
-                      }`}
-                    />
-                  </>
-                )}
+                <Image
+                  src={bgImageSrc}
+                  alt={project.title}
+                  fill
+                  sizes={isActive ? "(max-width: 768px) 100vw, 560px" : "140px"}
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  priority={idx === 0}
+                  unoptimized={bgImageSrc.includes("youtube.com") || bgImageSrc.includes("ytimg.com")}
+                />
+                {/* Gradient Overlay */}
+                <div
+                  className={`absolute inset-0 transition-opacity duration-500 ${
+                    isActive
+                      ? "bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-black/40"
+                      : "bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-black/30 hover:opacity-75"
+                  }`}
+                />
               </div>
 
               {/* ACTIVE EXPANDED CARD CONTENT */}
-              {isActive && !isPlayingVideo ? (
-                <div className="absolute inset-0 flex flex-col justify-between p-8 text-white z-20 overflow-y-auto">
+              {isActive && (
+                <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 text-white z-20 overflow-y-auto no-scrollbar">
                   <div>
+                    {/* Category Badge & Step */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-mono text-[9px] uppercase tracking-widest bg-ochre/90 px-2.5 py-0.5 rounded-full text-white font-bold">
+                        {project.category || "Media Feature"}
+                      </span>
+                    </div>
+
                     {/* Title */}
-                    <h3 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-wide leading-tight text-white pt-1 drop-shadow-sm">
+                    <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold uppercase tracking-wide leading-tight text-white pt-1 drop-shadow-sm">
                       {project.title}
                     </h3>
 
                     {/* Summary Description */}
-                    <p className="mt-4 text-xs sm:text-sm text-zinc-100 leading-relaxed max-w-lg font-medium drop-shadow-xs">
+                    <p className="mt-3 text-xs sm:text-sm text-zinc-100 leading-relaxed max-w-lg font-medium drop-shadow-xs">
                       {project.description}
                     </p>
 
                     {/* Student / Presenter Quote */}
                     {project.quote && (
-                      <p className="mt-4 text-xs text-zinc-200 italic border-l-2 border-ochre pl-3 py-0.5 font-sans">
+                      <p className="mt-3 text-xs text-zinc-200 italic border-l-2 border-ochre pl-3 py-0.5 font-sans">
                         &ldquo;{project.quote}&rdquo;
                       </p>
                     )}
 
                     {/* Topic / Tech Tags */}
                     {project.techStack && (
-                      <div className="mt-5 flex flex-wrap gap-1.5">
+                      <div className="mt-4 flex flex-wrap gap-1.5">
                         {project.techStack.map((tech: string) => (
                           <span
                             key={tech}
-                            className="rounded-full bg-black/40 backdrop-blur-md border border-white/15 px-3 py-1 text-[9px] font-mono text-zinc-200 font-semibold"
+                            className="rounded-full bg-black/50 backdrop-blur-md border border-white/20 px-2.5 py-0.5 text-[9px] font-mono text-zinc-200 font-semibold"
                           >
                             {tech}
                           </span>
@@ -189,50 +201,21 @@ export default function ExpandingProjectCapsules({
                   </div>
 
                   {/* Bottom Action Bar */}
-                  <div className="mt-6 pt-4 border-t border-white/15 flex items-center justify-between gap-4">
+                  <div className="mt-6 pt-4 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <span className="text-xs font-mono text-zinc-200 truncate">
                       Featured: <strong className="text-white font-bold">{project.creatorName}</strong>
                     </span>
 
-                    {ytInfo ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setPlayingVideoId(project._id || project.title || String(idx));
-                        }}
-                        className="rounded-full bg-ochre text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-ochre-dark transition-all duration-300 shadow-md flex items-center gap-2 whitespace-nowrap flex-shrink-0 cursor-pointer border border-orange-400/30"
-                      >
-                        <span className="w-2 h-2 rounded-full bg-orange-300 animate-ping" />
-                        <span>▶ Watch YouTube Video</span>
-                      </button>
-                    ) : (
-                      <a
-                        href={projectLink || "https://facebook.com/shegagenerations"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-full bg-ochre text-white text-[10px] font-mono font-bold uppercase tracking-widest px-5 py-2.5 hover:bg-ochre-dark transition-all duration-300 shadow-md flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 border border-orange-400/30"
-                      >
-                        <span>{ctaText}</span>
-                        <span>&rarr;</span>
-                      </a>
-                    )}
+                    <button
+                      type="button"
+                      onClick={(e) => handleWatchVideo(project, e)}
+                      className="w-full sm:w-auto rounded-full bg-ochre hover:bg-ochre-dark active:scale-95 text-white text-[11px] font-mono font-bold uppercase tracking-wider px-5 py-3 shadow-lg flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer border border-orange-400/40 transition-all min-h-[44px]"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-orange-200 animate-ping" />
+                      <span>▶ {ytInfo ? "Watch Video Feature" : ctaText}</span>
+                    </button>
                   </div>
                 </div>
-              ) : null}
-
-              {/* Close YouTube Video Player Overlay */}
-              {isActive && isPlayingVideo && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPlayingVideoId(null);
-                  }}
-                  className="absolute top-4 right-4 z-30 bg-black/90 hover:bg-black text-white font-mono text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full border border-white/20 shadow-xl transition-all"
-                >
-                  ✕ Close Video
-                </button>
               )}
 
               {/* INACTIVE DESKTOP CARD: THUMBNAIL + PLAY BADGE */}
@@ -244,7 +227,7 @@ export default function ExpandingProjectCapsules({
                   </span>
 
                   {/* PROMINENT PLAY BADGE */}
-                  <div className="w-10 h-10 rounded-full bg-ochre border-2 border-orange-400/60 flex items-center justify-center text-white text-sm shadow-xl my-4 transform group-hover:scale-110 transition-transform">
+                  <div className="w-10 h-10 rounded-full bg-ochre border-2 border-orange-400/60 flex items-center justify-center text-white text-sm shadow-xl my-4">
                     ▶
                   </div>
 
@@ -259,27 +242,86 @@ export default function ExpandingProjectCapsules({
 
               {/* INACTIVE MOBILE CARD ROW */}
               {!isActive && (
-                <div className="absolute inset-0 md:hidden flex items-center justify-between p-6 text-white z-20">
+                <div className="absolute inset-0 md:hidden flex items-center justify-between p-4 sm:p-6 text-white z-20">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-ochre border border-orange-400/50 flex items-center justify-center text-white text-xs font-bold shadow-md">
+                    <div className="w-9 h-9 rounded-full bg-ochre border border-orange-400/50 flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0">
                       ▶
                     </div>
                     <div>
                       <span className="font-mono text-[9px] uppercase tracking-widest text-orange-300 font-bold block mb-0.5">
                         {project.category || "Media Highlight"}
                       </span>
-                      <p className="font-display font-bold uppercase tracking-wider text-sm text-white drop-shadow-xs line-clamp-1">
+                      <p className="font-display font-bold uppercase tracking-wider text-xs sm:text-sm text-white drop-shadow-xs line-clamp-1">
                         {project.title}
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs font-mono text-orange-400 font-bold">&rarr;</span>
+                  <span className="text-xs font-mono text-orange-400 font-bold ml-2">&rarr;</span>
                 </div>
               )}
             </div>
           );
         })}
       </div>
+
+      {/* FULL-SCREEN VIDEO LIGHTBOX MODAL FOR MOBILE & DESKTOP */}
+      {activeVideoModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in"
+          onClick={() => setActiveVideoModal(null)}
+        >
+          <div
+            className="relative max-w-4xl w-full p-4 sm:p-6 text-white text-left z-50 my-auto bg-zinc-950 rounded-3xl border border-white/20 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setActiveVideoModal(null)}
+              className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 z-50 bg-ochre text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-xl transition-transform hover:scale-110 border border-orange-300/40 cursor-pointer"
+              aria-label="Close video"
+            >
+              ✕
+            </button>
+
+            {/* Video Player Container */}
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl bg-black border border-white/15">
+              <iframe
+                src={activeVideoModal.embedUrl}
+                title={activeVideoModal.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full border-0"
+              />
+            </div>
+
+            {/* Video Details & Action Footer */}
+            <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="font-display text-lg sm:text-xl font-bold uppercase text-white leading-tight">
+                  {activeVideoModal.title}
+                </h3>
+                {activeVideoModal.creatorName && (
+                  <p className="text-xs font-mono text-zinc-400 mt-1">
+                    Featured: <span className="text-amber-300 font-bold">{activeVideoModal.creatorName}</span>
+                  </p>
+                )}
+              </div>
+
+              {activeVideoModal.projectLink && (
+                <a
+                  href={activeVideoModal.projectLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white/15 hover:bg-white/25 text-white text-[10px] font-mono font-bold uppercase tracking-widest px-4 py-2 border border-white/20 transition-all"
+                >
+                  Open on YouTube ↗
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
