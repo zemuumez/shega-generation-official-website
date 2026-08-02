@@ -112,25 +112,25 @@ export default async function HomePage() {
           <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[2.1em]">
             <TypewriterTitle
               phrases={[heroTitle || "Shega Generation", "ሸጋ ትውልድ"]}
-              className="font-hero font-bold text-[clamp(2.4rem,10vw,5.5rem)] sm:text-[clamp(5.4rem,11.5vw,10rem)] leading-[0.94] uppercase tracking-wider text-masked-bg text-bordered-black text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center py-2"
+              className="font-hero font-bold text-[clamp(2.2rem,8vw,4.5rem)] sm:text-[clamp(3.4rem,9vw,6.5rem)] lg:text-[clamp(5.2rem,10vw,9rem)] leading-[0.94] uppercase tracking-wider text-masked-bg text-bordered-black text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center py-2"
               style={{ backgroundImage: `linear-gradient(to bottom, rgba(46, 204, 112, 0.12), rgba(39, 174, 95, 0.17)), url('${heroTitleMaskBg}')` }}
             />
           </div>
 
-          <div className="mt-6 sm:mt-8 mx-auto max-w-2xl text-center">
-            <p className="text-base sm:text-xl text-ink/80 leading-relaxed font-sans font-medium px-2 sm:px-4 tracking-wide">
+          <div className="mt-5 sm:mt-8 mx-auto max-w-2xl text-center">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-ink/80 leading-relaxed font-sans font-medium px-2 sm:px-4 tracking-wide">
               {heroCaption}
             </p>
-            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3.5 sm:gap-4 justify-center items-center w-full px-4 sm:px-0">
+            <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center w-full px-4 sm:px-0">
               <a
                 href="/events"
-                className="w-full sm:w-auto bg-ochre px-8 sm:px-9 py-3.5 sm:py-4 rounded-full text-xs font-mono uppercase tracking-widest text-white transition-all duration-300 hover:bg-ochre-dark hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
+                className="w-full sm:w-auto bg-ochre px-7 sm:px-9 py-3.5 sm:py-4 rounded-full text-xs font-mono uppercase tracking-widest text-white transition-all duration-300 hover:bg-ochre-dark hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
               >
                 {heroCtaPrimary}
               </a>
               <a
                 href="/donate"
-                className="w-full sm:w-auto border border-ink/40 text-ink hover:border-ochre hover:text-ochre px-8 sm:px-9 py-3.5 sm:py-4 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 hover:bg-white hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
+                className="w-full sm:w-auto border border-ink/40 text-ink hover:border-ochre hover:text-ochre px-7 sm:px-9 py-3.5 sm:py-4 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 hover:bg-white hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
               >
                 {heroCtaSecondary}
               </a>
@@ -142,17 +142,17 @@ export default async function HomePage() {
       {/* FULL-WIDTH PHOTO OVERLAY STATEMENT BANNER WITH PARALLAX EFFECT */}
       <ParallaxBanner
         src={statementBannerBg}
-        heightClass="h-[45vh] sm:h-[55vh] min-h-[340px]"
+        heightClass="h-[42vh] sm:h-[50vh] lg:h-[55vh] min-h-[320px]"
         overlayOpacity="bg-gradient-to-t from-black/65 via-black/45 to-black/35"
       >
         <div className="flex flex-col items-center justify-center text-center p-4 sm:p-6 select-none leading-[0.95] max-w-full">
-          <h2 className="font-display font-bold text-3xl sm:text-6xl md:text-7xl lg:text-8xl text-white uppercase tracking-wider drop-shadow-md">
+          <h2 className="font-display font-bold text-2xl sm:text-4xl md:text-5xl lg:text-7xl text-white uppercase tracking-wider drop-shadow-md">
             {statement1}
           </h2>
-          <h2 className="font-display font-bold text-3xl sm:text-6xl md:text-7xl lg:text-8xl stroke-text uppercase tracking-wider mt-2 sm:mt-3 drop-shadow-md">
+          <h2 className="font-display font-bold text-2xl sm:text-4xl md:text-5xl lg:text-7xl stroke-text uppercase tracking-wider mt-2 sm:mt-3 drop-shadow-md">
             {statement2}
           </h2>
-          <h2 className="font-display font-bold text-3xl sm:text-6xl md:text-7xl lg:text-8xl text-white uppercase tracking-wider mt-2 sm:mt-3 drop-shadow-md">
+          <h2 className="font-display font-bold text-2xl sm:text-4xl md:text-5xl lg:text-7xl text-white uppercase tracking-wider mt-2 sm:mt-3 drop-shadow-md">
             {statement3}
           </h2>
         </div>
@@ -164,23 +164,23 @@ export default async function HomePage() {
       {/* PARALLAX PHILOSOPHY BANNER */}
       <ParallaxBanner
         src={culturalAnchoringBg}
-        heightClass="h-[65vh] min-h-[440px]"
+        heightClass="h-[50vh] sm:h-[60vh] lg:h-[65vh] min-h-[360px]"
         overlayOpacity="bg-black/45"
       >
-        <div className="max-w-4xl text-center px-6">
-          <h2 className="font-display text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider leading-tight drop-shadow-md">
+        <div className="max-w-4xl text-center px-4 sm:px-6">
+          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-wider leading-tight drop-shadow-md">
             We weave modern technology with cultural roots
           </h2>
-          <p className="mt-6 text-zinc-100 max-w-xl mx-auto text-sm sm:text-base leading-relaxed font-medium drop-shadow-sm">
+          <p className="mt-4 sm:mt-6 text-zinc-100 max-w-xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed font-medium drop-shadow-sm">
             {culturalDescription}
           </p>
         </div>
       </ParallaxBanner>
 
       {/* INTERACTIVE TRACK EXPLORER */}
-      <section className="py-16 sm:py-24 border-b border-zinc-200 relative overflow-hidden">
+      <section className="py-14 sm:py-20 lg:py-24 border-b border-zinc-200 relative">
         {/* Background Geometric Line Pattern - Bleeds outward without breaking section entrance scroll */}
-        <div className="absolute inset-y-0 -right-8 md:-right-14 w-96 pointer-events-none opacity-60 z-0 hidden lg:block [mask-image:linear-gradient(to_left,white_50%,transparent_100%)]">
+        <div className="absolute inset-y-0 -right-8 md:-right-14 w-96 pointer-events-none opacity-60 z-0 hidden lg:block overflow-hidden [mask-image:linear-gradient(to_left,white_50%,transparent_100%)]">
           <TibebPattern variant="watermark" tone="ochre" className="opacity-15 w-full h-full object-cover" />
         </div>
 
@@ -189,12 +189,12 @@ export default async function HomePage() {
 
       {/* CURRICULUM OVERVIEW BREAKOUT */}
       {curriculumOverview && (
-        <section className="py-16 sm:py-24 border-b border-zinc-200 bg-white/40 overflow-hidden">
+        <section className="py-14 sm:py-20 lg:py-24 border-b border-zinc-200 bg-white/40 overflow-hidden">
           <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 text-center">
-            <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">
+            <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-ink uppercase tracking-wide">
               {curriculumOverview.title || "Full Educational Roadmap"}
             </h2>
-            <p className="mt-6 text-base sm:text-lg text-ink-soft leading-relaxed max-w-2xl mx-auto font-sans font-medium">
+            <p className="mt-4 sm:mt-6 text-xs sm:text-sm md:text-base lg:text-lg text-ink-soft leading-relaxed max-w-2xl mx-auto font-sans font-medium">
               {curriculumOverview.description}
             </p>
           </div>
@@ -203,23 +203,23 @@ export default async function HomePage() {
 
       {/* UPCOMING EVENT ACCENT HERO */}
       {upcomingEvent && (
-        <section className="px-4 py-16 sm:py-24 sm:px-6 relative border-b border-zinc-200 overflow-hidden">
+        <section className="px-4 py-14 sm:py-20 lg:py-24 sm:px-6 relative border-b border-zinc-200 overflow-hidden">
           <UpcomingEventCard event={upcomingEvent} />
         </section>
       )}
 
       {/* LMS FEATURED COURSE CAROUSEL */}
-      <section className="py-16 sm:py-24 relative border-b border-zinc-200 overflow-hidden">
+      <section className="py-14 sm:py-20 lg:py-24 relative border-b border-zinc-200 overflow-hidden">
         <div className="relative z-10">
           <div className="mx-auto mb-8 sm:mb-10 w-full max-w-7xl px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
-                <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
+                <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-ink uppercase tracking-wide">Where to start learning</h2>
+                <p className="mt-2 sm:mt-3 max-w-xl text-xs sm:text-sm md:text-base text-ink-soft leading-relaxed">
                   Hands-on engineering tracks, AI laboratories, and indigenous math modules prepared by Shega Generation, Sophor Code Academy, and TTI Hospitality.
                 </p>
               </div>
-              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ochre font-bold bg-ochre/10 px-4 py-2 rounded-full border border-ochre/30 shadow-sm">
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase text-ochre font-bold bg-ochre/10 px-3.5 py-1.5 rounded-full border border-ochre/30 shadow-sm">
                 <span>LMS Coming Soon</span>
               </div>
             </div>
@@ -233,15 +233,15 @@ export default async function HomePage() {
       </section>
 
       {/* STUDENT MEDIA COVERAGE & ACHIEVEMENTS (Expanding Capsules) */}
-      <section className="py-16 sm:py-24 relative border-b border-zinc-200 overflow-hidden">
+      <section className="py-14 sm:py-20 lg:py-24 relative border-b border-zinc-200 overflow-hidden">
         <div className="relative z-10">
           <div className="mx-auto mb-6 w-full max-w-7xl px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <div>
-                <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">
+                <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-ink uppercase tracking-wide">
                   {journeysTitle}
                 </h2>
-                <p className="mt-3 max-w-xl text-ink-soft leading-relaxed">
+                <p className="mt-2 sm:mt-3 max-w-xl text-xs sm:text-sm md:text-base text-ink-soft leading-relaxed">
                   {journeysDescription}
                 </p>
               </div>
@@ -258,12 +258,12 @@ export default async function HomePage() {
       </section>
 
       {/* TESTIMONIALS HORIZONTAL RAIL */}
-      <section className="py-16 sm:py-24 relative overflow-hidden bg-white/20 border-b border-zinc-200">
+      <section className="py-14 sm:py-20 lg:py-24 relative overflow-hidden bg-white/20 border-b border-zinc-200">
         <div className="mx-auto mb-8 sm:mb-10 w-full max-w-7xl px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
-              <h2 className="font-display text-display-md font-bold text-ink uppercase tracking-wide">Voices of Shega</h2>
-              <p className="mt-2 max-w-xl text-ink-soft text-sm sm:text-base leading-relaxed">
+              <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-ink uppercase tracking-wide">Voices of Shega</h2>
+              <p className="mt-2 max-w-xl text-xs sm:text-sm md:text-base text-ink-soft leading-relaxed">
                 Graduate stories from regional cohorts across Ethiopia — building localized software and launching real ventures.
               </p>
             </div>
@@ -282,29 +282,29 @@ export default async function HomePage() {
             return (
               <div
                 key={test._id || index}
-                className="rail-item flex-shrink-0 w-84 sm:w-[420px] rounded-[36px] border border-zinc-200 bg-white p-8 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-ochre/30 hover:-translate-y-1"
+                className="rail-item snap-center flex-shrink-0 w-[calc(100vw-3rem)] max-w-[310px] sm:max-w-none sm:w-[420px] rounded-[24px] sm:rounded-[36px] border border-zinc-200 bg-white p-5 sm:p-8 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-ochre/30 hover:-translate-y-1"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-3xl text-ochre/40 font-serif leading-none select-none">&ldquo;</span>
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-full bg-zinc-100 border border-zinc-200 px-3 py-1 text-[9px] font-mono uppercase tracking-widest text-ink-soft font-bold">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <span className="text-2xl sm:text-3xl text-ochre/40 font-serif leading-none select-none">&ldquo;</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="rounded-full bg-zinc-100 border border-zinc-200 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-mono uppercase tracking-widest text-ink-soft font-bold">
                         {locationTag}
                       </span>
-                      <span className="rounded-full bg-ochre/10 text-ochre-dark border border-ochre/20 px-2.5 py-1 text-[9px] font-mono font-bold">
+                      <span className="rounded-full bg-ochre/10 text-ochre-dark border border-ochre/20 px-2 sm:px-2.5 py-0.5 sm:py-1 text-[8px] sm:text-[9px] font-mono font-bold">
                         {trackTag}
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-sm sm:text-base text-ink-soft italic leading-relaxed text-zinc-700">
+                  <p className="text-xs sm:text-base text-ink-soft italic leading-relaxed text-zinc-700">
                     &ldquo;{test.quote}&rdquo;
                   </p>
                 </div>
 
-                <div className="mt-8 pt-5 border-t border-zinc-100 flex items-center justify-between">
-                  <div className="flex items-center gap-3.5">
-                    <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-ochre/20 shadow-sm flex-shrink-0 bg-zinc-100">
+                <div className="mt-5 sm:mt-8 pt-4 sm:pt-5 border-t border-zinc-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-ochre/20 shadow-sm flex-shrink-0 bg-zinc-100">
                       <Image
                         src={avatarSrc}
                         alt={test.author || "Testimonial author"}
@@ -314,10 +314,10 @@ export default async function HomePage() {
                       />
                     </div>
                     <div>
-                      <h4 className="font-display text-base font-bold text-ink uppercase tracking-wide leading-tight">
+                      <h4 className="font-display text-sm sm:text-base font-bold text-ink uppercase tracking-wide leading-tight">
                         {test.author}
                       </h4>
-                      <p className="text-[11px] font-mono text-ochre-dark font-medium mt-0.5">
+                      <p className="text-[10px] sm:text-[11px] font-mono text-ochre-dark font-medium mt-0.5">
                         {test.role}
                       </p>
                     </div>

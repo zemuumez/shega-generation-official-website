@@ -65,7 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <ThemeProvider siteSettings={siteSettings} />
       </head>
-      <body className="font-body bg-ivory text-ink antialiased min-h-screen relative overflow-x-hidden selection:bg-ochre/20 selection:text-ochre-dark">
+      <body className="font-body bg-ivory text-ink antialiased min-h-screen relative overflow-x-clip selection:bg-ochre/20 selection:text-ochre-dark">
         <Navbar />
 
         <main className="relative z-10 min-h-[85vh]">{children}</main>

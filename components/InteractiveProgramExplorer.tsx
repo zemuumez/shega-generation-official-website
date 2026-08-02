@@ -66,8 +66,8 @@ export default function InteractiveProgramExplorer() {
 
     const observerOptions: IntersectionObserverInit = {
       root: null,
-      rootMargin: "-25% 0px -45% 0px",
-      threshold: 0.2,
+      rootMargin: "-15% 0px -35% 0px",
+      threshold: 0.15,
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
@@ -86,7 +86,7 @@ export default function InteractiveProgramExplorer() {
 
     const el = document.getElementById(`track-card-${id}`);
     if (el) {
-      const yOffset = -120;
+      const yOffset = -100;
       const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
@@ -104,7 +104,7 @@ export default function InteractiveProgramExplorer() {
       <div className="flex flex-col md:flex-row gap-8 items-start">
         
         {/* LEFT COLUMN: Sticky Section Header, Navigation Tabs & Active Overview */}
-        <div className="md:w-5/12 w-full md:sticky md:top-28 h-fit space-y-6 z-10">
+        <div className="md:w-5/12 w-full md:sticky md:top-24 lg:top-28 h-fit space-y-6 z-10">
           {/* Section Entrance Header */}
           <div>
             <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">

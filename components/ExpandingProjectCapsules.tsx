@@ -87,8 +87,8 @@ export default function ExpandingProjectCapsules({
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 mt-6 sm:mt-8">
-      {/* Filter Pills: Scrollable rail on mobile, wrapped flex on desktop */}
-      <div className="overflow-x-auto no-scrollbar flex sm:flex-wrap items-center gap-2 sm:gap-2.5 pb-2 sm:pb-0 mb-6 sm:mb-8" role="tablist" aria-label="Media & Program Filters">
+      {/* Filter Pills: Scrollable rail on mobile/tablet, wrapped flex on desktop */}
+      <div className="overflow-x-auto no-scrollbar flex lg:flex-wrap items-center gap-2 sm:gap-2.5 pb-2 sm:pb-0 mb-6 sm:mb-8" role="tablist" aria-label="Media & Program Filters">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -107,8 +107,8 @@ export default function ExpandingProjectCapsules({
         ))}
       </div>
 
-      {/* Accordion / Capsules Container */}
-      <div className="flex flex-col md:flex-row gap-3.5 sm:gap-4 justify-center items-stretch min-h-[460px] sm:min-h-[500px] w-full">
+      {/* Accordion / Capsules Container: Stacks on mobile/tablet, flexes on desktop */}
+      <div className="flex flex-col lg:flex-row gap-3.5 sm:gap-4 justify-center items-stretch min-h-[440px] sm:min-h-[480px] w-full">
         {filteredProjects.map((project, idx) => {
           const isActive = activeIdx === idx;
           const ctaText = getCtaLabel(project.category);
@@ -130,10 +130,10 @@ export default function ExpandingProjectCapsules({
               key={project._id || project.title || idx}
               onMouseEnter={() => setActiveIdx(idx)}
               onClick={(e) => handleCardClick(idx, project, e)}
-              className={`relative overflow-hidden rounded-[24px] sm:rounded-[36px] border border-zinc-200 bg-zinc-900 transition-all duration-500 ease-out cursor-pointer flex-shrink-0 ${
+              className={`relative overflow-hidden rounded-[20px] sm:rounded-[32px] border border-zinc-200 bg-zinc-900 transition-all duration-500 ease-out cursor-pointer flex-shrink-0 ${
                 isActive
-                  ? "w-full md:w-[560px] min-h-[400px] sm:min-h-[460px] grow shadow-2xl border-ochre/60 ring-2 ring-ochre/30"
-                  : "w-full md:w-[120px] h-[90px] sm:h-[110px] md:h-auto hover:w-[140px] shadow-sm border-zinc-200/80"
+                  ? "w-full lg:w-[560px] min-h-[360px] sm:min-h-[420px] lg:min-h-[460px] grow shadow-2xl border-ochre/60 ring-2 ring-ochre/30"
+                  : "w-full lg:w-[120px] h-[80px] sm:h-[95px] lg:h-auto hover:lg:w-[140px] shadow-sm border-zinc-200/80"
               }`}
             >
               {/* Background Image */}
@@ -142,7 +142,7 @@ export default function ExpandingProjectCapsules({
                   src={bgImageSrc}
                   alt={project.title}
                   fill
-                  sizes={isActive ? "(max-width: 768px) 100vw, 560px" : "140px"}
+                  sizes={isActive ? "(max-width: 1024px) 100vw, 560px" : "140px"}
                   className="object-cover transition-transform duration-700 hover:scale-105"
                   priority={idx === 0}
                   unoptimized={bgImageSrc.includes("youtube.com") || bgImageSrc.includes("ytimg.com")}
@@ -159,7 +159,7 @@ export default function ExpandingProjectCapsules({
 
               {/* ACTIVE EXPANDED CARD CONTENT */}
               {isActive && (
-                <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 text-white z-20 overflow-y-auto no-scrollbar">
+                <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-7 md:p-8 text-white z-20 overflow-y-auto no-scrollbar">
                   <div>
                     {/* Category Badge & Step */}
                     <div className="flex items-center gap-2 mb-2">
@@ -168,26 +168,26 @@ export default function ExpandingProjectCapsules({
                       </span>
                     </div>
 
-                    {/* Title */}
-                    <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold uppercase tracking-wide leading-tight text-white pt-1 drop-shadow-sm">
+                    {/* Title with line clamp to prevent multi-line overflow on tablet */}
+                    <h3 className="font-display text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-wide leading-tight text-white pt-0.5 drop-shadow-sm line-clamp-2 sm:line-clamp-3">
                       {project.title}
                     </h3>
 
                     {/* Summary Description */}
-                    <p className="mt-3 text-xs sm:text-sm text-zinc-100 leading-relaxed max-w-lg font-medium drop-shadow-xs">
+                    <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-zinc-100 leading-relaxed max-w-xl font-medium drop-shadow-xs line-clamp-3">
                       {project.description}
                     </p>
 
                     {/* Student / Presenter Quote */}
                     {project.quote && (
-                      <p className="mt-3 text-xs text-zinc-200 italic border-l-2 border-ochre pl-3 py-0.5 font-sans">
+                      <p className="mt-2.5 sm:mt-3 text-xs text-zinc-200 italic border-l-2 border-ochre pl-3 py-0.5 font-sans line-clamp-2">
                         &ldquo;{project.quote}&rdquo;
                       </p>
                     )}
 
                     {/* Topic / Tech Tags */}
                     {project.techStack && (
-                      <div className="mt-4 flex flex-wrap gap-1.5">
+                      <div className="mt-3.5 sm:mt-4 flex flex-wrap gap-1.5">
                         {project.techStack.map((tech: string) => (
                           <span
                             key={tech}
@@ -201,7 +201,7 @@ export default function ExpandingProjectCapsules({
                   </div>
 
                   {/* Bottom Action Bar */}
-                  <div className="mt-6 pt-4 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <span className="text-xs font-mono text-zinc-200 truncate">
                       Featured: <strong className="text-white font-bold">{project.creatorName}</strong>
                     </span>
@@ -209,7 +209,7 @@ export default function ExpandingProjectCapsules({
                     <button
                       type="button"
                       onClick={(e) => handleWatchVideo(project, e)}
-                      className="w-full sm:w-auto rounded-full bg-ochre hover:bg-ochre-dark active:scale-95 text-white text-[11px] font-mono font-bold uppercase tracking-wider px-5 py-3 shadow-lg flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer border border-orange-400/40 transition-all min-h-[44px]"
+                      className="w-full sm:w-auto rounded-full bg-ochre hover:bg-ochre-dark active:scale-95 text-white text-[11px] font-mono font-bold uppercase tracking-wider px-5 py-2.5 sm:py-3 shadow-lg flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer border border-orange-400/40 transition-all min-h-[42px]"
                     >
                       <span className="w-2 h-2 rounded-full bg-orange-200 animate-ping" />
                       <span>▶ {ytInfo ? "Watch Video Feature" : ctaText}</span>
@@ -220,7 +220,7 @@ export default function ExpandingProjectCapsules({
 
               {/* INACTIVE DESKTOP CARD: THUMBNAIL + PLAY BADGE */}
               {!isActive && (
-                <div className="absolute inset-0 hidden md:flex flex-col items-center justify-between py-8 px-3 text-white z-20 pointer-events-none">
+                <div className="absolute inset-0 hidden lg:flex flex-col items-center justify-between py-8 px-3 text-white z-20 pointer-events-none">
                   {/* Step Number */}
                   <span className="font-mono text-[9px] uppercase tracking-widest bg-black/70 backdrop-blur-md px-2 py-0.5 rounded-full text-zinc-200 border border-white/15 font-bold shadow-xs">
                     {idx + 1}
@@ -240,11 +240,11 @@ export default function ExpandingProjectCapsules({
                 </div>
               )}
 
-              {/* INACTIVE MOBILE CARD ROW */}
+              {/* INACTIVE MOBILE & TABLET CARD ROW */}
               {!isActive && (
-                <div className="absolute inset-0 md:hidden flex items-center justify-between p-4 sm:p-6 text-white z-20">
+                <div className="absolute inset-0 lg:hidden flex items-center justify-between p-4 sm:p-5 text-white z-20">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-ochre border border-orange-400/50 flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-ochre border border-orange-400/50 flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0">
                       ▶
                     </div>
                     <div>
@@ -264,7 +264,7 @@ export default function ExpandingProjectCapsules({
         })}
       </div>
 
-      {/* FULL-SCREEN VIDEO LIGHTBOX MODAL FOR MOBILE & DESKTOP */}
+      {/* FULL-SCREEN VIDEO LIGHTBOX MODAL FOR MOBILE, TABLET & DESKTOP */}
       {activeVideoModal && (
         <div
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in"
@@ -298,7 +298,7 @@ export default function ExpandingProjectCapsules({
             {/* Video Details & Action Footer */}
             <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <h3 className="font-display text-lg sm:text-xl font-bold uppercase text-white leading-tight">
+                <h3 className="font-display text-base sm:text-xl font-bold uppercase text-white leading-tight">
                   {activeVideoModal.title}
                 </h3>
                 {activeVideoModal.creatorName && (
