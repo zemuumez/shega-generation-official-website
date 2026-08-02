@@ -13,6 +13,7 @@ import {
   EnvelopeIcon,
   UsersIcon,
   CreditCardIcon,
+  HelpCircleIcon,
 } from "@sanity/icons";
 
 export const deskStructure: StructureResolver = (S) =>
@@ -483,7 +484,53 @@ export const deskStructure: StructureResolver = (S) =>
 
       S.divider(),
 
-      // 8. ALL CONTENT COLLECTIONS
+      // 8. CHALLENGES & QUIZZES
+      S.listItem()
+        .id("challengesPageSection")
+        .title("Challenges & Arena")
+        .icon(HelpCircleIcon)
+        .child(
+          S.list()
+            .id("challengesPageList")
+            .title("Challenges & Arena Management")
+            .items([
+              S.listItem()
+                .id("challengesNavSettings")
+                .title("Challenges Page Copy & Nav Settings")
+                .icon(CogIcon)
+                .child(
+                  S.document()
+                    .id("challengesSiteSettingsDoc")
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings")
+                    .title("Challenges Copy & Nav Settings")
+                ),
+              S.divider(),
+              S.listItem()
+                .id("challengesQuizzesList")
+                .title("Quizzes & Timered Q&A")
+                .icon(HelpCircleIcon)
+                .child(
+                  S.documentTypeList("challengeQuiz")
+                    .id("dtChallengeQuizList")
+                    .title("All Quizzes & Challenges")
+                ),
+              S.listItem()
+                .id("challengesSubmissionsList")
+                .title("Leaderboard Submissions")
+                .icon(UserIcon)
+                .child(
+                  S.documentTypeList("challengeSubmission")
+                    .id("dtChallengeSubmissionList")
+                    .title("Participant Leaderboard Entries")
+                    .defaultOrdering([{ field: "score", direction: "desc" }])
+                ),
+            ])
+        ),
+
+      S.divider(),
+
+      // 9. ALL CONTENT COLLECTIONS
       S.listItem()
         .id("allCollectionsSection")
         .title("All Content Collections")
@@ -504,6 +551,8 @@ export const deskStructure: StructureResolver = (S) =>
               S.documentTypeListItem("studentApplication").id("dtStudentApplication").title("Student Applications").icon(UserIcon),
               S.documentTypeListItem("contactMessage").id("dtContactMessage").title("Contact Messages").icon(EnvelopeIcon),
               S.documentTypeListItem("donationRecord").id("dtDonationRecord").title("Donation Records").icon(CreditCardIcon),
+              S.documentTypeListItem("challengeQuiz").id("dtChallengeQuiz").title("Quizzes & Challenges").icon(HelpCircleIcon),
+              S.documentTypeListItem("challengeSubmission").id("dtChallengeSubmission").title("Leaderboard Submissions").icon(UserIcon),
             ])
         ),
 

@@ -14,6 +14,7 @@ export default function Footer() {
     { href: "/", label: "Home" },
     { href: "/about", label: "About Us" },
     { href: "/events", label: "Events & Gatherings" },
+    { href: "/challenges", label: "Challenges & Arena" },
     { href: "/gallery", label: "Media Gallery" },
     { href: "/contact", label: "Contact Us" },
     { href: "/donate", label: "Support / Donate" },

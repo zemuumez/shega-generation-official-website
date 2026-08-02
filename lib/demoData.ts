@@ -665,3 +665,203 @@ export const demoStoryMilestones = [
   },
 ];
 
+export const demoQuizzes = [
+  {
+    _id: "demo-quiz-1",
+    title: "Ethiopian Tech & Algorithmic Speed Challenge",
+    slug: { current: "ethiopian-tech-algorithmic-speed-challenge" },
+    category: "Timered Q&A",
+    difficulty: "Medium",
+    description: "Test your speed and mastery over modern JavaScript/TypeScript, Web Performance, and Ethiopian tech innovation history!",
+    timePerQuestion: 20,
+    isPublished: true,
+    isFeatured: true,
+    questions: [
+      {
+        questionText: "Which HTTP header is recommended for strict browser caching of immutable static assets in Next.js/React?",
+        codeSnippet: `// Example HTTP response headers
+Cache-Control: public, max-age=31536000, immutable
+ETag: "w/123456789"`,
+        options: [
+          "Cache-Control: no-store, no-cache",
+          "Cache-Control: public, max-age=31536000, immutable",
+          "Expires: 0",
+          "Pragma: no-cache",
+        ],
+        correctOptionIndex: 1,
+        explanation: "Combining `public, max-age=31536000, immutable` tells the browser and CDNs that the asset will never change, avoiding unnecessary revalidation HTTP requests.",
+        points: 100,
+      },
+      {
+        questionText: "What is the primary architectural purpose of Server Actions in React 19 / Next.js App Router?",
+        codeSnippet: `"use server";
+
+export async function submitForm(formData: FormData) {
+  // Executes securely on the Node.js server
+}`,
+        options: [
+          "To run client-side event handlers in Web Workers",
+          "To execute backend mutations directly without manual REST/GraphQL API boilerplate",
+          "To replace CSS animation logic",
+          "To force client components to render as static HTML only",
+        ],
+        correctOptionIndex: 1,
+        explanation: "Server Actions allow asynchronous functions to execute securely on the server, handling form actions and mutations without manual fetch client setup.",
+        points: 100,
+      },
+      {
+        questionText: "What is the main benefit of CSS Container Queries over traditional Viewport Media Queries?",
+        codeSnippet: `@container (min-width: 400px) {
+  .card-grid { grid-template-columns: 1fr 1fr; }
+}`,
+        options: [
+          "They only work on desktop screens",
+          "They style elements based on their parent container size rather than global viewport width",
+          "They eliminate the need for Flexbox",
+          "They compile directly to WebAssembly",
+        ],
+        correctOptionIndex: 1,
+        explanation: "Container queries enable modular component design where elements adjust layout based on the size of their immediate parent container.",
+        points: 100,
+      },
+      {
+        questionText: "What does 'ሸጋ' (Shega) translate to in Amharic in the context of Shega Generation?",
+        options: [
+          "Fast & Rapid",
+          "Excellent, Beautiful, and Full of Virtue/Quality",
+          "High Mountain Peak",
+          "Secret Code",
+        ],
+        correctOptionIndex: 1,
+        explanation: "In Ethiopian culture, 'ሸጋ' (Shega) signifies excellence, beauty, goodness, and high moral character.",
+        points: 100,
+      },
+      {
+        questionText: "What algorithm time complexity is achieved when accessing an element by key in a well-balanced Hash Table?",
+        codeSnippet: `const userMap = new Map();
+userMap.set("shega_user", { score: 950 });
+const data = userMap.get("shega_user"); // Time complexity?`,
+        options: ["O(N)", "O(log N)", "O(1) average time", "O(N^2)"],
+        correctOptionIndex: 2,
+        explanation: "Hash maps provide constant average time O(1) complexity for key lookups and inserts.",
+        points: 100,
+      },
+    ],
+  },
+  {
+    _id: "demo-quiz-2",
+    title: "Cybersecurity & Logic Quiz",
+    slug: { current: "cybersecurity-logic-quiz" },
+    category: "Timered Q&A",
+    difficulty: "Hard",
+    description: "A fast-paced challenge on web vulnerability analysis, hashing algorithms, and cryptographic logic.",
+    timePerQuestion: 15,
+    isPublished: true,
+    isFeatured: false,
+    questions: [
+      {
+        questionText: "Which cryptographic property ensures that changing a single bit in the input radically changes the output hash?",
+        options: [
+          "Symmetric encryption",
+          "The Avalanche Effect",
+          "Public key distribution",
+          "Linear feedback",
+        ],
+        correctOptionIndex: 1,
+        explanation: "The Avalanche Effect ensures a tiny change in input results in a completely unpredictable and vastly different hash output.",
+        points: 120,
+      },
+      {
+        questionText: "How can SQL Injection (SQLi) vulnerabilities be fundamentally prevented in web backend applications?",
+        codeSnippet: `// VULNERABLE:
+db.query(\`SELECT * FROM users WHERE name = '\${userInput}'\`);`,
+        options: [
+          "By converting input strings to uppercase",
+          "By using parameterized queries / prepared statements instead of string concatenation",
+          "By hiding the database password in client JS",
+          "By using HTTP GET instead of POST",
+        ],
+        correctOptionIndex: 1,
+        explanation: "Prepared statements parameterize query values separately from the SQL command structure, rendering injection attempts ineffective.",
+        points: 120,
+      },
+      {
+        questionText: "What does the Same-Origin Policy (SOP) enforce in modern web browsers?",
+        options: [
+          "Restricts how a document or script loaded from one origin can interact with a resource from another origin",
+          "Forces all websites to use HTTPS",
+          "Blocks JavaScript execution in HTML files",
+          "Limits local storage to 5MB",
+        ],
+        correctOptionIndex: 0,
+        explanation: "SOP is a core browser security mechanism that prevents malicious scripts on one origin from reading sensitive data on another origin.",
+        points: 120,
+      },
+    ],
+  },
+];
+
+export const demoLeaderboard = [
+  {
+    _id: "sub-1",
+    participantName: "Kaleab Tadesse",
+    participantHandle: "@kaleab_dev",
+    score: 980,
+    totalQuestions: 5,
+    correctCount: 5,
+    timeSpentSeconds: 28,
+    completedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+    quizTitle: "Ethiopian Tech & Algorithmic Speed Challenge",
+    quizId: "demo-quiz-1",
+  },
+  {
+    _id: "sub-2",
+    participantName: "Bethlehem Worku",
+    participantHandle: "@beti_code",
+    score: 940,
+    totalQuestions: 5,
+    correctCount: 5,
+    timeSpentSeconds: 34,
+    completedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+    quizTitle: "Ethiopian Tech & Algorithmic Speed Challenge",
+    quizId: "demo-quiz-1",
+  },
+  {
+    _id: "sub-3",
+    participantName: "Yonas Alemu",
+    participantHandle: "@yonas_cyber",
+    score: 880,
+    totalQuestions: 5,
+    correctCount: 4,
+    timeSpentSeconds: 25,
+    completedAt: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
+    quizTitle: "Ethiopian Tech & Algorithmic Speed Challenge",
+    quizId: "demo-quiz-1",
+  },
+  {
+    _id: "sub-4",
+    participantName: "Helina Bekele",
+    participantHandle: "@helina_ai",
+    score: 820,
+    totalQuestions: 5,
+    correctCount: 4,
+    timeSpentSeconds: 31,
+    completedAt: new Date(Date.now() - 1000 * 60 * 480).toISOString(),
+    quizTitle: "Ethiopian Tech & Algorithmic Speed Challenge",
+    quizId: "demo-quiz-1",
+  },
+  {
+    _id: "sub-5",
+    participantName: "Dawi Moges",
+    participantHandle: "@dawi_sec",
+    score: 790,
+    totalQuestions: 5,
+    correctCount: 4,
+    timeSpentSeconds: 38,
+    completedAt: new Date(Date.now() - 1000 * 60 * 720).toISOString(),
+    quizTitle: "Ethiopian Tech & Algorithmic Speed Challenge",
+    quizId: "demo-quiz-1",
+  },
+];
+
+

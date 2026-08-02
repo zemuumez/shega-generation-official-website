@@ -129,4 +129,60 @@ export const GALLERY_QUERY = `
   }
 }`;
 
+export const CHALLENGES_PAGE_QUERY = `
+{
+  "siteSettings": *[_id == "siteSettings" || _type == "siteSettings"][0] {
+    showChallengesNav,
+    challengesNavLabel,
+    challengesHeroTitle,
+    challengesHeroSubtitle
+  },
+  "quizzes": *[_type == "challengeQuiz" && isPublished == true] | order(_createdAt desc) {
+    _id,
+    title,
+    slug,
+    category,
+    difficulty,
+    description,
+    timePerQuestion,
+    isPublished,
+    isFeatured,
+    questions[] {
+      questionText,
+      codeSnippet,
+      options,
+      correctOptionIndex,
+      explanation,
+      points
+    }
+  },
+  "leaderboard": *[_type == "challengeSubmission"] | order(score desc, timeSpentSeconds asc) [0...50] {
+    _id,
+    participantName,
+    participantHandle,
+    score,
+    totalQuestions,
+    correctCount,
+    timeSpentSeconds,
+    completedAt,
+    "quizTitle": quiz->title,
+    "quizId": quiz->_id
+  }
+}`;
+
+export const LEADERBOARD_QUERY = `
+*[_type == "challengeSubmission"] | order(score desc, timeSpentSeconds asc) [0...100] {
+  _id,
+  participantName,
+  participantHandle,
+  score,
+  totalQuestions,
+  correctCount,
+  timeSpentSeconds,
+  completedAt,
+  "quizTitle": quiz->title,
+  "quizId": quiz->_id
+}`;
+
+
 

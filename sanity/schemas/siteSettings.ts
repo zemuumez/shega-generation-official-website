@@ -20,6 +20,7 @@ export default defineType({
     { name: "contact", title: "Contact Page" },
     { name: "partners", title: "Partners Section" },
     { name: "community", title: "Community Section" },
+    { name: "challenges", title: "Challenges Page & Nav Settings" },
     { name: "theme", title: "Theme & Brand Colors" },
   ],
   fields: [
@@ -609,6 +610,37 @@ export default defineType({
       type: "string",
       initialValue: "Draft organizational breakdown & governance framework for Shega Generation.",
       group: "about",
+    }),
+
+    // Challenges Page & Nav Settings
+    defineField({
+      name: "showChallengesNav",
+      title: "Show 'Challenges' in Navbar",
+      description: "Toggle to show or hide the Challenges link in the main navigation bar.",
+      type: "boolean",
+      initialValue: true,
+      group: "challenges",
+    }),
+    defineField({
+      name: "challengesNavLabel",
+      title: "Challenges Navbar Link Label",
+      type: "string",
+      initialValue: "Challenges",
+      group: "challenges",
+    }),
+    defineField({
+      name: "challengesHeroTitle",
+      title: "Challenges Hero Title",
+      type: "string",
+      initialValue: "Shega Tech Challenges & Arena",
+      group: "challenges",
+    }),
+    defineField({
+      name: "challengesHeroSubtitle",
+      title: "Challenges Hero Subtitle",
+      type: "string",
+      initialValue: "Test your coding speed, logical problem-solving, and algorithmic mastery. Rise to the top of the Shega Leaderboard!",
+      group: "challenges",
     }),
   ],
   preview: {
