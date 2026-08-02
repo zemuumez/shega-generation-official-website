@@ -20,6 +20,16 @@ export const THEME_PRESETS: Record<string, ThemeVariables> = {
     text: "#1C1E1B",         // Charcoal Text
     textSoft: "#5A5E5B",     // Muted Slate Text
   },
+  "minimal-monochrome": {
+    primary: "#09090B",       // Pure Pitch Black (Zinc 950)
+    primaryLight: "#27272A",  // Deep Charcoal (Zinc 800)
+    primaryDark: "#000000",   // Solid Pure Black
+    secondary: "#18181B",     // Pure Black Secondary (Zinc 900)
+    secondaryLight: "#27272A",// Dark Slate Charcoal (Zinc 800)
+    bg: "#F4F4F5",           // Ultra Clean Minimalist Paper Background
+    text: "#09090B",         // Deep Pitch Black Text
+    textSoft: "#3F3F46",     // Dark Muted Slate Text
+  },
   "terracotta-slate": {
     primary: "#B2533E",
     primaryLight: "#D78370",
@@ -69,14 +79,8 @@ export function resolveTheme(siteSettings?: any): ThemeVariables {
     };
   }
 
-  const preset = THEME_PRESETS[presetKey] || defaultPreset;
-
-  // Override primary or secondary if explicitly set in siteSettings
-  if (siteSettings?.primaryColor) {
-    return { ...preset, primary: siteSettings.primaryColor };
-  }
-
-  return preset;
+  // Return the selected preset directly
+  return THEME_PRESETS[presetKey] || defaultPreset;
 }
 
 export function generateThemeCssVariables(theme: ThemeVariables): string {

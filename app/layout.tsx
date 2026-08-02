@@ -4,6 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import PageLoader from "@/components/PageLoader";
+import { safeFetch } from "@/sanity/lib/client";
+import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import "./globals.css";
 
 const bodoniModa = Bodoni_Moda({
@@ -48,11 +50,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const siteSettings = await safeFetch<any>(SITE_SETTINGS_QUERY, {}, null);
+
   return (
     <html lang="en" className={`is-page-loading ${bodoniModa.variable} ${syne.variable} ${plusJakarta.variable} ${spaceMono.variable}`}>
       <head>
-        <ThemeProvider />
+        <ThemeProvider siteSettings={siteSettings} />
       </head>
       <body className="font-body bg-ivory text-ink antialiased min-h-screen relative overflow-x-hidden selection:bg-ochre/20 selection:text-ochre-dark">
         <Navbar />

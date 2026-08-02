@@ -8,17 +8,10 @@ export const SITE_SETTINGS_QUERY = `
 
 export const ABOUT_PAGE_SETTINGS_QUERY = `
 *[_id == "siteSettings" || _type == "siteSettings"][0] {
-  aboutHeroKicker,
-  aboutPageTitlePhrases,
-  aboutPageSubtitle,
-  aboutHeroStats,
-  aboutPillarsTitle,
-  aboutPillarsSubtitle,
-  aboutPillarsList,
-  aboutCampusVisionTitle,
-  aboutCampusVisionText,
-  orgStructureTitle,
-  orgStructureSubtitle
+  ...,
+  heroTitleBgImage { asset-> },
+  statementBannerImage { asset-> },
+  culturalAnchoringImage { asset-> }
 }`;
 
 export const HOME_PAGE_SETTINGS_QUERY = `
@@ -31,30 +24,26 @@ export const HOME_PAGE_SETTINGS_QUERY = `
 
 export const EVENTS_PAGE_SETTINGS_QUERY = `
 *[_id == "siteSettings" || _type == "siteSettings"][0] {
-  eventsSectionKicker,
-  eventsSectionTitle,
-  eventsPageTitlePhrases,
-  eventsPageSubtitle,
-  eventsCategories
+  ...,
+  heroTitleBgImage { asset-> },
+  statementBannerImage { asset-> },
+  culturalAnchoringImage { asset-> }
 }`;
 
 export const GALLERY_PAGE_SETTINGS_QUERY = `
 *[_id == "siteSettings" || _type == "siteSettings"][0] {
-  galleryPageTitlePhrases,
-  galleryPageSubtitle,
-  galleryCategories
+  ...,
+  heroTitleBgImage { asset-> },
+  statementBannerImage { asset-> },
+  culturalAnchoringImage { asset-> }
 }`;
 
 export const CONTACT_PAGE_SETTINGS_QUERY = `
 *[_id == "siteSettings" || _type == "siteSettings"][0] {
-  contactPageTitlePhrases,
-  contactPageSubtitle,
-  socialFacebookHandle,
-  socialFacebookUrl,
-  socialTelegramHandle,
-  socialTelegramUrl,
-  socialTikTokHandle,
-  socialTikTokUrl
+  ...,
+  heroTitleBgImage { asset-> },
+  statementBannerImage { asset-> },
+  culturalAnchoringImage { asset-> }
 }`;
 
 export const UPCOMING_EVENT_QUERY = `
