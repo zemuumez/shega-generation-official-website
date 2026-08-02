@@ -66,11 +66,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ThemeProvider siteSettings={siteSettings} />
       </head>
       <body className="font-body bg-ivory text-ink antialiased min-h-screen relative overflow-x-clip selection:bg-ochre/20 selection:text-ochre-dark">
-        <Navbar />
+        <Navbar
+          showChallengesNav={siteSettings?.showChallengesNav !== false}
+          challengesNavLabel={siteSettings?.challengesNavLabel}
+        />
 
         <main className="relative z-10 min-h-[85vh]">{children}</main>
 
-        <Footer />
+        <Footer showChallengesNav={siteSettings?.showChallengesNav !== false} />
         <PageLoader />
       </body>
     </html>

@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Footer() {
+export default function Footer({
+  showChallengesNav = true,
+}: {
+  showChallengesNav?: boolean;
+}) {
   const pathname = usePathname();
 
   if (pathname?.startsWith("/studio")) {
@@ -14,7 +18,9 @@ export default function Footer() {
     { href: "/", label: "Home" },
     { href: "/about", label: "About Us" },
     { href: "/events", label: "Events & Gatherings" },
-    { href: "/challenges", label: "Challenges & Arena" },
+    ...(showChallengesNav
+      ? [{ href: "/challenges", label: "Challenges & Arena" }]
+      : []),
     { href: "/gallery", label: "Media Gallery" },
     { href: "/contact", label: "Contact Us" },
     { href: "/donate", label: "Support / Donate" },

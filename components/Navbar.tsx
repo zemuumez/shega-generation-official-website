@@ -4,22 +4,30 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/events", label: "Events" },
-  { href: "/challenges", label: "Challenges" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/contact", label: "Contact" },
-];
-
-export default function Navbar() {
+export default function Navbar({
+  showChallengesNav = true,
+  challengesNavLabel = "Challenges",
+}: {
+  showChallengesNav?: boolean;
+  challengesNavLabel?: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
   if (pathname?.startsWith("/studio")) {
     return null;
   }
+
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/events", label: "Events" },
+    ...(showChallengesNav
+      ? [{ href: "/challenges", label: challengesNavLabel || "Challenges" }]
+      : []),
+    { href: "/gallery", label: "Gallery" },
+    { href: "/contact", label: "Contact" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-[#F4F3EE]/95 backdrop-blur-md border-b border-zinc-200/80 ">
@@ -29,7 +37,7 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2.5 transition-all duration-300 hover:opacity-90 select-none flex-shrink-0 group"
         >
-          <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl  p-1  group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+          <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl p-1 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
             <img
               src="/images/logo.png"
               alt="Shega Generation"
@@ -47,9 +55,9 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation Links: Home, Events, Gallery, Contact */}
+        {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600">
-          {NAV_LINKS.map((item) => {
+          {navLinks.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
@@ -115,19 +123,17 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Drawer with Backdrop Overlay */}
+      {/* Mobile Menu Drawer */}
       {isOpen && (
         <>
-          {/* Backdrop Overlay */}
           <div
             onClick={() => setIsOpen(false)}
             className="fixed inset-0 top-[65px] bg-black/40 backdrop-blur-xs z-40 md:hidden animate-fade-in"
           />
 
-          {/* Drawer Menu Panel */}
           <div className="relative z-50 md:hidden bg-[#F4F3EE] border-b border-zinc-200/90 px-6 py-6 shadow-xl space-y-4">
             <nav className="flex flex-col gap-1.5 font-sans text-sm font-medium">
-              {NAV_LINKS.map((item) => {
+              {navLinks.map((item) => {
                 const isActive = pathname === item.href;
                 return (
                   <Link
