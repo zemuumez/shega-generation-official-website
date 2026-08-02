@@ -274,41 +274,86 @@ export const demoTestimonials = [
 export const demoGallery = [
   {
     _id: "demo-g1",
-    image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800",
-    caption: "Field trip to INSA & Ethiopian Artificial Intelligence Institute",
+    title: "INSA & Artificial Intelligence Institute Excursion",
     categoryTag: "Expeditions",
+    description: "Shega Generation students visiting INSA cybersecurity facilities and national AI laboratories in Addis Ababa.",
+    images: [
+      {
+        _key: "img1-1",
+        image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800",
+        caption: "Field trip to INSA & Ethiopian Artificial Intelligence Institute",
+      },
+      {
+        _key: "img1-2",
+        image: "https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&q=80&w=800",
+        caption: "Student cohort inspecting high-performance server clusters",
+      },
+    ],
   },
   {
     _id: "demo-g2",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800",
-    caption: "Creative Kids (Ages 7–10) Scratch block coding session",
-    categoryTag: "Classroom",
+    title: "Simien Highlands Learning Trek",
+    categoryTag: "Expeditions",
+    description: "Outdoor learning trek exploring Ethiopia's indigenous wildlife and mountain topography.",
+    images: [
+      {
+        _key: "img2-1",
+        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800",
+        caption: "Exploring Simien Mountains National Park landscape",
+      },
+    ],
   },
   {
     _id: "demo-g3",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800",
-    caption: "Astute Teens (Ages 11–13) constructing Ethiopian tourism web portals",
+    title: "Creative Kids & Astute Teens Coding Labs",
     categoryTag: "Classroom",
+    description: "Hands-on web development, block coding, and hospitality sessions at TTI Campus.",
+    images: [
+      {
+        _key: "img3-1",
+        image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800",
+        caption: "Creative Kids (Ages 7–10) Scratch block coding session",
+      },
+      {
+        _key: "img3-2",
+        image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800",
+        caption: "Astute Teens (Ages 11–13) constructing Ethiopian tourism web portals",
+      },
+      {
+        _key: "img3-3",
+        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
+        caption: "Hands-on የማዕድ ስነ-ስርዓት (Dining Etiquette) session at TTI",
+      },
+    ],
   },
   {
     _id: "demo-g4",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800",
-    caption: "Leader Youth (Ages 14–18) AI command engineering & Python lab",
+    title: "Leader Youth AI & Hackathon Sprint",
     categoryTag: "Hackathons",
+    description: "Advanced Python developers competing in prompt engineering and commercial software builds.",
+    images: [
+      {
+        _key: "img4-1",
+        image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800",
+        caption: "Leader Youth (Ages 14–18) AI command engineering & Python lab",
+      },
+    ],
   },
   {
     _id: "demo-g5",
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
-    caption: "Hands-on የማዕድ ስነ-ስርዓት (Dining Etiquette) session at TTI",
-    categoryTag: "Classroom",
-  },
-  {
-    _id: "demo-g6",
-    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=800",
-    caption: "'Sofor's Got Talent' & Gebeta Championship at Guenet Hotel Mexico",
+    title: "'Sofor's Got Talent' & Community Giveback",
     categoryTag: "Volunteer-Work",
+    description: "Talent showcases, Gebeta championships, and youth volunteering activities.",
+    images: [
+      {
+        _key: "img5-1",
+        image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=800",
+        caption: "'Sofor's Got Talent' & Gebeta Championship at Guenet Hotel Mexico",
+      },
+    ],
   },
 ];
+
 
 export const demoPartners = [
   {

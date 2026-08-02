@@ -112,5 +112,21 @@ export const EDUCATIONAL_PILLARS_QUERY = `
 
 export const GALLERY_QUERY = `
 *[_type == "gallery"] | order(_createdAt desc) {
-  _id, title, categoryTag, aspect, mediaType, image { asset-> }, externalVideoUrl, caption, location, date
+  _id,
+  title,
+  categoryTag,
+  description,
+  caption,
+  location,
+  date,
+  image { asset-> },
+  images[] {
+    _key,
+    caption,
+    alt,
+    image { asset-> },
+    asset->
+  }
 }`;
+
+

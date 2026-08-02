@@ -255,7 +255,7 @@ export const deskStructure: StructureResolver = (S) =>
         .child(
           S.list()
             .id("galleryPageList")
-            .title("Gallery Sections by Category")
+            .title("Gallery Collections & Settings")
             .items([
               S.listItem()
                 .id("galleryPageCopySettings")
@@ -270,53 +270,54 @@ export const deskStructure: StructureResolver = (S) =>
                 ),
               S.divider(),
               S.listItem()
-                .id("expeditionsGalleryItem")
-                .title("Expeditions Gallery")
-                .child(
-                  S.documentList()
-                    .id("expeditionsGalleryDocList")
-                    .title("Expeditions Gallery")
-                    .filter('_type == "gallery" && categoryTag == "Expeditions"')
-                ),
-              S.listItem()
-                .id("hackathonsGalleryItem")
-                .title("Hackathons Gallery")
-                .child(
-                  S.documentList()
-                    .id("hackathonsGalleryDocList")
-                    .title("Hackathons Gallery")
-                    .filter('_type == "gallery" && categoryTag == "Hackathons"')
-                ),
-              S.listItem()
-                .id("classroomGalleryItem")
-                .title("Classroom Gallery")
-                .child(
-                  S.documentList()
-                    .id("classroomGalleryDocList")
-                    .title("Classroom Gallery")
-                    .filter('_type == "gallery" && categoryTag == "Classroom"')
-                ),
-              S.listItem()
-                .id("volunteerGalleryItem")
-                .title("Volunteer Work Gallery")
-                .child(
-                  S.documentList()
-                    .id("volunteerGalleryDocList")
-                    .title("Volunteer Work Gallery")
-                    .filter('_type == "gallery" && categoryTag == "Volunteer-Work"')
-                ),
-              S.divider(),
-              S.listItem()
                 .id("allGalleryItemsSection")
-                .title("All Media Items")
+                .title("All Gallery Collections / Albums")
                 .icon(FolderIcon)
                 .child(
                   S.documentTypeList("gallery")
                     .id("allGalleryTypeList")
-                    .title("All Gallery Items")
+                    .title("All Gallery Collections & Albums")
+                ),
+              S.divider(),
+              S.listItem()
+                .id("expeditionsGalleryItem")
+                .title("Expeditions Collections")
+                .child(
+                  S.documentList()
+                    .id("expeditionsGalleryDocList")
+                    .title("Expeditions Collections")
+                    .filter('_type == "gallery" && categoryTag == "Expeditions"')
+                ),
+              S.listItem()
+                .id("hackathonsGalleryItem")
+                .title("Hackathons Collections")
+                .child(
+                  S.documentList()
+                    .id("hackathonsGalleryDocList")
+                    .title("Hackathons Collections")
+                    .filter('_type == "gallery" && categoryTag == "Hackathons"')
+                ),
+              S.listItem()
+                .id("classroomGalleryItem")
+                .title("Classroom Collections")
+                .child(
+                  S.documentList()
+                    .id("classroomGalleryDocList")
+                    .title("Classroom Collections")
+                    .filter('_type == "gallery" && categoryTag == "Classroom"')
+                ),
+              S.listItem()
+                .id("volunteerGalleryItem")
+                .title("Volunteer Work Collections")
+                .child(
+                  S.documentList()
+                    .id("volunteerGalleryDocList")
+                    .title("Volunteer Work Collections")
+                    .filter('_type == "gallery" && categoryTag == "Volunteer-Work"')
                 ),
             ])
         ),
+
 
       // 5. STUDENT APPLICATIONS
       S.listItem()
