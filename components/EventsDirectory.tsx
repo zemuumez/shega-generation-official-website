@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import TypewriterTitle from "@/components/TypewriterTitle";
@@ -55,6 +55,23 @@ export default function EventsDirectory({
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
 
+  const [visibleRowsMap, setVisibleRowsMap] = useState<Record<string, number>>({});
+  const [itemsPerRow, setItemsPerRow] = useState(4);
+
+  useEffect(() => {
+    const updateItemsPerRow = () => {
+      const w = window.innerWidth;
+      if (w >= 1280) setItemsPerRow(4);
+      else if (w >= 1024) setItemsPerRow(3);
+      else if (w >= 640) setItemsPerRow(2);
+      else setItemsPerRow(1);
+    };
+
+    updateItemsPerRow();
+    window.addEventListener("resize", updateItemsPerRow);
+    return () => window.removeEventListener("resize", updateItemsPerRow);
+  }, []);
+
   const categoryOptions = [
     "All",
     ...(customCategories && customCategories.length > 0
@@ -90,6 +107,22 @@ export default function EventsDirectory({
       return true;
     });
   }, [events, timeFilter, categoryFilter]);
+
+  // Group filtered events by category for category-based row display
+  const eventCategoryGroups = useMemo(() => {
+    const map = new Map<string, any[]>();
+
+    filteredEvents.forEach((ev) => {
+      const cat = ev.type || "General";
+      if (!map.has(cat)) map.set(cat, []);
+      map.get(cat)!.push(ev);
+    });
+
+    return Array.from(map.entries()).map(([catName, catEvents]) => ({
+      categoryName: catName,
+      events: catEvents,
+    }));
+  }, [filteredEvents]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-28">
@@ -164,67 +197,119 @@ export default function EventsDirectory({
         </div>
       </div>
 
-      {/* RESPONSIVE FULL-WIDTH OVAL ARCH CARDS GRID */}
-      {filteredEvents.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 w-full">
-          {filteredEvents.map((event) => {
-            const dateDisplay = formatDate(event.eventDate);
+      {/* CATEGORY-GROUPED RESPONSIVE OVAL ARCH CARDS GRID WITH 1-ROW VIEW */}
+      {eventCategoryGroups.length > 0 && filteredEvents.length > 0 ? (
+        <div className="space-y-16 sm:space-y-20 w-full">
+          {eventCategoryGroups.map((group) => {
+            const currentRows = visibleRowsMap[group.categoryName] || 1;
+            const maxVisible = currentRows * itemsPerRow;
+            const visibleEvents = group.events.slice(0, maxVisible);
+            const hiddenCount = group.events.length - visibleEvents.length;
 
             return (
-              <button
-                key={event._id || event.title}
-                onClick={() => setSelectedEvent(event)}
-                className="group flex flex-col items-stretch text-left transition-all w-full cursor-pointer focus:outline-none"
-              >
-                {/* RESPONSIVE ELONGATED OVAL ARCH IMAGE CONTAINER */}
-                <div className="w-full aspect-[3/4] rounded-[140px] sm:rounded-[170px] overflow-hidden relative shadow-sm group-hover:shadow-xl transition-all duration-500 bg-zinc-100 border border-zinc-200/80">
-                  <Image
-                    src={safeImageUrl(
-                      event.coverImage,
-                      800,
-                      "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800"
-                    )}
-                    alt={event.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-
-                  {/* Category Overlay Badge */}
-                  {event.type && (
-                    <div className="absolute top-4 right-4 z-10">
-                      <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 shadow-xs">
-                        {event.type}
+              <div key={group.categoryName} className="w-full">
+                {/* CATEGORY SECTION HEADER */}
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-300/80 pb-4 mb-8 gap-3">
+                  <div>
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-navy bg-navy/10 px-3 py-1 rounded-full border border-navy/20">
+                        {group.categoryName}
+                      </span>
+                      <span className="font-mono text-xs font-semibold text-zinc-500">
+                        • {group.events.length} {group.events.length === 1 ? "event" : "events"}
                       </span>
                     </div>
-                  )}
-                </div>
-
-                {/* ELEGANT CARD TEXT LAYOUT */}
-                <div className="mt-4 w-full px-1">
-                  {/* Title */}
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-ink group-hover:text-ochre transition-colors leading-snug line-clamp-2">
-                      {event.title}
+                    <h3 className="font-display font-black text-2xl sm:text-3xl uppercase text-zinc-900 tracking-tight">
+                      {group.categoryName} Gatherings
                     </h3>
                   </div>
-
-                  {/* Date & Location Line */}
-                  <div className="mt-2.5 flex items-center justify-between text-xs font-mono text-zinc-500 font-medium pt-2 border-t border-zinc-100">
-                    <span className="flex items-center gap-1.5 text-zinc-600">
-                      <span>{dateDisplay}</span>
-                    </span>
-                    {event.location && (
-                      <span className="flex items-center gap-1.5 truncate max-w-[50%] text-zinc-500" title={event.location}>
-                        <span className="truncate">{event.location.split(",")[0]}</span>
-                      </span>
-                    )}
-                  </div>
                 </div>
-              </button>
+
+                {/* RESPONSIVE FULL-WIDTH OVAL ARCH CARDS GRID */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 w-full">
+                  {visibleEvents.map((event) => {
+                    const dateDisplay = formatDate(event.eventDate);
+
+                    return (
+                      <button
+                        key={event._id || event.title}
+                        onClick={() => setSelectedEvent(event)}
+                        className="group flex flex-col items-stretch text-left transition-all w-full cursor-pointer focus:outline-none"
+                      >
+                        {/* RESPONSIVE ELONGATED OVAL ARCH IMAGE CONTAINER */}
+                        <div className="w-full aspect-[3/4] rounded-[140px] sm:rounded-[170px] overflow-hidden relative shadow-sm group-hover:shadow-xl transition-all duration-500 bg-zinc-100 border border-zinc-200/80">
+                          <Image
+                            src={safeImageUrl(
+                              event.coverImage,
+                              800,
+                              "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800"
+                            )}
+                            alt={event.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+
+                          {/* Category Overlay Badge */}
+                          {event.type && (
+                            <div className="absolute top-4 right-4 z-10">
+                              <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 shadow-xs">
+                                {event.type}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* ELEGANT CARD TEXT LAYOUT */}
+                        <div className="mt-4 w-full px-1">
+                          {/* Title */}
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-ink group-hover:text-ochre transition-colors leading-snug line-clamp-2">
+                              {event.title}
+                            </h3>
+                          </div>
+
+                          {/* Date & Location Line */}
+                          <div className="mt-2.5 flex items-center justify-between text-xs font-mono text-zinc-500 font-medium pt-2 border-t border-zinc-100">
+                            <span className="flex items-center gap-1.5 text-zinc-600">
+                              <span>{dateDisplay}</span>
+                            </span>
+                            {event.location && (
+                              <span className="flex items-center gap-1.5 truncate max-w-[50%] text-zinc-500" title={event.location}>
+                                <span className="truncate">{event.location.split(",")[0]}</span>
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* SEE MORE BUTTON FOR +1 ROW UNLOCK */}
+                {hiddenCount > 0 && (
+                  <div className="mt-10 flex items-center justify-center">
+                    <button
+                      onClick={() =>
+                        setVisibleRowsMap((prev) => ({
+                          ...prev,
+                          [group.categoryName]: (prev[group.categoryName] || 1) + 1,
+                        }))
+                      }
+                      className="px-6 py-2.5 rounded-full bg-white border border-navy/40 text-navy font-mono text-xs uppercase font-bold hover:bg-navy hover:text-white transition-all shadow-xs flex items-center gap-2 cursor-pointer group"
+                    >
+                      <span>See More {group.categoryName}</span>
+                      <span className="bg-navy/10 text-navy group-hover:bg-white/20 group-hover:text-white px-2.5 py-0.5 rounded-full text-[10px]">
+                        +{Math.min(hiddenCount, itemsPerRow)} ({hiddenCount} remaining)
+                      </span>
+                    </button>
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
+
       ) : (
         <div className="text-center py-20 bg-zinc-50 rounded-3xl border border-dashed border-zinc-300 max-w-2xl mx-auto">
           <p className="font-display text-xl font-bold uppercase text-zinc-700">No events found</p>

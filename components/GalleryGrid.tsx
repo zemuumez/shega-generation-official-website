@@ -27,6 +27,23 @@ export default function GalleryGrid({
     categoryTag: string;
   } | null>(null);
 
+  const [visibleRowsMap, setVisibleRowsMap] = useState<Record<string, number>>({});
+  const [itemsPerRow, setItemsPerRow] = useState(4);
+
+  useEffect(() => {
+    const updateItemsPerRow = () => {
+      const w = window.innerWidth;
+      if (w >= 1280) setItemsPerRow(4);
+      else if (w >= 1024) setItemsPerRow(3);
+      else if (w >= 640) setItemsPerRow(2);
+      else setItemsPerRow(1);
+    };
+
+    updateItemsPerRow();
+    window.addEventListener("resize", updateItemsPerRow);
+    return () => window.removeEventListener("resize", updateItemsPerRow);
+  }, []);
+
   const tabsRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -43,6 +60,7 @@ export default function GalleryGrid({
     window.addEventListener("resize", checkScroll);
     return () => window.removeEventListener("resize", checkScroll);
   }, [checkScroll]);
+
 
   // Dynamically merge CMS-configured categories and any custom tags used on gallery documents
   const categoryOptions = useMemo(() => {
@@ -198,64 +216,92 @@ export default function GalleryGrid({
       {/* TITLED PHOTO GROUPS / ALBUMS GRID */}
       {filteredGroups.length > 0 && totalPhotosCount > 0 ? (
         <div className="space-y-16 sm:space-y-20 w-full">
-          {filteredGroups.map((group) => (
-            <div key={group.id} className="w-full">
-              {/* ALBUM GROUP HEADER */}
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-300/80 pb-4 mb-8 gap-3">
-                <div>
-                  <div className="flex items-center gap-2.5 mb-1.5">
-                    <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-ochre bg-ochre/10 px-3 py-1 rounded-full border border-ochre/25">
-                      {group.categoryTag}
-                    </span>
-                    <span className="font-mono text-xs font-semibold text-zinc-500">
-                      • {group.photos.length} {group.photos.length === 1 ? "photo" : "photos"}
-                    </span>
-                  </div>
-                  <h3 className="font-display font-black text-2xl sm:text-3xl uppercase text-zinc-900 tracking-tight">
-                    {group.title}
-                  </h3>
-                  {group.description && (
-                    <p className="mt-1.5 text-sm font-sans font-medium text-zinc-600 max-w-2xl leading-relaxed">
-                      {group.description}
-                    </p>
-                  )}
-                </div>
-              </div>
+          {filteredGroups.map((group) => {
+            const currentRows = visibleRowsMap[group.id] || 1;
+            const maxVisible = currentRows * itemsPerRow;
+            const visiblePhotos = group.photos.slice(0, maxVisible);
+            const hiddenCount = group.photos.length - visiblePhotos.length;
 
-              {/* CIRCULAR / SPHERICAL IMAGE CARDS GRID MATCHING TEMPLATE */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 w-full">
-                {group.photos.map((photo) => (
-                  <div
-                    key={photo.id}
-                    onClick={() => setLightboxItem(photo)}
-                    className="group flex flex-col items-center text-left transition-all w-full cursor-pointer"
-                  >
-                    {/* CIRCULAR / SPHERE IMAGE CONTAINER */}
-                    <div className="w-full max-w-[340px] aspect-square rounded-full overflow-hidden relative shadow-sm group-hover:shadow-2xl transition-all duration-500 bg-zinc-100 border border-zinc-200/80 mx-auto">
-                      <Image
-                        src={safeImageUrl(
-                          photo.image,
-                          800,
-                          "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800"
-                        )}
-                        alt={photo.caption || group.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
+            return (
+              <div key={group.id} className="w-full">
+                {/* ALBUM GROUP HEADER */}
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-300/80 pb-4 mb-8 gap-3">
+                  <div>
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-ochre bg-ochre/10 px-3 py-1 rounded-full border border-ochre/25">
+                        {group.categoryTag}
+                      </span>
+                      <span className="font-mono text-xs font-semibold text-zinc-500">
+                        • {group.photos.length} {group.photos.length === 1 ? "photo" : "photos"}
+                      </span>
                     </div>
-
-                    {/* CAPTION DETAILS BELOW SPHERE IMAGE */}
-                    <div className="mt-4 w-full max-w-[340px] px-2 flex items-start justify-between gap-3">
-                      <p className="text-sm font-sans font-medium text-ink-soft group-hover:text-ochre transition-colors leading-snug line-clamp-2">
-                        {photo.caption}
+                    <h3 className="font-display font-black text-2xl sm:text-3xl uppercase text-zinc-900 tracking-tight">
+                      {group.title}
+                    </h3>
+                    {group.description && (
+                      <p className="mt-1.5 text-sm font-sans font-medium text-zinc-600 max-w-2xl leading-relaxed">
+                        {group.description}
                       </p>
-                    </div>
+                    )}
                   </div>
-                ))}
+                </div>
+
+                {/* CIRCULAR / SPHERICAL IMAGE CARDS GRID MATCHING TEMPLATE */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 w-full">
+                  {visiblePhotos.map((photo) => (
+                    <div
+                      key={photo.id}
+                      onClick={() => setLightboxItem(photo)}
+                      className="group flex flex-col items-center text-left transition-all w-full cursor-pointer"
+                    >
+                      {/* CIRCULAR / SPHERE IMAGE CONTAINER */}
+                      <div className="w-full max-w-[340px] aspect-square rounded-full overflow-hidden relative shadow-sm group-hover:shadow-2xl transition-all duration-500 bg-zinc-100 border border-zinc-200/80 mx-auto">
+                        <Image
+                          src={safeImageUrl(
+                            photo.image,
+                            800,
+                            "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800"
+                          )}
+                          alt={photo.caption || group.title}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      </div>
+
+                      {/* CAPTION DETAILS BELOW SPHERE IMAGE */}
+                      <div className="mt-4 w-full max-w-[340px] px-2 flex items-start justify-between gap-3">
+                        <p className="text-sm font-sans font-medium text-ink-soft group-hover:text-ochre transition-colors leading-snug line-clamp-2">
+                          {photo.caption}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* SEE MORE BUTTON FOR +1 ROW UNLOCK */}
+                {hiddenCount > 0 && (
+                  <div className="mt-10 flex items-center justify-center">
+                    <button
+                      onClick={() =>
+                        setVisibleRowsMap((prev) => ({
+                          ...prev,
+                          [group.id]: (prev[group.id] || 1) + 1,
+                        }))
+                      }
+                      className="px-6 py-2.5 rounded-full bg-white border border-ochre/40 text-ochre font-mono text-xs uppercase font-bold hover:bg-ochre hover:text-white transition-all shadow-xs flex items-center gap-2 cursor-pointer group"
+                    >
+                      <span>See More</span>
+                      <span className="bg-ochre/10 text-ochre group-hover:bg-white/20 group-hover:text-white px-2.5 py-0.5 rounded-full text-[10px]">
+                        +{Math.min(hiddenCount, itemsPerRow)} ({hiddenCount} remaining)
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
+
         </div>
       ) : (
         <div className="text-center py-20 bg-zinc-50 rounded-3xl border border-dashed border-zinc-300 max-w-2xl mx-auto">
