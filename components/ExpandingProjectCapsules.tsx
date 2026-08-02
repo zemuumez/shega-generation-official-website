@@ -67,8 +67,8 @@ export default function ExpandingProjectCapsules({
 
   return (
     <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 mt-8">
-      {/* Filter Pills */}
-      <div className="flex flex-wrap gap-2.5 mb-8" role="tablist" aria-label="Media & Program Filters">
+      {/* Filter Pills: Scrollable rail on mobile, wrapped flex on desktop */}
+      <div className="overflow-x-auto no-scrollbar flex sm:flex-wrap items-center gap-2 sm:gap-2.5 pb-3 sm:pb-0 mb-6 sm:mb-8" role="tablist" aria-label="Media & Program Filters">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -77,10 +77,10 @@ export default function ExpandingProjectCapsules({
               setActiveIdx(0);
               setPlayingVideoId(null);
             }}
-            className={`px-5 py-2.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-300 border ${
+            className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 border flex-shrink-0 min-h-[38px] ${
               filter === cat
                 ? "bg-ochre border-ochre text-white font-bold shadow-md scale-[1.02]"
-                : "bg-white border-zinc-200 text-ink-soft hover:border-zinc-300 hover:text-ink"
+                : "bg-white border-zinc-200 text-ink-soft hover:border-zinc-300 hover:text-ink font-semibold"
             }`}
           >
             {cat}
@@ -89,7 +89,7 @@ export default function ExpandingProjectCapsules({
       </div>
 
       {/* Accordion / Capsules Container */}
-      <div className="flex flex-col md:flex-row gap-4 justify-center items-stretch min-h-[500px] w-full">
+      <div className="flex flex-col md:flex-row gap-3.5 sm:gap-4 justify-center items-stretch min-h-[460px] sm:min-h-[500px] w-full">
         {filteredProjects.map((project, idx) => {
           const isActive = activeIdx === idx;
           const ctaText = getCtaLabel(project.category);
@@ -113,10 +113,10 @@ export default function ExpandingProjectCapsules({
               key={project._id || project.title || idx}
               onMouseEnter={() => setActiveIdx(idx)}
               onClick={() => setActiveIdx(idx)}
-              className={`relative overflow-hidden rounded-[36px] border border-zinc-200 bg-zinc-900 transition-all duration-500 ease-out cursor-pointer flex-shrink-0 ${
+              className={`relative overflow-hidden rounded-[28px] sm:rounded-[36px] border border-zinc-200 bg-zinc-900 transition-all duration-500 ease-out cursor-pointer flex-shrink-0 ${
                 isActive
-                  ? "w-full md:w-[560px] grow shadow-2xl border-ochre/60 ring-2 ring-ochre/30"
-                  : "w-full md:w-[120px] h-[120px] md:h-auto hover:w-[140px] shadow-sm border-zinc-200/80"
+                  ? "w-full md:w-[560px] min-h-[380px] sm:min-h-[460px] grow shadow-2xl border-ochre/60 ring-2 ring-ochre/30"
+                  : "w-full md:w-[120px] h-[90px] sm:h-[110px] md:h-auto hover:w-[140px] shadow-sm border-zinc-200/80"
               }`}
             >
               {/* Background Thumbnail Image or Active YouTube Video Player */}

@@ -20,7 +20,7 @@ export default function ParallaxBanner({
 }: ParallaxBannerProps) {
   return (
     <section
-      className={`relative w-full ${heightClass} overflow-hidden flex items-center justify-center select-none bg-fixed bg-cover bg-center bg-no-repeat ${className}`}
+      className={`relative w-full ${heightClass} overflow-hidden flex items-center justify-center select-none bg-scroll sm:bg-fixed bg-cover bg-center bg-no-repeat ${className}`}
       style={{ backgroundImage: `url('${src}')` }}
     >
       {/* Dark Overlay */}

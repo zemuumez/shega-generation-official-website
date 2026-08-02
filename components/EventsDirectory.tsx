@@ -134,8 +134,8 @@ export default function EventsDirectory({
           })}
         </div>
 
-        {/* Category Pills (Right) */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
+        {/* Category Pills (Right) - Scrollable on mobile */}
+        <div className="overflow-x-auto no-scrollbar flex sm:flex-wrap items-center justify-start sm:justify-center gap-2 w-full md:w-auto max-w-full pb-1.5 sm:pb-0">
           {categoryOptions.map((cat) => {
             const isActive = categoryFilter === cat;
             return (

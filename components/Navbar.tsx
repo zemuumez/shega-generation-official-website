@@ -114,25 +114,59 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Menu Drawer with Backdrop Overlay */}
       {isOpen && (
-        <div className="md:hidden bg-[#F4F3EE] border-b border-zinc-200 px-6 py-5 space-y-3">
-          <nav className="flex flex-col gap-3 font-sans text-sm font-medium">
-            {NAV_LINKS.map((item) => (
+        <>
+          {/* Backdrop Overlay */}
+          <div
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 top-[65px] bg-black/40 backdrop-blur-xs z-40 md:hidden animate-fade-in"
+          />
+
+          {/* Drawer Menu Panel */}
+          <div className="relative z-50 md:hidden bg-[#F4F3EE] border-b border-zinc-200/90 px-6 py-6 shadow-xl space-y-4">
+            <nav className="flex flex-col gap-1.5 font-sans text-sm font-medium">
+              {NAV_LINKS.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`py-3 px-4 rounded-xl transition-all flex items-center justify-between min-h-[44px] ${
+                      isActive
+                        ? "bg-ochre/10 text-ochre font-bold border border-ochre/20"
+                        : "text-zinc-800 hover:bg-black/5 active:bg-black/10 font-semibold"
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    <svg
+                      className={`w-4 h-4 transition-transform ${isActive ? "text-ochre translate-x-1" : "text-zinc-400"}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="pt-2 border-t border-zinc-200">
               <Link
-                key={item.label}
-                href={item.href}
+                href="/donate"
                 onClick={() => setIsOpen(false)}
-                className="py-2 px-3 rounded-xl text-zinc-800 hover:bg-black/5 transition-colors flex items-center justify-between"
+                className="w-full bg-ochre hover:bg-ochre-dark text-white rounded-xl py-3.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-transform active:scale-[0.98]"
               >
-                <span>{item.label}</span>
-                <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                <span>Make a Donation &amp; Support Students</span>
+                <svg className="w-4 h-4 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </Link>
-            ))}
-          </nav>
-        </div>
+            </div>
+          </div>
+        </>
       )}
     </header>
   );

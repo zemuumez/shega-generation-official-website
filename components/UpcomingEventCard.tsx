@@ -77,16 +77,16 @@ export default function UpcomingEventCard({ event }: { event: EventDoc | null })
           </p>
         </div>
 
-        <div className="mt-8 grid grid-cols-4 gap-3 font-mono">
+        <div className="mt-6 sm:mt-8 grid grid-cols-4 gap-1.5 sm:gap-3 font-mono">
           {[
             { label: "days", value: displayDays },
             { label: "hrs", value: displayHours },
             { label: "min", value: displayMinutes },
             { label: "sec", value: displaySeconds },
           ].map((unit) => (
-            <div key={unit.label} className="rounded-full bg-zinc-50 border border-zinc-100 p-3 text-center aspect-square flex flex-col justify-center items-center transition-all duration-300 hover:border-ochre/20">
-              <div className="text-xl font-bold text-ink leading-none">{String(unit.value).padStart(2, "0")}</div>
-              <div className="text-[8px] uppercase tracking-widest text-ink-soft/60 mt-1 leading-none">{unit.label}</div>
+            <div key={unit.label} className="rounded-2xl sm:rounded-full bg-zinc-50 border border-zinc-100 p-2 sm:p-3 text-center aspect-square flex flex-col justify-center items-center transition-all duration-300 hover:border-ochre/20">
+              <div className="text-base sm:text-xl font-bold text-ink leading-none">{String(unit.value).padStart(2, "0")}</div>
+              <div className="text-[7px] sm:text-[8px] uppercase tracking-widest text-ink-soft/60 mt-1 leading-none">{unit.label}</div>
             </div>
           ))}
         </div>

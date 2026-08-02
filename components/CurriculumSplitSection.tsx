@@ -38,13 +38,13 @@ export default function CurriculumSplitSection() {
         <LeafPattern tone="gray" variant="mosaic" id="curriculum-leaf" opacity="0.3" />
       </div>
 
-      <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 pt-6 pb-28 flex flex-col md:flex-row gap-12 lg:gap-16 relative z-10">
+      <div className="mx-auto w-full max-w-[90vw] px-4 sm:px-6 pt-10 pb-16 sm:pb-28 flex flex-col md:flex-row gap-8 md:gap-12 lg:gap-16 relative z-10">
         {/* Left Column - Slowly positions to the vertical middle of viewport while right side scrolls */}
         <div className="md:w-1/2 md:sticky md:top-[calc(50vh-200px)] h-fit pt-2 transition-all duration-300">
           <span className="font-mono text-xs uppercase tracking-[0.25em] text-ink/65 font-bold block mb-1">
              Pedagogical Architecture
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-ink uppercase tracking-wide leading-tight">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-ink uppercase tracking-wide leading-tight">
             A curriculum designed for regional leaders
           </h2>
           <p className="mt-6 text-base text-ink-soft leading-relaxed max-w-md">

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, Syne, Plus_Jakarta_Sans, Space_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -35,6 +35,13 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#F4F3EE",
+};
 
 export const metadata: Metadata = {
   title: "Shega Generations | ሽጋ ትውልድ",

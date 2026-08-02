@@ -489,9 +489,9 @@ export default function AboutDirectory({
             </p>
           </div>
 
-          {/* Department Filter Tabs */}
-          <div className="w-full max-w-5xl mx-auto mb-14 px-4">
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full">
+          {/* Department Filter Tabs: Horizontal scrollable rail on mobile */}
+          <div className="w-full max-w-5xl mx-auto mb-10 sm:mb-14">
+            <div className="overflow-x-auto no-scrollbar flex sm:flex-wrap items-center justify-start sm:justify-center gap-2 sm:gap-4 w-full px-2 sm:px-4 pb-2 sm:pb-0">
               {[
                 { id: "executive", label: "Executive Leadership", count: execMembers.length },
                 { id: "board", label: "Board of Directors", count: boardMembers.length },
@@ -503,7 +503,7 @@ export default function AboutDirectory({
                   <button
                     key={tab.id}
                     onClick={() => setSelectedDept(tab.id)}
-                    className={`relative whitespace-nowrap px-5 sm:px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-mono font-bold transition-all duration-300 flex items-center justify-center gap-2.5 border select-none leading-none outline-none ${
+                    className={`relative whitespace-nowrap px-4 sm:px-6 py-3 sm:py-3.5 rounded-2xl text-[11px] sm:text-sm font-mono font-bold transition-all duration-300 flex items-center justify-center gap-2 border select-none leading-none outline-none flex-shrink-0 min-h-[42px] ${
                       isActive
                         ? "text-white border-navy bg-navy shadow-lg"
                         : "text-zinc-700 bg-ivory/90 hover:bg-white hover:text-ochre border-zinc-200/90 shadow-xs"

@@ -16,6 +16,12 @@
 
 * {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -246,3 +252,25 @@ html.is-page-loading footer {
     -webkit-text-stroke: 0.8px rgba(113, 113, 122, 0.6);
   }
 }
+
+/* Mobile & Tablet Specific Utility Rules */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Prevent iOS Safari input focus auto-zoom by enforcing 16px font-size on mobile inputs */
+@media screen and (max-width: 767px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+

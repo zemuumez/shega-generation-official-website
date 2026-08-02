@@ -157,7 +157,7 @@ export default function DonationPortal() {
           >
             {/* Amount Selector */}
             <p className="font-mono text-xs uppercase tracking-widest text-ink-soft/60">Select pledge amount</p>
-            <div className="mt-3 grid grid-cols-4 gap-2">
+            <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
               {presets.map((preset) => (
                 <button
                   key={preset}
@@ -166,7 +166,7 @@ export default function DonationPortal() {
                     setAmount(preset);
                     setCustomAmount("");
                   }}
-                  className={`rounded-2xl border py-3 text-xs font-mono transition-all duration-300 ${
+                  className={`rounded-2xl border py-3 text-xs font-mono transition-all duration-300 min-h-[44px] ${
                     amount === preset && !customAmount
                       ? "border-ochre bg-ochre/10 text-ink font-bold shadow-sm ring-1 ring-ochre"
                       : "border-zinc-200 bg-zinc-50/50 text-ink-soft hover:border-zinc-300 hover:text-ink"

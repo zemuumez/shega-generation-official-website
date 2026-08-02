@@ -10,11 +10,11 @@ export default function Footer() {
   }
 
   return (
-    <footer className="border-t border-zinc-200 bg-white/40 relative z-10">
-      <div className="mx-auto w-full max-w-[90vw] px-4 py-14 sm:px-6">
-        <div className="flex flex-col justify-between gap-10 sm:flex-row items-start sm:items-center">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-white p-1 shadow-sm border border-zinc-200/80 flex items-center justify-center">
+    <footer className="border-t border-zinc-200 bg-white/40 relative z-10 overflow-hidden">
+      <div className="mx-auto w-full max-w-[90vw] px-4 py-10 sm:py-14 sm:px-6">
+        <div className="flex flex-col justify-between gap-8 sm:gap-10 sm:flex-row items-center text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-white p-1 shadow-xs border border-zinc-200/80 flex items-center justify-center flex-shrink-0">
               <img
                 src="/images/logo.png"
                 alt="Shega Generation Logo"
@@ -22,22 +22,22 @@ export default function Footer() {
               />
             </div>
             <div>
-              <p className="font-display text-2xl font-bold uppercase tracking-wider text-ink">
+              <p className="font-display text-xl sm:text-2xl font-bold uppercase tracking-wider text-ink">
                 Shega Generations <span className="text-ochre">| ሸጋ ትውልድ</span>
               </p>
               <p className="mt-1 text-xs sm:text-sm text-ink-soft font-sans">
-                Nurturing Tech Geniuses & Indigenous Leadership in Ethiopia.
+                Nurturing Tech Geniuses &amp; Indigenous Leadership in Ethiopia.
               </p>
             </div>
           </div>
 
           {/* Social Links: YouTube, TikTok, Facebook */}
-          <div className="flex items-center gap-6 sm:gap-8 text-xs sm:text-sm font-mono text-ink-soft font-bold uppercase tracking-wider">
+          <div className="flex items-center justify-center gap-5 sm:gap-8 text-xs sm:text-sm font-mono text-ink-soft font-bold uppercase tracking-wider flex-wrap">
             <a
               href="https://youtube.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-ochre transition-colors"
+              className="py-1 px-2 hover:text-ochre transition-colors min-h-[36px] flex items-center"
             >
               YouTube
             </a>
@@ -45,7 +45,7 @@ export default function Footer() {
               href="https://www.tiktok.com/@samuelgeremew_21"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-ochre transition-colors"
+              className="py-1 px-2 hover:text-ochre transition-colors min-h-[36px] flex items-center"
             >
               TikTok
             </a>
@@ -53,14 +53,14 @@ export default function Footer() {
               href="https://web.facebook.com/share/g/18foDKzcBS/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-ochre transition-colors"
+              className="py-1 px-2 hover:text-ochre transition-colors min-h-[36px] flex items-center"
             >
               Facebook
             </a>
           </div>
         </div>
 
-        <p className="mt-12 text-xs font-mono text-ink-soft/60">
+        <p className="mt-8 sm:mt-12 text-center sm:text-left text-[11px] sm:text-xs font-mono text-ink-soft/60">
           &copy; {new Date().getFullYear()} Shega Generations. All rights reserved.
         </p>
       </div>

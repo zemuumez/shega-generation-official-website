@@ -112,25 +112,25 @@ export default async function HomePage() {
           <div className="flex flex-col items-center justify-center text-center mt-2 sm:mt-4 select-none w-full min-h-[2.1em]">
             <TypewriterTitle
               phrases={[heroTitle || "Shega Generation", "ሸጋ ትውልድ"]}
-              className="font-hero font-bold text-[clamp(3.4rem,12vw,6.8rem)] sm:text-[clamp(5.4rem,11.5vw,10rem)] leading-[0.94] uppercase tracking-wider text-masked-bg text-bordered-black text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center py-2"
+              className="font-hero font-bold text-[clamp(2.4rem,10vw,5.5rem)] sm:text-[clamp(5.4rem,11.5vw,10rem)] leading-[0.94] uppercase tracking-wider text-masked-bg text-bordered-black text-center max-w-full drop-shadow-sm flex flex-col items-center justify-center py-2"
               style={{ backgroundImage: `linear-gradient(to bottom, rgba(46, 204, 112, 0.12), rgba(39, 174, 95, 0.17)), url('${heroTitleMaskBg}')` }}
             />
           </div>
 
           <div className="mt-6 sm:mt-8 mx-auto max-w-2xl text-center">
-            <p className="text-base sm:text-xl text-ink/80 leading-relaxed font-sans font-medium px-4 tracking-wide">
+            <p className="text-base sm:text-xl text-ink/80 leading-relaxed font-sans font-medium px-2 sm:px-4 tracking-wide">
               {heroCaption}
             </p>
-            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3.5 sm:gap-4 justify-center items-center w-full px-4 sm:px-0">
               <a
                 href="/events"
-                className="w-full sm:w-auto bg-ochre px-9 py-4 rounded-full text-xs font-mono uppercase tracking-widest text-white transition-all duration-300 hover:bg-ochre-dark hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
+                className="w-full sm:w-auto bg-ochre px-8 sm:px-9 py-3.5 sm:py-4 rounded-full text-xs font-mono uppercase tracking-widest text-white transition-all duration-300 hover:bg-ochre-dark hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
               >
                 {heroCtaPrimary}
               </a>
               <a
                 href="/donate"
-                className="w-full sm:w-auto border border-ink/40 text-ink hover:border-ochre hover:text-ochre px-9 py-4 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 hover:bg-white hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
+                className="w-full sm:w-auto border border-ink/40 text-ink hover:border-ochre hover:text-ochre px-8 sm:px-9 py-3.5 sm:py-4 rounded-full text-xs font-mono uppercase tracking-widest transition-all duration-300 hover:bg-white hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 text-center font-bold"
               >
                 {heroCtaSecondary}
               </a>
@@ -142,17 +142,17 @@ export default async function HomePage() {
       {/* FULL-WIDTH PHOTO OVERLAY STATEMENT BANNER WITH PARALLAX EFFECT */}
       <ParallaxBanner
         src={statementBannerBg}
-        heightClass="h-[55vh] min-h-[420px]"
+        heightClass="h-[45vh] sm:h-[55vh] min-h-[340px]"
         overlayOpacity="bg-gradient-to-t from-black/65 via-black/45 to-black/35"
       >
-        <div className="flex flex-col items-center justify-center text-center p-6 select-none leading-[0.95]">
-          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider drop-shadow-md">
+        <div className="flex flex-col items-center justify-center text-center p-4 sm:p-6 select-none leading-[0.95] max-w-full">
+          <h2 className="font-display font-bold text-3xl sm:text-6xl md:text-7xl lg:text-8xl text-white uppercase tracking-wider drop-shadow-md">
             {statement1}
           </h2>
-          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl stroke-text uppercase tracking-wider mt-3 drop-shadow-md">
+          <h2 className="font-display font-bold text-3xl sm:text-6xl md:text-7xl lg:text-8xl stroke-text uppercase tracking-wider mt-2 sm:mt-3 drop-shadow-md">
             {statement2}
           </h2>
-          <h2 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wider mt-3 drop-shadow-md">
+          <h2 className="font-display font-bold text-3xl sm:text-6xl md:text-7xl lg:text-8xl text-white uppercase tracking-wider mt-2 sm:mt-3 drop-shadow-md">
             {statement3}
           </h2>
         </div>
