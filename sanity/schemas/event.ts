@@ -17,12 +17,10 @@ export default defineType({
       name: "type",
       title: "Event Type / Category",
       type: "string",
-      options: {
-        list: ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"],
-        layout: "dropdown",
-      },
+      description: "Category for this event (e.g., CTF, Hackathon, Hiking, Tour, Tech Training, Charity, or type a custom category).",
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: "slug",
       title: "URL Slug",

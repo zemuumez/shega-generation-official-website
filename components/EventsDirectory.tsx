@@ -51,12 +51,13 @@ export default function EventsDirectory({
   customSubtitle?: string;
   customCategories?: string[];
 }) {
-  const [timeFilter, setTimeFilter] = useState("All");
+  const [timeFilter, setTimeFilter] = useState("Past");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
 
   const [visibleRowsMap, setVisibleRowsMap] = useState<Record<string, number>>({});
   const [itemsPerRow, setItemsPerRow] = useState(4);
+
 
   useEffect(() => {
     const updateItemsPerRow = () => {
@@ -72,12 +73,22 @@ export default function EventsDirectory({
     return () => window.removeEventListener("resize", updateItemsPerRow);
   }, []);
 
-  const categoryOptions = [
-    "All",
-    ...(customCategories && customCategories.length > 0
-      ? customCategories
-      : ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"]),
-  ];
+  const categoryOptions = useMemo(() => {
+    const base =
+      customCategories && customCategories.length > 0
+        ? customCategories
+        : ["CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"];
+
+    const set = new Set<string>(base);
+    (events || []).forEach((ev) => {
+      if (ev.type && typeof ev.type === "string" && ev.type.trim()) {
+        set.add(ev.type.trim());
+      }
+    });
+
+    return ["All", ...Array.from(set)];
+  }, [customCategories, events]);
+
 
   const phrases =
     customPhrases && customPhrases.length > 0
@@ -251,13 +262,13 @@ export default function EventsDirectory({
                           />
 
                           {/* Category Overlay Badge */}
-                          {event.type && (
+                          {/* {event.type && (
                             <div className="absolute top-4 right-4 z-10">
                               <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 shadow-xs">
                                 {event.type}
                               </span>
                             </div>
-                          )}
+                          )} */}
                         </div>
 
                         {/* ELEGANT CARD TEXT LAYOUT */}
