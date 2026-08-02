@@ -216,3 +216,19 @@ iframe.goog-te-banner-frame {
 .animate-shimmer {
   animation: shimmer 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+
+/* Smooth fade transition for page content */
+header,
+footer,
+main {
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Strictly hide header, main content, and footer while page loader is active */
+html.is-page-loading header,
+html.is-page-loading footer,
+html.is-page-loading main {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

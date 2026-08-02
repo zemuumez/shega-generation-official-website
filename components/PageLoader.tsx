@@ -1,27 +1,73 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 
 interface PageLoaderProps {
   forceShow?: boolean;
 }
 
+// Track active loader instances so header & footer stay hidden until ALL loaders finish
+let activeLoadersCount = 0;
+
+function incrementActiveLoaders() {
+  activeLoadersCount++;
+  if (typeof document !== "undefined") {
+    document.documentElement.classList.add("is-page-loading");
+  }
+}
+
+function decrementActiveLoaders() {
+  activeLoadersCount = Math.max(0, activeLoadersCount - 1);
+  if (activeLoadersCount === 0 && typeof document !== "undefined") {
+    document.documentElement.classList.remove("is-page-loading");
+  }
+}
+
 export default function PageLoader({ forceShow = false }: PageLoaderProps) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isFading, setIsFading] = useState(false);
+  const isActiveRef = useRef(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Dynamically manage active count and html class
+  useEffect(() => {
+    if (isLoading) {
+      if (!isActiveRef.current) {
+        isActiveRef.current = true;
+        incrementActiveLoaders();
+      }
+    } else {
+      if (isActiveRef.current) {
+        isActiveRef.current = false;
+        decrementActiveLoaders();
+      }
+    }
+
+    return () => {
+      if (isActiveRef.current) {
+        isActiveRef.current = false;
+        decrementActiveLoaders();
+      }
+    };
+  }, [isLoading]);
 
   // Function to hide loader with smooth fade transition
   const hideLoader = () => {
     setIsFading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 400); // 400ms smooth fade transition
+    }, 400);
     return () => clearTimeout(timer);
   };
 
-  // Trigger loader on initial page load
+  // Initial page load handler
   useEffect(() => {
     if (forceShow) {
       setIsLoading(true);
@@ -30,7 +76,7 @@ export default function PageLoader({ forceShow = false }: PageLoaderProps) {
     }
 
     if (document.readyState === "complete") {
-      const timer = setTimeout(hideLoader, 250);
+      const timer = setTimeout(hideLoader, 200);
       return () => clearTimeout(timer);
     } else {
       const handleLoad = () => hideLoader();
@@ -44,26 +90,34 @@ export default function PageLoader({ forceShow = false }: PageLoaderProps) {
     }
   }, [forceShow]);
 
-  // Trigger loader on client-side route changes
+  // Route change handler
   useEffect(() => {
     if (forceShow) return;
 
-    // Trigger full screen loader when route changes
     setIsLoading(true);
     setIsFading(false);
 
-    const timer = setTimeout(hideLoader, 350);
+    const timer = setTimeout(hideLoader, 300);
     return () => clearTimeout(timer);
   }, [pathname]);
 
   if (!isLoading) return null;
 
-  return (
+  const loaderUI = (
     <div
       className={`fixed inset-0 w-screen h-screen z-[99999999] flex items-center justify-center bg-[#F4F3EE] dark:bg-[#0A192F] transition-opacity duration-400 ease-out select-none ${
         isFading ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
-      style={{ top: 0, left: 0, right: 0, bottom: 0, width: "100vw", height: "100vh" }}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "100vw",
+        height: "100vh",
+        zIndex: 99999999,
+      }}
     >
       {/* 1. LEFT SIDE ANIMATED HERO PATTERN RIBBON */}
       <div className="absolute left-0 top-0 bottom-0 w-[30vw] max-w-sm z-0 pointer-events-none opacity-20 hidden sm:block [mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.7)_40%,rgba(0,0,0,0)_100%)] [-webkit-mask-image:linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0.7)_40%,rgba(0,0,0,0)_100%)]">
@@ -121,4 +175,10 @@ export default function PageLoader({ forceShow = false }: PageLoaderProps) {
       </div>
     </div>
   );
+
+  if (mounted && typeof document !== "undefined") {
+    return createPortal(loaderUI, document.body);
+  }
+
+  return loaderUI;
 }
