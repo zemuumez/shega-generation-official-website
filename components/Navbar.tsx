@@ -28,7 +28,7 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2.5 transition-all duration-300 hover:opacity-90 select-none flex-shrink-0 group"
         >
-          <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white p-1 shadow-sm border border-zinc-200/80 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+          <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl  p-1  group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
             <img
               src="/images/logo.png"
               alt="Shega Generation"

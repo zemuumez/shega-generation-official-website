@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { usePathname } from "next/navigation";
 
 interface PageLoaderProps {
   forceShow?: boolean;
@@ -26,7 +25,6 @@ function decrementActiveLoaders() {
 }
 
 export default function PageLoader({ forceShow = false }: PageLoaderProps) {
-  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isFading, setIsFading] = useState(false);
@@ -67,7 +65,7 @@ export default function PageLoader({ forceShow = false }: PageLoaderProps) {
     return () => clearTimeout(timer);
   };
 
-  // Initial page load handler
+  // Page load handler
   useEffect(() => {
     if (forceShow) {
       setIsLoading(true);
@@ -76,7 +74,7 @@ export default function PageLoader({ forceShow = false }: PageLoaderProps) {
     }
 
     if (document.readyState === "complete") {
-      const timer = setTimeout(hideLoader, 200);
+      const timer = setTimeout(hideLoader, 300);
       return () => clearTimeout(timer);
     } else {
       const handleLoad = () => hideLoader();
@@ -89,17 +87,6 @@ export default function PageLoader({ forceShow = false }: PageLoaderProps) {
       };
     }
   }, [forceShow]);
-
-  // Route change handler
-  useEffect(() => {
-    if (forceShow) return;
-
-    setIsLoading(true);
-    setIsFading(false);
-
-    const timer = setTimeout(hideLoader, 300);
-    return () => clearTimeout(timer);
-  }, [pathname]);
 
   if (!isLoading) return null;
 
