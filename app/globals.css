@@ -232,3 +232,17 @@ html.is-page-loading footer {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* Ultra-thin gray bordered text stroke style for hero section typography */
+.text-bordered-gray,
+.text-bordered-black {
+  -webkit-text-stroke: 0.5px rgba(113, 113, 122, 0.6);
+  paint-order: stroke fill;
+}
+
+@media (min-width: 640px) {
+  .text-bordered-gray,
+  .text-bordered-black {
+    -webkit-text-stroke: 0.8px rgba(113, 113, 122, 0.6);
+  }
+}
