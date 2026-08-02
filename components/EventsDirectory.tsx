@@ -2,9 +2,10 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import TypewriterTitle from "@/components/TypewriterTitle";
 import { safeImageUrl } from "@/sanity/lib/client";
+
 
 const TIME_FILTERS = ["All", "Upcoming", "Past"];
 const CATEGORY_FILTERS = ["All", "CTF", "Hackathon", "Hiking", "Tour", "Tech Training", "Charity"];
@@ -340,90 +341,121 @@ export default function EventsDirectory({
       )}
 
       {/* EVENT DETAIL MODAL DIALOG */}
-      {selectedEvent && (
-        <div
-          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in"
-          onClick={() => setSelectedEvent(null)}
-        >
-          <div
-            className="relative bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-zinc-200 z-50 my-auto overflow-hidden text-left"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {selectedEvent && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-3 sm:p-6 overflow-y-auto"
+            onClick={() => setSelectedEvent(null)}
           >
-            {/* Close Button */}
-            <button
-              type="button"
-              onClick={() => setSelectedEvent(null)}
-              className="absolute top-4 right-4 z-20 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all cursor-pointer"
-              aria-label="Close dialog"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative bg-white rounded-3xl max-w-2xl w-full my-auto shadow-2xl border border-zinc-200/80 z-[101] overflow-hidden text-left flex flex-col max-h-[88vh] sm:max-h-[85vh]"
+              onClick={(e) => e.stopPropagation()}
             >
-              ✕
-            </button>
-
-            {/* RECTANGULAR COVER IMAGE AS REQUESTED */}
-            <div className="relative w-full h-[240px] sm:h-[320px] rounded-2xl overflow-hidden mb-6 shadow-sm border border-zinc-200/80">
-              <Image
-                src={safeImageUrl(
-                  selectedEvent.coverImage,
-                  1200,
-                  "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1200"
-                )}
-                alt={selectedEvent.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            {/* Category & Date / Location Header */}
-            <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-              <span className="font-mono text-[9px] font-bold uppercase tracking-wider bg-ochre/10 text-ochre px-3 py-1 rounded-full border border-ochre/20">
-                {selectedEvent.type || "Event"}
-              </span>
-
-              <div className="flex flex-wrap items-center gap-4 text-zinc-500 font-medium">
-                <span>{formatDate(selectedEvent.eventDate)}</span>
-                {selectedEvent.location && <span>{selectedEvent.location}</span>}
-              </div>
-            </div>
-
-            {/* Event Title */}
-            <h2 className="font-display text-2xl sm:text-3xl font-bold uppercase text-ink mt-4 leading-tight">
-              {selectedEvent.title}
-            </h2>
-
-            {/* Description */}
-            <p className="mt-4 text-zinc-600 text-sm sm:text-base leading-relaxed font-sans whitespace-pre-line">
-              {renderDescriptionText(selectedEvent.description) ||
-                "Join Shega Generation students, tech leaders, and community members for an interactive gathering filled with technology demonstrations, workshops, and youth innovation."}
-            </p>
-
-            {/* Action / Registration Link (If Available) */}
-            <div className="mt-8 pt-4 border-t border-zinc-100 flex items-center justify-between gap-4">
-              <a
-                href={
-                  selectedEvent.registrationLink ||
-                  (selectedEvent.slug?.current
-                    ? `/events/${selectedEvent.slug.current}`
-                    : "/contact")
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-ochre text-white px-7 py-3.5 rounded-full font-mono text-xs font-bold uppercase tracking-wider hover:bg-ochre-dark transition-all shadow-md"
-              >
-                <span>Register &amp; Learn More</span>
-                <span>&rarr;</span>
-              </a>
-
-              <button
+              {/* Floating Glassmorphic Close Button */}
+              {/* <button
                 type="button"
                 onClick={() => setSelectedEvent(null)}
-                className="text-xs font-mono text-zinc-500 hover:text-zinc-900 underline"
+                className="absolute top-4 right-4 z-30 bg-black/60 hover:bg-black/85 text-white w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all shadow-md backdrop-blur-md cursor-pointer border border-white/20"
+                aria-label="Close dialog"
               >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+                ✕
+              </button> */}
+
+              {/* SCROLLABLE CONTENT BODY */}
+              <div className="overflow-y-auto custom-scrollbar p-6 sm:p-8 space-y-6">
+                {/* COVER IMAGE WITH OVERLAY BADGE */}
+                <div className="relative w-full h-[220px] sm:h-[300px] rounded-2xl overflow-hidden shadow-sm border border-zinc-200/80 bg-zinc-100 flex-shrink-0">
+                  <Image
+                    src={safeImageUrl(
+                      selectedEvent.coverImage,
+                      1200,
+                      "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1200"
+                    )}
+                    alt={selectedEvent.title}
+                    fill
+                    className="object-cover"
+                  />
+
+                  {/* Category Pill Overlay */}
+                  {selectedEvent.type && (
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-wider bg-black/65 backdrop-blur-md text-white px-3.5 py-1.5 rounded-full border border-white/25 shadow-xs">
+                        {selectedEvent.type}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Date & Location Header */}
+                <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono border-b border-zinc-100 pb-3">
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-ochre bg-ochre/10 px-3 py-1 rounded-full border border-ochre/20">
+                    {selectedEvent.type || "Event"}
+                  </span>
+
+                  <div className="flex flex-wrap items-center gap-4 text-zinc-500 font-medium">
+                    <span className="flex items-center gap-1.5">
+                      <span>📅</span>
+                      <span>{formatDate(selectedEvent.eventDate)}</span>
+                    </span>
+                    {selectedEvent.location && (
+                      <span className="flex items-center gap-1.5">
+                        <span>📍</span>
+                        <span>{selectedEvent.location}</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Event Title */}
+                <h2 className="font-display text-2xl sm:text-3xl font-black uppercase text-ink leading-tight tracking-tight">
+                  {selectedEvent.title}
+                </h2>
+
+                {/* Full Description */}
+                <div className="text-zinc-600 text-sm sm:text-base leading-relaxed font-sans whitespace-pre-line space-y-3">
+                  {renderDescriptionText(selectedEvent.description) ||
+                    "Join Shega Generation students, tech leaders, and community members for an interactive gathering filled with technology demonstrations, workshops, and youth innovation."}
+                </div>
+              </div>
+
+              {/* STICKY BOTTOM ACTION FOOTER */}
+              <div className="p-4 sm:px-8 sm:py-4.5 bg-zinc-50/90 backdrop-blur-md border-t border-zinc-200/80 flex items-center justify-between gap-4 flex-shrink-0">
+                <a
+                  href={
+                    selectedEvent.registrationLink ||
+                    (selectedEvent.slug?.current
+                      ? `/events/${selectedEvent.slug.current}`
+                      : "/contact")
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-ochre text-white px-7 py-3 rounded-full font-mono text-xs font-bold uppercase tracking-wider hover:bg-ochre-dark transition-all shadow-md group cursor-pointer"
+                >
+                  <span>Register &amp; Learn More</span>
+                  <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedEvent(null)}
+                  className="text-xs font-mono font-bold text-zinc-500 hover:text-zinc-900 transition-colors px-3 py-2 cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
