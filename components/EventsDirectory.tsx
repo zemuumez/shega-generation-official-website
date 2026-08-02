@@ -202,14 +202,11 @@ export default function EventsDirectory({
 
                 {/* ELEGANT CARD TEXT LAYOUT */}
                 <div className="mt-4 w-full px-1">
-                  {/* Title + Arrow Row */}
+                  {/* Title */}
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-ink group-hover:text-ochre transition-colors leading-snug line-clamp-2">
                       {event.title}
                     </h3>
-                    <span className="text-base text-zinc-400 group-hover:text-ochre group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 flex-shrink-0 pt-0.5">
-                      &nearr;
-                    </span>
                   </div>
 
                   {/* Date & Location Line */}
