@@ -27,10 +27,10 @@ export default defineType({
       name: "category",
       title: "Challenge Category",
       type: "string",
-      initialValue: "Timered Q&A",
+      initialValue: "Timed Q&A",
       options: {
         list: [
-          { title: "Timered Q&A (Quiz)", value: "Timered Q&A" },
+          { title: "Timed Q&A (Quiz)", value: "Timed Q&A" },
           { title: "Modern Challenges", value: "Modern Challenges" },
           { title: "Take-Home Assignment", value: "Take-Home Assignment" },
           { title: "Mini CTF", value: "Mini CTF" },

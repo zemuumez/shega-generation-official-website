@@ -508,7 +508,7 @@ export const deskStructure: StructureResolver = (S) =>
               S.divider(),
               S.listItem()
                 .id("challengesQuizzesList")
-                .title("Quizzes & Timered Q&A")
+                .title("Quizzes & Timed Q&A")
                 .icon(HelpCircleIcon)
                 .child(
                   S.documentTypeList("challengeQuiz")

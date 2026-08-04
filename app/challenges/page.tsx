@@ -7,7 +7,7 @@ import { demoQuizzes, demoLeaderboard } from "@/lib/demoData";
 export const metadata: Metadata = {
   title: "Challenges & Quizzes | Shega Generation (ሸጋ ትውልድ)",
   description:
-    "Test your speed and algorithmic problem solving with timered quizzes, modern challenges, and live leaderboards at Shega Generation.",
+    "Test your speed and algorithmic problem solving with timed quizzes, modern challenges, and live leaderboards at Shega Generation.",
   openGraph: {
     title: "Challenges & Arena | Shega Generation",
     description:
