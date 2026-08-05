@@ -21,7 +21,7 @@ interface BroadcastQuestion {
   status: "IDLE" | "ACTIVE" | "INTERMISSION" | "EXPIRED" | "COMPLETED";
 }
 
-export default function LiveQuizParticipantPage({ params }: { params: { topicSlug: string } }) {
+export default function MobileLiveQuizPage({ params }: { params: { topicSlug: string } }) {
   const [userId] = useState<string>(() => `user_${Math.random().toString(36).substring(2, 9)}`);
   const [playerName, setPlayerName] = useState<string>("");
   const [playerHandle, setPlayerHandle] = useState<string>("");
@@ -59,7 +59,7 @@ export default function LiveQuizParticipantPage({ params }: { params: { topicSlu
       try {
         const data: BroadcastQuestion = JSON.parse(e.data);
         
-        // Reset option selection if new question launched
+        // Reset selection if new question launched
         if (activeQuestion?.questionId !== data.questionId) {
           setSelectedOption(null);
           setIsSubmitted(false);
@@ -116,21 +116,21 @@ export default function LiveQuizParticipantPage({ params }: { params: { topicSlu
   // Registration step
   if (!isRegistered) {
     return (
-      <div className="min-h-screen bg-[#0A192F] text-white flex items-center justify-center p-4 font-sans selection:bg-ochre selection:text-white">
+      <div className="min-h-screen bg-[#000000] text-white flex items-center justify-center p-4 font-sans selection:bg-[#10B981] selection:text-black">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-[#0F172A] rounded-3xl p-6 sm:p-8 max-w-md w-full border border-zinc-800 shadow-2xl text-center"
+          className="bg-[#0F172A] rounded-3xl p-6 sm:p-8 max-w-md w-full border border-[#10B981]/50 shadow-[0_0_30px_rgba(16,185,129,0.15)] text-center"
         >
-          <span className="w-14 h-14 mx-auto rounded-2xl bg-ochre/20 text-ochre text-3xl flex items-center justify-center mb-4 border border-ochre/30">
+          <span className="w-14 h-14 mx-auto rounded-2xl bg-[#10B981]/20 text-[#10B981] text-3xl flex items-center justify-center mb-4 border border-[#10B981]/30">
             ⚡
           </span>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold font-display text-white mb-2">
-            Join Live Challenge Session
+          <h1 className="text-2xl font-bold font-display text-white mb-2">
+            Join Live Challenge Battle
           </h1>
-          <p className="text-xs font-mono text-zinc-400 mb-6">
-            Topic: <span className="text-ochre uppercase font-bold">{params.topicSlug.replace(/-/g, " ")}</span>
+          <p className="text-xs font-mono text-[#94A3B8] mb-6">
+            TOPIC: <span className="text-[#10B981] font-bold uppercase">{params.topicSlug.replace(/-/g, " ")}</span>
           </p>
 
           <form
@@ -138,7 +138,7 @@ export default function LiveQuizParticipantPage({ params }: { params: { topicSlu
               e.preventDefault();
               if (playerName.trim()) setIsRegistered(true);
             }}
-            className="space-y-4 text-left"
+            className="space-y-4 text-left font-sans"
           >
             <div>
               <label className="block text-xs font-mono font-bold text-zinc-300 uppercase mb-1">
@@ -149,8 +149,8 @@ export default function LiveQuizParticipantPage({ params }: { params: { topicSlu
                 required
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
-                placeholder="e.g. Abebe Bikila"
-                className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                placeholder="e.g. Kidus M."
+                className="w-full px-4 py-3.5 rounded-xl bg-black/50 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]"
               />
             </div>
 
@@ -162,14 +162,14 @@ export default function LiveQuizParticipantPage({ params }: { params: { topicSlu
                 type="text"
                 value={playerHandle}
                 onChange={(e) => setPlayerHandle(e.target.value)}
-                placeholder="e.g. @abebe_code"
-                className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                placeholder="e.g. @kidus_code"
+                className="w-full px-4 py-3.5 rounded-xl bg-black/50 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-bold text-sm py-4 rounded-xl shadow-md transition-all mt-2"
+              className="w-full bg-[#10B981] hover:bg-[#059669] text-black font-mono font-extrabold text-sm py-4 rounded-xl shadow-md transition-all mt-2"
             >
               Enter Live Arena Now 🔥
             </button>
@@ -179,85 +179,105 @@ export default function LiveQuizParticipantPage({ params }: { params: { topicSlu
     );
   }
 
-  // Timer Bar Color Calculation: Green -> Yellow -> Red
+  // Timer ratio and color calculation (Green -> Yellow -> Red)
   const timerRatio = activeQuestion
     ? activeQuestion.remainingSeconds / (activeQuestion.timerDuration || 45)
     : 1;
 
-  let timerColorClass = "bg-emerald-500";
+  let timerColorClass = "bg-[#10B981]"; // Green
   if (timerRatio < 0.25) {
-    timerColorClass = "bg-red-500 animate-pulse";
+    timerColorClass = "bg-[#EF4444] animate-pulse"; // Crimson Red
   } else if (timerRatio < 0.5) {
-    timerColorClass = "bg-amber-400";
+    timerColorClass = "bg-[#F59E0B]"; // Cyber Amber
   }
 
+  const difficulty = activeQuestion?.difficulty || "MEDIUM";
+  const points = activeQuestion?.points || (difficulty === "EASY" ? 100 : difficulty === "HARD" ? 400 : 200);
+
   return (
-    <div className="min-h-screen bg-[#0A192F] text-white flex flex-col justify-between p-4 sm:p-6 font-sans selection:bg-ochre selection:text-white">
-      {/* Mobile Header Bar */}
-      <header className="max-w-md mx-auto w-full flex items-center justify-between gap-4 pb-4 border-b border-zinc-800">
-        <div>
-          <span className="text-[11px] font-mono text-ochre font-bold uppercase tracking-wider block">
-            {playerName} ({playerHandle || `@${playerName.toLowerCase().replace(/\s+/g, "_")}`})
-          </span>
-          <h2 className="text-sm font-bold font-display text-white truncate max-w-[200px]">
-            {params.topicSlug.replace(/-/g, " ")}
-          </h2>
+    <div className="min-h-screen bg-[#000000] text-white flex flex-col justify-between p-3 sm:p-6 font-sans selection:bg-[#10B981] selection:text-black">
+      {/* Mobile Header Bar matching Mockup Page 3: [≡] SG ARENA | TOPIC: ... | 👤 User */}
+      <header className="max-w-md mx-auto w-full bg-[#0F172A] border border-zinc-800 rounded-2xl p-3.5 flex items-center justify-between gap-2 shadow-md font-mono text-xs">
+        <div className="flex items-center gap-2">
+          <span className="text-[#10B981] font-bold text-sm">≡</span>
+          <span className="font-extrabold text-white">SG ARENA</span>
         </div>
 
-        <div className="text-right font-mono">
-          <span className="text-[10px] font-bold text-zinc-400 block uppercase">SCORE</span>
-          <strong className="text-ochre font-extrabold text-lg">{userScore} pts</strong>
+        <div className="text-center truncate max-w-[140px]">
+          <span className="text-[10px] text-[#94A3B8] block">TOPIC</span>
+          <span className="text-[#10B981] font-bold uppercase truncate block text-[11px]">
+            {params.topicSlug.replace(/-/g, " ")}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1 rounded-xl border border-zinc-800">
+          <span className="text-zinc-400">👤</span>
+          <span className="font-bold text-white text-[11px] truncate max-w-[80px]">
+            {playerName}
+          </span>
         </div>
       </header>
 
-      {/* Main Single Question Display */}
-      <main className="max-w-md mx-auto w-full my-auto py-6">
+      {/* Main Single Question Mobile Display */}
+      <main className="max-w-md mx-auto w-full my-auto py-4">
         <AnimatePresence mode="wait">
-          {/* State 1: Active Live Question */}
+          {/* Active Question State */}
           {activeQuestion && activeQuestion.status === "ACTIVE" && (
             <motion.div
               key={activeQuestion.questionId}
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              className="bg-[#0F172A] rounded-3xl p-6 border border-zinc-800 shadow-2xl relative overflow-hidden"
+              exit={{ opacity: 0, y: -10 }}
+              className="bg-[#0F172A] rounded-3xl p-5 sm:p-6 border border-zinc-800 shadow-2xl relative overflow-hidden space-y-4"
             >
-              {/* Question Header & Countdown Badge */}
-              <div className="flex items-center justify-between gap-3 mb-4">
-                <span className="px-3 py-1 rounded-full bg-white/10 font-mono text-xs font-bold text-ochre">
-                  Question #{activeQuestion.orderIndex || 1}
-                </span>
-
-                <div className="flex items-center gap-2 bg-ochre/20 border border-ochre/40 px-3.5 py-1.5 rounded-full font-mono text-xs font-bold text-ochre">
-                  <span>⏱️</span>
-                  <span className="text-sm font-extrabold text-white">
-                    {activeQuestion.remainingSeconds}s
+              {/* High-Contrast Progress Bar: Green -> Yellow -> Red */}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-[11px] font-mono font-bold text-zinc-400">
+                  <span>COUNTDOWN TIMER</span>
+                  <span className={timerRatio < 0.25 ? "text-[#EF4444]" : timerRatio < 0.5 ? "text-[#F59E0B]" : "text-[#10B981]"}>
+                    00:{activeQuestion.remainingSeconds < 10 ? `0${activeQuestion.remainingSeconds}` : activeQuestion.remainingSeconds}s
                   </span>
+                </div>
+                <div className="w-full h-3 bg-black/80 rounded-full overflow-hidden border border-zinc-800 p-0.5">
+                  <div
+                    style={{ width: `${Math.max(0, timerRatio * 100)}%` }}
+                    className={`h-full rounded-full transition-all duration-1000 ${timerColorClass}`}
+                  />
                 </div>
               </div>
 
-              {/* Visual Countdown Bar: Green -> Yellow -> Red */}
-              <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden mb-6">
-                <div
-                  style={{ width: `${Math.max(0, timerRatio * 100)}%` }}
-                  className={`h-full transition-all duration-1000 ${timerColorClass}`}
-                />
+              {/* Difficulty Badge */}
+              <div className="flex items-center justify-between">
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-mono font-extrabold uppercase border ${
+                    difficulty === "EASY"
+                      ? "bg-[#10B981]/20 border-[#10B981]/40 text-[#10B981]"
+                      : difficulty === "HARD"
+                      ? "bg-[#EF4444]/20 border-[#EF4444]/40 text-[#EF4444]"
+                      : "bg-[#F59E0B]/20 border-[#F59E0B]/40 text-[#F59E0B]"
+                  }`}
+                >
+                  [ {difficulty} - {points} Pts ]
+                </span>
+
+                <span className="text-xs font-mono text-zinc-400 font-bold">
+                  Q{activeQuestion.orderIndex || 1}
+                </span>
               </div>
 
               {/* Question Text */}
-              <h3 className="text-lg sm:text-xl font-bold font-display text-white mb-4 leading-snug">
+              <h3 className="text-base sm:text-lg font-bold font-display text-white leading-snug">
                 {activeQuestion.questionText}
               </h3>
 
-              {/* Optional Code Snippet Block */}
               {activeQuestion.codeSnippet && (
-                <pre className="mb-6 bg-black/60 rounded-xl p-4 border border-zinc-800 font-mono text-xs text-emerald-400 overflow-x-auto whitespace-pre">
+                <pre className="bg-black rounded-xl p-3.5 border border-zinc-800 font-mono text-xs text-[#10B981] overflow-x-auto whitespace-pre">
                   {activeQuestion.codeSnippet}
                 </pre>
               )}
 
-              {/* Large Touch Target Multiple Choice Options */}
-              <div className="space-y-3.5 mb-6">
+              {/* Full-width Touch Target Options with Emerald Glow */}
+              <div className="space-y-3 pt-2">
                 {activeQuestion.options.map((opt, idx) => {
                   const isSelected = selectedOption === idx;
                   const isLocked = isSubmitted || activeQuestion.remainingSeconds <= 0;
@@ -267,117 +287,124 @@ export default function LiveQuizParticipantPage({ params }: { params: { topicSlu
                       key={idx}
                       disabled={isLocked}
                       onClick={() => handleSelectOption(idx)}
-                      className={`w-full text-left p-4 sm:p-5 rounded-2xl font-sans text-sm font-semibold transition-all flex items-center justify-between border min-h-[60px] ${
+                      className={`w-full text-left p-4 rounded-2xl font-sans text-sm font-semibold transition-all flex items-center justify-between border min-h-[58px] ${
                         isSelected
-                          ? "bg-ochre text-white border-ochre scale-[1.02] shadow-md"
+                          ? "bg-[#10B981]/20 text-white border-[#10B981] shadow-[0_0_20px_rgba(16,185,129,0.4)] ring-2 ring-[#10B981]"
                           : isLocked
-                          ? "bg-zinc-900/60 border-zinc-800 text-zinc-500 cursor-not-allowed"
-                          : "bg-black/40 hover:bg-zinc-900 text-zinc-100 border-zinc-800 hover:border-zinc-700 active:scale-[0.99]"
+                          ? "bg-black/30 border-zinc-800 text-zinc-600 cursor-not-allowed"
+                          : "bg-black/60 hover:bg-zinc-800 text-zinc-200 border-zinc-800 active:scale-[0.99]"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="w-7 h-7 rounded-xl bg-white/10 font-mono text-xs font-bold flex items-center justify-center">
-                          {String.fromCharCode(65 + idx)}
+                        <span className={`w-7 h-7 rounded-xl font-mono text-xs font-bold flex items-center justify-center border ${
+                          isSelected
+                            ? "bg-[#10B981] text-black border-[#10B981]"
+                            : "bg-white/10 text-white border-transparent"
+                        }`}>
+                          ( {String.fromCharCode(65 + idx)} )
                         </span>
                         <span>{opt}</span>
                       </div>
+
+                      {isSelected && (
+                        <span className="text-[10px] font-mono text-[#10B981] font-extrabold uppercase px-2 py-0.5 rounded bg-[#10B981]/20 border border-[#10B981]/40">
+                          [SELECTED]
+                        </span>
+                      )}
                     </button>
                   );
                 })}
               </div>
 
-              {/* Submission Feedback */}
+              {/* Submission Result Feedback */}
               {submissionResult && (
                 <div
-                  className={`p-4 rounded-2xl font-mono text-xs font-bold border ${
+                  className={`p-3.5 rounded-xl font-mono text-xs font-bold border text-center ${
                     submissionResult.isCorrect
-                      ? "bg-emerald-950/60 border-emerald-500/50 text-emerald-300"
-                      : "bg-red-950/60 border-red-500/50 text-red-300"
+                      ? "bg-[#10B981]/20 border-[#10B981]/40 text-[#10B981]"
+                      : "bg-[#EF4444]/20 border-[#EF4444]/40 text-[#EF4444]"
                   }`}
                 >
                   {submissionResult.isCorrect
-                    ? `🎉 Correct! +${submissionResult.pointsEarned} Points`
-                    : "❌ Incorrect Option."}
+                    ? `🎉 Correct Answer! +${submissionResult.pointsEarned} Pts`
+                    : "❌ Submitted. Processing leaderboard..."}
                 </div>
               )}
             </motion.div>
           )}
 
-          {/* State 2: 5-Second Leaderboard Intermission Phase */}
+          {/* Intermission Phase */}
           {activeQuestion && activeQuestion.status === "INTERMISSION" && (
             <motion.div
-              key="intermission-phase"
+              key="intermission"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#0F172A] rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-2xl text-center"
+              className="bg-[#0F172A] rounded-3xl p-6 border border-zinc-800 shadow-2xl text-center space-y-4"
             >
-              <div className="w-14 h-14 mx-auto rounded-full bg-amber-400/20 border border-amber-400 text-amber-400 text-2xl flex items-center justify-center mb-3">
+              <div className="w-12 h-12 mx-auto rounded-full bg-[#F59E0B]/20 text-[#F59E0B] text-2xl flex items-center justify-center border border-[#F59E0B]/40">
                 🏆
               </div>
 
-              <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono text-xs font-bold uppercase mb-3 inline-block">
-                5s Intermission • Live Ranking
-              </span>
-
-              <h3 className="text-xl font-bold font-display text-white mb-4">
-                Question Completed!
+              <h3 className="text-lg font-bold font-display text-white">
+                Question Intermission
               </h3>
 
-              {/* Intermission Rankings List */}
-              <div className="space-y-2 text-left font-mono text-xs mb-4 max-h-48 overflow-y-auto">
+              <div className="space-y-2 text-left font-mono text-xs max-h-48 overflow-y-auto">
                 {leaderboard.slice(0, 5).map((item, idx) => (
                   <div
                     key={item._id || idx}
                     className="p-3 rounded-xl bg-black/40 border border-zinc-800 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-amber-400">#{idx + 1}</span>
+                      <span className="font-bold text-[#F59E0B]">#{idx + 1}</span>
                       <span className="font-bold text-white">{item.participantName}</span>
                     </div>
-                    <strong className="text-ochre font-extrabold">{item.score} pts</strong>
+                    <strong className="text-[#10B981] font-extrabold">{item.score} Pts</strong>
                   </div>
                 ))}
               </div>
-
-              <p className="text-xs font-mono text-zinc-400">
-                Next question auto-pushing shortly...
-              </p>
             </motion.div>
           )}
 
-          {/* State 3: Waiting / Idle */}
+          {/* Idle State */}
           {(!activeQuestion || activeQuestion.status === "IDLE") && (
             <motion.div
-              key="idle-state"
+              key="idle"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="bg-[#0F172A] rounded-3xl p-8 border border-zinc-800 text-center shadow-xl"
+              className="bg-[#0F172A] rounded-3xl p-8 border border-zinc-800 text-center shadow-xl space-y-4"
             >
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-ochre/10 text-ochre text-3xl flex items-center justify-center mb-4 border border-ochre/20">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-[#10B981]/15 text-[#10B981] text-3xl flex items-center justify-center border border-[#10B981]/30">
                 ⏳
               </div>
 
-              <h3 className="text-xl font-bold font-display text-white mb-2">
-                Waiting for Operator...
+              <h3 className="text-xl font-bold font-display text-white">
+                Waiting for Admin Broadcast...
               </h3>
-              <p className="text-xs font-mono text-zinc-400 leading-relaxed mb-6">
-                The live quiz operator will broadcast the next question to all connected screens momentarily.
+              <p className="text-xs font-mono text-zinc-400">
+                The operator will push the next question to your screen shortly.
               </p>
 
-              <div className="p-3 rounded-xl bg-black/40 border border-zinc-800 text-xs font-mono text-zinc-400">
-                Connected Device ID: <strong className="text-white">{userId.slice(0, 10)}</strong>
+              <div className="p-3 rounded-xl bg-black/50 border border-zinc-800 text-xs font-mono text-zinc-400">
+                Current Arena Points: <strong className="text-[#10B981] font-bold">{userScore} Pts</strong>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      {/* Footer Navigation */}
-      <footer className="max-w-md mx-auto w-full pt-4 border-t border-zinc-800 text-center text-xs font-mono text-zinc-500">
-        <Link href="/challenges" className="hover:text-white transition-colors">
-          ← Exit to Challenge Hub
-        </Link>
+      {/* Page 3 Locked Footer: [ L O C K E D  &  S U B M I T T E D ] */}
+      <footer className="max-w-md mx-auto w-full pt-2 text-center">
+        {isSubmitted || (activeQuestion && activeQuestion.remainingSeconds <= 0) ? (
+          <div className="w-full bg-[#10B981]/20 border border-[#10B981]/50 text-[#10B981] font-mono text-xs font-extrabold py-3.5 rounded-2xl shadow-md tracking-widest uppercase">
+            [ L O C K E D &amp; S U B M I T T E D ]
+          </div>
+        ) : (
+          <Link href="/challenges" className="text-xs font-mono text-zinc-500 hover:text-white transition-colors">
+            ← Exit to Challenge Hub
+          </Link>
+        )}
       </footer>
     </div>
   );
