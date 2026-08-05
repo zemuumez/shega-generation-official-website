@@ -19,6 +19,7 @@ import contactPageSettings from "./contactPageSettings";
 import themeSettings from "./themeSettings";
 import challengeQuiz from "./challengeQuiz";
 import challengeSubmission from "./challengeSubmission";
+import quizTopic from "./quizTopic";
 
 export const schemaTypes = [
   event,
@@ -42,6 +43,7 @@ export const schemaTypes = [
   themeSettings,
   challengeQuiz,
   challengeSubmission,
+  quizTopic,
 ];
 
 

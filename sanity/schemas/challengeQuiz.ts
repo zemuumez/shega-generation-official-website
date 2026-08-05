@@ -24,6 +24,13 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "topic",
+      title: "Associated Topic",
+      type: "reference",
+      to: [{ type: "quizTopic" }],
+      description: "Filterable topic domain for live broadcast sessions.",
+    }),
+    defineField({
       name: "category",
       title: "Challenge Category",
       type: "string",
@@ -40,15 +47,14 @@ export default defineType({
     }),
     defineField({
       name: "difficulty",
-      title: "Difficulty Level",
+      title: "Overall Difficulty Level",
       type: "string",
-      initialValue: "Medium",
+      initialValue: "MEDIUM",
       options: {
         list: [
-          { title: "Easy", value: "Easy" },
-          { title: "Medium", value: "Medium" },
-          { title: "Hard", value: "Hard" },
-          { title: "Genius", value: "Genius" },
+          { title: "Easy (100 pts)", value: "EASY" },
+          { title: "Medium (200 pts)", value: "MEDIUM" },
+          { title: "Hard (400 pts)", value: "HARD" },
         ],
       },
     }),
@@ -60,10 +66,10 @@ export default defineType({
     }),
     defineField({
       name: "timePerQuestion",
-      title: "Time Limit per Question (seconds)",
+      title: "Default Time Limit per Question (seconds)",
       type: "number",
-      initialValue: 20,
-      description: "Default countdown time in seconds for each question in this quiz.",
+      initialValue: 45,
+      description: "Default countdown time in seconds (pre-populated to 45s). Editable prior to live broadcast.",
       validation: (Rule) => Rule.min(5).max(300),
     }),
     defineField({
@@ -71,13 +77,6 @@ export default defineType({
       title: "Published & Active",
       type: "boolean",
       initialValue: true,
-      description: "Allow players to take this quiz on the frontend.",
-    }),
-    defineField({
-      name: "isFeatured",
-      title: "Featured Challenge",
-      type: "boolean",
-      initialValue: false,
     }),
     defineField({
       name: "questions",
@@ -96,11 +95,42 @@ export default defineType({
               validation: (Rule) => Rule.required(),
             }),
             defineField({
+              name: "orderIndex",
+              title: "Sequential Order Index",
+              type: "number",
+              initialValue: 1,
+              description: "1, 2, 3... used for sequence ordering and auto-push loops.",
+            }),
+            defineField({
+              name: "questionType",
+              title: "Question Type",
+              type: "string",
+              initialValue: "MULTIPLE_CHOICE",
+              options: {
+                list: [
+                  { title: "Multiple Choice", value: "MULTIPLE_CHOICE" },
+                  { title: "True / False", value: "TRUE_FALSE" },
+                ],
+              },
+            }),
+            defineField({
+              name: "difficulty",
+              title: "Question Difficulty",
+              type: "string",
+              initialValue: "MEDIUM",
+              options: {
+                list: [
+                  { title: "EASY (100 pts)", value: "EASY" },
+                  { title: "MEDIUM (200 pts)", value: "MEDIUM" },
+                  { title: "HARD (400 pts)", value: "HARD" },
+                ],
+              },
+            }),
+            defineField({
               name: "codeSnippet",
               title: "Code Snippet / Context (Optional)",
               type: "text",
               rows: 4,
-              description: "Optional code block or formatted text block for this question.",
             }),
             defineField({
               name: "options",
@@ -108,14 +138,12 @@ export default defineType({
               type: "array",
               of: [{ type: "string" }],
               validation: (Rule) => Rule.min(2).max(6).required(),
-              description: "List choices (e.g. Option A, Option B, Option C, Option D).",
             }),
             defineField({
               name: "correctOptionIndex",
               title: "Correct Option Index (0-based)",
               type: "number",
               initialValue: 0,
-              description: "Index of the correct answer in the options list (0 for 1st, 1 for 2nd, 2 for 3rd, 3 for 4th).",
               validation: (Rule) => Rule.min(0).max(5).required(),
             }),
             defineField({
@@ -123,25 +151,24 @@ export default defineType({
               title: "Explanation (Optional)",
               type: "text",
               rows: 2,
-              description: "Brief explanation shown after answering or in the results breakdown.",
             }),
             defineField({
               name: "points",
-              title: "Base Points for Question",
+              title: "Custom Base Points (Optional)",
               type: "number",
-              initialValue: 100,
+              description: "Leave empty to use difficulty level points (EASY: 100, MEDIUM: 200, HARD: 400).",
             }),
           ],
           preview: {
             select: {
               title: "questionText",
-              options: "options",
+              order: "orderIndex",
+              difficulty: "difficulty",
             },
-            prepare({ title, options }) {
-              const count = options?.length || 0;
+            prepare({ title, order, difficulty }) {
               return {
-                title: title || "Untitled Question",
-                subtitle: `${count} options available`,
+                title: `#${order || 1} - ${title || "Untitled Question"}`,
+                subtitle: `Difficulty: ${difficulty || "MEDIUM"}`,
               };
             },
           },
@@ -159,7 +186,7 @@ export default defineType({
     prepare({ title, category, difficulty, published }) {
       return {
         title: title || "Untitled Quiz",
-        subtitle: `${category || "Quiz"} • ${difficulty || "Medium"} • ${published ? "Active" : "Draft"}`,
+        subtitle: `${category || "Quiz"} • ${difficulty || "MEDIUM"} • ${published ? "Active" : "Draft"}`,
       };
     },
   },

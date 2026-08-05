@@ -40,10 +40,11 @@ interface LeaderboardEntry {
 }
 
 const CATEGORIES = [
-  { id: "Timed Q&A", label: "Timed Q&A / Quiz", icon: "⚡", active: true },
+  { id: "Live Timed Quiz", label: "Live Timed Quiz", icon: "⚡", active: true },
+  { id: "Timed Q&A", label: "Timed Q&A", icon: "⏱️", active: false, badge: "Coming Soon" },
+  { id: "Mini CTF", label: "Mini CTF", icon: "🚩", active: false, badge: "Coming Soon" },
+  { id: "Hometake Assignment", label: "Hometake Assignment", icon: "🏠", active: false, badge: "Coming Soon" },
   { id: "Modern Challenges", label: "Modern Challenges", icon: "🚀", active: false, badge: "Coming Soon" },
-  { id: "Take-Home Assignment", label: "Take-Home Assignment", icon: "🏠", active: false, badge: "Coming Soon" },
-  { id: "Mini CTF", label: "Mini CTF", icon: "🛡️", active: false, badge: "Coming Soon" },
 ];
 
 export default function ChallengeDirectory({
@@ -58,7 +59,7 @@ export default function ChallengeDirectory({
   customSubtitle?: string;
 }) {
   const [mainView, setMainView] = useState<"challenges" | "leaderboard">("challenges");
-  const [activeCategory, setActiveCategory] = useState("Timed Q&A");
+  const [activeCategory, setActiveCategory] = useState("Live Timed Quiz");
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(initialLeaderboard || []);
   const [selectedQuiz, setSelectedQuiz] = useState<ChallengeQuiz | null>(null);
 
@@ -305,8 +306,8 @@ export default function ChallengeDirectory({
               })}
             </div>
 
-            {/* Timed Q&A View */}
-            {activeCategory === "Timed Q&A" && (
+            {/* Live Timed Quiz View */}
+            {activeCategory === "Live Timed Quiz" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {quizzes.map((quiz) => (
                   <div
@@ -332,18 +333,26 @@ export default function ChallengeDirectory({
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-zinc-100 flex items-center justify-between">
+                    <div className="pt-4 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-3">
                       <div className="text-xs font-mono text-zinc-500">
                         Difficulty: <strong className="text-navy font-bold">{quiz.difficulty || "Medium"}</strong> ({quiz.questions?.length || 5} Questions)
                       </div>
 
-                      <button
-                        onClick={() => startQuizRegistration(quiz)}
-                        className="bg-ochre hover:bg-ochre-dark text-white font-mono text-xs font-bold px-5 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5"
-                      >
-                        <span>Start Challenge</span>
-                        <span>→</span>
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={`/challenges/quiz/${quiz.slug?.current || quiz._id}`}
+                          className="bg-navy hover:bg-navy/90 text-white font-mono text-xs font-bold px-4 py-2.5 rounded-xl transition-all"
+                        >
+                          Join Live Stream ⚡
+                        </a>
+                        <button
+                          onClick={() => startQuizRegistration(quiz)}
+                          className="bg-ochre hover:bg-ochre-dark text-white font-mono text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5"
+                        >
+                          <span>Play Solo</span>
+                          <span>→</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -351,7 +360,7 @@ export default function ChallengeDirectory({
             )}
 
             {/* Coming Soon Categories */}
-            {activeCategory !== "Timed Q&A" && (
+            {activeCategory !== "Live Timed Quiz" && (
               <div className="bg-white rounded-3xl p-8 sm:p-12 border border-zinc-200 text-center max-w-2xl mx-auto my-6">
                 <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-50 text-amber-600 text-3xl flex items-center justify-center mb-4 border border-amber-200">
                   {CATEGORIES.find((c) => c.id === activeCategory)?.icon || "🚀"}

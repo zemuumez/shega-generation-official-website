@@ -516,6 +516,16 @@ export const deskStructure: StructureResolver = (S) =>
                     .title("All Quizzes & Challenges")
                 ),
               S.listItem()
+                .id("quizTopicsList")
+                .title("Quiz Topics & Domains")
+                .icon(FolderIcon)
+                .child(
+                  S.documentTypeList("quizTopic")
+                    .id("dtQuizTopicList")
+                    .title("Quiz Topics")
+                    .defaultOrdering([{ field: "orderIndex", direction: "asc" }])
+                ),
+              S.listItem()
                 .id("challengesSubmissionsList")
                 .title("Leaderboard Submissions")
                 .icon(UserIcon)

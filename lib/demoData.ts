@@ -665,6 +665,33 @@ export const demoStoryMilestones = [
   },
 ];
 
+export const demoTopics = [
+  {
+    _id: "topic-web-dev-algos",
+    title: "Web Development & Algorithmic Speed",
+    slug: { current: "web-dev-algorithms" },
+    description: "High-speed questions on React 19, Next.js App Router, CSS Container Queries, HTTP caching, and Data Structure complexities.",
+    orderIndex: 1,
+    isActive: true,
+  },
+  {
+    _id: "topic-cybersecurity",
+    title: "Cybersecurity & Cryptography",
+    slug: { current: "cybersecurity-crypto" },
+    description: "Web security fundamentals, SQL injection defense, CORS/SOP policies, hashing algorithms, and Avalanche Effect.",
+    orderIndex: 2,
+    isActive: true,
+  },
+  {
+    _id: "topic-ethiopian-tech",
+    title: "Ethiopian Tech History & Shega Culture",
+    slug: { current: "ethiopian-tech-shega" },
+    description: "Indigenous knowledge, Ethiopian computing pioneers, INSA & AI Institute milestones, and Shega values.",
+    orderIndex: 3,
+    isActive: true,
+  },
+];
+
 export const demoQuizzes = [
   {
     _id: "demo-quiz-1",
