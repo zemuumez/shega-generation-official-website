@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getLiveState, generateQuestionToken } from "@/lib/quizLiveEngine";
+import { getLiveState, setLiveState, generateQuestionToken, advanceToNextQuestion } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -59,12 +59,20 @@ export async function GET(req: NextRequest) {
             status: liveState.status,
             isLocked: liveState.isLocked,
             autoPush: liveState.autoPush,
+            allowSoloPlay: liveState.allowSoloPlay,
           };
 
           sendEvent("QUESTION_BROADCAST", participantPayload);
 
+          // Auto-Push Trigger: When countdown hits 00:00, trigger 5s Intermission & Auto-Push Question #orderIndex+1
           if (remainingSeconds <= 0 && liveState.status === "ACTIVE") {
-            sendEvent("QUESTION_EXPIRED", { questionId: liveState.questionId });
+            if (liveState.autoPush) {
+              await advanceToNextQuestion(liveState);
+            } else {
+              liveState.status = "EXPIRED";
+              await setLiveState(liveState);
+              sendEvent("QUESTION_EXPIRED", { questionId: liveState.questionId });
+            }
           }
         } catch (err) {
           console.error("SSE stream error:", err);

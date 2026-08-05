@@ -9,6 +9,7 @@ import {
   getDifficultyPoints,
   setAllowSoloPlay,
   getAllowSoloPlay,
+  advanceToNextQuestion,
 } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
@@ -140,50 +141,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No active session to advance." }, { status: 400 });
     }
 
-    // 1. Enter 5-second Leaderboard Intermission Phase first
-    currentState.status = "INTERMISSION";
-    await setLiveState(currentState);
-
-    // Schedule auto-push after 5 seconds
-    setTimeout(async () => {
-      const nextIndex = (currentState.orderIndex || 1) + 1;
-      const questions = await getTopicSequence(currentState.topicId);
-      if (questions && nextIndex <= questions.length) {
-        const nextQ = questions.find((q: any) => q.orderIndex === nextIndex) || questions[nextIndex - 1];
-        if (nextQ) {
-          const durationSeconds = currentState.timerDuration || 45;
-          const now = Date.now();
-          const endTime = now + durationSeconds * 1000;
-          const points = nextQ.points || getDifficultyPoints(nextQ.difficulty || "MEDIUM");
-          const currentSoloState = await getAllowSoloPlay();
-
-          await setLiveState({
-            questionId: nextQ._key || nextQ._id || `q_${Date.now()}`,
-            topicId: currentState.topicId,
-            questionText: nextQ.questionText,
-            questionType: nextQ.questionType || "MULTIPLE_CHOICE",
-            codeSnippet: nextQ.codeSnippet,
-            options: nextQ.options || [],
-            difficulty: nextQ.difficulty || "MEDIUM",
-            points,
-            orderIndex: nextIndex,
-            timerDuration: durationSeconds,
-            startTime: now,
-            endTime,
-            isLocked: true,
-            autoPush: true,
-            allowSoloPlay: currentSoloState,
-            status: "ACTIVE",
-          });
-        }
-      } else {
-        // All questions completed
-        currentState.status = "COMPLETED";
-        currentState.isLocked = false;
-        await setLiveState(currentState);
-      }
-    }, 5000); // 5-second Leaderboard Intermission
-
+    await advanceToNextQuestion(currentState);
     return NextResponse.json({ ok: true, status: "INTERMISSION", intermissionDurationSeconds: 5 });
   }
 

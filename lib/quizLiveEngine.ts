@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { Redis } from "@upstash/redis";
+import { sanityClient } from "@/sanity/lib/client";
 
 const SECRET_KEY = process.env.QUIZ_HMAC_SECRET || "shega-generation-live-quiz-secret-2026";
 
@@ -135,6 +136,82 @@ export async function cacheTopicSequence(topicId: string, questions: any[]): Pro
 
 export async function getTopicSequence(topicId: string): Promise<any[] | null> {
   return await getCache(`quiz:live:sequence:${topicId}`);
+}
+
+// 6. Robust Auto-Advance Question Engine (Triggers 5s Intermission + Auto-Pushes Question #orderIndex+1)
+let isAdvancingLock = false;
+
+export async function advanceToNextQuestion(currentState: LiveQuestionPayload): Promise<void> {
+  if (!currentState || isAdvancingLock) return;
+  isAdvancingLock = true;
+
+  try {
+    // Transition to 5-second Leaderboard Intermission Phase
+    currentState.status = "INTERMISSION";
+    await setLiveState(currentState);
+
+    setTimeout(async () => {
+      try {
+        const nextIndex = (currentState.orderIndex || 1) + 1;
+        let questions: any[] = (await getTopicSequence(currentState.topicId)) || [];
+        
+        if (!questions || questions.length === 0) {
+          try {
+            const doc = await sanityClient.fetch(
+              `*[_type == "challengeQuiz" && (topic._ref == $topicId || _id == $topicId)][0]`,
+              { topicId: currentState.topicId }
+            );
+            questions = doc?.questions || [];
+            if (questions.length > 0) {
+              await cacheTopicSequence(currentState.topicId, questions);
+            }
+          } catch {
+            questions = [];
+          }
+        }
+
+        if (questions && nextIndex <= questions.length) {
+          const nextQ = questions.find((q: any) => q.orderIndex === nextIndex) || questions[nextIndex - 1];
+          if (nextQ) {
+            const durationSeconds = currentState.timerDuration || 45;
+            const now = Date.now();
+            const endTime = now + durationSeconds * 1000;
+            const points = nextQ.points || getDifficultyPoints(nextQ.difficulty || "MEDIUM");
+            const currentSoloState = await getAllowSoloPlay();
+
+            await setLiveState({
+              questionId: nextQ._key || nextQ._id || `q_${Date.now()}`,
+              topicId: currentState.topicId,
+              questionText: nextQ.questionText,
+              questionType: nextQ.questionType || "MULTIPLE_CHOICE",
+              codeSnippet: nextQ.codeSnippet,
+              options: nextQ.options || [],
+              difficulty: nextQ.difficulty || "MEDIUM",
+              points,
+              orderIndex: nextIndex,
+              timerDuration: durationSeconds,
+              startTime: now,
+              endTime,
+              isLocked: true,
+              autoPush: true,
+              allowSoloPlay: currentSoloState,
+              status: "ACTIVE",
+            });
+          }
+        } else {
+          // All questions in sequence completed
+          currentState.status = "COMPLETED";
+          currentState.isLocked = false;
+          await setLiveState(currentState);
+        }
+      } finally {
+        isAdvancingLock = false;
+      }
+    }, 5000); // 5-second Leaderboard Intermission Phase
+  } catch (err) {
+    isAdvancingLock = false;
+    console.error("Error in advanceToNextQuestion:", err);
+  }
 }
 
 // Helper: Calculate points by difficulty
