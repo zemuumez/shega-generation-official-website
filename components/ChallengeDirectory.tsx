@@ -277,8 +277,8 @@ export default function ChallengeDirectory({
 
   return (
     <div className="min-h-screen bg-navy text-white pb-24 selection:bg-ochre selection:text-white">
-      {/* 1. Hero Header - Primary Ochre & Navy Brand Theme */}
-      <section className="relative bg-gradient-to-b from-[#030A16] via-navy to-navy-light text-white pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-800/80">
+      {/* 1. Hero Header - Dynamic CMS Theme Theme Tokens (ochre / navy) */}
+      <section className="relative bg-gradient-to-b from-navy-dark via-navy to-navy-light text-white pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-800/80">
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/15 border border-ochre/40 text-ochre text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm">
             <span>(ሸጋ አሬና) SHEGA ARENA</span>
@@ -293,7 +293,7 @@ export default function ChallengeDirectory({
           </p>
 
           {/* View Switcher: Challenges vs Leaderboard */}
-          <div className="inline-flex p-1.5 rounded-2xl bg-black/60 border border-zinc-800 gap-2">
+          <div className="inline-flex p-1.5 rounded-2xl bg-navy-dark/90 border border-zinc-800 gap-2">
             <button
               onClick={() => setMainView("challenges")}
               className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all ${
@@ -332,8 +332,8 @@ export default function ChallengeDirectory({
                     key={cat.id}
                     className={`rounded-3xl p-6 sm:p-7 border transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
                       isLive
-                        ? "bg-navy-light border-ochre shadow-[0_0_25px_rgba(234,88,12,0.2)] ring-1 ring-ochre/50 hover:scale-[1.02]"
-                        : "bg-[#030A16]/60 border-zinc-800 opacity-65 grayscale hover:grayscale-0"
+                        ? "bg-navy-light border-ochre shadow-[0_0_25px_var(--color-primary)] ring-1 ring-ochre/50 hover:scale-[1.02]"
+                        : "bg-navy-dark/60 border-zinc-800 opacity-65 grayscale hover:grayscale-0"
                     }`}
                   >
                     <div>
@@ -406,7 +406,7 @@ export default function ChallengeDirectory({
                 {quizzes.map((quiz) => (
                   <div
                     key={quiz._id}
-                    className="bg-[#030A16] rounded-2xl p-6 border border-zinc-800 flex flex-col justify-between hover:border-ochre transition-all"
+                    className="bg-navy-dark rounded-2xl p-6 border border-zinc-800 flex flex-col justify-between hover:border-ochre transition-all"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-3 mb-3">
@@ -469,7 +469,7 @@ export default function ChallengeDirectory({
               </div>
 
               {/* Segmented Filtering Tabs */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mb-8 bg-[#030A16] p-2 rounded-2xl border border-zinc-800">
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-8 bg-navy-dark p-2 rounded-2xl border border-zinc-800">
                 {["all", ...quizzes.map((q) => q._id)].map((id) => {
                   const label = id === "all" ? "Live Quiz" : quizzes.find((q) => q._id === id)?.title || id;
                   const isSelected = leaderboardFilter === id;
@@ -494,7 +494,7 @@ export default function ChallengeDirectory({
               {filteredLeaderboard.length >= 3 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                   {/* Rank 2 - Silver */}
-                  <div className="bg-[#030A16] rounded-2xl p-5 border border-zinc-400/40 text-center order-2 md:order-1 flex flex-col justify-between shadow-[0_0_15px_rgba(203,213,225,0.1)]">
+                  <div className="bg-navy-dark rounded-2xl p-5 border border-zinc-400/40 text-center order-2 md:order-1 flex flex-col justify-between shadow-[0_0_15px_rgba(203,213,225,0.1)]">
                     <div>
                       <span className="text-xs font-mono font-bold text-zinc-400 uppercase block mb-1">
                         🥈 RANK #2
@@ -524,7 +524,7 @@ export default function ChallengeDirectory({
                   </div>
 
                   {/* Rank 1 - Gold Champion */}
-                  <div className="bg-[#030A16] rounded-2xl p-6 border-2 border-amber-400 text-center order-1 md:order-2 flex flex-col justify-between shadow-[0_0_30px_rgba(251,191,36,0.25)] md:-translate-y-2">
+                  <div className="bg-navy-dark rounded-2xl p-6 border-2 border-amber-400 text-center order-1 md:order-2 flex flex-col justify-between shadow-[0_0_30px_rgba(251,191,36,0.25)] md:-translate-y-2">
                     <div>
                       <span className="text-xs font-mono font-bold text-amber-400 uppercase block mb-1">
                         🥇 CHAMPION #1
@@ -554,7 +554,7 @@ export default function ChallengeDirectory({
                   </div>
 
                   {/* Rank 3 - Bronze */}
-                  <div className="bg-[#030A16] rounded-2xl p-5 border border-amber-700/50 text-center order-3 flex flex-col justify-between shadow-[0_0_15px_rgba(180,83,9,0.15)]">
+                  <div className="bg-navy-dark rounded-2xl p-5 border border-amber-700/50 text-center order-3 flex flex-col justify-between shadow-[0_0_15px_rgba(180,83,9,0.15)]">
                     <div>
                       <span className="text-xs font-mono font-bold text-amber-600 uppercase block mb-1">
                         🥉 RANK #3
@@ -588,7 +588,7 @@ export default function ChallengeDirectory({
               {/* Leaderboard Table with Accuracy Metric */}
               <div className="overflow-x-auto rounded-2xl border border-zinc-800 mb-4">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-black text-zinc-300 uppercase text-[10px] tracking-wider border-b border-zinc-800">
+                  <thead className="bg-navy-dark text-zinc-300 uppercase text-[10px] tracking-wider border-b border-zinc-800">
                     <tr>
                       <th className="py-4 px-4 font-bold">Rank</th>
                       <th className="py-4 px-4 font-bold">Participant</th>
@@ -596,7 +596,7 @@ export default function ChallengeDirectory({
                       <th className="py-4 px-4 font-bold text-right">Accuracy (%)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-800 bg-[#030A16]">
+                  <tbody className="divide-y divide-zinc-800 bg-navy-dark">
                     {filteredLeaderboard.map((item, idx) => {
                       const rank = idx + 1;
                       const accuracyPct = Math.round(
@@ -667,7 +667,7 @@ export default function ChallengeDirectory({
       {/* 3. MODAL: Player Registration */}
       <AnimatePresence>
         {isRegistering && selectedQuiz && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-dark/80 backdrop-blur-xs">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -700,7 +700,7 @@ export default function ChallengeDirectory({
                     value={playerName}
                     onChange={(e) => setPlayerName(e.target.value)}
                     placeholder="e.g. Abebe Bikila"
-                    className="w-full px-4 py-3.5 rounded-xl bg-black/50 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                    className="w-full px-4 py-3.5 rounded-xl bg-navy-dark border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
                   />
                 </div>
 
@@ -713,7 +713,7 @@ export default function ChallengeDirectory({
                     value={playerHandle}
                     onChange={(e) => setPlayerHandle(e.target.value)}
                     placeholder="e.g. @abebe_code"
-                    className="w-full px-4 py-3.5 rounded-xl bg-black/50 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                    className="w-full px-4 py-3.5 rounded-xl bg-navy-dark border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
                   />
                 </div>
 
@@ -732,7 +732,7 @@ export default function ChallengeDirectory({
       {/* 4. MODAL: Active Solo Quiz Player */}
       <AnimatePresence>
         {quizStarted && selectedQuiz && !quizCompleted && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-dark/90">
             <motion.div
               key={currentQuestionIndex}
               initial={{ opacity: 0, y: 10 }}
@@ -771,7 +771,7 @@ export default function ChallengeDirectory({
               </h3>
 
               {selectedQuiz.questions[currentQuestionIndex].codeSnippet && (
-                <pre className="mb-6 bg-black rounded-xl p-4 border border-zinc-800 font-mono text-xs text-ochre overflow-x-auto whitespace-pre">
+                <pre className="mb-6 bg-navy-dark rounded-xl p-4 border border-zinc-800 font-mono text-xs text-ochre overflow-x-auto whitespace-pre">
                   {selectedQuiz.questions[currentQuestionIndex].codeSnippet}
                 </pre>
               )}
@@ -789,7 +789,7 @@ export default function ChallengeDirectory({
                       className={`w-full text-left p-4 rounded-xl font-sans text-sm font-medium transition-all flex items-center justify-between border ${
                         isSelected
                           ? "bg-ochre text-white border-ochre font-bold"
-                          : "bg-black/40 hover:bg-zinc-800 text-zinc-200 border-zinc-800"
+                          : "bg-navy-dark/40 hover:bg-zinc-800 text-zinc-200 border-zinc-800"
                       }`}
                     >
                       <div className="flex items-center gap-3">

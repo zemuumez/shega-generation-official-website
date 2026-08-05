@@ -120,7 +120,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-[#030A16] rounded-3xl p-6 sm:p-8 max-w-md w-full border border-ochre/50 shadow-[0_0_30px_rgba(234,88,12,0.2)] text-center"
+          className="bg-navy-light rounded-3xl p-6 sm:p-8 max-w-md w-full border border-ochre/50 shadow-2xl text-center"
         >
           <span className="w-14 h-14 mx-auto rounded-2xl bg-ochre/20 text-ochre text-3xl flex items-center justify-center mb-4 border border-ochre/30">
             ⚡
@@ -150,7 +150,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
                 placeholder="e.g. Kidus M."
-                className="w-full px-4 py-3.5 rounded-xl bg-black/50 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                className="w-full px-4 py-3.5 rounded-xl bg-navy-dark border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
               />
             </div>
 
@@ -163,7 +163,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 value={playerHandle}
                 onChange={(e) => setPlayerHandle(e.target.value)}
                 placeholder="e.g. @kidus_code"
-                className="w-full px-4 py-3.5 rounded-xl bg-black/50 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                className="w-full px-4 py-3.5 rounded-xl bg-navy-dark border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
               />
             </div>
 
@@ -179,12 +179,12 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     );
   }
 
-  // Timer ratio and color calculation (Primary Ochre -> Cyber Amber -> Red)
+  // Timer ratio and color calculation (Theme Ochre -> Cyber Amber -> Red)
   const timerRatio = activeQuestion
     ? activeQuestion.remainingSeconds / (activeQuestion.timerDuration || 45)
     : 1;
 
-  let timerColorClass = "bg-ochre"; // Primary Theme Ochre
+  let timerColorClass = "bg-ochre"; // Uses dynamic --color-primary
   if (timerRatio < 0.25) {
     timerColorClass = "bg-[#EF4444] animate-pulse"; // Crimson Red
   } else if (timerRatio < 0.5) {
@@ -197,7 +197,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
   return (
     <div className="min-h-screen bg-navy text-white flex flex-col justify-between p-3 sm:p-6 font-sans selection:bg-ochre selection:text-white">
       {/* Mobile Header Bar matching Mockup Page 3: [≡] SG ARENA | TOPIC: ... | 👤 User */}
-      <header className="max-w-md mx-auto w-full bg-[#030A16] border border-zinc-800 rounded-2xl p-3.5 flex items-center justify-between gap-2 shadow-md font-mono text-xs">
+      <header className="max-w-md mx-auto w-full bg-navy-light border border-zinc-800 rounded-2xl p-3.5 flex items-center justify-between gap-2 shadow-md font-mono text-xs">
         <div className="flex items-center gap-2">
           <span className="text-ochre font-bold text-sm">≡</span>
           <span className="font-extrabold text-white">SG ARENA</span>
@@ -210,7 +210,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1 rounded-xl border border-zinc-800">
+        <div className="flex items-center gap-1.5 bg-navy-dark px-2.5 py-1 rounded-xl border border-zinc-800">
           <span className="text-zinc-400">👤</span>
           <span className="font-bold text-white text-[11px] truncate max-w-[80px]">
             {playerName}
@@ -228,7 +228,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="bg-[#030A16] rounded-3xl p-5 sm:p-6 border border-zinc-800 shadow-2xl relative overflow-hidden space-y-4"
+              className="bg-navy-light rounded-3xl p-5 sm:p-6 border border-zinc-800 shadow-2xl relative overflow-hidden space-y-4"
             >
               {/* High-Contrast Progress Bar: Ochre -> Yellow -> Red */}
               <div className="space-y-1">
@@ -238,7 +238,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                     00:{activeQuestion.remainingSeconds < 10 ? `0${activeQuestion.remainingSeconds}` : activeQuestion.remainingSeconds}s
                   </span>
                 </div>
-                <div className="w-full h-3 bg-black/80 rounded-full overflow-hidden border border-zinc-800 p-0.5">
+                <div className="w-full h-3 bg-navy-dark rounded-full overflow-hidden border border-zinc-800 p-0.5">
                   <div
                     style={{ width: `${Math.max(0, timerRatio * 100)}%` }}
                     className={`h-full rounded-full transition-all duration-1000 ${timerColorClass}`}
@@ -271,12 +271,12 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
               </h3>
 
               {activeQuestion.codeSnippet && (
-                <pre className="bg-black rounded-xl p-3.5 border border-zinc-800 font-mono text-xs text-ochre overflow-x-auto whitespace-pre">
+                <pre className="bg-navy-dark rounded-xl p-3.5 border border-zinc-800 font-mono text-xs text-ochre overflow-x-auto whitespace-pre">
                   {activeQuestion.codeSnippet}
                 </pre>
               )}
 
-              {/* Full-width Touch Target Options with Ochre Primary Glow */}
+              {/* Full-width Touch Target Options with Ochre Theme Glow */}
               <div className="space-y-3 pt-2">
                 {activeQuestion.options.map((opt, idx) => {
                   const isSelected = selectedOption === idx;
@@ -289,10 +289,10 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                       onClick={() => handleSelectOption(idx)}
                       className={`w-full text-left p-4 rounded-2xl font-sans text-sm font-semibold transition-all flex items-center justify-between border min-h-[58px] ${
                         isSelected
-                          ? "bg-ochre/20 text-white border-ochre shadow-[0_0_20px_rgba(234,88,12,0.4)] ring-2 ring-ochre"
+                          ? "bg-ochre/20 text-white border-ochre ring-2 ring-ochre"
                           : isLocked
-                          ? "bg-black/30 border-zinc-800 text-zinc-600 cursor-not-allowed"
-                          : "bg-black/60 hover:bg-zinc-800 text-zinc-200 border-zinc-800 active:scale-[0.99]"
+                          ? "bg-navy-dark/40 border-zinc-800 text-zinc-600 cursor-not-allowed"
+                          : "bg-navy-dark hover:bg-zinc-800 text-zinc-200 border-zinc-800 active:scale-[0.99]"
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -340,7 +340,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#030A16] rounded-3xl p-6 border border-zinc-800 shadow-2xl text-center space-y-4"
+              className="bg-navy-light rounded-3xl p-6 border border-zinc-800 shadow-2xl text-center space-y-4"
             >
               <div className="w-12 h-12 mx-auto rounded-full bg-[#F59E0B]/20 text-[#F59E0B] text-2xl flex items-center justify-center border border-[#F59E0B]/40">
                 🏆
@@ -354,7 +354,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 {leaderboard.slice(0, 5).map((item, idx) => (
                   <div
                     key={item._id || idx}
-                    className="p-3 rounded-xl bg-black/40 border border-zinc-800 flex items-center justify-between"
+                    className="p-3 rounded-xl bg-navy-dark border border-zinc-800 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-[#F59E0B]">#{idx + 1}</span>
@@ -373,7 +373,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
               key="idle"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="bg-[#030A16] rounded-3xl p-8 border border-zinc-800 text-center shadow-xl space-y-4"
+              className="bg-navy-light rounded-3xl p-8 border border-zinc-800 text-center shadow-xl space-y-4"
             >
               <div className="w-14 h-14 mx-auto rounded-2xl bg-ochre/15 text-ochre text-3xl flex items-center justify-center border border-ochre/30">
                 ⏳
@@ -386,7 +386,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 The operator will push the next question to your screen shortly.
               </p>
 
-              <div className="p-3 rounded-xl bg-black/50 border border-zinc-800 text-xs font-mono text-zinc-400">
+              <div className="p-3 rounded-xl bg-navy-dark border border-zinc-800 text-xs font-mono text-zinc-400">
                 Current Arena Points: <strong className="text-ochre font-bold">{userScore} Pts</strong>
               </div>
             </motion.div>
