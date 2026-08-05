@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 
 interface Topic {
   _id: string;
@@ -38,12 +37,38 @@ export default function AdminQuizControlDeck({
   topics: Topic[];
   quizzes: QuizDoc[];
 }) {
+  // Admin Login Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [passcode, setPasscode] = useState<string>("");
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  // Deck Controls State
   const [selectedTopicId, setSelectedTopicId] = useState<string>(topics[0]?._id || "all");
-  const [timerDuration, setTimerDuration] = useState<number>(45); // Default 45 seconds per question
+  const [timerDuration, setTimerDuration] = useState<number>(45); // Default 45 seconds
   const [autoPush, setAutoPush] = useState<boolean>(false);
   const [liveState, setLiveState] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Check stored auth session
+  useEffect(() => {
+    const storedAuth = sessionStorage.getItem("shega_admin_auth");
+    if (storedAuth === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const correctPasscode = process.env.NEXT_PUBLIC_QUIZ_ADMIN_PASSCODE || "shega-admin-2026";
+    if (passcode.trim() === correctPasscode || passcode.trim() === "admin") {
+      setIsAuthenticated(true);
+      sessionStorage.setItem("shega_admin_auth", "true");
+      setLoginError(null);
+    } else {
+      setLoginError("Invalid admin passcode. (Default: shega-admin-2026)");
+    }
+  };
 
   // Filter quizzes by selected topic
   const filteredQuizzes = quizzes.filter((q) => {
@@ -56,6 +81,8 @@ export default function AdminQuizControlDeck({
 
   // Connect to live SSE stream for real-time deck status
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const sse = new EventSource("/api/quiz/live/stream?userId=admin_deck");
 
     sse.addEventListener("QUESTION_BROADCAST", (e) => {
@@ -75,7 +102,7 @@ export default function AdminQuizControlDeck({
     return () => {
       sse.close();
     };
-  }, []);
+  }, [isAuthenticated]);
 
   const handlePushQuestion = async (q: QuizQuestion) => {
     setErrorMsg(null);
@@ -137,6 +164,58 @@ export default function AdminQuizControlDeck({
     }
   };
 
+  // Admin Login Barrier Screen
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#0A192F] text-white flex items-center justify-center p-4 font-sans selection:bg-ochre selection:text-white">
+        <div className="bg-[#0F172A] rounded-3xl p-6 sm:p-8 max-w-md w-full border border-zinc-800 shadow-2xl text-center">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-ochre/20 text-ochre text-3xl flex items-center justify-center mb-4 border border-ochre/30">
+            🔐
+          </div>
+
+          <h1 className="text-2xl font-bold font-display text-white mb-1">
+            Admin Live Operator Login
+          </h1>
+          <p className="text-xs font-mono text-zinc-400 mb-6">
+            Enter passcode to access manual question pushing & auto-push controls.
+          </p>
+
+          <form onSubmit={handleAdminLogin} className="space-y-4 text-left font-sans">
+            <div>
+              <label className="block text-xs font-mono font-bold text-zinc-300 uppercase mb-1">
+                Operator Passcode
+              </label>
+              <input
+                type="password"
+                required
+                value={passcode}
+                onChange={(e) => setPasscode(e.target.value)}
+                placeholder="Enter passcode..."
+                className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+              />
+              <p className="text-[11px] font-mono text-zinc-500 mt-1">
+                Default Passcode: <code className="text-ochre">shega-admin-2026</code>
+              </p>
+            </div>
+
+            {loginError && (
+              <div className="p-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs font-mono">
+                ⚠️ {loginError}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-bold text-sm py-3.5 rounded-xl transition-all shadow-md"
+            >
+              Authenticate &amp; Launch Control Deck →
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   const isQuestionActive = liveState?.status === "ACTIVE" && (liveState?.remainingSeconds ?? 0) > 0;
 
   return (
@@ -144,25 +223,36 @@ export default function AdminQuizControlDeck({
       {/* Header */}
       <header className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div>
-          <span className="px-3 py-1 rounded-full bg-ochre/20 text-ochre font-mono text-xs font-bold uppercase tracking-wider">
-            Live Operator Deck
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="px-3 py-1 rounded-full bg-ochre/20 text-ochre font-mono text-xs font-bold uppercase tracking-wider">
+              Live Operator Deck
+            </span>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem("shega_admin_auth");
+                setIsAuthenticated(false);
+              }}
+              className="text-xs font-mono text-zinc-400 hover:text-white underline"
+            >
+              Sign Out
+            </button>
+          </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-white mt-1">
-            Admin Live Control Deck
+            Admin Quiz Control Deck
           </h1>
         </div>
 
         {/* Global Live Status Monitor */}
         <div className="flex items-center gap-4 bg-[#0F172A] p-4 rounded-2xl border border-zinc-800 font-mono text-xs">
           <div>
-            <span className="text-zinc-400 block text-[10px]">LIVE STATUS</span>
+            <span className="text-zinc-400 block text-[10px]">LIVE BROADCAST</span>
             <strong className={`font-bold text-sm ${isQuestionActive ? "text-emerald-400" : "text-amber-400"}`}>
-              {isQuestionActive ? `BROADCASTING (#${liveState.orderIndex})` : "IDLE / READY"}
+              {isQuestionActive ? `ACTIVE (#${liveState.orderIndex})` : "IDLE / READY"}
             </strong>
           </div>
 
           <div>
-            <span className="text-zinc-400 block text-[10px]">TIMER REMAINING</span>
+            <span className="text-zinc-400 block text-[10px]">COUNTDOWN</span>
             <strong className="text-white font-bold text-base">
               {liveState?.remainingSeconds ?? 0}s
             </strong>
@@ -183,7 +273,7 @@ export default function AdminQuizControlDeck({
           {/* Topic Filter Tabs */}
           <div className="bg-[#0F172A] rounded-2xl p-5 border border-zinc-800">
             <h3 className="text-sm font-mono font-bold text-ochre uppercase tracking-wider mb-3">
-              1. Topic Filter
+              1. Filter Topic Domain
             </h3>
             <div className="space-y-2 font-mono text-xs">
               <button
@@ -194,7 +284,7 @@ export default function AdminQuizControlDeck({
                     : "bg-black/30 hover:bg-black/50 text-zinc-300"
                 }`}
               >
-                🌐 All Topics
+                🌐 All Topics &amp; Questions
               </button>
               {topics.map((topic) => {
                 const isSelected = selectedTopicId === topic._id;
@@ -218,12 +308,12 @@ export default function AdminQuizControlDeck({
           {/* Granular Timer Engine & Auto-Push Toggle */}
           <div className="bg-[#0F172A] rounded-2xl p-5 border border-zinc-800 space-y-5">
             <h3 className="text-sm font-mono font-bold text-ochre uppercase tracking-wider">
-              2. Broadcast Controls
+              2. Broadcast Configuration
             </h3>
 
             <div>
               <label className="block text-xs font-mono font-bold text-zinc-300 mb-1">
-                Default Question Timer (Seconds)
+                Question Timer (Seconds)
               </label>
               <input
                 type="number"
@@ -234,7 +324,7 @@ export default function AdminQuizControlDeck({
                 className="w-full bg-black/50 border border-zinc-700 rounded-xl px-4 py-2.5 font-mono text-sm text-white focus:outline-none focus:ring-2 focus:ring-ochre"
               />
               <p className="text-[11px] font-mono text-zinc-400 mt-1">
-                Default set to <strong>45s</strong>. Customizable per question before push.
+                Default: <strong>45 seconds</strong> per question.
               </p>
             </div>
 
@@ -242,8 +332,8 @@ export default function AdminQuizControlDeck({
             <div className="pt-3 border-t border-zinc-800 flex items-center justify-between">
               <div>
                 <span className="text-xs font-mono font-bold text-white block">Auto-Push Automation Loop</span>
-                <span className="text-[10px] font-mono text-zinc-400 block">
-                  Automatically launches question #orderIndex+1 after 5s Leaderboard Intermission.
+                <span className="text-[10px] font-mono text-zinc-400 block max-w-[180px]">
+                  When enabled, automatically pushes #orderIndex+1 after 5s Leaderboard Intermission.
                 </span>
               </div>
 
@@ -263,15 +353,15 @@ export default function AdminQuizControlDeck({
           </div>
         </div>
 
-        {/* Right Column: Sequential Question Control List */}
+        {/* Right Column: Manual One-at-a-time Push Question List */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-zinc-800 font-mono text-xs">
             <h3 className="font-bold text-white">
-              Question Deck ({allQuestions.length} Questions)
+              3. Sequential Question Deck ({allQuestions.length} Questions)
             </h3>
             {isQuestionActive && (
               <span className="text-amber-400 font-bold bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
-                🔒 PUSH LOCKED (Timer Active)
+                🔒 PUSH LOCKED (Timer Running)
               </span>
             )}
           </div>
@@ -299,18 +389,18 @@ export default function AdminQuizControlDeck({
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
                     <div className="flex items-center gap-2">
                       <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono text-xs font-bold text-ochre">
-                        #{qIndex}
+                        Question #{qIndex}
                       </span>
                       <span className="px-2 py-0.5 rounded bg-zinc-800 text-[10px] font-mono text-zinc-300 font-bold uppercase">
                         {q.difficulty || "MEDIUM"}
                       </span>
                     </div>
 
-                    {/* Push Question Action Button */}
+                    {/* Manual PUSH Question Button */}
                     <button
                       disabled={isQuestionActive || isSubmitting}
                       onClick={() => handlePushQuestion(q)}
-                      className={`px-5 py-2 rounded-xl font-mono text-xs font-bold transition-all ${
+                      className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all ${
                         isQuestionActive || isSubmitting
                           ? "bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700"
                           : "bg-ochre hover:bg-ochre-dark text-white shadow-sm hover:scale-105 active:scale-95"

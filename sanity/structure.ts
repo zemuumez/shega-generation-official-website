@@ -505,6 +505,16 @@ export const deskStructure: StructureResolver = (S) =>
                     .documentId("siteSettings")
                     .title("Challenges Copy & Nav Settings")
                 ),
+              S.listItem()
+                .id("adminControlDeckShortcut")
+                .title("Admin Live Control Deck 🚀 (/admin/quiz-control)")
+                .icon(RocketIcon)
+                .child(
+                  S.component()
+                    .id("adminDeckRedirect")
+                    .title("Admin Live Control Deck")
+                    .component(() => null)
+                ),
               S.divider(),
               S.listItem()
                 .id("challengesQuizzesList")
