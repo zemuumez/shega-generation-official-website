@@ -79,6 +79,13 @@ export default defineType({
       initialValue: true,
     }),
     defineField({
+      name: "isFeatured",
+      title: "Featured Challenge",
+      type: "boolean",
+      initialValue: true,
+      description: "Display prominently on home page or challenge directory hero.",
+    }),
+    defineField({
       name: "questions",
       title: "Quiz Questions",
       type: "array",
