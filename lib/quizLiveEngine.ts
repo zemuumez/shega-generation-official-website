@@ -105,6 +105,7 @@ export interface LiveQuestionPayload {
   endTime: number;
   isLocked: boolean;
   autoPush: boolean;
+  allowSoloPlay?: boolean;
   status: "IDLE" | "ACTIVE" | "INTERMISSION" | "EXPIRED" | "COMPLETED";
 }
 
@@ -117,7 +118,17 @@ export async function setLiveState(state: LiveQuestionPayload | null): Promise<v
   await setCache("quiz:live:active_state", state);
 }
 
-// 4. Pre-Cache Topic Questions Sequence
+// 4. Solo Play Mode Toggle Cache
+export async function getAllowSoloPlay(): Promise<boolean> {
+  const res = await getCache("quiz:config:allow_solo_play");
+  return res !== false; // Defaults to true unless explicitly toggled OFF
+}
+
+export async function setAllowSoloPlay(allow: boolean): Promise<void> {
+  await setCache("quiz:config:allow_solo_play", allow);
+}
+
+// 5. Pre-Cache Topic Questions Sequence
 export async function cacheTopicSequence(topicId: string, questions: any[]): Promise<void> {
   await setCache(`quiz:live:sequence:${topicId}`, questions, 86400); // 24 hours
 }

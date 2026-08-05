@@ -21,8 +21,18 @@ interface BroadcastQuestion {
   status: "IDLE" | "ACTIVE" | "INTERMISSION" | "EXPIRED" | "COMPLETED";
 }
 
+interface StoredParticipant {
+  userId: string;
+  playerName: string;
+  playerHandle: string;
+  expiryTimestamp: number;
+}
+
+const STORAGE_KEY = "shega_quiz_participant";
+const TTL_MS = 24 * 60 * 60 * 1000; // 24 Hours TTL
+
 export default function MobileLiveQuizPage({ params }: { params: { topicSlug: string } }) {
-  const [userId] = useState<string>(() => `user_${Math.random().toString(36).substring(2, 9)}`);
+  const [userId, setUserId] = useState<string>(() => `user_${Math.random().toString(36).substring(2, 9)}`);
   const [playerName, setPlayerName] = useState<string>("");
   const [playerHandle, setPlayerHandle] = useState<string>("");
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
@@ -34,32 +44,50 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
   const [userScore, setUserScore] = useState<number>(0);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
 
-  // Fetch updated leaderboard
-  const fetchLeaderboard = async () => {
+  // 1. Restore participant from 24-hour TTL localStorage on mount
+  useEffect(() => {
     try {
-      const res = await fetch("/api/challenges/leaderboard");
-      const data = await res.json();
-      if (data.ok && Array.isArray(data.leaderboard)) {
-        setLeaderboard(data.leaderboard);
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed: StoredParticipant = JSON.parse(raw);
+        if (parsed && Date.now() < parsed.expiryTimestamp) {
+          setUserId(parsed.userId);
+          setPlayerName(parsed.playerName);
+          setPlayerHandle(parsed.playerHandle);
+          setIsRegistered(true);
+        } else {
+          localStorage.removeItem(STORAGE_KEY);
+        }
       }
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  // Connect to SSE stream
+  // 2. Mid-Question State Sync on Mount / Reload
   useEffect(() => {
     if (!isRegistered) return;
 
     fetchLeaderboard();
 
+    // Query active state immediately to sync mid-question timer duration on reload
+    fetch(`/api/quiz/live/state?userId=${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "ACTIVE" && data.activeQuestion) {
+          setActiveQuestion(data.activeQuestion);
+        }
+      })
+      .catch(() => {});
+
+    // SSE Real-Time Broadcast Stream
     const sse = new EventSource(`/api/quiz/live/stream?userId=${userId}`);
 
     sse.addEventListener("QUESTION_BROADCAST", (e) => {
       try {
         const data: BroadcastQuestion = JSON.parse(e.data);
         
-        // Reset selection if new question launched
+        // Reset option selection if new question launched
         if (activeQuestion?.questionId !== data.questionId) {
           setSelectedOption(null);
           setIsSubmitted(false);
@@ -80,6 +108,42 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       sse.close();
     };
   }, [isRegistered, userId, activeQuestion?.questionId]);
+
+  const fetchLeaderboard = async () => {
+    try {
+      const res = await fetch("/api/challenges/leaderboard");
+      const data = await res.json();
+      if (data.ok && Array.isArray(data.leaderboard)) {
+        setLeaderboard(data.leaderboard);
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleRegisterParticipant = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!playerName.trim()) return;
+
+    const newUserId = userId || `user_${Math.random().toString(36).substring(2, 9)}`;
+    const handle = playerHandle.trim() || `@${playerName.toLowerCase().replace(/\s+/g, "_")}`;
+    const payload: StoredParticipant = {
+      userId: newUserId,
+      playerName: playerName.trim(),
+      playerHandle: handle,
+      expiryTimestamp: Date.now() + TTL_MS, // 24-Hour Expiration Timestamp
+    };
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // ignore
+    }
+
+    setUserId(newUserId);
+    setPlayerHandle(handle);
+    setIsRegistered(true);
+  };
 
   const handleSelectOption = async (optionIdx: number) => {
     if (isSubmitted || !activeQuestion || activeQuestion.remainingSeconds <= 0) return;
@@ -113,7 +177,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     }
   };
 
-  // Registration step
+  // Registration step (if not registered or 24-hour TTL expired)
   if (!isRegistered) {
     return (
       <div className="min-h-screen bg-navy text-white flex items-center justify-center p-4 font-sans selection:bg-ochre selection:text-white">
@@ -133,13 +197,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
             TOPIC: <span className="text-ochre font-bold uppercase">{params.topicSlug.replace(/-/g, " ")}</span>
           </p>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (playerName.trim()) setIsRegistered(true);
-            }}
-            className="space-y-4 text-left font-sans"
-          >
+          <form onSubmit={handleRegisterParticipant} className="space-y-4 text-left font-sans">
             <div>
               <label className="block text-xs font-mono font-bold text-zinc-300 uppercase mb-1">
                 Your Full Name *
@@ -184,11 +242,11 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     ? activeQuestion.remainingSeconds / (activeQuestion.timerDuration || 45)
     : 1;
 
-  let timerColorClass = "bg-ochre"; // Uses dynamic --color-primary
+  let timerColorClass = "bg-ochre";
   if (timerRatio < 0.25) {
-    timerColorClass = "bg-[#EF4444] animate-pulse"; // Crimson Red
+    timerColorClass = "bg-[#EF4444] animate-pulse";
   } else if (timerRatio < 0.5) {
-    timerColorClass = "bg-[#F59E0B]"; // Cyber Amber
+    timerColorClass = "bg-[#F59E0B]";
   }
 
   const difficulty = activeQuestion?.difficulty || "MEDIUM";

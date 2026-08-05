@@ -1,17 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { sanityClient } from "@/sanity/lib/client";
-import { setLiveState, getLiveState, cacheTopicSequence, getTopicSequence, getDifficultyPoints } from "@/lib/quizLiveEngine";
+import {
+  setLiveState,
+  getLiveState,
+  cacheTopicSequence,
+  getTopicSequence,
+  getDifficultyPoints,
+  setAllowSoloPlay,
+  getAllowSoloPlay,
+} from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 
 const ControlSchema = z.object({
-  action: z.enum(["PUSH_QUESTION", "TOGGLE_AUTO_PUSH", "AUTO_ADVANCE_NEXT", "RESET_SESSION"]),
+  action: z.enum(["PUSH_QUESTION", "TOGGLE_AUTO_PUSH", "TOGGLE_SOLO_PLAY", "AUTO_ADVANCE_NEXT", "RESET_SESSION"]),
   topicId: z.string().optional(),
   questionId: z.string().optional(),
   orderIndex: z.number().optional(),
   timerDuration: z.number().min(5).max(300).optional().default(45), // Default 45 seconds per question
   autoPush: z.boolean().optional(),
+  allowSoloPlay: z.boolean().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -27,7 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { action, topicId, questionId, orderIndex, timerDuration, autoPush } = parsed.data;
+  const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay } = parsed.data;
   const currentState = await getLiveState();
 
   if (action === "RESET_SESSION") {
@@ -41,6 +50,17 @@ export async function POST(req: NextRequest) {
       await setLiveState(currentState);
     }
     return NextResponse.json({ ok: true, autoPush: currentState?.autoPush ?? false });
+  }
+
+  if (action === "TOGGLE_SOLO_PLAY") {
+    const currentVal = await getAllowSoloPlay();
+    const nextVal = allowSoloPlay !== undefined ? allowSoloPlay : !currentVal;
+    await setAllowSoloPlay(nextVal);
+    if (currentState) {
+      currentState.allowSoloPlay = nextVal;
+      await setLiveState(currentState);
+    }
+    return NextResponse.json({ ok: true, allowSoloPlay: nextVal });
   }
 
   if (action === "PUSH_QUESTION") {
@@ -89,6 +109,7 @@ export async function POST(req: NextRequest) {
     const now = Date.now();
     const endTime = now + durationSeconds * 1000;
     const points = targetQuestion.points || getDifficultyPoints(targetQuestion.difficulty || "MEDIUM");
+    const currentSoloState = await getAllowSoloPlay();
 
     const newLiveState = {
       questionId: targetQuestion._key || targetQuestion._id || `q_${Date.now()}`,
@@ -105,6 +126,7 @@ export async function POST(req: NextRequest) {
       endTime,
       isLocked: true, // Single question lock activated
       autoPush: autoPush !== undefined ? autoPush : (currentState?.autoPush ?? false),
+      allowSoloPlay: currentSoloState,
       status: "ACTIVE" as const,
     };
 
@@ -133,6 +155,7 @@ export async function POST(req: NextRequest) {
           const now = Date.now();
           const endTime = now + durationSeconds * 1000;
           const points = nextQ.points || getDifficultyPoints(nextQ.difficulty || "MEDIUM");
+          const currentSoloState = await getAllowSoloPlay();
 
           await setLiveState({
             questionId: nextQ._key || nextQ._id || `q_${Date.now()}`,
@@ -149,6 +172,7 @@ export async function POST(req: NextRequest) {
             endTime,
             isLocked: true,
             autoPush: true,
+            allowSoloPlay: currentSoloState,
             status: "ACTIVE",
           });
         }

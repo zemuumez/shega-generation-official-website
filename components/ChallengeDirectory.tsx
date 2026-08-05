@@ -123,10 +123,11 @@ export default function ChallengeDirectory({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastRank, setLastRank] = useState<number | null>(null);
 
-  // Leaderboard Filter
+  // Leaderboard & Solo Play State
   const [leaderboardFilter, setLeaderboardFilter] = useState("all");
+  const [allowSoloPlay, setAllowSoloPlay] = useState<boolean>(true);
 
-  // Fetch updated leaderboard
+  // Fetch updated leaderboard & solo play mode status
   const fetchLeaderboard = async () => {
     try {
       const res = await fetch("/api/challenges/leaderboard");
@@ -141,6 +142,12 @@ export default function ChallengeDirectory({
 
   useEffect(() => {
     fetchLeaderboard();
+    fetch("/api/quiz/live/state")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.allowSoloPlay !== undefined) setAllowSoloPlay(data.allowSoloPlay);
+      })
+      .catch(() => {});
   }, []);
 
   // Handle Question Countdown Timer
@@ -439,12 +446,18 @@ export default function ChallengeDirectory({
                         >
                           Join Live Arena ⚡
                         </a>
-                        <button
-                          onClick={() => startQuizRegistration(quiz)}
-                          className="bg-black/60 hover:bg-black/90 text-white font-mono font-bold text-xs px-4 py-2.5 rounded-xl border border-zinc-700 transition-all"
-                        >
-                          Play Solo
-                        </button>
+                        {allowSoloPlay ? (
+                          <button
+                            onClick={() => startQuizRegistration(quiz)}
+                            className="bg-black/60 hover:bg-black/90 text-white font-mono font-bold text-xs px-4 py-2.5 rounded-xl border border-zinc-700 transition-all"
+                          >
+                            Play Solo
+                          </button>
+                        ) : (
+                          <span className="bg-zinc-800/80 text-zinc-500 font-mono font-bold text-[11px] px-3 py-2 rounded-xl border border-zinc-700/50 cursor-not-allowed">
+                            Solo Disabled for Live Event
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
