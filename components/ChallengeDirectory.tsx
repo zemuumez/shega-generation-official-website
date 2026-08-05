@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import TypewriterTitle from "@/components/TypewriterTitle";
 
 interface QuizQuestion {
   questionText: string;
@@ -277,11 +276,11 @@ export default function ChallengeDirectory({
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-white pb-24 selection:bg-[#10B981] selection:text-black">
-      {/* 1. Hero Header - Deep Slate & Pitch Black Atmosphere */}
-      <section className="relative bg-gradient-to-b from-[#000000] via-[#0F172A] to-[#0A192F] text-white pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-800/80">
+    <div className="min-h-screen bg-navy text-white pb-24 selection:bg-ochre selection:text-white">
+      {/* 1. Hero Header - Primary Ochre & Navy Brand Theme */}
+      <section className="relative bg-gradient-to-b from-[#030A16] via-navy to-navy-light text-white pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-800/80">
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#10B981]/15 border border-[#10B981]/40 text-[#10B981] text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/15 border border-ochre/40 text-ochre text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm">
             <span>(ሸጋ አሬና) SHEGA ARENA</span>
           </div>
 
@@ -289,7 +288,7 @@ export default function ChallengeDirectory({
             {customTitle || "(ሸጋ አሬና) SHEGA ARENA: SELECT YOUR CHALLENGE"}
           </h1>
 
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-[#94A3B8] font-sans leading-relaxed mb-8">
+          <p className="max-w-2xl mx-auto text-base sm:text-lg text-zinc-300 font-sans leading-relaxed mb-8">
             {customSubtitle || "Test your skills, represent Ethiopia, and rise the leaderboard."}
           </p>
 
@@ -299,7 +298,7 @@ export default function ChallengeDirectory({
               onClick={() => setMainView("challenges")}
               className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all ${
                 mainView === "challenges"
-                  ? "bg-[#10B981] text-black shadow-md font-extrabold"
+                  ? "bg-ochre text-white shadow-md font-extrabold"
                   : "text-zinc-400 hover:text-white hover:bg-white/5"
               }`}
             >
@@ -309,7 +308,7 @@ export default function ChallengeDirectory({
               onClick={() => setMainView("leaderboard")}
               className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all ${
                 mainView === "leaderboard"
-                  ? "bg-[#10B981] text-black shadow-md font-extrabold"
+                  ? "bg-ochre text-white shadow-md font-extrabold"
                   : "text-zinc-400 hover:text-white hover:bg-white/5"
               }`}
             >
@@ -333,16 +332,16 @@ export default function ChallengeDirectory({
                     key={cat.id}
                     className={`rounded-3xl p-6 sm:p-7 border transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
                       isLive
-                        ? "bg-[#0F172A] border-[#10B981] shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-[#10B981]/50 hover:scale-[1.02]"
-                        : "bg-[#0A192F]/60 border-zinc-800 opacity-65 grayscale hover:grayscale-0"
+                        ? "bg-navy-light border-ochre shadow-[0_0_25px_rgba(234,88,12,0.2)] ring-1 ring-ochre/50 hover:scale-[1.02]"
+                        : "bg-[#030A16]/60 border-zinc-800 opacity-65 grayscale hover:grayscale-0"
                     }`}
                   >
                     <div>
                       {/* Badge / Status */}
                       <div className="flex items-center justify-between gap-3 mb-4">
                         {isLive ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#10B981]/20 border border-[#10B981]/40 text-[#10B981] text-[11px] font-mono font-extrabold uppercase animate-pulse">
-                            <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ochre/20 border border-ochre/40 text-ochre text-[11px] font-mono font-extrabold uppercase animate-pulse">
+                            <span className="w-2 h-2 rounded-full bg-ochre" />
                             <span>LIVE ARENA ACTIVE</span>
                           </span>
                         ) : (
@@ -356,11 +355,11 @@ export default function ChallengeDirectory({
                         {cat.title}
                       </h3>
 
-                      <p className="text-xs font-mono text-[#10B981] font-bold mb-3">
+                      <p className="text-xs font-mono text-ochre font-bold mb-3">
                         {cat.subtitle}
                       </p>
 
-                      <p className="text-xs text-[#94A3B8] font-sans leading-relaxed mb-6">
+                      <p className="text-xs text-zinc-300 font-sans leading-relaxed mb-6">
                         {cat.description}
                       </p>
                     </div>
@@ -370,7 +369,7 @@ export default function ChallengeDirectory({
                         <>
                           <a
                             href="/challenges/quiz/web-dev-algorithms"
-                            className="w-full bg-[#10B981] hover:bg-[#059669] text-black font-mono font-extrabold text-xs py-3 rounded-xl shadow-md transition-all text-center flex items-center justify-center gap-2"
+                            className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-xs py-3 rounded-xl shadow-md transition-all text-center flex items-center justify-center gap-2"
                           >
                             <span>[Enter Arena]</span>
                             <span>⚡</span>
@@ -391,10 +390,10 @@ export default function ChallengeDirectory({
             </div>
 
             {/* Live Quizzes List Section */}
-            <section className="bg-[#0A192F] rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-xl">
+            <section className="bg-navy-light rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-xl">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-zinc-800">
                 <div>
-                  <span className="text-xs font-mono font-bold text-[#10B981] uppercase tracking-wider block mb-1">
+                  <span className="text-xs font-mono font-bold text-ochre uppercase tracking-wider block mb-1">
                     ⚡ Live Broadcast Topics
                   </span>
                   <h2 className="text-2xl font-bold font-display text-white">
@@ -407,11 +406,11 @@ export default function ChallengeDirectory({
                 {quizzes.map((quiz) => (
                   <div
                     key={quiz._id}
-                    className="bg-[#0F172A] rounded-2xl p-6 border border-zinc-800 flex flex-col justify-between hover:border-[#10B981] transition-all"
+                    className="bg-[#030A16] rounded-2xl p-6 border border-zinc-800 flex flex-col justify-between hover:border-ochre transition-all"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-3 mb-3">
-                        <span className="px-3 py-1 rounded-full bg-[#10B981]/15 border border-[#10B981]/30 text-[#10B981] text-xs font-mono font-bold uppercase">
+                        <span className="px-3 py-1 rounded-full bg-ochre/15 border border-ochre/30 text-ochre text-xs font-mono font-bold uppercase">
                           {quiz.category || "Live Timed Quiz"}
                         </span>
                         <span className="text-xs font-mono font-bold text-zinc-400">
@@ -423,7 +422,7 @@ export default function ChallengeDirectory({
                         {quiz.title}
                       </h3>
 
-                      <p className="text-xs text-[#94A3B8] font-sans leading-relaxed mb-6">
+                      <p className="text-xs text-zinc-300 font-sans leading-relaxed mb-6">
                         {quiz.description}
                       </p>
                     </div>
@@ -436,7 +435,7 @@ export default function ChallengeDirectory({
                       <div className="flex items-center gap-2">
                         <a
                           href={`/challenges/quiz/${quiz.slug?.current || quiz._id}`}
-                          className="bg-[#10B981] hover:bg-[#059669] text-black font-mono font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all"
+                          className="bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all"
                         >
                           Join Live Arena ⚡
                         </a>
@@ -456,9 +455,9 @@ export default function ChallengeDirectory({
         ) : (
           /* PAGE 2: Global & Quiz-Specific Leaderboard (🏆 THE ሸጋ HALL OF FAME) */
           <div className="space-y-8">
-            <div className="bg-[#0A192F] rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-2xl relative overflow-hidden">
+            <div className="bg-navy-light rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-2xl relative overflow-hidden">
               <div className="text-center mb-8 pb-6 border-b border-zinc-800">
-                <span className="text-xs font-mono font-bold text-[#10B981] uppercase tracking-wider block mb-2">
+                <span className="text-xs font-mono font-bold text-ochre uppercase tracking-wider block mb-2">
                   OFFICIAL RANKINGS
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-white mb-2">
@@ -470,7 +469,7 @@ export default function ChallengeDirectory({
               </div>
 
               {/* Segmented Filtering Tabs */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mb-8 bg-[#0F172A] p-2 rounded-2xl border border-zinc-800">
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-8 bg-[#030A16] p-2 rounded-2xl border border-zinc-800">
                 {["all", ...quizzes.map((q) => q._id)].map((id) => {
                   const label = id === "all" ? "Live Quiz" : quizzes.find((q) => q._id === id)?.title || id;
                   const isSelected = leaderboardFilter === id;
@@ -481,7 +480,7 @@ export default function ChallengeDirectory({
                       onClick={() => setLeaderboardFilter(id)}
                       className={`px-4 py-2 rounded-xl font-mono text-xs font-bold transition-all ${
                         isSelected
-                          ? "bg-[#10B981] text-black shadow-sm"
+                          ? "bg-ochre text-white shadow-sm"
                           : "text-zinc-400 hover:text-white hover:bg-white/5"
                       }`}
                     >
@@ -495,7 +494,7 @@ export default function ChallengeDirectory({
               {filteredLeaderboard.length >= 3 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                   {/* Rank 2 - Silver */}
-                  <div className="bg-[#0F172A] rounded-2xl p-5 border border-zinc-400/40 text-center order-2 md:order-1 flex flex-col justify-between shadow-[0_0_15px_rgba(203,213,225,0.1)]">
+                  <div className="bg-[#030A16] rounded-2xl p-5 border border-zinc-400/40 text-center order-2 md:order-1 flex flex-col justify-between shadow-[0_0_15px_rgba(203,213,225,0.1)]">
                     <div>
                       <span className="text-xs font-mono font-bold text-zinc-400 uppercase block mb-1">
                         🥈 RANK #2
@@ -506,7 +505,7 @@ export default function ChallengeDirectory({
                       <h4 className="font-extrabold text-white font-display text-base">
                         {filteredLeaderboard[1].participantName}
                       </h4>
-                      <p className="text-xs font-mono text-[#10B981] font-semibold">
+                      <p className="text-xs font-mono text-ochre font-semibold">
                         {filteredLeaderboard[1].participantHandle}
                       </p>
                     </div>
@@ -517,7 +516,7 @@ export default function ChallengeDirectory({
                       </div>
                       <div>
                         <span className="text-zinc-400 block text-[10px]">ACCURACY</span>
-                        <strong className="text-[#10B981] font-bold">
+                        <strong className="text-ochre font-bold">
                           {Math.round(((filteredLeaderboard[1].correctCount || 18) / (filteredLeaderboard[1].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[1].correctCount || 18}/20)
                         </strong>
                       </div>
@@ -525,7 +524,7 @@ export default function ChallengeDirectory({
                   </div>
 
                   {/* Rank 1 - Gold Champion */}
-                  <div className="bg-[#0F172A] rounded-2xl p-6 border-2 border-amber-400 text-center order-1 md:order-2 flex flex-col justify-between shadow-[0_0_30px_rgba(251,191,36,0.25)] md:-translate-y-2">
+                  <div className="bg-[#030A16] rounded-2xl p-6 border-2 border-amber-400 text-center order-1 md:order-2 flex flex-col justify-between shadow-[0_0_30px_rgba(251,191,36,0.25)] md:-translate-y-2">
                     <div>
                       <span className="text-xs font-mono font-bold text-amber-400 uppercase block mb-1">
                         🥇 CHAMPION #1
@@ -555,7 +554,7 @@ export default function ChallengeDirectory({
                   </div>
 
                   {/* Rank 3 - Bronze */}
-                  <div className="bg-[#0F172A] rounded-2xl p-5 border border-amber-700/50 text-center order-3 flex flex-col justify-between shadow-[0_0_15px_rgba(180,83,9,0.15)]">
+                  <div className="bg-[#030A16] rounded-2xl p-5 border border-amber-700/50 text-center order-3 flex flex-col justify-between shadow-[0_0_15px_rgba(180,83,9,0.15)]">
                     <div>
                       <span className="text-xs font-mono font-bold text-amber-600 uppercase block mb-1">
                         🥉 RANK #3
@@ -566,7 +565,7 @@ export default function ChallengeDirectory({
                       <h4 className="font-extrabold text-white font-display text-base">
                         {filteredLeaderboard[2].participantName}
                       </h4>
-                      <p className="text-xs font-mono text-[#10B981] font-semibold">
+                      <p className="text-xs font-mono text-ochre font-semibold">
                         {filteredLeaderboard[2].participantHandle}
                       </p>
                     </div>
@@ -577,7 +576,7 @@ export default function ChallengeDirectory({
                       </div>
                       <div>
                         <span className="text-zinc-400 block text-[10px]">ACCURACY</span>
-                        <strong className="text-[#10B981] font-bold">
+                        <strong className="text-ochre font-bold">
                           {Math.round(((filteredLeaderboard[2].correctCount || 17) / (filteredLeaderboard[2].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[2].correctCount || 17}/20)
                         </strong>
                       </div>
@@ -589,7 +588,7 @@ export default function ChallengeDirectory({
               {/* Leaderboard Table with Accuracy Metric */}
               <div className="overflow-x-auto rounded-2xl border border-zinc-800 mb-4">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-[#000000] text-zinc-300 uppercase text-[10px] tracking-wider border-b border-zinc-800">
+                  <thead className="bg-black text-zinc-300 uppercase text-[10px] tracking-wider border-b border-zinc-800">
                     <tr>
                       <th className="py-4 px-4 font-bold">Rank</th>
                       <th className="py-4 px-4 font-bold">Participant</th>
@@ -597,7 +596,7 @@ export default function ChallengeDirectory({
                       <th className="py-4 px-4 font-bold text-right">Accuracy (%)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-800 bg-[#0F172A]">
+                  <tbody className="divide-y divide-zinc-800 bg-[#030A16]">
                     {filteredLeaderboard.map((item, idx) => {
                       const rank = idx + 1;
                       const accuracyPct = Math.round(
@@ -611,7 +610,7 @@ export default function ChallengeDirectory({
                           <td className="py-4 px-4 font-sans font-bold text-white">
                             <div>{item.participantName}</div>
                             {item.participantHandle && (
-                              <span className="text-[10px] font-mono text-[#10B981] font-semibold">
+                              <span className="text-[10px] font-mono text-ochre font-semibold">
                                 {item.participantHandle}
                               </span>
                             )}
@@ -619,7 +618,7 @@ export default function ChallengeDirectory({
                           <td className="py-4 px-4 text-right font-extrabold text-white text-sm">
                             {item.score}
                           </td>
-                          <td className="py-4 px-4 text-right font-bold text-[#10B981]">
+                          <td className="py-4 px-4 text-right font-bold text-ochre">
                             {accuracyPct}% ({item.correctCount || 15}/{item.totalQuestions || 20})
                           </td>
                         </tr>
@@ -630,16 +629,16 @@ export default function ChallengeDirectory({
               </div>
 
               {/* Sticky "YOU" Rank Fixed Row at Bottom */}
-              <div className="bg-[#10B981]/20 border-2 border-[#10B981] rounded-2xl p-4 flex items-center justify-between font-mono text-xs shadow-lg">
+              <div className="bg-ochre/15 border-2 border-ochre rounded-2xl p-4 flex items-center justify-between font-mono text-xs shadow-lg">
                 <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 rounded-full bg-[#10B981] text-black font-extrabold">
+                  <span className="px-3 py-1 rounded-full bg-ochre text-white font-extrabold">
                     YOU
                   </span>
                   <div>
                     <strong className="text-white font-sans text-sm block">
                       {currentUserEntry.participantName}
                     </strong>
-                    <span className="text-[#10B981] text-[10px]">
+                    <span className="text-ochre text-[10px]">
                       {currentUserEntry.participantHandle}
                     </span>
                   </div>
@@ -654,7 +653,7 @@ export default function ChallengeDirectory({
                   </div>
                   <div>
                     <span className="text-zinc-400 block text-[10px] text-right">ACCURACY</span>
-                    <strong className="text-[#10B981] font-bold">
+                    <strong className="text-ochre font-bold">
                       {Math.round(((currentUserEntry.correctCount || 12) / (currentUserEntry.totalQuestions || 20)) * 100)}% ({currentUserEntry.correctCount || 12}/{currentUserEntry.totalQuestions || 20})
                     </strong>
                   </div>
@@ -668,12 +667,12 @@ export default function ChallengeDirectory({
       {/* 3. MODAL: Player Registration */}
       <AnimatePresence>
         {isRegistering && selectedQuiz && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#000000]/80 backdrop-blur-xs">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#0F172A] rounded-3xl p-6 sm:p-8 max-w-md w-full border border-[#10B981] shadow-2xl relative"
+              className="bg-navy-light rounded-3xl p-6 sm:p-8 max-w-md w-full border border-ochre shadow-2xl relative"
             >
               <button
                 onClick={() => setIsRegistering(false)}
@@ -683,11 +682,11 @@ export default function ChallengeDirectory({
               </button>
 
               <div className="text-center mb-6">
-                <span className="w-12 h-12 mx-auto rounded-2xl bg-[#10B981]/20 text-[#10B981] text-2xl flex items-center justify-center mb-3">
+                <span className="w-12 h-12 mx-auto rounded-2xl bg-ochre/20 text-ochre text-2xl flex items-center justify-center mb-3">
                   ⚡
                 </span>
                 <h3 className="text-2xl font-bold font-display text-white mb-1">Enter Arena</h3>
-                <p className="text-xs font-mono text-[#94A3B8]">{selectedQuiz.title}</p>
+                <p className="text-xs font-mono text-zinc-300">{selectedQuiz.title}</p>
               </div>
 
               <form onSubmit={handleStartQuiz} className="space-y-4 font-sans">
@@ -701,7 +700,7 @@ export default function ChallengeDirectory({
                     value={playerName}
                     onChange={(e) => setPlayerName(e.target.value)}
                     placeholder="e.g. Abebe Bikila"
-                    className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]"
+                    className="w-full px-4 py-3.5 rounded-xl bg-black/50 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
                   />
                 </div>
 
@@ -714,13 +713,13 @@ export default function ChallengeDirectory({
                     value={playerHandle}
                     onChange={(e) => setPlayerHandle(e.target.value)}
                     placeholder="e.g. @abebe_code"
-                    className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]"
+                    className="w-full px-4 py-3.5 rounded-xl bg-black/50 border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-[#10B981] hover:bg-[#059669] text-black font-mono font-extrabold text-sm py-3.5 rounded-xl transition-all shadow-md mt-2"
+                  className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-sm py-3.5 rounded-xl transition-all shadow-md mt-2"
                 >
                   Enter Arena Now 🔥
                 </button>
@@ -733,17 +732,17 @@ export default function ChallengeDirectory({
       {/* 4. MODAL: Active Solo Quiz Player */}
       <AnimatePresence>
         {quizStarted && selectedQuiz && !quizCompleted && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#000000]/90">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90">
             <motion.div
               key={currentQuestionIndex}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="bg-[#0F172A] text-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full border border-zinc-800 relative overflow-hidden"
+              className="bg-navy-light text-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full border border-zinc-800 relative overflow-hidden"
             >
               <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-zinc-800">
                 <div>
-                  <span className="text-xs font-mono text-[#10B981] uppercase font-bold tracking-wider">
+                  <span className="text-xs font-mono text-ochre uppercase font-bold tracking-wider">
                     Question {currentQuestionIndex + 1} of {selectedQuiz.questions.length}
                   </span>
                   <h4 className="text-sm font-sans text-zinc-300 font-medium truncate max-w-xs sm:max-w-sm">
@@ -751,7 +750,7 @@ export default function ChallengeDirectory({
                   </h4>
                 </div>
 
-                <div className="flex items-center gap-2 bg-[#F59E0B]/20 border border-[#F59E0B]/40 px-3.5 py-1.5 rounded-full font-mono text-xs font-bold text-[#F59E0B]">
+                <div className="flex items-center gap-2 bg-ochre/20 border border-ochre/40 px-3.5 py-1.5 rounded-full font-mono text-xs font-bold text-ochre">
                   <span>⏱️</span>
                   <span className="text-sm font-extrabold text-white">{timeLeft}s</span>
                 </div>
@@ -763,7 +762,7 @@ export default function ChallengeDirectory({
                   initial={{ width: "100%" }}
                   animate={{ width: "0%" }}
                   transition={{ duration: selectedQuiz.timePerQuestion || 20, ease: "linear" }}
-                  className="h-full bg-[#10B981]"
+                  className="h-full bg-ochre"
                 />
               </div>
 
@@ -772,7 +771,7 @@ export default function ChallengeDirectory({
               </h3>
 
               {selectedQuiz.questions[currentQuestionIndex].codeSnippet && (
-                <pre className="mb-6 bg-black rounded-xl p-4 border border-zinc-800 font-mono text-xs text-[#10B981] overflow-x-auto whitespace-pre">
+                <pre className="mb-6 bg-black rounded-xl p-4 border border-zinc-800 font-mono text-xs text-ochre overflow-x-auto whitespace-pre">
                   {selectedQuiz.questions[currentQuestionIndex].codeSnippet}
                 </pre>
               )}
@@ -789,7 +788,7 @@ export default function ChallengeDirectory({
                       }}
                       className={`w-full text-left p-4 rounded-xl font-sans text-sm font-medium transition-all flex items-center justify-between border ${
                         isSelected
-                          ? "bg-[#10B981] text-black border-[#10B981] font-bold"
+                          ? "bg-ochre text-white border-ochre font-bold"
                           : "bg-black/40 hover:bg-zinc-800 text-zinc-200 border-zinc-800"
                       }`}
                     >
@@ -805,7 +804,7 @@ export default function ChallengeDirectory({
               </div>
 
               <div className="text-right text-xs font-mono text-zinc-400">
-                Score: <strong className="text-[#10B981] font-bold">{score} Pts</strong>
+                Score: <strong className="text-ochre font-bold">{score} Pts</strong>
               </div>
             </motion.div>
           </div>
