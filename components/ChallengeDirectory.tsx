@@ -127,27 +127,55 @@ export default function ChallengeDirectory({
   const [leaderboardFilter, setLeaderboardFilter] = useState("all");
   const [allowSoloPlay, setAllowSoloPlay] = useState<boolean>(true);
 
-  // Fetch updated leaderboard & solo play mode status
-  const fetchLeaderboard = async () => {
+  // Fetch updated leaderboard & live state
+  const fetchLeaderboardAndLiveState = async () => {
     try {
       const res = await fetch("/api/challenges/leaderboard");
       const data = await res.json();
       if (data.ok && Array.isArray(data.leaderboard)) {
         setLeaderboard(data.leaderboard);
       }
-    } catch (err) {
-      console.error("Failed to fetch leaderboard:", err);
+    } catch {
+      // ignore
+    }
+
+    try {
+      const stateRes = await fetch("/api/quiz/live/state");
+      const stateData = await stateRes.json();
+      if (stateData.allowSoloPlay !== undefined) {
+        setAllowSoloPlay(stateData.allowSoloPlay);
+      }
+    } catch {
+      // ignore
     }
   };
 
   useEffect(() => {
-    fetchLeaderboard();
-    fetch("/api/quiz/live/state")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.allowSoloPlay !== undefined) setAllowSoloPlay(data.allowSoloPlay);
-      })
-      .catch(() => {});
+    fetchLeaderboardAndLiveState();
+
+    // SSE Real-Time Stream to instantly auto-update allowSoloPlay toggle
+    const sse = new EventSource("/api/quiz/live/stream?userId=hub_directory");
+
+    const handleStreamMsg = (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.allowSoloPlay !== undefined) {
+          setAllowSoloPlay(data.allowSoloPlay);
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    sse.addEventListener("QUESTION_BROADCAST", handleStreamMsg);
+    sse.addEventListener("CONNECTED", handleStreamMsg);
+
+    const interval = setInterval(fetchLeaderboardAndLiveState, 2000);
+
+    return () => {
+      clearInterval(interval);
+      sse.close();
+    };
   }, []);
 
   // Handle Question Countdown Timer

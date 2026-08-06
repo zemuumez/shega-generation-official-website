@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanityClient } from "@/sanity/lib/client";
 import { LEADERBOARD_QUERY } from "@/sanity/lib/queries";
-import { demoLeaderboard } from "@/lib/demoData";
 
 export const runtime = "nodejs";
-export const revalidate = 10;
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
@@ -18,8 +17,8 @@ export async function GET(req: NextRequest) {
       entries = [];
     }
 
-    if (!entries || entries.length === 0) {
-      entries = demoLeaderboard;
+    if (!entries) {
+      entries = [];
     }
 
     if (quizId && quizId !== "all") {
@@ -35,6 +34,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, leaderboard: entries }, { status: 200 });
   } catch (err) {
     console.error("Failed to fetch leaderboard:", err);
-    return NextResponse.json({ ok: true, leaderboard: demoLeaderboard }, { status: 200 });
+    return NextResponse.json({ ok: true, leaderboard: [] }, { status: 200 });
   }
 }

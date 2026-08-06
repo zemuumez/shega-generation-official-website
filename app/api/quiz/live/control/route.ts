@@ -19,7 +19,7 @@ const ControlSchema = z.object({
   topicId: z.string().optional(),
   questionId: z.string().optional(),
   orderIndex: z.number().optional(),
-  timerDuration: z.number().min(5).max(300).optional().default(45), // Default 45 seconds per question
+  timerDuration: z.number().min(5).max(300).optional(),
   autoPush: z.boolean().optional(),
   allowSoloPlay: z.boolean().optional(),
 });
@@ -106,7 +106,8 @@ export async function POST(req: NextRequest) {
       targetQuestion = questions.find((q: any) => q.orderIndex === orderIndex) || questions[orderIndex - 1] || questions[0];
     }
 
-    const durationSeconds = timerDuration || targetQuestion.timerDuration || 45;
+    // Explicit timer priority: timerDuration passed by Admin Deck > targetQuestion.timerDuration > 45s fallback
+    const durationSeconds = timerDuration && timerDuration >= 5 ? timerDuration : (targetQuestion.timerDuration || 45);
     const now = Date.now();
     const endTime = now + durationSeconds * 1000;
     const points = targetQuestion.points || getDifficultyPoints(targetQuestion.difficulty || "MEDIUM");

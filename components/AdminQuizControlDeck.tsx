@@ -45,6 +45,7 @@ export default function AdminQuizControlDeck({
   // Deck Controls State
   const [selectedTopicId, setSelectedTopicId] = useState<string>(topics[0]?._id || "all");
   const [timerDuration, setTimerDuration] = useState<number>(45); // Default 45 seconds
+  const [timerSavedFeedback, setTimerSavedFeedback] = useState<boolean>(false);
   const [autoPush, setAutoPush] = useState<boolean>(false);
   const [allowSoloPlay, setAllowSoloPlay] = useState<boolean>(true);
   const [liveState, setLiveState] = useState<any>(null);
@@ -374,14 +375,34 @@ export default function AdminQuizControlDeck({
               <label className="block text-xs font-mono font-bold text-zinc-300 mb-1">
                 Question Timer (Seconds)
               </label>
-              <input
-                type="number"
-                min={5}
-                max={300}
-                value={timerDuration}
-                onChange={(e) => setTimerDuration(Number(e.target.value))}
-                className="w-full bg-navy-dark border border-zinc-700 rounded-xl px-4 py-2.5 font-mono text-sm text-white focus:outline-none focus:ring-2 focus:ring-ochre"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min={5}
+                  max={300}
+                  value={timerDuration}
+                  onChange={(e) => {
+                    setTimerDuration(Number(e.target.value));
+                    setTimerSavedFeedback(false);
+                  }}
+                  className="w-full bg-navy-dark border border-zinc-700 rounded-xl px-4 py-2.5 font-mono text-sm text-white focus:outline-none focus:ring-2 focus:ring-ochre"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTimerSavedFeedback(true);
+                    setTimeout(() => setTimerSavedFeedback(false), 3000);
+                  }}
+                  className="bg-ochre hover:bg-ochre-dark text-white font-mono font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm shrink-0 whitespace-nowrap active:scale-95"
+                >
+                  Set Timer ⏱️
+                </button>
+              </div>
+              {timerSavedFeedback && (
+                <div className="mt-2 text-xs font-mono text-emerald-400 font-bold flex items-center gap-1">
+                  <span>✓</span> Broadcast timer set to {timerDuration} seconds!
+                </div>
+              )}
               <p className="text-[11px] font-mono text-zinc-400 mt-1">
                 Default: <strong>45 seconds</strong> per question.
               </p>
@@ -488,7 +509,7 @@ export default function AdminQuizControlDeck({
                           : "bg-ochre hover:bg-ochre-dark text-white shadow-sm hover:scale-105 active:scale-95"
                       }`}
                     >
-                      {isCurrentlyBroadcasting ? "BROADCASTING LIVE..." : "PUSH QUESTION →"}
+                      {isCurrentlyBroadcasting ? "BROADCASTING LIVE..." : `PUSH QUESTION (${timerDuration}s) →`}
                     </button>
                   </div>
 

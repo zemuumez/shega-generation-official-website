@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanityClient } from "@/sanity/lib/client";
 import { sanityWriteClient } from "@/sanity/lib/writeClient";
-import { demoLeaderboard } from "@/lib/demoData";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -29,8 +28,8 @@ export async function GET(req: NextRequest) {
       entries = [];
     }
 
-    if (!entries || entries.length === 0) {
-      entries = demoLeaderboard;
+    if (!entries) {
+      entries = [];
     }
 
     // Generate CSV String with UTF-8 BOM (\uFEFF) for Amharic encoding support in Excel / Sheets

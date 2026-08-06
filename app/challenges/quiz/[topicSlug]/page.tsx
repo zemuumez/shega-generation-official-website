@@ -123,7 +123,11 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       fetchLeaderboard();
     });
 
+    // 3-second Auto-Refresh Leaderboard Polling
+    const lbInterval = setInterval(fetchLeaderboard, 3000);
+
     return () => {
+      clearInterval(lbInterval);
       sse.close();
     };
   }, [isRegistered, userId, activeQuestion?.questionId]);

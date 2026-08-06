@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getLiveState, setLiveState, generateQuestionToken, advanceToNextQuestion } from "@/lib/quizLiveEngine";
+import { getLiveState, setLiveState, generateQuestionToken, advanceToNextQuestion, getAllowSoloPlay } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -29,7 +29,8 @@ export async function GET(req: NextRequest) {
           const liveState = await getLiveState();
 
           if (!liveState) {
-            sendEvent("IDLE_STATE", { status: "IDLE" });
+            const allowSoloPlay = await getAllowSoloPlay();
+            sendEvent("IDLE_STATE", { status: "IDLE", allowSoloPlay });
             return;
           }
 
