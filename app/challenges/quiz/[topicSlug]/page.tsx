@@ -84,57 +84,79 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
 
     fetchLeaderboard();
 
-    // Query active state immediately to sync mid-question timer duration on reload
-    fetch(`/api/quiz/live/state?userId=${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
+    const syncLiveState = async () => {
+      try {
+        const res = await fetch(`/api/quiz/live/state?userId=${userId}`);
+        const data = await res.json();
         if (data.status === "ACTIVE" && data.activeQuestion) {
+          if (currentQIdRef.current !== data.activeQuestion.questionId) {
+            currentQIdRef.current = data.activeQuestion.questionId;
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setSubmissionResult(null);
+          }
           setActiveQuestion(data.activeQuestion);
-        } else if (data.status === "IDLE") {
-          setActiveQuestion(null);
+        } else if (data.status === "IDLE" || data.status === "EXPIRED") {
+          if (data.status === "IDLE") {
+            currentQIdRef.current = null;
+            setActiveQuestion(null);
+          }
         }
-      })
-      .catch(() => {});
+      } catch {
+        // ignore
+      }
+    };
+
+    // Initial sync
+    syncLiveState();
+    fetchLeaderboard();
+
+    // 1s Polling interval for Vercel Serverless resilience + 2s Leaderboard refresh
+    const pollInterval = setInterval(() => {
+      syncLiveState();
+      fetchLeaderboard();
+    }, 1000);
 
     // SSE Real-Time Zero-Refresh Broadcast Stream
-    const sse = new EventSource(`/api/quiz/live/stream?userId=${userId}`);
+    let sse: EventSource | null = null;
+    try {
+      sse = new EventSource(`/api/quiz/live/stream?userId=${userId}`);
 
-    sse.addEventListener("QUESTION_BROADCAST", (e) => {
-      try {
-        const data: BroadcastQuestion = JSON.parse(e.data);
-        
-        if (currentQIdRef.current !== data.questionId) {
-          currentQIdRef.current = data.questionId;
-          setSelectedOption(null);
-          setIsSubmitted(false);
-          setSubmissionResult(null);
+      sse.addEventListener("QUESTION_BROADCAST", (e) => {
+        try {
+          const data: BroadcastQuestion = JSON.parse(e.data);
+          if (currentQIdRef.current !== data.questionId) {
+            currentQIdRef.current = data.questionId;
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setSubmissionResult(null);
+          }
+          setActiveQuestion(data);
+          fetchLeaderboard();
+        } catch {
+          // ignore
         }
+      });
 
-        setActiveQuestion(data);
+      sse.addEventListener("IDLE_STATE", () => {
+        currentQIdRef.current = null;
+        setActiveQuestion(null);
+        setSelectedOption(null);
+        setIsSubmitted(false);
+        setSubmissionResult(null);
         fetchLeaderboard();
-      } catch (err) {
-        console.error("Failed to parse SSE payload:", err);
-      }
-    });
+      });
 
-    sse.addEventListener("IDLE_STATE", () => {
-      currentQIdRef.current = null;
-      setActiveQuestion(null);
-      setSelectedOption(null);
-      setIsSubmitted(false);
-      setSubmissionResult(null);
-      fetchLeaderboard();
-    });
-
-    sse.addEventListener("QUESTION_EXPIRED", () => {
-      fetchLeaderboard();
-    });
-
-    const lbInterval = setInterval(fetchLeaderboard, 2000);
+      sse.addEventListener("QUESTION_EXPIRED", () => {
+        fetchLeaderboard();
+      });
+    } catch {
+      // ignore
+    }
 
     return () => {
-      clearInterval(lbInterval);
-      sse.close();
+      clearInterval(pollInterval);
+      if (sse) sse.close();
     };
   }, [isRegistered, userId]);
 

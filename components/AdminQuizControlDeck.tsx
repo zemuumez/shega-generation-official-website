@@ -151,34 +151,46 @@ export default function AdminQuizControlDeck({
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    fetch("/api/quiz/live/state")
-      .then((res) => res.json())
-      .then((data) => {
+    const syncAdminState = async () => {
+      try {
+        const res = await fetch("/api/quiz/live/state");
+        const data = await res.json();
         if (data.allowSoloPlay !== undefined) setAllowSoloPlay(data.allowSoloPlay);
         if (data.status === "ACTIVE" && data.activeQuestion) {
           setLiveState(data.activeQuestion);
         }
-      })
-      .catch(() => {});
-
-    const sse = new EventSource("/api/quiz/live/stream?userId=admin_deck");
-
-    sse.addEventListener("QUESTION_BROADCAST", (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        setLiveState(data);
-        if (data.autoPush !== undefined) setAutoPush(data.autoPush);
       } catch {
         // ignore
       }
-    });
+    };
 
-    sse.addEventListener("IDLE_STATE", () => {
-      // Do not clear liveState on Admin Deck from SSE IDLE_STATE race condition
-    });
+    syncAdminState();
+    const pollInterval = setInterval(syncAdminState, 1000);
+
+    let sse: EventSource | null = null;
+    try {
+      sse = new EventSource("/api/quiz/live/stream?userId=admin_deck");
+
+      sse.addEventListener("QUESTION_BROADCAST", (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          setLiveState(data);
+          if (data.autoPush !== undefined) setAutoPush(data.autoPush);
+        } catch {
+          // ignore
+        }
+      });
+
+      sse.addEventListener("IDLE_STATE", () => {
+        // Do not clear liveState on Admin Deck from SSE IDLE_STATE race condition
+      });
+    } catch {
+      // ignore
+    }
 
     return () => {
-      sse.close();
+      clearInterval(pollInterval);
+      if (sse) sse.close();
     };
   }, [isAuthenticated]);
 
