@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface QuizQuestion {
   questionText: string;
@@ -38,49 +37,46 @@ interface LeaderboardEntry {
   quizId?: string;
 }
 
+const STORAGE_KEY = "shega_quiz_participant";
+
 const CATEGORIES = [
   {
     id: "Live Timed Quiz",
-    title: "⚡ LIVE TIMED QUIZ",
+    title: "LIVE TIMED QUIZ",
     subtitle: "Topic: Web Dev, AI & Cyber",
-    description: "Real-time synchronized battle with live countdowns & instant scoring.",
-    icon: "⚡",
+    description: "Real-time synchronized battle with live countdowns and instant scoring.",
     locked: false,
     active: true,
   },
   {
     id: "Timed Q&A",
-    title: "⏱️ TIMED Q&A",
+    title: "TIMED Q&A",
     subtitle: "Rapid-fire questions",
     description: "Solo time-bound technical challenges.",
-    icon: "⏱️",
     locked: true,
     badge: "Locked - Coming Soon",
   },
   {
     id: "Mini CTF",
-    title: "🚩 MINI CTF",
+    title: "MINI CTF",
     subtitle: "Cybersecurity & Logic",
     description: "Capture the flag security puzzles and exploit challenges.",
-    icon: "🚩",
     locked: true,
     badge: "Locked - Coming Soon",
   },
   {
     id: "Hometake Assignment",
-    title: "🏠 HOMETAKE ASSIGNMENT",
+    title: "HOMETAKE ASSIGNMENT",
     subtitle: "Deep-dive coding",
     description: "Take-home engineering tasks and portfolio builds.",
-    icon: "🏠",
     locked: true,
     badge: "Locked - Coming Soon",
   },
   {
     id: "Modern Challenges",
-    title: "🚀 MODERN CHALLENGES",
+    title: "MODERN CHALLENGES",
     subtitle: "Innovation sprint",
     description: "Hackathon sprints and emerging AI architecture challenges.",
-    icon: "🚀",
     locked: true,
     badge: "Locked - Coming Soon",
   },
@@ -102,9 +98,25 @@ export default function ChallengeDirectory({
   const [selectedQuiz, setSelectedQuiz] = useState<ChallengeQuiz | null>(null);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
 
-  // Participant Registration State
+  // Registered Participant State
   const [playerName, setPlayerName] = useState("");
   const [playerHandle, setPlayerHandle] = useState("");
+
+  // Restore real participant profile from localStorage on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && Date.now() < parsed.expiryTimestamp) {
+          setPlayerName(parsed.playerName || "");
+          setPlayerHandle(parsed.playerHandle || "");
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   // Quiz Engine State
   const [quizStarted, setQuizStarted] = useState(false);
@@ -151,7 +163,6 @@ export default function ChallengeDirectory({
   useEffect(() => {
     fetchLeaderboardAndLiveState();
 
-    // SSE Real-Time Stream to instantly auto-update allowSoloPlay toggle
     const sse = new EventSource("/api/quiz/live/stream?userId=hub_directory");
 
     const handleStreamMsg = (e: MessageEvent) => {
@@ -288,29 +299,33 @@ export default function ChallengeDirectory({
     return item.quizId === leaderboardFilter || item.quizTitle === leaderboardFilter;
   });
 
-  // Logged-in user matching entry for sticky row
+  // Logged-in user matching entry for sticky row - dynamically synced with real data
   const currentUserEntry = leaderboard.find(
-    (item) => item.participantName === playerName || item.participantHandle === playerHandle
+    (item) => (playerName && item.participantName === playerName) || (playerHandle && item.participantHandle === playerHandle)
   ) || {
-    participantName: playerName || "You (Guest)",
-    participantHandle: playerHandle || "@you",
-    score: score || 450,
-    correctCount: correctCount || 12,
-    totalQuestions: selectedQuiz?.questions.length || 20,
-    timeSpentSeconds: totalTimeSpent || 42,
+    participantName: playerName || "Guest Participant",
+    participantHandle: playerHandle || "@guest",
+    score: score || 0,
+    correctCount: correctCount || 0,
+    totalQuestions: userAnswers.length || 0,
+    timeSpentSeconds: totalTimeSpent || 0,
   };
+
+  const calculatedAccuracy = currentUserEntry.totalQuestions > 0
+    ? Math.round((currentUserEntry.correctCount / currentUserEntry.totalQuestions) * 100)
+    : 0;
 
   return (
     <div className="min-h-screen bg-ivory text-ink pb-24 selection:bg-ochre selection:text-white">
-      {/* 1. Hero Header - Dynamic Clean Theme Header */}
+      {/* 1. Hero Header - Clean English Design System */}
       <section className="relative bg-white text-ink pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-200/80 shadow-xs">
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/15 border border-ochre/40 text-ochre text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm">
-            <span>(ሸጋ አሬና) SHEGA ARENA</span>
+            <span>SHEGA ARENA</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold font-display tracking-tight text-ink mb-3">
-            {customTitle || "(ሸጋ አሬና) SHEGA ARENA: SELECT YOUR CHALLENGE"}
+            {customTitle ? customTitle.replace(/\(ሸጋ አሬና\)\s*/g, "") : "SHEGA ARENA: SELECT YOUR CHALLENGE"}
           </h1>
 
           <p className="max-w-2xl mx-auto text-base sm:text-lg text-ink-soft font-sans leading-relaxed mb-8">
@@ -327,7 +342,7 @@ export default function ChallengeDirectory({
                   : "text-ink-soft hover:text-ink hover:bg-zinc-200"
               }`}
             >
-              ⚡ Challenge Hub
+              Challenge Hub
             </button>
             <button
               onClick={() => setMainView("leaderboard")}
@@ -337,7 +352,7 @@ export default function ChallengeDirectory({
                   : "text-ink-soft hover:text-ink hover:bg-zinc-200"
               }`}
             >
-              🏆 Hall of Fame
+              Hall of Fame
             </button>
           </div>
         </div>
@@ -371,7 +386,7 @@ export default function ChallengeDirectory({
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-200 border border-zinc-300 text-zinc-600 text-[11px] font-mono font-bold uppercase">
-                            <span>🔒 {cat.badge}</span>
+                            <span>{cat.badge}</span>
                           </span>
                         )}
                       </div>
@@ -394,10 +409,9 @@ export default function ChallengeDirectory({
                         <>
                           <a
                             href="/challenges/quiz/web-dev-algorithms"
-                            className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-xs py-3 rounded-xl shadow-md transition-all text-center flex items-center justify-center gap-2"
+                            className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-xs py-3 rounded-xl shadow-md transition-all text-center"
                           >
-                            <span>[Enter Arena]</span>
-                            <span>⚡</span>
+                            Enter Arena
                           </a>
                         </>
                       ) : (
@@ -405,7 +419,7 @@ export default function ChallengeDirectory({
                           disabled
                           className="w-full bg-zinc-200 text-zinc-500 font-mono font-bold text-xs py-3 rounded-xl cursor-not-allowed border border-zinc-300"
                         >
-                          [Locked - Coming Soon] 🔒
+                          Locked - Coming Soon
                         </button>
                       )}
                     </div>
@@ -419,7 +433,7 @@ export default function ChallengeDirectory({
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-zinc-200">
                 <div>
                   <span className="text-xs font-mono font-bold text-ochre uppercase tracking-wider block mb-1">
-                    ⚡ Live Broadcast Topics
+                    Live Broadcast Topics
                   </span>
                   <h2 className="text-2xl font-bold font-display text-ink">
                     Available Live Challenge Rooms
@@ -439,7 +453,7 @@ export default function ChallengeDirectory({
                           {quiz.category || "Live Timed Quiz"}
                         </span>
                         <span className="text-xs font-mono font-bold text-ink-soft">
-                          ⏱️ {quiz.timePerQuestion || 45}s / question
+                          {quiz.timePerQuestion || 45}s / question
                         </span>
                       </div>
 
@@ -462,7 +476,7 @@ export default function ChallengeDirectory({
                           href={`/challenges/quiz/${quiz.slug?.current || quiz._id}`}
                           className="bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm"
                         >
-                          Join Live Arena ⚡
+                          Join Live Arena
                         </a>
                         {allowSoloPlay ? (
                           <button
@@ -484,7 +498,7 @@ export default function ChallengeDirectory({
             </section>
           </div>
         ) : (
-          /* PAGE 2: Global & Quiz-Specific Leaderboard (🏆 THE ሸጋ HALL OF FAME) */
+          /* PAGE 2: Leaderboard View */
           <div className="space-y-8">
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-zinc-200/80 shadow-2xl relative overflow-hidden text-ink">
               <div className="text-center mb-8 pb-6 border-b border-zinc-200">
@@ -492,7 +506,7 @@ export default function ChallengeDirectory({
                   OFFICIAL RANKINGS
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-ink mb-2">
-                  🏆 THE ሸጋ HALL OF FAME (ሸጋ ክብር አዳራሽ)
+                  THE SHEGA HALL OF FAME
                 </h2>
                 <p className="text-xs font-mono text-ink-soft">
                   Dynamic difficulty weighting: EASY (100 Pts), MEDIUM (200 Pts), HARD (400 Pts) + Speed Bonus
@@ -521,14 +535,14 @@ export default function ChallengeDirectory({
                 })}
               </div>
 
-              {/* Top 3 Podium (Gold, Silver, Bronze Glows) */}
+              {/* Top 3 Podium */}
               {filteredLeaderboard.length >= 3 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                  {/* Rank 2 - Silver */}
+                  {/* Rank 2 */}
                   <div className="bg-ivory rounded-2xl p-5 border border-zinc-300 text-center order-2 md:order-1 flex flex-col justify-between shadow-xs">
                     <div>
                       <span className="text-xs font-mono font-bold text-zinc-600 uppercase block mb-1">
-                        🥈 RANK #2
+                        RANK #2
                       </span>
                       <div className="w-12 h-12 mx-auto rounded-full bg-zinc-300 text-black font-mono font-bold text-base flex items-center justify-center mb-2 shadow-sm">
                         {filteredLeaderboard[1].participantName.slice(0, 2).toUpperCase()}
@@ -548,17 +562,17 @@ export default function ChallengeDirectory({
                       <div>
                         <span className="text-ink-soft block text-[10px]">ACCURACY</span>
                         <strong className="text-ochre font-bold">
-                          {Math.round(((filteredLeaderboard[1].correctCount || 18) / (filteredLeaderboard[1].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[1].correctCount || 18}/20)
+                          {Math.round(((filteredLeaderboard[1].correctCount || 18) / (filteredLeaderboard[1].totalQuestions || 20)) * 100)}%
                         </strong>
                       </div>
                     </div>
                   </div>
 
-                  {/* Rank 1 - Gold Champion */}
+                  {/* Rank 1 - Champion */}
                   <div className="bg-ivory rounded-2xl p-6 border-2 border-amber-400 text-center order-1 md:order-2 flex flex-col justify-between shadow-md md:-translate-y-2">
                     <div>
                       <span className="text-xs font-mono font-bold text-amber-600 uppercase block mb-1">
-                        🥇 CHAMPION #1
+                        CHAMPION #1
                       </span>
                       <div className="w-14 h-14 mx-auto rounded-full bg-amber-400 text-black font-mono font-bold text-xl flex items-center justify-center mb-2 shadow-md ring-4 ring-amber-400/30">
                         {filteredLeaderboard[0].participantName.slice(0, 2).toUpperCase()}
@@ -578,17 +592,17 @@ export default function ChallengeDirectory({
                       <div>
                         <span className="text-ink-soft block text-[10px]">ACCURACY</span>
                         <strong className="text-amber-600 font-bold text-sm">
-                          {Math.round(((filteredLeaderboard[0].correctCount || 19) / (filteredLeaderboard[0].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[0].correctCount || 19}/20)
+                          {Math.round(((filteredLeaderboard[0].correctCount || 19) / (filteredLeaderboard[0].totalQuestions || 20)) * 100)}%
                         </strong>
                       </div>
                     </div>
                   </div>
 
-                  {/* Rank 3 - Bronze */}
+                  {/* Rank 3 */}
                   <div className="bg-ivory rounded-2xl p-5 border border-amber-700/40 text-center order-3 flex flex-col justify-between shadow-xs">
                     <div>
                       <span className="text-xs font-mono font-bold text-amber-700 uppercase block mb-1">
-                        🥉 RANK #3
+                        RANK #3
                       </span>
                       <div className="w-12 h-12 mx-auto rounded-full bg-amber-700 text-white font-mono font-bold text-base flex items-center justify-center mb-2 shadow-sm">
                         {filteredLeaderboard[2].participantName.slice(0, 2).toUpperCase()}
@@ -608,7 +622,7 @@ export default function ChallengeDirectory({
                       <div>
                         <span className="text-ink-soft block text-[10px]">ACCURACY</span>
                         <strong className="text-ochre font-bold">
-                          {Math.round(((filteredLeaderboard[2].correctCount || 16) / (filteredLeaderboard[2].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[2].correctCount || 16}/20)
+                          {Math.round(((filteredLeaderboard[2].correctCount || 16) / (filteredLeaderboard[2].totalQuestions || 20)) * 100)}%
                         </strong>
                       </div>
                     </div>
@@ -632,7 +646,7 @@ export default function ChallengeDirectory({
                   <tbody className="divide-y divide-zinc-200">
                     {filteredLeaderboard.map((item, idx) => {
                       const rank = idx + 1;
-                      const isMe = item.participantName === playerName || item.participantHandle === playerHandle;
+                      const isMe = (playerName && item.participantName === playerName) || (playerHandle && item.participantHandle === playerHandle);
 
                       return (
                         <tr
@@ -646,7 +660,7 @@ export default function ChallengeDirectory({
                           }`}
                         >
                           <td className="p-4 text-center font-bold">
-                            {rank === 1 ? "🥇 #1" : rank === 2 ? "🥈 #2" : rank === 3 ? "🥉 #3" : `#${rank}`}
+                            #{rank}
                           </td>
                           <td className="p-4">
                             <strong className="block text-ink font-sans text-sm">{item.participantName}</strong>
@@ -661,7 +675,7 @@ export default function ChallengeDirectory({
                             </span>
                           </td>
                           <td className="p-4 text-center text-ink-soft">
-                            ⏱️ {item.timeSpentSeconds || 30}s
+                            {item.timeSpentSeconds || 30}s
                           </td>
                           <td className="p-4 text-right text-ink-soft text-[11px]">
                             {item.completedAt ? new Date(item.completedAt).toLocaleDateString() : "Today"}
@@ -677,7 +691,7 @@ export default function ChallengeDirectory({
         )}
       </main>
 
-      {/* STICKY "YOU" RANK FOOTER BAR - Light Theme Card */}
+      {/* STICKY "YOU" RANK FOOTER BAR - Real Data Sync */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white text-ink border-t border-zinc-200/80 p-3.5 shadow-2xl font-mono text-xs">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -699,7 +713,7 @@ export default function ChallengeDirectory({
             <div className="text-center hidden sm:block">
               <span className="text-ink-soft block text-[9px]">ACCURACY</span>
               <strong className="text-ink font-bold">
-                {Math.round(((currentUserEntry.correctCount || 12) / (currentUserEntry.totalQuestions || 20)) * 100)}%
+                {calculatedAccuracy}%
               </strong>
             </div>
           </div>
@@ -762,7 +776,7 @@ export default function ChallengeDirectory({
                   type="submit"
                   className="w-1/2 bg-ochre hover:bg-ochre-dark text-white font-extrabold py-3.5 rounded-xl transition-all shadow-md"
                 >
-                  Start Quiz →
+                  Start Quiz
                 </button>
               </div>
             </form>

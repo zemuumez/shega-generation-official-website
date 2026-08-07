@@ -58,6 +58,8 @@ export async function GET(req: NextRequest) {
             token: hmacToken,
             tokenExpiry,
             status: liveState.status,
+            startTime: liveState.startTime,
+            endTime: liveState.endTime,
             isLocked: liveState.isLocked,
             autoPush: liveState.autoPush,
             allowSoloPlay: liveState.allowSoloPlay,

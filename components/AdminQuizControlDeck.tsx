@@ -20,6 +20,8 @@ interface QuizQuestion {
   options: string[];
   correctOptionIndex: number;
   explanation?: string;
+  timerDuration?: number;
+  points?: number;
 }
 
 interface QuizDoc {
@@ -30,6 +32,13 @@ interface QuizDoc {
   questions: QuizQuestion[];
 }
 
+const STORAGE_KEYS = {
+  TIMER: "shega_admin_timer_duration",
+  AUTO_PUSH: "shega_admin_auto_push",
+  SOLO_PLAY: "shega_admin_allow_solo",
+  QUEUE: "shega_admin_question_queue",
+};
+
 export default function AdminQuizControlDeck({
   topics,
   quizzes,
@@ -37,29 +46,85 @@ export default function AdminQuizControlDeck({
   topics: Topic[];
   quizzes: QuizDoc[];
 }) {
-  // Admin Login Authentication State
+  // 1. Ticking countdown timer state for Admin monitor (declared unconditionally at top)
+  const [nowTime, setNowTime] = useState<number>(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNowTime(Date.now());
+    }, 500);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // 2. Admin Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [passcode, setPasscode] = useState<string>("");
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  // Deck Controls State
+  // 3. Deck Controls & Queue Stack State
   const [selectedTopicId, setSelectedTopicId] = useState<string>(topics[0]?._id || "all");
-  const [timerDuration, setTimerDuration] = useState<number>(45); // Default 45 seconds
+  const [timerDuration, setTimerDuration] = useState<number>(45);
   const [timerSavedFeedback, setTimerSavedFeedback] = useState<boolean>(false);
   const [autoPush, setAutoPush] = useState<boolean>(false);
   const [allowSoloPlay, setAllowSoloPlay] = useState<boolean>(true);
   const [liveState, setLiveState] = useState<any>(null);
+  const [questionQueue, setQuestionQueue] = useState<QuizQuestion[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showResetConfirmModal, setShowResetConfirmModal] = useState<boolean>(false);
 
-  // Check stored auth session
+  // Restore configurations and question queue from localStorage on mount
   useEffect(() => {
-    const storedAuth = sessionStorage.getItem("shega_admin_auth");
-    if (storedAuth === "true") {
-      setIsAuthenticated(true);
+    try {
+      const savedTimer = localStorage.getItem(STORAGE_KEYS.TIMER);
+      if (savedTimer) setTimerDuration(Number(savedTimer));
+
+      const savedAuto = localStorage.getItem(STORAGE_KEYS.AUTO_PUSH);
+      if (savedAuto !== null) setAutoPush(savedAuto === "true");
+
+      const savedSolo = localStorage.getItem(STORAGE_KEYS.SOLO_PLAY);
+      if (savedSolo !== null) setAllowSoloPlay(savedSolo === "true");
+
+      const savedQueue = localStorage.getItem(STORAGE_KEYS.QUEUE);
+      if (savedQueue) {
+        const parsed = JSON.parse(savedQueue);
+        if (Array.isArray(parsed)) setQuestionQueue(parsed);
+      }
+
+      const storedAuth = sessionStorage.getItem("shega_admin_auth");
+      if (storedAuth === "true") {
+        setIsAuthenticated(true);
+      }
+    } catch {
+      // ignore
     }
   }, []);
+
+  // Persist configurations to localStorage whenever updated
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.TIMER, String(timerDuration));
+    } catch {}
+  }, [timerDuration]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.AUTO_PUSH, String(autoPush));
+    } catch {}
+  }, [autoPush]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.SOLO_PLAY, String(allowSoloPlay));
+    } catch {}
+  }, [allowSoloPlay]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(questionQueue));
+    } catch {}
+  }, [questionQueue]);
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,6 +155,9 @@ export default function AdminQuizControlDeck({
       .then((res) => res.json())
       .then((data) => {
         if (data.allowSoloPlay !== undefined) setAllowSoloPlay(data.allowSoloPlay);
+        if (data.status === "ACTIVE" && data.activeQuestion) {
+          setLiveState(data.activeQuestion);
+        }
       })
       .catch(() => {});
 
@@ -114,7 +182,16 @@ export default function AdminQuizControlDeck({
     };
   }, [isAuthenticated]);
 
-  const handlePushQuestion = async (q: QuizQuestion) => {
+  // Compute exact ticking countdown seconds & progress ratio
+  const activeRemainingSeconds = liveState && liveState.endTime
+    ? Math.max(0, Math.ceil((liveState.endTime - nowTime) / 1000))
+    : (liveState?.remainingSeconds ?? 0);
+
+  const isQuestionActive = liveState?.status === "ACTIVE" && activeRemainingSeconds > 0;
+  const maxTimerSeconds = liveState?.timerDuration || timerDuration || 45;
+  const progressRatio = Math.max(0, Math.min(1, activeRemainingSeconds / maxTimerSeconds));
+
+  const pushSingleQuestion = async (q: QuizQuestion) => {
     setErrorMsg(null);
     setIsSubmitting(true);
     try {
@@ -133,7 +210,17 @@ export default function AdminQuizControlDeck({
 
       const data = await res.json();
       if (!res.ok) {
-        setErrorMsg(data.error || "Failed to push question.");
+        if (res.status === 423) {
+          // Single question lock active: Enqueue into right-side broadcast queue stack
+          setQuestionQueue((prev) => {
+            const nextQ = [...prev, q];
+            try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(nextQ)); } catch {}
+            return nextQ;
+          });
+          setErrorMsg(`Question #${q.orderIndex || 1} added to the Live Broadcast Queue Stack!`);
+        } else {
+          setErrorMsg(data.error || "Failed to push question.");
+        }
       } else {
         setLiveState(data.state);
       }
@@ -144,9 +231,47 @@ export default function AdminQuizControlDeck({
     }
   };
 
+  const handlePushOrEnqueueQuestion = async (q: QuizQuestion) => {
+    if (isQuestionActive) {
+      setQuestionQueue((prev) => {
+        const nextQ = [...prev, q];
+        try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(nextQ)); } catch {}
+        return nextQ;
+      });
+      setErrorMsg(`Question #${q.orderIndex || 1} enqueued to the right-side broadcast stack.`);
+      return;
+    }
+    await pushSingleQuestion(q);
+  };
+
+  const handlePushNextFromQueue = async () => {
+    if (questionQueue.length === 0) return;
+    const nextQ = questionQueue[0];
+    setQuestionQueue((prev) => {
+      const nextQueue = prev.slice(1);
+      try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(nextQueue)); } catch {}
+      return nextQueue;
+    });
+    await pushSingleQuestion(nextQ);
+  };
+
+  const handleRemoveFromQueue = (index: number) => {
+    setQuestionQueue((prev) => {
+      const nextQueue = prev.filter((_, i) => i !== index);
+      try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(nextQueue)); } catch {}
+      return nextQueue;
+    });
+  };
+
+  const handleClearQueue = () => {
+    setQuestionQueue([]);
+    try { localStorage.removeItem(STORAGE_KEYS.QUEUE); } catch {}
+  };
+
   const handleToggleAutoPush = async () => {
     const nextVal = !autoPush;
     setAutoPush(nextVal);
+    try { localStorage.setItem(STORAGE_KEYS.AUTO_PUSH, String(nextVal)); } catch {}
     try {
       await fetch("/api/quiz/live/control", {
         method: "POST",
@@ -164,6 +289,7 @@ export default function AdminQuizControlDeck({
   const handleToggleSoloPlay = async () => {
     const nextVal = !allowSoloPlay;
     setAllowSoloPlay(nextVal);
+    try { localStorage.setItem(STORAGE_KEYS.SOLO_PLAY, String(nextVal)); } catch {}
     try {
       await fetch("/api/quiz/live/control", {
         method: "POST",
@@ -203,6 +329,9 @@ export default function AdminQuizControlDeck({
         body: JSON.stringify({ action: "RESET_SESSION" }),
       });
       setLiveState(null);
+      setQuestionQueue([]);
+      try { localStorage.removeItem(STORAGE_KEYS.QUEUE); } catch {}
+      setErrorMsg(null);
     } catch {
       // ignore
     }
@@ -213,15 +342,11 @@ export default function AdminQuizControlDeck({
     return (
       <div className="min-h-screen bg-ivory text-ink flex items-center justify-center p-4 font-sans selection:bg-ochre selection:text-white">
         <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-zinc-200 shadow-2xl text-center">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-ochre/15 text-ochre text-3xl flex items-center justify-center mb-4 border border-ochre/30">
-            🔐
-          </div>
-
           <h1 className="text-2xl font-bold font-display text-ink mb-1">
             Admin Live Operator Login
           </h1>
           <p className="text-xs font-mono text-ink-soft mb-6">
-            Enter passcode to access manual question pushing &amp; auto-push controls.
+            Enter passcode to access question pushing and auto-push controls.
           </p>
 
           <form onSubmit={handleAdminLogin} className="space-y-4 text-left font-sans">
@@ -244,7 +369,7 @@ export default function AdminQuizControlDeck({
 
             {loginError && (
               <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/40 text-red-700 text-xs font-mono">
-                ⚠️ {loginError}
+                {loginError}
               </div>
             )}
 
@@ -252,7 +377,7 @@ export default function AdminQuizControlDeck({
               type="submit"
               className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-bold text-sm py-3.5 rounded-xl transition-all shadow-md"
             >
-              Authenticate &amp; Launch Control Deck →
+              Authenticate and Launch Control Deck
             </button>
           </form>
         </div>
@@ -260,12 +385,10 @@ export default function AdminQuizControlDeck({
     );
   }
 
-  const isQuestionActive = liveState?.status === "ACTIVE" && (liveState?.remainingSeconds ?? 0) > 0;
-
   return (
     <div className="min-h-screen bg-ivory text-ink p-4 sm:p-8 font-sans selection:bg-ochre selection:text-white">
-      {/* Header Bar - Light Theme Container matching Site Theme */}
-      <header className="max-w-6xl mx-auto bg-white text-ink rounded-2xl p-4 sm:p-6 flex flex-wrap items-center justify-between gap-4 border border-zinc-200/80 shadow-md font-mono text-xs mb-8">
+      {/* Header Bar - Clean Light Theme Container */}
+      <header className="max-w-7xl mx-auto bg-white text-ink rounded-2xl p-4 sm:p-6 flex flex-wrap items-center justify-between gap-4 border border-zinc-200/80 shadow-md font-mono text-xs mb-8">
         <div>
           <div className="flex items-center gap-3">
             <span className="px-3 py-1 rounded-full bg-ochre/15 border border-ochre/30 text-ochre font-mono text-xs font-bold uppercase tracking-wider">
@@ -286,50 +409,28 @@ export default function AdminQuizControlDeck({
           </h1>
         </div>
 
-        {/* Global Live Status Monitor & Leaderboard Actions */}
-        <div className="flex flex-wrap items-center gap-3">
+        {/* Global Leaderboard Actions */}
+        <div className="flex items-center gap-3">
           <button
             onClick={handleExportCSV}
             className="bg-ochre hover:bg-ochre-dark text-white font-mono font-bold px-3.5 py-2.5 rounded-xl text-xs transition-all shadow-sm flex items-center gap-1.5"
           >
-            <span>📥 Export CSV</span>
+            Export CSV
           </button>
 
           <button
             onClick={() => setShowResetConfirmModal(true)}
             className="bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-mono font-bold px-3.5 py-2.5 rounded-xl text-xs transition-all"
           >
-            <span>🗑️ Reset Leaderboard</span>
+            Reset Leaderboard
           </button>
-
-          <div className="flex items-center gap-4 bg-ivory p-3.5 rounded-2xl border border-zinc-200 font-mono text-xs">
-            <div>
-              <span className="text-ink-soft block text-[10px]">LIVE BROADCAST</span>
-              <strong className={`font-bold text-sm ${isQuestionActive ? "text-emerald-600" : "text-amber-600"}`}>
-                {isQuestionActive ? `ACTIVE (#${liveState.orderIndex})` : "IDLE / READY"}
-              </strong>
-            </div>
-
-            <div>
-              <span className="text-ink-soft block text-[10px]">COUNTDOWN</span>
-              <strong className="text-ink font-bold text-base">
-                {liveState?.remainingSeconds ?? 0}s
-              </strong>
-            </div>
-
-            <button
-              onClick={handleResetSession}
-              className="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-3 py-1.5 rounded-lg transition-colors border border-red-300"
-            >
-              Reset Session
-            </button>
-          </div>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Topics & Global Controls */}
-        <div className="space-y-6">
+      {/* Main Grid */}
+      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Topic Filters & Configuration (Col-Span 3) */}
+        <div className="lg:col-span-3 space-y-6">
           {/* Topic Filter Tabs */}
           <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-md">
             <h3 className="text-sm font-mono font-bold text-ochre uppercase tracking-wider mb-3">
@@ -344,7 +445,7 @@ export default function AdminQuizControlDeck({
                     : "bg-ivory hover:bg-zinc-200 text-ink border border-zinc-200"
                 }`}
               >
-                🌐 All Topics &amp; Questions
+                All Topics and Questions
               </button>
               {topics.map((topic) => {
                 const isSelected = selectedTopicId === topic._id;
@@ -358,14 +459,14 @@ export default function AdminQuizControlDeck({
                         : "bg-ivory hover:bg-zinc-200 text-ink border border-zinc-200"
                     }`}
                   >
-                    📂 {topic.title}
+                    {topic.title}
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Granular Timer Engine & Controls */}
+          {/* Broadcast Configuration */}
           <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-md space-y-5">
             <h3 className="text-sm font-mono font-bold text-ochre uppercase tracking-wider">
               2. Broadcast Configuration
@@ -382,7 +483,9 @@ export default function AdminQuizControlDeck({
                   max={300}
                   value={timerDuration}
                   onChange={(e) => {
-                    setTimerDuration(Number(e.target.value));
+                    const val = Number(e.target.value);
+                    setTimerDuration(val);
+                    try { localStorage.setItem(STORAGE_KEYS.TIMER, String(val)); } catch {}
                     setTimerSavedFeedback(false);
                   }}
                   className="w-full bg-ivory border border-zinc-300 rounded-xl px-4 py-2.5 font-mono text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ochre"
@@ -390,30 +493,28 @@ export default function AdminQuizControlDeck({
                 <button
                   type="button"
                   onClick={() => {
+                    try { localStorage.setItem(STORAGE_KEYS.TIMER, String(timerDuration)); } catch {}
                     setTimerSavedFeedback(true);
                     setTimeout(() => setTimerSavedFeedback(false), 3000);
                   }}
                   className="bg-ochre hover:bg-ochre-dark text-white font-mono font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm shrink-0 whitespace-nowrap active:scale-95"
                 >
-                  Set Timer ⏱️
+                  Set Timer
                 </button>
               </div>
               {timerSavedFeedback && (
-                <div className="mt-2 text-xs font-mono text-emerald-600 font-bold flex items-center gap-1">
-                  <span>✓</span> Broadcast timer set to {timerDuration} seconds!
+                <div className="mt-2 text-xs font-mono text-emerald-600 font-bold">
+                  Broadcast timer set to {timerDuration} seconds.
                 </div>
               )}
-              <p className="text-[11px] font-mono text-ink-soft mt-1">
-                Default: <strong>45 seconds</strong> per question.
-              </p>
             </div>
 
             {/* Solo Play Mode Switch */}
             <div className="pt-3 border-t border-zinc-200 flex items-center justify-between">
               <div>
-                <span className="text-xs font-mono font-bold text-ink block">Allow "Play Solo" Mode</span>
+                <span className="text-xs font-mono font-bold text-ink block">Allow Play Solo Mode</span>
                 <span className="text-[10px] font-mono text-ink-soft block max-w-[180px]">
-                  When OFF, disables solo play so users MUST join live sessions.
+                  When OFF, disables solo play on participant side.
                 </span>
               </div>
 
@@ -436,7 +537,7 @@ export default function AdminQuizControlDeck({
               <div>
                 <span className="text-xs font-mono font-bold text-ink block">Auto-Push Automation Loop</span>
                 <span className="text-[10px] font-mono text-ink-soft block max-w-[180px]">
-                  When enabled, automatically pushes #orderIndex+1 after 5s Leaderboard Intermission.
+                  When ON, automatically pushes queued questions in sequence.
                 </span>
               </div>
 
@@ -456,22 +557,17 @@ export default function AdminQuizControlDeck({
           </div>
         </div>
 
-        {/* Right Column: Manual One-at-a-time Push Question List */}
-        <div className="lg:col-span-2 space-y-4">
+        {/* Center Column: Question Deck List (Col-Span 5) */}
+        <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-zinc-300 font-mono text-xs">
             <h3 className="font-bold text-ink">
               3. Sequential Question Deck ({allQuestions.length} Questions)
             </h3>
-            {isQuestionActive && (
-              <span className="text-amber-700 font-bold bg-amber-500/15 px-3 py-1 rounded-full border border-amber-500/40">
-                🔒 PUSH LOCKED (Timer Running)
-              </span>
-            )}
           </div>
 
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/40 text-red-700 font-mono text-xs">
-              ⚠️ {errorMsg}
+            <div className="p-3.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-900 font-mono text-xs">
+              {errorMsg}
             </div>
           )}
 
@@ -479,6 +575,7 @@ export default function AdminQuizControlDeck({
             {allQuestions.map((q, idx) => {
               const qIndex = q.orderIndex || idx + 1;
               const isCurrentlyBroadcasting = liveState?.questionId === (q._key || q._id) && isQuestionActive;
+              const isQueued = questionQueue.some((item) => (item._key || item._id) === (q._key || q._id));
 
               return (
                 <div
@@ -486,6 +583,8 @@ export default function AdminQuizControlDeck({
                   className={`p-5 rounded-2xl border transition-all ${
                     isCurrentlyBroadcasting
                       ? "bg-ochre/15 border-ochre shadow-md"
+                      : isQueued
+                      ? "bg-amber-50 border-amber-400 shadow-xs"
                       : "bg-white border-zinc-200/80 shadow-sm"
                   }`}
                 >
@@ -499,17 +598,24 @@ export default function AdminQuizControlDeck({
                       </span>
                     </div>
 
-                    {/* Manual PUSH Question Button */}
                     <button
-                      disabled={isQuestionActive || isSubmitting}
-                      onClick={() => handlePushQuestion(q)}
-                      className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all ${
-                        isQuestionActive || isSubmitting
-                          ? "bg-zinc-200 text-zinc-500 cursor-not-allowed border border-zinc-300"
-                          : "bg-ochre hover:bg-ochre-dark text-white shadow-sm hover:scale-105 active:scale-95"
+                      disabled={isSubmitting}
+                      onClick={() => handlePushOrEnqueueQuestion(q)}
+                      className={`px-4 py-2 rounded-xl font-mono text-xs font-bold transition-all ${
+                        isCurrentlyBroadcasting
+                          ? "bg-ochre text-white shadow-sm"
+                          : isQueued
+                          ? "bg-amber-600 text-white"
+                          : "bg-ochre hover:bg-ochre-dark text-white shadow-sm active:scale-95"
                       }`}
                     >
-                      {isCurrentlyBroadcasting ? "BROADCASTING LIVE..." : `PUSH QUESTION (${timerDuration}s) →`}
+                      {isCurrentlyBroadcasting
+                        ? "Broadcasting Live..."
+                        : isQueued
+                        ? "Queued in Stack"
+                        : isQuestionActive
+                        ? "Enqueue Question"
+                        : `Push Question (${timerDuration}s)`}
                     </button>
                   </div>
 
@@ -542,15 +648,148 @@ export default function AdminQuizControlDeck({
             })}
           </div>
         </div>
+
+        {/* Right Column: Live Broadcast Deck & Queue Stack Panel (Col-Span 4) */}
+        <div className="lg:col-span-4 space-y-5 sticky top-6">
+          {/* Active Live Broadcast Monitor with Reset Session Button */}
+          <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-md space-y-4 font-mono text-xs">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-200 gap-2">
+              <div>
+                <span className="text-[10px] text-ochre font-bold uppercase tracking-wider block">
+                  Active Question Monitor
+                </span>
+                <h4 className="font-extrabold text-ink text-sm font-display">
+                  Live Broadcast Deck
+                </h4>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                  isQuestionActive ? "bg-emerald-100 text-emerald-800 border border-emerald-300 animate-pulse" : "bg-zinc-100 text-zinc-600"
+                }`}>
+                  {isQuestionActive ? "LIVE" : "IDLE"}
+                </span>
+
+                <button
+                  onClick={handleResetSession}
+                  className="bg-red-50 hover:bg-red-100 text-red-700 font-bold px-2.5 py-1 rounded-lg transition-colors border border-red-200 text-[11px]"
+                  title="Reset current live session"
+                >
+                  Reset Session
+                </button>
+              </div>
+            </div>
+
+            {isQuestionActive ? (
+              <div className="space-y-3 bg-ivory p-4 rounded-xl border border-zinc-200">
+                <div className="flex items-center justify-between font-bold">
+                  <span className="text-xs text-ochre">
+                    Question #{liveState.orderIndex || 1}
+                  </span>
+                  <span className={`text-xs ${activeRemainingSeconds <= 10 ? "text-red-600 animate-pulse" : "text-emerald-600"}`}>
+                    {activeRemainingSeconds}s remaining
+                  </span>
+                </div>
+
+                {/* Ticking Progress Bar for Active Question */}
+                <div className="w-full h-2.5 bg-zinc-200 rounded-full overflow-hidden border border-zinc-300 p-0.5">
+                  <div
+                    style={{ width: `${progressRatio * 100}%` }}
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      activeRemainingSeconds <= 10 ? "bg-red-500" : "bg-ochre"
+                    }`}
+                  />
+                </div>
+
+                <h5 className="font-sans text-sm font-bold text-ink">
+                  {liveState.questionText}
+                </h5>
+
+                <div className="flex items-center justify-between text-[11px] text-ink-soft border-t border-zinc-200 pt-2">
+                  <span>Difficulty: <strong>{liveState.difficulty}</strong></span>
+                  <span>Points: <strong>{liveState.points} Pts</strong></span>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 text-center bg-ivory rounded-xl border border-zinc-200 text-ink-soft text-xs">
+                No question is currently live. Select a question to push or enqueue.
+              </div>
+            )}
+          </div>
+
+          {/* Live Broadcast Queue Stack */}
+          <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-md space-y-4 font-mono text-xs">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-200">
+              <div>
+                <span className="text-[10px] text-ochre font-bold uppercase tracking-wider block">
+                  Broadcast Queue Stack
+                </span>
+                <h4 className="font-extrabold text-ink text-sm font-display">
+                  Staged Questions ({questionQueue.length})
+                </h4>
+              </div>
+
+              {questionQueue.length > 0 && (
+                <button
+                  onClick={handleClearQueue}
+                  className="text-[10px] text-red-600 hover:text-red-800 underline font-bold"
+                >
+                  Clear Queue
+                </button>
+              )}
+            </div>
+
+            {questionQueue.length === 0 ? (
+              <div className="p-4 text-center bg-ivory rounded-xl border border-zinc-200 text-ink-soft text-xs">
+                Queue is empty. Clicking push on active questions stages them here.
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+                {questionQueue.map((q, qIdx) => (
+                  <div
+                    key={q._key || q._id || qIdx}
+                    className="p-3.5 rounded-xl bg-ivory border border-zinc-200 flex items-start justify-between gap-2 shadow-xs"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold text-[10px]">
+                          Stack #{qIdx + 1}
+                        </span>
+                        <span className="font-bold text-ink">
+                          Question #{q.orderIndex || qIdx + 1}
+                        </span>
+                      </div>
+                      <p className="font-sans text-xs text-ink line-clamp-2">
+                        {q.questionText}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => handleRemoveFromQueue(qIdx)}
+                      className="text-red-500 hover:text-red-700 text-xs font-bold px-1.5 py-0.5 rounded bg-white border border-zinc-200"
+                      title="Remove from queue stack"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+
+                <button
+                  onClick={handlePushNextFromQueue}
+                  className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-bold text-xs py-3 rounded-xl shadow-md transition-all mt-2"
+                >
+                  Push Next Queued Question
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </main>
 
       {/* Reset Leaderboard Confirmation Modal */}
       {showResetConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs font-sans">
           <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-red-500/50 shadow-2xl text-center space-y-4 text-ink">
-            <div className="w-12 h-12 mx-auto rounded-full bg-red-500/15 text-red-600 text-2xl flex items-center justify-center">
-              ⚠️
-            </div>
             <h3 className="text-xl font-bold text-ink">Reset Event Leaderboard?</h3>
             <p className="text-xs font-mono text-ink-soft">
               This will permanently clear all submitted participant scores for post-event reset. (Be sure to download CSV export first!)

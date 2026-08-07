@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import ThemeProvider from "@/components/ThemeProvider";
 
 interface BroadcastQuestion {
   questionId: string;
@@ -102,7 +103,6 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       try {
         const data: BroadcastQuestion = JSON.parse(e.data);
         
-        // Reset option selection if new question launched
         if (currentQIdRef.current !== data.questionId) {
           currentQIdRef.current = data.questionId;
           setSelectedOption(null);
@@ -111,7 +111,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
         }
 
         setActiveQuestion(data);
-        fetchLeaderboard(); // Auto-refresh leaderboard zero-refresh
+        fetchLeaderboard();
       } catch (err) {
         console.error("Failed to parse SSE payload:", err);
       }
@@ -130,7 +130,6 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       fetchLeaderboard();
     });
 
-    // 2-second Auto-Refresh Leaderboard & State Polling
     const lbInterval = setInterval(fetchLeaderboard, 2000);
 
     return () => {
@@ -149,7 +148,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       userId: newUserId,
       playerName: playerName.trim(),
       playerHandle: handle,
-      expiryTimestamp: Date.now() + TTL_MS, // 24-Hour Expiration Timestamp
+      expiryTimestamp: Date.now() + TTL_MS,
     };
 
     try {
@@ -206,7 +205,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     }
   };
 
-  // Registration step (if not registered or 24-hour TTL expired)
+  // Registration step
   if (!isRegistered) {
     return (
       <div className="min-h-screen bg-ivory text-ink flex items-center justify-center p-4 font-sans selection:bg-ochre selection:text-white">
@@ -215,10 +214,6 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
           animate={{ opacity: 1, scale: 1 }}
           className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-zinc-200/80 shadow-xl text-center"
         >
-          <span className="w-14 h-14 mx-auto rounded-2xl bg-ochre/15 text-ochre text-3xl flex items-center justify-center mb-4 border border-ochre/30">
-            ⚡
-          </span>
-
           <h1 className="text-2xl font-bold font-display text-ink mb-2">
             Join Live Challenge Battle
           </h1>
@@ -258,7 +253,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
               type="submit"
               className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-sm py-4 rounded-xl shadow-md transition-all mt-2"
             >
-              Enter Live Arena Now 🔥
+              Enter Live Arena Now
             </button>
           </form>
         </motion.div>
@@ -266,7 +261,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     );
   }
 
-  // Timer ratio and color calculation (Theme Ochre -> Cyber Amber -> Red)
+  // Timer ratio and color calculation
   const timerRatio = activeQuestion
     ? activeQuestion.remainingSeconds / (activeQuestion.timerDuration || 45)
     : 1;
@@ -283,10 +278,11 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
 
   return (
     <div className="min-h-screen bg-ivory text-ink p-3 sm:p-6 font-sans selection:bg-ochre selection:text-white">
-      {/* Mobile/Desktop Header Bar - Clean Theme Container */}
+      <ThemeProvider />
+
+      {/* Header Bar */}
       <header className="max-w-6xl mx-auto w-full bg-white text-ink border border-zinc-200/80 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-sm font-mono text-xs mb-6">
         <div className="flex items-center gap-2">
-          <span className="text-ochre font-bold text-base">⚡</span>
           <span className="font-extrabold text-ink text-sm">SHEGA ARENA LIVE</span>
         </div>
 
@@ -299,7 +295,6 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 bg-ivory px-3 py-1.5 rounded-xl border border-zinc-200">
-            <span className="text-ink-soft">👤</span>
             <span className="font-bold text-ink text-xs truncate max-w-[100px]">
               {playerName}
             </span>
@@ -310,7 +305,6 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
             <strong className="text-ink">{userScore} Pts</strong>
           </div>
 
-          {/* Quiz Taker Sign Out / Logout Button */}
           <button
             onClick={handleLogoutParticipant}
             className="text-[11px] font-mono text-ink-soft hover:text-ink underline transition-colors px-2 py-1"
@@ -321,12 +315,11 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
         </div>
       </header>
 
-      {/* Main Grid: Left Column (Live Question Player) & Right Column (Live Topic Leaderboard) */}
+      {/* Main Grid */}
       <main className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Left / Center Column: Live Question Player */}
+        {/* Left Column: Live Question Player */}
         <div className="lg:col-span-2 space-y-4">
           <AnimatePresence mode="wait">
-            {/* Active Question State */}
             {activeQuestion && activeQuestion.status === "ACTIVE" && (
               <motion.div
                 key={activeQuestion.questionId}
@@ -335,7 +328,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 exit={{ opacity: 0, y: -10 }}
                 className="bg-white rounded-3xl p-5 sm:p-7 border border-zinc-200/80 shadow-xl relative overflow-hidden space-y-4"
               >
-                {/* High-Contrast Progress Bar */}
+                {/* Progress Bar */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between text-[11px] font-mono font-bold text-ink-soft">
                     <span>COUNTDOWN TIMER</span>
@@ -381,7 +374,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                   </pre>
                 )}
 
-                {/* Full-width Touch Target Options with Ochre Theme Glow */}
+                {/* Options */}
                 <div className="space-y-3 pt-2">
                   {activeQuestion.options.map((opt, idx) => {
                     const isSelected = selectedOption === idx;
@@ -421,7 +414,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                   })}
                 </div>
 
-                {/* Submission Result Feedback Banner */}
+                {/* Submission Feedback */}
                 {submissionResult && (
                   <div
                     className={`p-3.5 rounded-xl font-mono text-xs font-bold border text-center ${
@@ -431,8 +424,8 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                     }`}
                   >
                     {submissionResult.isCorrect
-                      ? `🎉 Correct Answer! +${submissionResult.pointsEarned} Pts`
-                      : "⌛ Submitted. Processing live leaderboard..."}
+                      ? `Correct Answer! +${submissionResult.pointsEarned} Pts`
+                      : "Submitted. Processing live leaderboard..."}
                   </div>
                 )}
               </motion.div>
@@ -447,15 +440,11 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="bg-white rounded-3xl p-6 border border-zinc-200/80 shadow-xl text-center space-y-4"
               >
-                <div className="w-12 h-12 mx-auto rounded-full bg-[#F59E0B]/15 text-[#F59E0B] text-2xl flex items-center justify-center border border-[#F59E0B]/40">
-                  🏆
-                </div>
-
                 <h3 className="text-lg font-bold font-display text-ink">
                   5s Question Intermission
                 </h3>
                 <p className="text-xs font-mono text-ink-soft">
-                  Check live ranks on the right panel. Next question auto-pushing shortly...
+                  Check live ranks on the right panel. Next question pushing shortly...
                 </p>
               </motion.div>
             )}
@@ -468,15 +457,11 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 animate={{ opacity: 1 }}
                 className="bg-white rounded-3xl p-8 border border-zinc-200/80 text-center shadow-xl space-y-4"
               >
-                <div className="w-14 h-14 mx-auto rounded-2xl bg-ochre/15 text-ochre text-3xl flex items-center justify-center border border-ochre/30">
-                  ⏳
-                </div>
-
                 <h3 className="text-xl font-bold font-display text-ink">
                   Waiting for Admin Broadcast...
                 </h3>
                 <p className="text-xs font-mono text-ink-soft">
-                  The operator will push the next question to all connected screens zero-refresh.
+                  The operator will push the next question to all connected screens live.
                 </p>
 
                 <div className="p-3 rounded-xl bg-ivory border border-zinc-200 text-xs font-mono text-ink-soft">
@@ -490,17 +475,17 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
           <footer className="w-full pt-2 text-center">
             {isSubmitted || (activeQuestion && activeQuestion.remainingSeconds <= 0) ? (
               <div className="w-full bg-ochre/15 border border-ochre/40 text-ochre font-mono text-xs font-extrabold py-3.5 rounded-2xl shadow-sm tracking-widest uppercase">
-                [ L O C K E D &amp; S U B M I T T E D ]
+                [ LOCKED AND SUBMITTED ]
               </div>
             ) : (
               <Link href="/challenges" className="text-xs font-mono text-ink-soft hover:text-ochre transition-colors">
-                ← Exit to Challenge Hub
+                Exit to Challenge Hub
               </Link>
             )}
           </footer>
         </div>
 
-        {/* Right Column: Live Topic Leaderboard Side Panel */}
+        {/* Right Column: Live Topic Leaderboard */}
         <div className="bg-white text-ink rounded-3xl p-5 border border-zinc-200/80 shadow-xl space-y-4 font-mono text-xs sticky top-20">
           <div className="flex items-center justify-between pb-3 border-b border-zinc-200">
             <div>
@@ -508,14 +493,14 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 LIVE TOPIC RANKINGS
               </span>
               <h4 className="font-extrabold text-ink text-sm font-display">
-                🏆 Topic Leaderboard
+                Topic Leaderboard
               </h4>
             </div>
             <button
               onClick={fetchLeaderboard}
               className="text-[10px] bg-ivory hover:bg-zinc-200 text-ink px-2.5 py-1 rounded-lg border border-zinc-300 transition-colors font-bold"
             >
-              🔄 Refresh
+              Refresh
             </button>
           </div>
 
@@ -550,7 +535,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                           ? "bg-amber-700 text-white"
                           : "bg-zinc-200 text-ink"
                       }`}>
-                        {rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`}
+                        #{rank}
                       </span>
 
                       <div>
