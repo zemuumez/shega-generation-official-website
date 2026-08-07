@@ -302,29 +302,29 @@ export default function ChallengeDirectory({
 
   return (
     <div className="min-h-screen bg-ivory text-ink pb-24 selection:bg-ochre selection:text-white">
-      {/* 1. Hero Header - Dynamic CMS Theme Theme Tokens (ochre / navy) */}
-      <section className="relative bg-navy text-white pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-800">
+      {/* 1. Hero Header - Dynamic Clean Theme Header */}
+      <section className="relative bg-white text-ink pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-200/80 shadow-xs">
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/15 border border-ochre/40 text-ochre text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm">
             <span>(ሸጋ አሬና) SHEGA ARENA</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold font-display tracking-tight text-white mb-3">
+          <h1 className="text-3xl sm:text-5xl font-extrabold font-display tracking-tight text-ink mb-3">
             {customTitle || "(ሸጋ አሬና) SHEGA ARENA: SELECT YOUR CHALLENGE"}
           </h1>
 
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-zinc-300 font-sans leading-relaxed mb-8">
+          <p className="max-w-2xl mx-auto text-base sm:text-lg text-ink-soft font-sans leading-relaxed mb-8">
             {customSubtitle || "Test your skills, represent Ethiopia, and rise the leaderboard."}
           </p>
 
           {/* View Switcher: Challenges vs Leaderboard */}
-          <div className="inline-flex p-1.5 rounded-2xl bg-navy-light border border-zinc-700 gap-2">
+          <div className="inline-flex p-1.5 rounded-2xl bg-ivory border border-zinc-300 gap-2">
             <button
               onClick={() => setMainView("challenges")}
               className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all ${
                 mainView === "challenges"
                   ? "bg-ochre text-white shadow-md font-extrabold"
-                  : "text-zinc-300 hover:text-white hover:bg-white/10"
+                  : "text-ink-soft hover:text-ink hover:bg-zinc-200"
               }`}
             >
               ⚡ Challenge Hub
@@ -334,7 +334,7 @@ export default function ChallengeDirectory({
               className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all ${
                 mainView === "leaderboard"
                   ? "bg-ochre text-white shadow-md font-extrabold"
-                  : "text-zinc-300 hover:text-white hover:bg-white/10"
+                  : "text-ink-soft hover:text-ink hover:bg-zinc-200"
               }`}
             >
               🏆 Hall of Fame
@@ -467,7 +467,7 @@ export default function ChallengeDirectory({
                         {allowSoloPlay ? (
                           <button
                             onClick={() => startQuizRegistration(quiz)}
-                            className="bg-navy hover:bg-navy-light text-white font-mono font-bold text-xs px-4 py-2.5 rounded-xl border border-zinc-700 transition-all shadow-xs"
+                            className="bg-zinc-800 hover:bg-black text-white font-mono font-bold text-xs px-4 py-2.5 rounded-xl border border-zinc-700 transition-all shadow-xs"
                           >
                             Play Solo
                           </button>
@@ -677,28 +677,28 @@ export default function ChallengeDirectory({
         )}
       </main>
 
-      {/* STICKY "YOU" RANK FOOTER BAR */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-navy text-white border-t border-zinc-800 p-3.5 shadow-2xl font-mono text-xs">
+      {/* STICKY "YOU" RANK FOOTER BAR - Light Theme Card */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white text-ink border-t border-zinc-200/80 p-3.5 shadow-2xl font-mono text-xs">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="w-8 h-8 rounded-full bg-ochre text-white font-bold flex items-center justify-center text-xs">
               YOU
             </span>
             <div>
-              <strong className="text-white block font-sans text-sm">{currentUserEntry.participantName}</strong>
-              <span className="text-zinc-300 text-[10px]">{currentUserEntry.participantHandle}</span>
+              <strong className="text-ink block font-sans text-sm">{currentUserEntry.participantName}</strong>
+              <span className="text-ink-soft text-[10px]">{currentUserEntry.participantHandle}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-6">
             <div className="text-center">
-              <span className="text-zinc-300 block text-[9px]">YOUR SCORE</span>
+              <span className="text-ink-soft block text-[9px]">YOUR SCORE</span>
               <strong className="text-ochre font-extrabold text-sm">{currentUserEntry.score} Pts</strong>
             </div>
 
             <div className="text-center hidden sm:block">
-              <span className="text-zinc-300 block text-[9px]">ACCURACY</span>
-              <strong className="text-white font-bold">
+              <span className="text-ink-soft block text-[9px]">ACCURACY</span>
+              <strong className="text-ink font-bold">
                 {Math.round(((currentUserEntry.correctCount || 12) / (currentUserEntry.totalQuestions || 20)) * 100)}%
               </strong>
             </div>
@@ -708,7 +708,7 @@ export default function ChallengeDirectory({
 
       {/* Participant Registration Modal */}
       {showRegistrationModal && selectedQuiz && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs font-sans">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs font-sans">
           <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-zinc-200 shadow-2xl text-ink space-y-4">
             <div className="text-center">
               <span className="px-3 py-1 rounded-full bg-ochre/15 text-ochre font-mono text-xs font-bold uppercase">
