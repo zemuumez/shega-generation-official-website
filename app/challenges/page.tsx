@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import ChallengeDirectory from "@/components/ChallengeDirectory";
+import ThemeProvider from "@/components/ThemeProvider";
 import { sanityClient } from "@/sanity/lib/client";
-import { CHALLENGES_PAGE_QUERY } from "@/sanity/lib/queries";
+import { CHALLENGES_PAGE_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import { demoQuizzes, demoLeaderboard } from "@/lib/demoData";
 
 export const metadata: Metadata = {
@@ -15,13 +16,19 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 10; // Revalidate every 10 seconds
+export const revalidate = 0; // Dynamic route
 
 export default async function ChallengesPage() {
   let pageData: any = null;
+  let siteSettings: any = null;
 
   try {
-    pageData = await sanityClient.fetch(CHALLENGES_PAGE_QUERY);
+    const [pData, sSettings] = await Promise.all([
+      sanityClient.fetch(CHALLENGES_PAGE_QUERY),
+      sanityClient.fetch(SITE_SETTINGS_QUERY),
+    ]);
+    pageData = pData;
+    siteSettings = sSettings;
   } catch (err) {
     console.error("Failed to fetch challenges page data from Sanity:", err);
   }
@@ -36,14 +43,17 @@ export default async function ChallengesPage() {
       ? pageData.leaderboard
       : demoLeaderboard;
 
-  const siteSettings = pageData?.siteSettings || {};
+  const activeSiteSettings = siteSettings || pageData?.siteSettings || {};
 
   return (
-    <ChallengeDirectory
-      quizzes={quizzes}
-      leaderboard={leaderboard}
-      customTitle={siteSettings.challengesHeroTitle}
-      customSubtitle={siteSettings.challengesHeroSubtitle}
-    />
+    <main className="min-h-screen bg-ivory text-ink relative">
+      <ThemeProvider siteSettings={activeSiteSettings} />
+      <ChallengeDirectory
+        quizzes={quizzes}
+        leaderboard={leaderboard}
+        customTitle={activeSiteSettings.challengesHeroTitle}
+        customSubtitle={activeSiteSettings.challengesHeroSubtitle}
+      />
+    </main>
   );
 }

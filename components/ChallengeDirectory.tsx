@@ -98,23 +98,21 @@ export default function ChallengeDirectory({
   customSubtitle?: string;
 }) {
   const [mainView, setMainView] = useState<"challenges" | "leaderboard">("challenges");
-  const [activeCategory, setActiveCategory] = useState("Live Timed Quiz");
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(initialLeaderboard || []);
   const [selectedQuiz, setSelectedQuiz] = useState<ChallengeQuiz | null>(null);
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
 
-  // Registration & Active Quiz State
+  // Participant Registration State
   const [playerName, setPlayerName] = useState("");
   const [playerHandle, setPlayerHandle] = useState("");
-  const [isRegistering, setIsRegistering] = useState(false);
+
+  // Quiz Engine State
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [score, setScore] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
-
-  // Timer State
-  const [timeLeft, setTimeLeft] = useState(20);
+  const [timeLeft, setTimeLeft] = useState(45);
   const [totalTimeSpent, setTotalTimeSpent] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -207,14 +205,14 @@ export default function ChallengeDirectory({
 
   const startQuizRegistration = (quiz: ChallengeQuiz) => {
     setSelectedQuiz(quiz);
-    setIsRegistering(true);
+    setShowRegistrationModal(true);
   };
 
   const handleStartQuiz = (e: React.FormEvent) => {
     e.preventDefault();
     if (!playerName.trim()) return;
 
-    setIsRegistering(false);
+    setShowRegistrationModal(false);
     setQuizStarted(true);
     setCurrentQuestionIndex(0);
     setUserAnswers([]);
@@ -222,30 +220,22 @@ export default function ChallengeDirectory({
     setCorrectCount(0);
     setTotalTimeSpent(0);
     setQuizCompleted(false);
-    setSelectedOption(null);
   };
 
-  const handleNextQuestion = (chosenIndex: number | null, secondsRemaining: number) => {
+  const handleNextQuestion = (optionIndex: number | null, pointsEarned: number = 0) => {
     if (timerRef.current) clearInterval(timerRef.current);
-    if (!selectedQuiz) return;
 
-    const currentQ = selectedQuiz.questions[currentQuestionIndex];
-    const isCorrect = chosenIndex === currentQ.correctOptionIndex;
+    const updatedAnswers = [...userAnswers, optionIndex ?? -1];
+    setUserAnswers(updatedAnswers);
 
-    let pointsEarned = 0;
+    const isCorrect = optionIndex !== null && selectedQuiz?.questions[currentQuestionIndex]?.correctOptionIndex === optionIndex;
+
     if (isCorrect) {
-      const basePoints = currentQ.points || 100;
-      const speedBonus = secondsRemaining * 5;
-      pointsEarned = basePoints + speedBonus;
       setScore((s) => s + pointsEarned);
       setCorrectCount((c) => c + 1);
     }
 
-    const updatedAnswers = [...userAnswers, chosenIndex !== null ? chosenIndex : -1];
-    setUserAnswers(updatedAnswers);
-    setSelectedOption(null);
-
-    if (currentQuestionIndex + 1 < selectedQuiz.questions.length) {
+    if (selectedQuiz && currentQuestionIndex + 1 < selectedQuiz.questions.length) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else {
       finishQuiz(updatedAnswers, isCorrect ? score + pointsEarned : score, isCorrect ? correctCount + 1 : correctCount);
@@ -311,9 +301,9 @@ export default function ChallengeDirectory({
   };
 
   return (
-    <div className="min-h-screen bg-navy text-white pb-24 selection:bg-ochre selection:text-white">
+    <div className="min-h-screen bg-ivory text-ink pb-24 selection:bg-ochre selection:text-white">
       {/* 1. Hero Header - Dynamic CMS Theme Theme Tokens (ochre / navy) */}
-      <section className="relative bg-gradient-to-b from-navy-dark via-navy to-navy-light text-white pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-800/80">
+      <section className="relative bg-navy text-white pt-14 pb-14 px-4 sm:px-6 border-b border-zinc-800">
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ochre/15 border border-ochre/40 text-ochre text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm">
             <span>(ሸጋ አሬና) SHEGA ARENA</span>
@@ -328,13 +318,13 @@ export default function ChallengeDirectory({
           </p>
 
           {/* View Switcher: Challenges vs Leaderboard */}
-          <div className="inline-flex p-1.5 rounded-2xl bg-navy-dark/90 border border-zinc-800 gap-2">
+          <div className="inline-flex p-1.5 rounded-2xl bg-navy-light border border-zinc-700 gap-2">
             <button
               onClick={() => setMainView("challenges")}
               className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all ${
                 mainView === "challenges"
                   ? "bg-ochre text-white shadow-md font-extrabold"
-                  : "text-zinc-400 hover:text-white hover:bg-white/5"
+                  : "text-zinc-300 hover:text-white hover:bg-white/10"
               }`}
             >
               ⚡ Challenge Hub
@@ -344,7 +334,7 @@ export default function ChallengeDirectory({
               className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all ${
                 mainView === "leaderboard"
                   ? "bg-ochre text-white shadow-md font-extrabold"
-                  : "text-zinc-400 hover:text-white hover:bg-white/5"
+                  : "text-zinc-300 hover:text-white hover:bg-white/10"
               }`}
             >
               🏆 Hall of Fame
@@ -367,26 +357,26 @@ export default function ChallengeDirectory({
                     key={cat.id}
                     className={`rounded-3xl p-6 sm:p-7 border transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
                       isLive
-                        ? "bg-navy-light border-ochre shadow-[0_0_25px_var(--color-primary)] ring-1 ring-ochre/50 hover:scale-[1.02]"
-                        : "bg-navy-dark/60 border-zinc-800 opacity-65 grayscale hover:grayscale-0"
+                        ? "bg-white border-ochre shadow-md ring-1 ring-ochre/40 hover:scale-[1.02]"
+                        : "bg-ivory/80 border-zinc-300 opacity-75 grayscale hover:grayscale-0"
                     }`}
                   >
                     <div>
                       {/* Badge / Status */}
                       <div className="flex items-center justify-between gap-3 mb-4">
                         {isLive ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ochre/20 border border-ochre/40 text-ochre text-[11px] font-mono font-extrabold uppercase animate-pulse">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ochre/15 border border-ochre/40 text-ochre text-[11px] font-mono font-extrabold uppercase animate-pulse">
                             <span className="w-2 h-2 rounded-full bg-ochre" />
                             <span>LIVE ARENA ACTIVE</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-800/80 border border-zinc-700 text-zinc-400 text-[11px] font-mono font-bold uppercase">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-200 border border-zinc-300 text-zinc-600 text-[11px] font-mono font-bold uppercase">
                             <span>🔒 {cat.badge}</span>
                           </span>
                         )}
                       </div>
 
-                      <h3 className="text-xl sm:text-2xl font-extrabold font-display text-white mb-2">
+                      <h3 className="text-xl sm:text-2xl font-extrabold font-display text-ink mb-2">
                         {cat.title}
                       </h3>
 
@@ -394,12 +384,12 @@ export default function ChallengeDirectory({
                         {cat.subtitle}
                       </p>
 
-                      <p className="text-xs text-zinc-300 font-sans leading-relaxed mb-6">
+                      <p className="text-xs text-ink-soft font-sans leading-relaxed mb-6">
                         {cat.description}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
+                    <div className="pt-4 border-t border-zinc-200 flex items-center justify-between">
                       {isLive ? (
                         <>
                           <a
@@ -413,7 +403,7 @@ export default function ChallengeDirectory({
                       ) : (
                         <button
                           disabled
-                          className="w-full bg-zinc-800/60 text-zinc-500 font-mono font-bold text-xs py-3 rounded-xl cursor-not-allowed border border-zinc-700/50"
+                          className="w-full bg-zinc-200 text-zinc-500 font-mono font-bold text-xs py-3 rounded-xl cursor-not-allowed border border-zinc-300"
                         >
                           [Locked - Coming Soon] 🔒
                         </button>
@@ -425,13 +415,13 @@ export default function ChallengeDirectory({
             </div>
 
             {/* Live Quizzes List Section */}
-            <section className="bg-navy-light rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-xl">
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-zinc-800">
+            <section className="bg-white rounded-3xl p-6 sm:p-8 border border-zinc-200/80 shadow-xl">
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-zinc-200">
                 <div>
                   <span className="text-xs font-mono font-bold text-ochre uppercase tracking-wider block mb-1">
                     ⚡ Live Broadcast Topics
                   </span>
-                  <h2 className="text-2xl font-bold font-display text-white">
+                  <h2 className="text-2xl font-bold font-display text-ink">
                     Available Live Challenge Rooms
                   </h2>
                 </div>
@@ -441,48 +431,48 @@ export default function ChallengeDirectory({
                 {quizzes.map((quiz) => (
                   <div
                     key={quiz._id}
-                    className="bg-navy-dark rounded-2xl p-6 border border-zinc-800 flex flex-col justify-between hover:border-ochre transition-all"
+                    className="bg-ivory rounded-2xl p-6 border border-zinc-200/80 flex flex-col justify-between hover:border-ochre transition-all shadow-xs"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-3 mb-3">
                         <span className="px-3 py-1 rounded-full bg-ochre/15 border border-ochre/30 text-ochre text-xs font-mono font-bold uppercase">
                           {quiz.category || "Live Timed Quiz"}
                         </span>
-                        <span className="text-xs font-mono font-bold text-zinc-400">
+                        <span className="text-xs font-mono font-bold text-ink-soft">
                           ⏱️ {quiz.timePerQuestion || 45}s / question
                         </span>
                       </div>
 
-                      <h3 className="text-xl font-bold font-display text-white mb-2">
+                      <h3 className="text-xl font-bold font-display text-ink mb-2">
                         {quiz.title}
                       </h3>
 
-                      <p className="text-xs text-zinc-300 font-sans leading-relaxed mb-6">
+                      <p className="text-xs text-ink-soft font-sans leading-relaxed mb-6">
                         {quiz.description}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between gap-3">
-                      <div className="text-xs font-mono text-zinc-400">
-                        Difficulty: <strong className="text-white">{quiz.difficulty || "MEDIUM"}</strong> ({quiz.questions?.length || 4} Qs)
+                    <div className="pt-4 border-t border-zinc-200 flex items-center justify-between gap-3">
+                      <div className="text-xs font-mono text-ink-soft">
+                        Difficulty: <strong className="text-ink">{quiz.difficulty || "MEDIUM"}</strong> ({quiz.questions?.length || 4} Qs)
                       </div>
 
                       <div className="flex items-center gap-2">
                         <a
                           href={`/challenges/quiz/${quiz.slug?.current || quiz._id}`}
-                          className="bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all"
+                          className="bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm"
                         >
                           Join Live Arena ⚡
                         </a>
                         {allowSoloPlay ? (
                           <button
                             onClick={() => startQuizRegistration(quiz)}
-                            className="bg-black/60 hover:bg-black/90 text-white font-mono font-bold text-xs px-4 py-2.5 rounded-xl border border-zinc-700 transition-all"
+                            className="bg-navy hover:bg-navy-light text-white font-mono font-bold text-xs px-4 py-2.5 rounded-xl border border-zinc-700 transition-all shadow-xs"
                           >
                             Play Solo
                           </button>
                         ) : (
-                          <span className="bg-zinc-800/80 text-zinc-500 font-mono font-bold text-[11px] px-3 py-2 rounded-xl border border-zinc-700/50 cursor-not-allowed">
+                          <span className="bg-zinc-200 text-zinc-500 font-mono font-bold text-[11px] px-3 py-2 rounded-xl border border-zinc-300 cursor-not-allowed">
                             Solo Disabled for Live Event
                           </span>
                         )}
@@ -496,21 +486,21 @@ export default function ChallengeDirectory({
         ) : (
           /* PAGE 2: Global & Quiz-Specific Leaderboard (🏆 THE ሸጋ HALL OF FAME) */
           <div className="space-y-8">
-            <div className="bg-navy-light rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-2xl relative overflow-hidden">
-              <div className="text-center mb-8 pb-6 border-b border-zinc-800">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-zinc-200/80 shadow-2xl relative overflow-hidden text-ink">
+              <div className="text-center mb-8 pb-6 border-b border-zinc-200">
                 <span className="text-xs font-mono font-bold text-ochre uppercase tracking-wider block mb-2">
                   OFFICIAL RANKINGS
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-white mb-2">
+                <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-ink mb-2">
                   🏆 THE ሸጋ HALL OF FAME (ሸጋ ክብር አዳራሽ)
                 </h2>
-                <p className="text-xs font-mono text-zinc-400">
+                <p className="text-xs font-mono text-ink-soft">
                   Dynamic difficulty weighting: EASY (100 Pts), MEDIUM (200 Pts), HARD (400 Pts) + Speed Bonus
                 </p>
               </div>
 
               {/* Segmented Filtering Tabs */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mb-8 bg-navy-dark p-2 rounded-2xl border border-zinc-800">
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-8 bg-ivory p-2 rounded-2xl border border-zinc-200">
                 {["all", ...quizzes.map((q) => q._id)].map((id) => {
                   const label = id === "all" ? "Live Quiz" : quizzes.find((q) => q._id === id)?.title || id;
                   const isSelected = leaderboardFilter === id;
@@ -522,7 +512,7 @@ export default function ChallengeDirectory({
                       className={`px-4 py-2 rounded-xl font-mono text-xs font-bold transition-all ${
                         isSelected
                           ? "bg-ochre text-white shadow-sm"
-                          : "text-zinc-400 hover:text-white hover:bg-white/5"
+                          : "text-ink-soft hover:text-ink hover:bg-zinc-200"
                       }`}
                     >
                       [ {label} ]
@@ -535,28 +525,28 @@ export default function ChallengeDirectory({
               {filteredLeaderboard.length >= 3 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                   {/* Rank 2 - Silver */}
-                  <div className="bg-navy-dark rounded-2xl p-5 border border-zinc-400/40 text-center order-2 md:order-1 flex flex-col justify-between shadow-[0_0_15px_rgba(203,213,225,0.1)]">
+                  <div className="bg-ivory rounded-2xl p-5 border border-zinc-300 text-center order-2 md:order-1 flex flex-col justify-between shadow-xs">
                     <div>
-                      <span className="text-xs font-mono font-bold text-zinc-400 uppercase block mb-1">
+                      <span className="text-xs font-mono font-bold text-zinc-600 uppercase block mb-1">
                         🥈 RANK #2
                       </span>
                       <div className="w-12 h-12 mx-auto rounded-full bg-zinc-300 text-black font-mono font-bold text-base flex items-center justify-center mb-2 shadow-sm">
                         {filteredLeaderboard[1].participantName.slice(0, 2).toUpperCase()}
                       </div>
-                      <h4 className="font-extrabold text-white font-display text-base">
+                      <h4 className="font-extrabold text-ink font-display text-base">
                         {filteredLeaderboard[1].participantName}
                       </h4>
                       <p className="text-xs font-mono text-ochre font-semibold">
                         {filteredLeaderboard[1].participantHandle}
                       </p>
                     </div>
-                    <div className="mt-4 pt-3 border-t border-zinc-800 flex justify-around text-xs font-mono">
+                    <div className="mt-4 pt-3 border-t border-zinc-300 flex justify-around text-xs font-mono">
                       <div>
-                        <span className="text-zinc-400 block text-[10px]">SCORE</span>
-                        <strong className="text-white font-bold">{filteredLeaderboard[1].score} Pts</strong>
+                        <span className="text-ink-soft block text-[10px]">SCORE</span>
+                        <strong className="text-ink font-bold">{filteredLeaderboard[1].score} Pts</strong>
                       </div>
                       <div>
-                        <span className="text-zinc-400 block text-[10px]">ACCURACY</span>
+                        <span className="text-ink-soft block text-[10px]">ACCURACY</span>
                         <strong className="text-ochre font-bold">
                           {Math.round(((filteredLeaderboard[1].correctCount || 18) / (filteredLeaderboard[1].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[1].correctCount || 18}/20)
                         </strong>
@@ -565,29 +555,29 @@ export default function ChallengeDirectory({
                   </div>
 
                   {/* Rank 1 - Gold Champion */}
-                  <div className="bg-navy-dark rounded-2xl p-6 border-2 border-amber-400 text-center order-1 md:order-2 flex flex-col justify-between shadow-[0_0_30px_rgba(251,191,36,0.25)] md:-translate-y-2">
+                  <div className="bg-ivory rounded-2xl p-6 border-2 border-amber-400 text-center order-1 md:order-2 flex flex-col justify-between shadow-md md:-translate-y-2">
                     <div>
-                      <span className="text-xs font-mono font-bold text-amber-400 uppercase block mb-1">
+                      <span className="text-xs font-mono font-bold text-amber-600 uppercase block mb-1">
                         🥇 CHAMPION #1
                       </span>
                       <div className="w-14 h-14 mx-auto rounded-full bg-amber-400 text-black font-mono font-bold text-xl flex items-center justify-center mb-2 shadow-md ring-4 ring-amber-400/30">
                         {filteredLeaderboard[0].participantName.slice(0, 2).toUpperCase()}
                       </div>
-                      <h4 className="font-black text-white font-display text-lg">
+                      <h4 className="font-black text-ink font-display text-lg">
                         {filteredLeaderboard[0].participantName}
                       </h4>
-                      <p className="text-xs font-mono text-amber-400 font-bold">
+                      <p className="text-xs font-mono text-amber-600 font-bold">
                         {filteredLeaderboard[0].participantHandle}
                       </p>
                     </div>
-                    <div className="mt-4 pt-3 border-t border-zinc-800 flex justify-around text-xs font-mono">
+                    <div className="mt-4 pt-3 border-t border-zinc-300 flex justify-around text-xs font-mono">
                       <div>
-                        <span className="text-amber-300 block text-[10px]">SCORE</span>
-                        <strong className="text-white font-bold text-base">{filteredLeaderboard[0].score} Pts</strong>
+                        <span className="text-ink-soft block text-[10px]">SCORE</span>
+                        <strong className="text-ink font-bold text-base">{filteredLeaderboard[0].score} Pts</strong>
                       </div>
                       <div>
-                        <span className="text-amber-300 block text-[10px]">ACCURACY</span>
-                        <strong className="text-amber-400 font-bold text-sm">
+                        <span className="text-ink-soft block text-[10px]">ACCURACY</span>
+                        <strong className="text-amber-600 font-bold text-sm">
                           {Math.round(((filteredLeaderboard[0].correctCount || 19) / (filteredLeaderboard[0].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[0].correctCount || 19}/20)
                         </strong>
                       </div>
@@ -595,30 +585,30 @@ export default function ChallengeDirectory({
                   </div>
 
                   {/* Rank 3 - Bronze */}
-                  <div className="bg-navy-dark rounded-2xl p-5 border border-amber-700/50 text-center order-3 flex flex-col justify-between shadow-[0_0_15px_rgba(180,83,9,0.15)]">
+                  <div className="bg-ivory rounded-2xl p-5 border border-amber-700/40 text-center order-3 flex flex-col justify-between shadow-xs">
                     <div>
-                      <span className="text-xs font-mono font-bold text-amber-600 uppercase block mb-1">
+                      <span className="text-xs font-mono font-bold text-amber-700 uppercase block mb-1">
                         🥉 RANK #3
                       </span>
-                      <div className="w-12 h-12 mx-auto rounded-full bg-amber-700 text-white font-mono font-bold text-base flex items-center justify-center mb-2">
+                      <div className="w-12 h-12 mx-auto rounded-full bg-amber-700 text-white font-mono font-bold text-base flex items-center justify-center mb-2 shadow-sm">
                         {filteredLeaderboard[2].participantName.slice(0, 2).toUpperCase()}
                       </div>
-                      <h4 className="font-extrabold text-white font-display text-base">
+                      <h4 className="font-extrabold text-ink font-display text-base">
                         {filteredLeaderboard[2].participantName}
                       </h4>
                       <p className="text-xs font-mono text-ochre font-semibold">
                         {filteredLeaderboard[2].participantHandle}
                       </p>
                     </div>
-                    <div className="mt-4 pt-3 border-t border-zinc-800 flex justify-around text-xs font-mono">
+                    <div className="mt-4 pt-3 border-t border-zinc-300 flex justify-around text-xs font-mono">
                       <div>
-                        <span className="text-zinc-400 block text-[10px]">SCORE</span>
-                        <strong className="text-white font-bold">{filteredLeaderboard[2].score} Pts</strong>
+                        <span className="text-ink-soft block text-[10px]">SCORE</span>
+                        <strong className="text-ink font-bold">{filteredLeaderboard[2].score} Pts</strong>
                       </div>
                       <div>
-                        <span className="text-zinc-400 block text-[10px]">ACCURACY</span>
+                        <span className="text-ink-soft block text-[10px]">ACCURACY</span>
                         <strong className="text-ochre font-bold">
-                          {Math.round(((filteredLeaderboard[2].correctCount || 17) / (filteredLeaderboard[2].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[2].correctCount || 17}/20)
+                          {Math.round(((filteredLeaderboard[2].correctCount || 16) / (filteredLeaderboard[2].totalQuestions || 20)) * 100)}% ({filteredLeaderboard[2].correctCount || 16}/20)
                         </strong>
                       </div>
                     </div>
@@ -626,41 +616,55 @@ export default function ChallengeDirectory({
                 </div>
               )}
 
-              {/* Leaderboard Table with Accuracy Metric */}
-              <div className="overflow-x-auto rounded-2xl border border-zinc-800 mb-4">
-                <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-navy-dark text-zinc-300 uppercase text-[10px] tracking-wider border-b border-zinc-800">
-                    <tr>
-                      <th className="py-4 px-4 font-bold">Rank</th>
-                      <th className="py-4 px-4 font-bold">Participant</th>
-                      <th className="py-4 px-4 font-bold text-right">Total Score (Pts)</th>
-                      <th className="py-4 px-4 font-bold text-right">Accuracy (%)</th>
+              {/* Full Leaderboard Table */}
+              <div className="overflow-x-auto rounded-2xl border border-zinc-200">
+                <table className="w-full text-left font-mono text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-ivory border-b border-zinc-200 text-ink-soft font-bold">
+                      <th className="p-4 text-center">RANK</th>
+                      <th className="p-4">PARTICIPANT</th>
+                      <th className="p-4 text-center">SCORE</th>
+                      <th className="p-4 text-center">ACCURACY</th>
+                      <th className="p-4 text-center">TIME (S)</th>
+                      <th className="p-4 text-right">DATE</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-800 bg-navy-dark">
+                  <tbody className="divide-y divide-zinc-200">
                     {filteredLeaderboard.map((item, idx) => {
                       const rank = idx + 1;
-                      const accuracyPct = Math.round(
-                        ((item.correctCount || 15) / (item.totalQuestions || 20)) * 100
-                      );
+                      const isMe = item.participantName === playerName || item.participantHandle === playerHandle;
+
                       return (
-                        <tr key={item._id || idx} className="hover:bg-zinc-800/40 transition-colors">
-                          <td className="py-4 px-4 font-bold text-white">
+                        <tr
+                          key={item._id || idx}
+                          className={`transition-colors ${
+                            isMe
+                              ? "bg-ochre/15 font-bold text-ink"
+                              : rank === 1
+                              ? "bg-amber-500/10 font-bold"
+                              : "hover:bg-ivory"
+                          }`}
+                        >
+                          <td className="p-4 text-center font-bold">
                             {rank === 1 ? "🥇 #1" : rank === 2 ? "🥈 #2" : rank === 3 ? "🥉 #3" : `#${rank}`}
                           </td>
-                          <td className="py-4 px-4 font-sans font-bold text-white">
-                            <div>{item.participantName}</div>
-                            {item.participantHandle && (
-                              <span className="text-[10px] font-mono text-ochre font-semibold">
-                                {item.participantHandle}
-                              </span>
-                            )}
+                          <td className="p-4">
+                            <strong className="block text-ink font-sans text-sm">{item.participantName}</strong>
+                            <span className="text-ink-soft text-[11px]">{item.participantHandle || "@student"}</span>
                           </td>
-                          <td className="py-4 px-4 text-right font-extrabold text-white text-sm">
-                            {item.score}
+                          <td className="p-4 text-center">
+                            <strong className="text-ochre font-extrabold text-sm">{item.score} Pts</strong>
                           </td>
-                          <td className="py-4 px-4 text-right font-bold text-ochre">
-                            {accuracyPct}% ({item.correctCount || 15}/{item.totalQuestions || 20})
+                          <td className="p-4 text-center">
+                            <span className="px-2.5 py-1 rounded-full bg-zinc-200 text-ink text-[11px] font-bold">
+                              {Math.round(((item.correctCount || 1) / (item.totalQuestions || 1)) * 100)}% ({item.correctCount}/{item.totalQuestions})
+                            </span>
+                          </td>
+                          <td className="p-4 text-center text-ink-soft">
+                            ⏱️ {item.timeSpentSeconds || 30}s
+                          </td>
+                          <td className="p-4 text-right text-ink-soft text-[11px]">
+                            {item.completedAt ? new Date(item.completedAt).toLocaleDateString() : "Today"}
                           </td>
                         </tr>
                       );
@@ -668,189 +672,103 @@ export default function ChallengeDirectory({
                   </tbody>
                 </table>
               </div>
-
-              {/* Sticky "YOU" Rank Fixed Row at Bottom */}
-              <div className="bg-ochre/15 border-2 border-ochre rounded-2xl p-4 flex items-center justify-between font-mono text-xs shadow-lg">
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 rounded-full bg-ochre text-white font-extrabold">
-                    YOU
-                  </span>
-                  <div>
-                    <strong className="text-white font-sans text-sm block">
-                      {currentUserEntry.participantName}
-                    </strong>
-                    <span className="text-ochre text-[10px]">
-                      {currentUserEntry.participantHandle}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <div>
-                    <span className="text-zinc-400 block text-[10px] text-right">SCORE</span>
-                    <strong className="text-white font-extrabold text-sm">
-                      {currentUserEntry.score} Pts
-                    </strong>
-                  </div>
-                  <div>
-                    <span className="text-zinc-400 block text-[10px] text-right">ACCURACY</span>
-                    <strong className="text-ochre font-bold">
-                      {Math.round(((currentUserEntry.correctCount || 12) / (currentUserEntry.totalQuestions || 20)) * 100)}% ({currentUserEntry.correctCount || 12}/{currentUserEntry.totalQuestions || 20})
-                    </strong>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}
       </main>
 
-      {/* 3. MODAL: Player Registration */}
-      <AnimatePresence>
-        {isRegistering && selectedQuiz && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-dark/80 backdrop-blur-xs">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-navy-light rounded-3xl p-6 sm:p-8 max-w-md w-full border border-ochre shadow-2xl relative"
-            >
-              <button
-                onClick={() => setIsRegistering(false)}
-                className="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"
-              >
-                ✕
-              </button>
-
-              <div className="text-center mb-6">
-                <span className="w-12 h-12 mx-auto rounded-2xl bg-ochre/20 text-ochre text-2xl flex items-center justify-center mb-3">
-                  ⚡
-                </span>
-                <h3 className="text-2xl font-bold font-display text-white mb-1">Enter Arena</h3>
-                <p className="text-xs font-mono text-zinc-300">{selectedQuiz.title}</p>
-              </div>
-
-              <form onSubmit={handleStartQuiz} className="space-y-4 font-sans">
-                <div>
-                  <label className="block text-xs font-mono font-bold text-zinc-300 uppercase mb-1">
-                    Your Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={playerName}
-                    onChange={(e) => setPlayerName(e.target.value)}
-                    placeholder="e.g. Abebe Bikila"
-                    className="w-full px-4 py-3.5 rounded-xl bg-navy-dark border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono font-bold text-zinc-300 uppercase mb-1">
-                    Handle / Tag (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={playerHandle}
-                    onChange={(e) => setPlayerHandle(e.target.value)}
-                    placeholder="e.g. @abebe_code"
-                    className="w-full px-4 py-3.5 rounded-xl bg-navy-dark border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-ochre hover:bg-ochre-dark text-white font-mono font-extrabold text-sm py-3.5 rounded-xl transition-all shadow-md mt-2"
-                >
-                  Enter Arena Now 🔥
-                </button>
-              </form>
-            </motion.div>
+      {/* STICKY "YOU" RANK FOOTER BAR */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-navy text-white border-t border-zinc-800 p-3.5 shadow-2xl font-mono text-xs">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="w-8 h-8 rounded-full bg-ochre text-white font-bold flex items-center justify-center text-xs">
+              YOU
+            </span>
+            <div>
+              <strong className="text-white block font-sans text-sm">{currentUserEntry.participantName}</strong>
+              <span className="text-zinc-300 text-[10px]">{currentUserEntry.participantHandle}</span>
+            </div>
           </div>
-        )}
-      </AnimatePresence>
 
-      {/* 4. MODAL: Active Solo Quiz Player */}
-      <AnimatePresence>
-        {quizStarted && selectedQuiz && !quizCompleted && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-dark/90">
-            <motion.div
-              key={currentQuestionIndex}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="bg-navy-light text-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full border border-zinc-800 relative overflow-hidden"
-            >
-              <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-zinc-800">
-                <div>
-                  <span className="text-xs font-mono text-ochre uppercase font-bold tracking-wider">
-                    Question {currentQuestionIndex + 1} of {selectedQuiz.questions.length}
-                  </span>
-                  <h4 className="text-sm font-sans text-zinc-300 font-medium truncate max-w-xs sm:max-w-sm">
-                    {selectedQuiz.title}
-                  </h4>
-                </div>
+          <div className="flex items-center gap-6">
+            <div className="text-center">
+              <span className="text-zinc-300 block text-[9px]">YOUR SCORE</span>
+              <strong className="text-ochre font-extrabold text-sm">{currentUserEntry.score} Pts</strong>
+            </div>
 
-                <div className="flex items-center gap-2 bg-ochre/20 border border-ochre/40 px-3.5 py-1.5 rounded-full font-mono text-xs font-bold text-ochre">
-                  <span>⏱️</span>
-                  <span className="text-sm font-extrabold text-white">{timeLeft}s</span>
-                </div>
-              </div>
+            <div className="text-center hidden sm:block">
+              <span className="text-zinc-300 block text-[9px]">ACCURACY</span>
+              <strong className="text-white font-bold">
+                {Math.round(((currentUserEntry.correctCount || 12) / (currentUserEntry.totalQuestions || 20)) * 100)}%
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden mb-6">
-                <motion.div
-                  key={`timer-bar-${currentQuestionIndex}`}
-                  initial={{ width: "100%" }}
-                  animate={{ width: "0%" }}
-                  transition={{ duration: selectedQuiz.timePerQuestion || 20, ease: "linear" }}
-                  className="h-full bg-ochre"
+      {/* Participant Registration Modal */}
+      {showRegistrationModal && selectedQuiz && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs font-sans">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-zinc-200 shadow-2xl text-ink space-y-4">
+            <div className="text-center">
+              <span className="px-3 py-1 rounded-full bg-ochre/15 text-ochre font-mono text-xs font-bold uppercase">
+                Solo Challenge Registration
+              </span>
+              <h3 className="text-2xl font-extrabold font-display text-ink mt-2">
+                {selectedQuiz.title}
+              </h3>
+              <p className="text-xs text-ink-soft mt-1">
+                Enter your name to record your score on the Shega Hall of Fame.
+              </p>
+            </div>
+
+            <form onSubmit={handleStartQuiz} className="space-y-4 text-left font-mono text-xs">
+              <div>
+                <label className="block text-ink font-bold uppercase mb-1">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                  placeholder="e.g. Samuel Bekele"
+                  className="w-full px-4 py-3 rounded-xl bg-ivory border border-zinc-300 text-ink focus:outline-none focus:ring-2 focus:ring-ochre text-sm font-sans"
                 />
               </div>
 
-              <h3 className="text-lg sm:text-xl font-bold font-display text-white mb-4 leading-snug">
-                {selectedQuiz.questions[currentQuestionIndex].questionText}
-              </h3>
-
-              {selectedQuiz.questions[currentQuestionIndex].codeSnippet && (
-                <pre className="mb-6 bg-navy-dark rounded-xl p-4 border border-zinc-800 font-mono text-xs text-ochre overflow-x-auto whitespace-pre">
-                  {selectedQuiz.questions[currentQuestionIndex].codeSnippet}
-                </pre>
-              )}
-
-              <div className="space-y-3 mb-8">
-                {selectedQuiz.questions[currentQuestionIndex].options.map((opt, idx) => {
-                  const isSelected = selectedOption === idx;
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        setSelectedOption(idx);
-                        handleNextQuestion(idx, timeLeft);
-                      }}
-                      className={`w-full text-left p-4 rounded-xl font-sans text-sm font-medium transition-all flex items-center justify-between border ${
-                        isSelected
-                          ? "bg-ochre text-white border-ochre font-bold"
-                          : "bg-navy-dark/40 hover:bg-zinc-800 text-zinc-200 border-zinc-800"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 rounded-lg bg-white/10 font-mono text-xs font-bold flex items-center justify-center">
-                          {String.fromCharCode(65 + idx)}
-                        </span>
-                        <span>{opt}</span>
-                      </div>
-                    </button>
-                  );
-                })}
+              <div>
+                <label className="block text-ink font-bold uppercase mb-1">
+                  Handle / Tag (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={playerHandle}
+                  onChange={(e) => setPlayerHandle(e.target.value)}
+                  placeholder="e.g. @samuel_dev"
+                  className="w-full px-4 py-3 rounded-xl bg-ivory border border-zinc-300 text-ink focus:outline-none focus:ring-2 focus:ring-ochre text-sm font-sans"
+                />
               </div>
 
-              <div className="text-right text-xs font-mono text-zinc-400">
-                Score: <strong className="text-ochre font-bold">{score} Pts</strong>
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowRegistrationModal(false)}
+                  className="w-1/2 bg-zinc-200 hover:bg-zinc-300 text-ink font-bold py-3.5 rounded-xl transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="w-1/2 bg-ochre hover:bg-ochre-dark text-white font-extrabold py-3.5 rounded-xl transition-all shadow-md"
+                >
+                  Start Quiz →
+                </button>
               </div>
-            </motion.div>
+            </form>
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }

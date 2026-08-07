@@ -211,22 +211,22 @@ export default function AdminQuizControlDeck({
   // Admin Login Barrier Screen
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-navy text-white flex items-center justify-center p-4 font-sans selection:bg-ochre selection:text-white">
-        <div className="bg-navy-light rounded-3xl p-6 sm:p-8 max-w-md w-full border border-zinc-800 shadow-2xl text-center">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-ochre/20 text-ochre text-3xl flex items-center justify-center mb-4 border border-ochre/30">
+      <div className="min-h-screen bg-ivory text-ink flex items-center justify-center p-4 font-sans selection:bg-ochre selection:text-white">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-zinc-200 shadow-2xl text-center">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-ochre/15 text-ochre text-3xl flex items-center justify-center mb-4 border border-ochre/30">
             🔐
           </div>
 
-          <h1 className="text-2xl font-bold font-display text-white mb-1">
+          <h1 className="text-2xl font-bold font-display text-ink mb-1">
             Admin Live Operator Login
           </h1>
-          <p className="text-xs font-mono text-zinc-400 mb-6">
+          <p className="text-xs font-mono text-ink-soft mb-6">
             Enter passcode to access manual question pushing &amp; auto-push controls.
           </p>
 
           <form onSubmit={handleAdminLogin} className="space-y-4 text-left font-sans">
             <div>
-              <label className="block text-xs font-mono font-bold text-zinc-300 uppercase mb-1">
+              <label className="block text-xs font-mono font-bold text-ink uppercase mb-1">
                 Operator Passcode
               </label>
               <input
@@ -235,15 +235,15 @@ export default function AdminQuizControlDeck({
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="Enter passcode..."
-                className="w-full px-4 py-3.5 rounded-xl bg-navy-dark border border-zinc-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                className="w-full px-4 py-3.5 rounded-xl bg-ivory border border-zinc-300 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
               />
-              <p className="text-[11px] font-mono text-zinc-500 mt-1">
+              <p className="text-[11px] font-mono text-ink-soft mt-1">
                 Default Passcode: <code className="text-ochre">shega-admin-2026</code>
               </p>
             </div>
 
             {loginError && (
-              <div className="p-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs font-mono">
+              <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/40 text-red-700 text-xs font-mono">
                 ⚠️ {loginError}
               </div>
             )}
@@ -263,12 +263,12 @@ export default function AdminQuizControlDeck({
   const isQuestionActive = liveState?.status === "ACTIVE" && (liveState?.remainingSeconds ?? 0) > 0;
 
   return (
-    <div className="min-h-screen bg-navy text-white p-4 sm:p-8 font-sans">
-      {/* Header */}
-      <header className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-zinc-800">
+    <div className="min-h-screen bg-ivory text-ink p-4 sm:p-8 font-sans selection:bg-ochre selection:text-white">
+      {/* Header Bar */}
+      <header className="max-w-6xl mx-auto bg-navy text-white rounded-2xl p-4 sm:p-6 flex flex-wrap items-center justify-between gap-4 shadow-md font-mono text-xs mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1 rounded-full bg-ochre/20 text-ochre font-mono text-xs font-bold uppercase tracking-wider">
+            <span className="px-3 py-1 rounded-full bg-ochre/20 border border-ochre/40 text-ochre font-mono text-xs font-bold uppercase tracking-wider">
               Live Operator Deck
             </span>
             <button
@@ -276,7 +276,7 @@ export default function AdminQuizControlDeck({
                 sessionStorage.removeItem("shega_admin_auth");
                 setIsAuthenticated(false);
               }}
-              className="text-xs font-mono text-zinc-400 hover:text-white underline"
+              className="text-xs font-mono text-zinc-300 hover:text-white underline"
             >
               Sign Out
             </button>
@@ -297,21 +297,21 @@ export default function AdminQuizControlDeck({
 
           <button
             onClick={() => setShowResetConfirmModal(true)}
-            className="bg-red-950/60 border border-red-500/40 hover:bg-red-900 text-red-300 font-mono font-bold px-3.5 py-2.5 rounded-xl text-xs transition-all"
+            className="bg-red-900/60 border border-red-500/40 hover:bg-red-800 text-white font-mono font-bold px-3.5 py-2.5 rounded-xl text-xs transition-all"
           >
             <span>🗑️ Reset Leaderboard</span>
           </button>
 
-          <div className="flex items-center gap-4 bg-navy-light p-3.5 rounded-2xl border border-zinc-800 font-mono text-xs">
+          <div className="flex items-center gap-4 bg-navy-light p-3.5 rounded-2xl border border-zinc-700 font-mono text-xs">
             <div>
-              <span className="text-zinc-400 block text-[10px]">LIVE BROADCAST</span>
+              <span className="text-zinc-300 block text-[10px]">LIVE BROADCAST</span>
               <strong className={`font-bold text-sm ${isQuestionActive ? "text-emerald-400" : "text-amber-400"}`}>
                 {isQuestionActive ? `ACTIVE (#${liveState.orderIndex})` : "IDLE / READY"}
               </strong>
             </div>
 
             <div>
-              <span className="text-zinc-400 block text-[10px]">COUNTDOWN</span>
+              <span className="text-zinc-300 block text-[10px]">COUNTDOWN</span>
               <strong className="text-white font-bold text-base">
                 {liveState?.remainingSeconds ?? 0}s
               </strong>
@@ -327,11 +327,11 @@ export default function AdminQuizControlDeck({
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <main className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Topics & Global Controls */}
         <div className="space-y-6">
           {/* Topic Filter Tabs */}
-          <div className="bg-navy-light rounded-2xl p-5 border border-zinc-800">
+          <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-md">
             <h3 className="text-sm font-mono font-bold text-ochre uppercase tracking-wider mb-3">
               1. Filter Topic Domain
             </h3>
@@ -341,7 +341,7 @@ export default function AdminQuizControlDeck({
                 className={`w-full text-left p-3 rounded-xl font-bold transition-all ${
                   selectedTopicId === "all"
                     ? "bg-ochre text-white shadow-sm"
-                    : "bg-navy-dark hover:bg-black/50 text-zinc-300"
+                    : "bg-ivory hover:bg-zinc-200 text-ink border border-zinc-200"
                 }`}
               >
                 🌐 All Topics &amp; Questions
@@ -355,7 +355,7 @@ export default function AdminQuizControlDeck({
                     className={`w-full text-left p-3 rounded-xl font-bold transition-all ${
                       isSelected
                         ? "bg-ochre text-white shadow-sm"
-                        : "bg-navy-dark hover:bg-black/50 text-zinc-300"
+                        : "bg-ivory hover:bg-zinc-200 text-ink border border-zinc-200"
                     }`}
                   >
                     📂 {topic.title}
@@ -366,13 +366,13 @@ export default function AdminQuizControlDeck({
           </div>
 
           {/* Granular Timer Engine & Controls */}
-          <div className="bg-navy-light rounded-2xl p-5 border border-zinc-800 space-y-5">
+          <div className="bg-white rounded-2xl p-5 border border-zinc-200/80 shadow-md space-y-5">
             <h3 className="text-sm font-mono font-bold text-ochre uppercase tracking-wider">
               2. Broadcast Configuration
             </h3>
 
             <div>
-              <label className="block text-xs font-mono font-bold text-zinc-300 mb-1">
+              <label className="block text-xs font-mono font-bold text-ink mb-1">
                 Question Timer (Seconds)
               </label>
               <div className="flex gap-2">
@@ -385,7 +385,7 @@ export default function AdminQuizControlDeck({
                     setTimerDuration(Number(e.target.value));
                     setTimerSavedFeedback(false);
                   }}
-                  className="w-full bg-navy-dark border border-zinc-700 rounded-xl px-4 py-2.5 font-mono text-sm text-white focus:outline-none focus:ring-2 focus:ring-ochre"
+                  className="w-full bg-ivory border border-zinc-300 rounded-xl px-4 py-2.5 font-mono text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ochre"
                 />
                 <button
                   type="button"
@@ -399,20 +399,20 @@ export default function AdminQuizControlDeck({
                 </button>
               </div>
               {timerSavedFeedback && (
-                <div className="mt-2 text-xs font-mono text-emerald-400 font-bold flex items-center gap-1">
+                <div className="mt-2 text-xs font-mono text-emerald-600 font-bold flex items-center gap-1">
                   <span>✓</span> Broadcast timer set to {timerDuration} seconds!
                 </div>
               )}
-              <p className="text-[11px] font-mono text-zinc-400 mt-1">
+              <p className="text-[11px] font-mono text-ink-soft mt-1">
                 Default: <strong>45 seconds</strong> per question.
               </p>
             </div>
 
             {/* Solo Play Mode Switch */}
-            <div className="pt-3 border-t border-zinc-800 flex items-center justify-between">
+            <div className="pt-3 border-t border-zinc-200 flex items-center justify-between">
               <div>
-                <span className="text-xs font-mono font-bold text-white block">Allow "Play Solo" Mode</span>
-                <span className="text-[10px] font-mono text-zinc-400 block max-w-[180px]">
+                <span className="text-xs font-mono font-bold text-ink block">Allow "Play Solo" Mode</span>
+                <span className="text-[10px] font-mono text-ink-soft block max-w-[180px]">
                   When OFF, disables solo play so users MUST join live sessions.
                 </span>
               </div>
@@ -420,7 +420,7 @@ export default function AdminQuizControlDeck({
               <button
                 onClick={handleToggleSoloPlay}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  allowSoloPlay ? "bg-emerald-500" : "bg-zinc-700"
+                  allowSoloPlay ? "bg-emerald-500" : "bg-zinc-300"
                 }`}
               >
                 <span
@@ -432,10 +432,10 @@ export default function AdminQuizControlDeck({
             </div>
 
             {/* Auto-Push Loop Switch */}
-            <div className="pt-3 border-t border-zinc-800 flex items-center justify-between">
+            <div className="pt-3 border-t border-zinc-200 flex items-center justify-between">
               <div>
-                <span className="text-xs font-mono font-bold text-white block">Auto-Push Automation Loop</span>
-                <span className="text-[10px] font-mono text-zinc-400 block max-w-[180px]">
+                <span className="text-xs font-mono font-bold text-ink block">Auto-Push Automation Loop</span>
+                <span className="text-[10px] font-mono text-ink-soft block max-w-[180px]">
                   When enabled, automatically pushes #orderIndex+1 after 5s Leaderboard Intermission.
                 </span>
               </div>
@@ -443,7 +443,7 @@ export default function AdminQuizControlDeck({
               <button
                 onClick={handleToggleAutoPush}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  autoPush ? "bg-emerald-500" : "bg-zinc-700"
+                  autoPush ? "bg-emerald-500" : "bg-zinc-300"
                 }`}
               >
                 <span
@@ -458,19 +458,19 @@ export default function AdminQuizControlDeck({
 
         {/* Right Column: Manual One-at-a-time Push Question List */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-zinc-800 font-mono text-xs">
-            <h3 className="font-bold text-white">
+          <div className="flex items-center justify-between pb-2 border-b border-zinc-300 font-mono text-xs">
+            <h3 className="font-bold text-ink">
               3. Sequential Question Deck ({allQuestions.length} Questions)
             </h3>
             {isQuestionActive && (
-              <span className="text-amber-400 font-bold bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
+              <span className="text-amber-700 font-bold bg-amber-500/15 px-3 py-1 rounded-full border border-amber-500/40">
                 🔒 PUSH LOCKED (Timer Running)
               </span>
             )}
           </div>
 
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 font-mono text-xs">
+            <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/40 text-red-700 font-mono text-xs">
               ⚠️ {errorMsg}
             </div>
           )}
@@ -486,15 +486,15 @@ export default function AdminQuizControlDeck({
                   className={`p-5 rounded-2xl border transition-all ${
                     isCurrentlyBroadcasting
                       ? "bg-ochre/15 border-ochre shadow-md"
-                      : "bg-navy-light border-zinc-800"
+                      : "bg-white border-zinc-200/80 shadow-sm"
                   }`}
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono text-xs font-bold text-ochre">
+                      <span className="px-2.5 py-1 rounded-lg bg-ochre/15 font-mono text-xs font-bold text-ochre border border-ochre/30">
                         Question #{qIndex}
                       </span>
-                      <span className="px-2 py-0.5 rounded bg-zinc-800 text-[10px] font-mono text-zinc-300 font-bold uppercase">
+                      <span className="px-2 py-0.5 rounded bg-zinc-200 text-[10px] font-mono text-ink font-bold uppercase">
                         {q.difficulty || "MEDIUM"}
                       </span>
                     </div>
@@ -505,7 +505,7 @@ export default function AdminQuizControlDeck({
                       onClick={() => handlePushQuestion(q)}
                       className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all ${
                         isQuestionActive || isSubmitting
-                          ? "bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700"
+                          ? "bg-zinc-200 text-zinc-500 cursor-not-allowed border border-zinc-300"
                           : "bg-ochre hover:bg-ochre-dark text-white shadow-sm hover:scale-105 active:scale-95"
                       }`}
                     >
@@ -513,24 +513,24 @@ export default function AdminQuizControlDeck({
                     </button>
                   </div>
 
-                  <h4 className="font-bold text-white font-sans text-base mb-2">
+                  <h4 className="font-bold text-ink font-sans text-base mb-2">
                     {q.questionText}
                   </h4>
 
                   {q.codeSnippet && (
-                    <pre className="bg-navy-dark rounded-xl p-3 text-xs font-mono text-emerald-400 overflow-x-auto mb-3">
+                    <pre className="bg-navy rounded-xl p-3 text-xs font-mono text-ochre overflow-x-auto mb-3 border border-zinc-800">
                       {q.codeSnippet}
                     </pre>
                   )}
 
-                  <div className="grid grid-cols-2 gap-2 text-xs font-mono text-zinc-400">
+                  <div className="grid grid-cols-2 gap-2 text-xs font-mono text-ink-soft">
                     {q.options?.map((opt, optIdx) => (
                       <div
                         key={optIdx}
                         className={`p-2 rounded-lg border ${
                           optIdx === q.correctOptionIndex
-                            ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-300"
-                            : "bg-navy-dark border-zinc-800 text-zinc-400"
+                            ? "bg-emerald-50 border-emerald-400 text-emerald-800 font-bold"
+                            : "bg-ivory border-zinc-200 text-ink-soft"
                         }`}
                       >
                         {String.fromCharCode(65 + optIdx)}. {opt}
@@ -546,25 +546,25 @@ export default function AdminQuizControlDeck({
 
       {/* Reset Leaderboard Confirmation Modal */}
       {showResetConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs font-sans">
-          <div className="bg-navy-light rounded-3xl p-6 max-w-md w-full border border-red-500/50 shadow-2xl text-center space-y-4">
-            <div className="w-12 h-12 mx-auto rounded-full bg-red-500/20 text-red-400 text-2xl flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs font-sans">
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-red-500/50 shadow-2xl text-center space-y-4 text-ink">
+            <div className="w-12 h-12 mx-auto rounded-full bg-red-500/15 text-red-600 text-2xl flex items-center justify-center">
               ⚠️
             </div>
-            <h3 className="text-xl font-bold text-white">Reset Event Leaderboard?</h3>
-            <p className="text-xs font-mono text-zinc-300">
+            <h3 className="text-xl font-bold text-ink">Reset Event Leaderboard?</h3>
+            <p className="text-xs font-mono text-ink-soft">
               This will permanently clear all submitted participant scores for post-event reset. (Be sure to download CSV export first!)
             </p>
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setShowResetConfirmModal(false)}
-                className="w-1/2 bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-xs font-bold py-3 rounded-xl"
+                className="w-1/2 bg-zinc-200 hover:bg-zinc-300 text-ink font-mono text-xs font-bold py-3 rounded-xl"
               >
                 Cancel
               </button>
               <button
                 onClick={handleResetLeaderboard}
-                className="w-1/2 bg-red-600 hover:bg-red-700 text-white font-mono text-xs font-bold py-3 rounded-xl"
+                className="w-1/2 bg-red-600 hover:bg-red-700 text-white font-mono text-xs font-bold py-3 rounded-xl shadow-md"
               >
                 Confirm Reset
               </button>
