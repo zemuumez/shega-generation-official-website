@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
@@ -37,6 +37,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
   const [playerHandle, setPlayerHandle] = useState<string>("");
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
 
+  const currentQIdRef = useRef<string | null>(null);
   const [activeQuestion, setActiveQuestion] = useState<BroadcastQuestion | null>(null);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -102,7 +103,8 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
         const data: BroadcastQuestion = JSON.parse(e.data);
         
         // Reset option selection if new question launched
-        if (activeQuestion?.questionId !== data.questionId) {
+        if (currentQIdRef.current !== data.questionId) {
+          currentQIdRef.current = data.questionId;
           setSelectedOption(null);
           setIsSubmitted(false);
           setSubmissionResult(null);
@@ -116,6 +118,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     });
 
     sse.addEventListener("IDLE_STATE", () => {
+      currentQIdRef.current = null;
       setActiveQuestion(null);
       setSelectedOption(null);
       setIsSubmitted(false);
@@ -123,14 +126,18 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       fetchLeaderboard();
     });
 
-    // 3-second Auto-Refresh Leaderboard Polling
-    const lbInterval = setInterval(fetchLeaderboard, 3000);
+    sse.addEventListener("QUESTION_EXPIRED", () => {
+      fetchLeaderboard();
+    });
+
+    // 2-second Auto-Refresh Leaderboard & State Polling
+    const lbInterval = setInterval(fetchLeaderboard, 2000);
 
     return () => {
       clearInterval(lbInterval);
       sse.close();
     };
-  }, [isRegistered, userId, activeQuestion?.questionId]);
+  }, [isRegistered, userId]);
 
   const handleRegisterParticipant = (e: React.FormEvent) => {
     e.preventDefault();
