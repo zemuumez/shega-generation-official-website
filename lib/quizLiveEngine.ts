@@ -14,13 +14,20 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
   }
 }
 
-// In-Memory Fallback Store for local dev when Redis env is omitted
-const memoryStore = new Map<string, any>();
+// Global In-Memory Store shared across all Next.js API routes
+const globalForQuiz = globalThis as unknown as {
+  _shegaQuizMemoryStore: Map<string, any>;
+};
+
+const memoryStore =
+  globalForQuiz._shegaQuizMemoryStore ||
+  (globalForQuiz._shegaQuizMemoryStore = new Map<string, any>());
 
 async function getCache(key: string): Promise<any> {
   if (redis) {
     try {
-      return await redis.get(key);
+      const val = await redis.get(key);
+      if (val !== null && val !== undefined) return val;
     } catch {
       // fallback
     }
@@ -29,6 +36,7 @@ async function getCache(key: string): Promise<any> {
 }
 
 async function setCache(key: string, value: any, ttlSeconds?: number): Promise<void> {
+  memoryStore.set(key, value);
   if (redis) {
     try {
       if (ttlSeconds) {
@@ -36,12 +44,10 @@ async function setCache(key: string, value: any, ttlSeconds?: number): Promise<v
       } else {
         await redis.set(key, value);
       }
-      return;
     } catch {
       // fallback
     }
   }
-  memoryStore.set(key, value);
 }
 
 // 1. HMAC Token Generator & Verifier

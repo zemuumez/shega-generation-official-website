@@ -174,7 +174,7 @@ export default function AdminQuizControlDeck({
     });
 
     sse.addEventListener("IDLE_STATE", () => {
-      setLiveState(null);
+      // Do not clear liveState on Admin Deck from SSE IDLE_STATE race condition
     });
 
     return () => {
@@ -665,9 +665,13 @@ export default function AdminQuizControlDeck({
 
               <div className="flex items-center gap-2">
                 <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                  isQuestionActive ? "bg-emerald-100 text-emerald-800 border border-emerald-300 animate-pulse" : "bg-zinc-100 text-zinc-600"
+                  isQuestionActive
+                    ? "bg-emerald-100 text-emerald-800 border border-emerald-300 animate-pulse"
+                    : liveState
+                    ? "bg-amber-100 text-amber-800 border border-amber-300"
+                    : "bg-zinc-100 text-zinc-600"
                 }`}>
-                  {isQuestionActive ? "LIVE" : "IDLE"}
+                  {isQuestionActive ? "LIVE" : liveState ? "EXPIRED" : "IDLE"}
                 </span>
 
                 <button
@@ -680,14 +684,14 @@ export default function AdminQuizControlDeck({
               </div>
             </div>
 
-            {isQuestionActive ? (
+            {liveState ? (
               <div className="space-y-3 bg-ivory p-4 rounded-xl border border-zinc-200">
                 <div className="flex items-center justify-between font-bold">
                   <span className="text-xs text-ochre">
                     Question #{liveState.orderIndex || 1}
                   </span>
-                  <span className={`text-xs ${activeRemainingSeconds <= 10 ? "text-red-600 animate-pulse" : "text-emerald-600"}`}>
-                    {activeRemainingSeconds}s remaining
+                  <span className={`text-xs ${isQuestionActive ? (activeRemainingSeconds <= 10 ? "text-red-600 animate-pulse" : "text-emerald-600") : "text-amber-700"}`}>
+                    {isQuestionActive ? `${activeRemainingSeconds}s remaining` : "0s (Expired)"}
                   </span>
                 </div>
 
@@ -696,7 +700,7 @@ export default function AdminQuizControlDeck({
                   <div
                     style={{ width: `${progressRatio * 100}%` }}
                     className={`h-full rounded-full transition-all duration-500 ${
-                      activeRemainingSeconds <= 10 ? "bg-red-500" : "bg-ochre"
+                      isQuestionActive ? (activeRemainingSeconds <= 10 ? "bg-red-500" : "bg-ochre") : "bg-zinc-400"
                     }`}
                   />
                 </div>
