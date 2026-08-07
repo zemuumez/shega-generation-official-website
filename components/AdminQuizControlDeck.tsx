@@ -264,11 +264,11 @@ export default function AdminQuizControlDeck({
 
   return (
     <div className="min-h-screen bg-ivory text-ink p-4 sm:p-8 font-sans selection:bg-ochre selection:text-white">
-      {/* Header Bar */}
-      <header className="max-w-6xl mx-auto bg-navy text-white rounded-2xl p-4 sm:p-6 flex flex-wrap items-center justify-between gap-4 shadow-md font-mono text-xs mb-8">
+      {/* Header Bar - Light Theme Container matching Site Theme */}
+      <header className="max-w-6xl mx-auto bg-white text-ink rounded-2xl p-4 sm:p-6 flex flex-wrap items-center justify-between gap-4 border border-zinc-200/80 shadow-md font-mono text-xs mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1 rounded-full bg-ochre/20 border border-ochre/40 text-ochre font-mono text-xs font-bold uppercase tracking-wider">
+            <span className="px-3 py-1 rounded-full bg-ochre/15 border border-ochre/30 text-ochre font-mono text-xs font-bold uppercase tracking-wider">
               Live Operator Deck
             </span>
             <button
@@ -276,12 +276,12 @@ export default function AdminQuizControlDeck({
                 sessionStorage.removeItem("shega_admin_auth");
                 setIsAuthenticated(false);
               }}
-              className="text-xs font-mono text-zinc-300 hover:text-white underline"
+              className="text-xs font-mono text-ink-soft hover:text-ink underline"
             >
               Sign Out
             </button>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-white mt-1">
+          <h1 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-ink mt-1">
             Admin Quiz Control Deck
           </h1>
         </div>
@@ -297,29 +297,29 @@ export default function AdminQuizControlDeck({
 
           <button
             onClick={() => setShowResetConfirmModal(true)}
-            className="bg-red-900/60 border border-red-500/40 hover:bg-red-800 text-white font-mono font-bold px-3.5 py-2.5 rounded-xl text-xs transition-all"
+            className="bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-mono font-bold px-3.5 py-2.5 rounded-xl text-xs transition-all"
           >
             <span>🗑️ Reset Leaderboard</span>
           </button>
 
-          <div className="flex items-center gap-4 bg-navy-light p-3.5 rounded-2xl border border-zinc-700 font-mono text-xs">
+          <div className="flex items-center gap-4 bg-ivory p-3.5 rounded-2xl border border-zinc-200 font-mono text-xs">
             <div>
-              <span className="text-zinc-300 block text-[10px]">LIVE BROADCAST</span>
-              <strong className={`font-bold text-sm ${isQuestionActive ? "text-emerald-400" : "text-amber-400"}`}>
+              <span className="text-ink-soft block text-[10px]">LIVE BROADCAST</span>
+              <strong className={`font-bold text-sm ${isQuestionActive ? "text-emerald-600" : "text-amber-600"}`}>
                 {isQuestionActive ? `ACTIVE (#${liveState.orderIndex})` : "IDLE / READY"}
               </strong>
             </div>
 
             <div>
-              <span className="text-zinc-300 block text-[10px]">COUNTDOWN</span>
-              <strong className="text-white font-bold text-base">
+              <span className="text-ink-soft block text-[10px]">COUNTDOWN</span>
+              <strong className="text-ink font-bold text-base">
                 {liveState?.remainingSeconds ?? 0}s
               </strong>
             </div>
 
             <button
               onClick={handleResetSession}
-              className="bg-red-500/20 hover:bg-red-500/30 text-red-300 font-bold px-3 py-1.5 rounded-lg transition-colors border border-red-500/30"
+              className="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-3 py-1.5 rounded-lg transition-colors border border-red-300"
             >
               Reset Session
             </button>
@@ -518,7 +518,7 @@ export default function AdminQuizControlDeck({
                   </h4>
 
                   {q.codeSnippet && (
-                    <pre className="bg-navy rounded-xl p-3 text-xs font-mono text-ochre overflow-x-auto mb-3 border border-zinc-800">
+                    <pre className="bg-ivory rounded-xl p-3 text-xs font-mono text-ochre overflow-x-auto mb-3 border border-zinc-300">
                       {q.codeSnippet}
                     </pre>
                   )}
@@ -546,7 +546,7 @@ export default function AdminQuizControlDeck({
 
       {/* Reset Leaderboard Confirmation Modal */}
       {showResetConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs font-sans">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs font-sans">
           <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-red-500/50 shadow-2xl text-center space-y-4 text-ink">
             <div className="w-12 h-12 mx-auto rounded-full bg-red-500/15 text-red-600 text-2xl flex items-center justify-center">
               ⚠️

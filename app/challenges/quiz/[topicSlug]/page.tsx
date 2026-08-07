@@ -283,37 +283,37 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
 
   return (
     <div className="min-h-screen bg-ivory text-ink p-3 sm:p-6 font-sans selection:bg-ochre selection:text-white">
-      {/* Mobile/Desktop Header Bar - Uses Secondary CMS Theme Color (Navy) */}
-      <header className="max-w-6xl mx-auto w-full bg-navy text-white border border-zinc-800 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-md font-mono text-xs mb-6">
+      {/* Mobile/Desktop Header Bar - Clean Theme Container */}
+      <header className="max-w-6xl mx-auto w-full bg-white text-ink border border-zinc-200/80 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-sm font-mono text-xs mb-6">
         <div className="flex items-center gap-2">
           <span className="text-ochre font-bold text-base">⚡</span>
-          <span className="font-extrabold text-white text-sm">SHEGA ARENA LIVE</span>
+          <span className="font-extrabold text-ink text-sm">SHEGA ARENA LIVE</span>
         </div>
 
         <div className="text-center truncate">
-          <span className="text-[10px] text-zinc-300 block">TOPIC DOMAIN</span>
+          <span className="text-[10px] text-ink-soft block">TOPIC DOMAIN</span>
           <span className="text-ochre font-bold uppercase truncate block text-xs">
             {params.topicSlug.replace(/-/g, " ")}
           </span>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 bg-navy-light px-3 py-1.5 rounded-xl border border-zinc-700">
-            <span className="text-zinc-300">👤</span>
-            <span className="font-bold text-white text-xs truncate max-w-[100px]">
+          <div className="flex items-center gap-1.5 bg-ivory px-3 py-1.5 rounded-xl border border-zinc-200">
+            <span className="text-ink-soft">👤</span>
+            <span className="font-bold text-ink text-xs truncate max-w-[100px]">
               {playerName}
             </span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-1 bg-ochre/20 border border-ochre/40 px-3 py-1.5 rounded-xl text-ochre font-bold">
+          <div className="hidden sm:flex items-center gap-1 bg-ochre/15 border border-ochre/30 px-3 py-1.5 rounded-xl text-ochre font-bold">
             <span>Score:</span>
-            <strong className="text-white">{userScore} Pts</strong>
+            <strong className="text-ink">{userScore} Pts</strong>
           </div>
 
           {/* Quiz Taker Sign Out / Logout Button */}
           <button
             onClick={handleLogoutParticipant}
-            className="text-[11px] font-mono text-zinc-300 hover:text-white underline transition-colors px-2 py-1"
+            className="text-[11px] font-mono text-ink-soft hover:text-ink underline transition-colors px-2 py-1"
             title="Sign out or switch participant profile"
           >
             Sign Out
@@ -376,7 +376,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 </h3>
 
                 {activeQuestion.codeSnippet && (
-                  <pre className="bg-navy rounded-xl p-3.5 border border-zinc-800 font-mono text-xs text-ochre overflow-x-auto whitespace-pre">
+                  <pre className="bg-ivory rounded-xl p-3.5 border border-zinc-300 font-mono text-xs text-ochre overflow-x-auto whitespace-pre">
                     {activeQuestion.codeSnippet}
                   </pre>
                 )}
