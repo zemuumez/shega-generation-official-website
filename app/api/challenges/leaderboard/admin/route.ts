@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanityClient } from "@/sanity/lib/client";
 import { sanityWriteClient } from "@/sanity/lib/writeClient";
+import { clearLiveLeaderboardStore } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -63,6 +64,8 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE() {
   try {
+    await clearLiveLeaderboardStore();
+
     if (process.env.SANITY_WRITE_TOKEN) {
       // Query all submission document IDs
       const submissions = await sanityClient.fetch(`*[_type == "challengeSubmission"]._id`);

@@ -6,6 +6,7 @@ import {
   getLiveState,
   getTopicSequence,
   getDifficultyPoints,
+  recordSubmission,
 } from "@/lib/quizLiveEngine";
 import { sanityClient } from "@/sanity/lib/client";
 import { sanityWriteClient } from "@/sanity/lib/writeClient";
@@ -112,13 +113,26 @@ export async function POST(req: NextRequest) {
     pointsEarned = basePoints + speedBonus;
   }
 
-  // 5. Persist submission to Sanity CMS if write token exists
-  const handleTag = participantHandle.startsWith("@")
+  const handleTag = participantHandle?.startsWith("@")
     ? participantHandle
     : participantHandle
     ? `@${participantHandle}`
     : `@${participantName.toLowerCase().replace(/\s+/g, "_")}`;
 
+  const timeSpentSeconds = Math.max(1, Math.round((nowServer - liveState.startTime) / 1000));
+
+  // 5. Persist submission to real-time memory/Redis store
+  await recordSubmission({
+    participantName,
+    participantHandle: handleTag,
+    score: pointsEarned,
+    totalQuestions: 1,
+    correctCount: isCorrect ? 1 : 0,
+    timeSpentSeconds,
+    quizId: liveState.topicId,
+  });
+
+  // 6. Optional async sync to Sanity CMS if write token is configured
   try {
     if (process.env.SANITY_WRITE_TOKEN) {
       await sanityWriteClient.create({
@@ -128,7 +142,7 @@ export async function POST(req: NextRequest) {
         score: pointsEarned,
         totalQuestions: 1,
         correctCount: isCorrect ? 1 : 0,
-        timeSpentSeconds: Math.round((nowServer - liveState.startTime) / 1000),
+        timeSpentSeconds,
         completedAt: new Date().toISOString(),
       });
     }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanityClient } from "@/sanity/lib/client";
 import { LEADERBOARD_QUERY } from "@/sanity/lib/queries";
+import { getLiveLeaderboardStore } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,16 +11,40 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const quizId = url.searchParams.get("quizId");
 
-    let entries: any[] = [];
+    let sanityEntries: any[] = [];
     try {
-      entries = await sanityClient.fetch(LEADERBOARD_QUERY);
+      sanityEntries = await sanityClient.fetch(LEADERBOARD_QUERY);
     } catch {
-      entries = [];
+      sanityEntries = [];
     }
 
-    if (!entries) {
-      entries = [];
+    if (!sanityEntries) {
+      sanityEntries = [];
     }
+
+    const liveEntries = await getLiveLeaderboardStore();
+
+    // Merge Sanity CMS and live memory/Redis entries by participant handle or name
+    const mergedMap = new Map<string, any>();
+
+    for (const item of [...liveEntries, ...sanityEntries]) {
+      const handleKey = (item.participantHandle || "").toLowerCase();
+      const nameKey = (item.participantName || "").toLowerCase();
+      const key = handleKey || nameKey;
+      if (!key) continue;
+
+      if (!mergedMap.has(key)) {
+        mergedMap.set(key, item);
+      } else {
+        const existing = mergedMap.get(key);
+        // Retain highest score & updated stats
+        if ((item.score || 0) > (existing.score || 0)) {
+          mergedMap.set(key, item);
+        }
+      }
+    }
+
+    let entries = Array.from(mergedMap.values());
 
     if (quizId && quizId !== "all") {
       entries = entries.filter((item) => item.quizId === quizId || item.quizTitle === quizId);

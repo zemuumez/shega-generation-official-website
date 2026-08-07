@@ -232,3 +232,77 @@ export function getDifficultyPoints(difficulty: string): number {
       return 200;
   }
 }
+
+// 7. Real-Time Leaderboard Memory & Cache Engine
+export interface LiveLeaderboardEntry {
+  _id: string;
+  participantName: string;
+  participantHandle: string;
+  score: number;
+  totalQuestions: number;
+  correctCount: number;
+  timeSpentSeconds: number;
+  completedAt: string;
+  quizId?: string;
+  quizTitle?: string;
+}
+
+export async function recordSubmission(submission: Partial<LiveLeaderboardEntry>): Promise<LiveLeaderboardEntry> {
+  const currentLeaderboard: LiveLeaderboardEntry[] = (await getCache("quiz:live:leaderboard_entries")) || [];
+  
+  const existingIdx = currentLeaderboard.findIndex(
+    (e) =>
+      (e.participantHandle && submission.participantHandle && e.participantHandle.toLowerCase() === submission.participantHandle.toLowerCase()) ||
+      (e.participantName && submission.participantName && e.participantName.toLowerCase() === submission.participantName.toLowerCase())
+  );
+
+  const entryId = submission._id || `sub_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  let entryToReturn: LiveLeaderboardEntry;
+
+  if (existingIdx >= 0) {
+    const existing = currentLeaderboard[existingIdx];
+    const updatedScore = (existing.score || 0) + (submission.score || 0);
+    const updatedCorrect = (existing.correctCount || 0) + (submission.correctCount || 0);
+    const updatedTotal = (existing.totalQuestions || 0) + (submission.totalQuestions || 1);
+    const updatedTime = (existing.timeSpentSeconds || 0) + (submission.timeSpentSeconds || 0);
+
+    entryToReturn = {
+      ...existing,
+      score: updatedScore,
+      correctCount: updatedCorrect,
+      totalQuestions: updatedTotal,
+      timeSpentSeconds: updatedTime,
+      completedAt: new Date().toISOString(),
+      quizId: submission.quizId || existing.quizId,
+      quizTitle: submission.quizTitle || existing.quizTitle,
+    };
+    currentLeaderboard[existingIdx] = entryToReturn;
+  } else {
+    entryToReturn = {
+      _id: entryId,
+      participantName: submission.participantName || "Anonymous Student",
+      participantHandle: submission.participantHandle || "@student",
+      score: submission.score || 0,
+      totalQuestions: submission.totalQuestions || 1,
+      correctCount: submission.correctCount || 0,
+      timeSpentSeconds: submission.timeSpentSeconds || 0,
+      completedAt: new Date().toISOString(),
+      quizId: submission.quizId,
+      quizTitle: submission.quizTitle,
+    };
+    currentLeaderboard.push(entryToReturn);
+  }
+
+  currentLeaderboard.sort((a, b) => b.score - a.score);
+  await setCache("quiz:live:leaderboard_entries", currentLeaderboard);
+  return entryToReturn;
+}
+
+export async function getLiveLeaderboardStore(): Promise<LiveLeaderboardEntry[]> {
+  const memoryLeaderboard: LiveLeaderboardEntry[] = (await getCache("quiz:live:leaderboard_entries")) || [];
+  return memoryLeaderboard;
+}
+
+export async function clearLiveLeaderboardStore(): Promise<void> {
+  await setCache("quiz:live:leaderboard_entries", []);
+}
