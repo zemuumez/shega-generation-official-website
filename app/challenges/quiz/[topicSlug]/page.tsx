@@ -368,7 +368,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
         {/* Left Column: Live Question Player */}
         <div className="lg:col-span-2 space-y-4">
           <AnimatePresence mode="wait">
-            {activeQuestion && activeQuestion.status === "ACTIVE" && (
+            {activeQuestion && (activeQuestion.status === "ACTIVE" || activeQuestion.status === "EXPIRED") && (
               <motion.div
                 key={activeQuestion.questionId}
                 initial={{ opacity: 0, y: 10 }}
