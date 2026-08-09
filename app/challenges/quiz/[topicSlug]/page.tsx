@@ -17,6 +17,8 @@ interface BroadcastQuestion {
   orderIndex: number;
   timerDuration: number;
   remainingSeconds: number;
+  startTime?: number;
+  endTime?: number;
   token: string;
   tokenExpiry: number;
   status: "IDLE" | "ACTIVE" | "INTERMISSION" | "EXPIRED" | "COMPLETED";
@@ -33,6 +35,14 @@ const STORAGE_KEY = "shega_quiz_participant";
 const TTL_MS = 24 * 60 * 60 * 1000; // 24 Hours TTL
 
 export default function MobileLiveQuizPage({ params }: { params: { topicSlug: string } }) {
+  // Local 500ms ticker for smooth timer calculation without forcing state re-renders
+  const [nowTime, setNowTime] = useState<number>(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNowTime(Date.now()), 500);
+    return () => clearInterval(timer);
+  }, []);
+
   const [userId, setUserId] = useState<string>(() => `user_${Math.random().toString(36).substring(2, 9)}`);
   const [playerName, setPlayerName] = useState<string>("");
   const [playerHandle, setPlayerHandle] = useState<string>("");
@@ -78,7 +88,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     }
   };
 
-  // 2. Real-Time Zero-Refresh SSE Stream & Initial Sync
+  // 2. Real-Time Zero-Refresh Stream & Background Sync
   useEffect(() => {
     if (!isRegistered) return;
 
@@ -94,13 +104,19 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
             setSelectedOption(null);
             setIsSubmitted(false);
             setSubmissionResult(null);
+            setActiveQuestion(data.activeQuestion);
+          } else {
+            // Same question: Only update if status changed
+            setActiveQuestion((prev) => {
+              if (!prev || prev.status !== data.activeQuestion.status) {
+                return data.activeQuestion;
+              }
+              return prev;
+            });
           }
-          setActiveQuestion(data.activeQuestion);
-        } else if (data.status === "IDLE" || data.status === "EXPIRED") {
-          if (data.status === "IDLE") {
-            currentQIdRef.current = null;
-            setActiveQuestion(null);
-          }
+        } else if (data.status === "IDLE") {
+          currentQIdRef.current = null;
+          setActiveQuestion(null);
         }
       } catch {
         // ignore
@@ -111,11 +127,11 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     syncLiveState();
     fetchLeaderboard();
 
-    // 1s Polling interval for Vercel Serverless resilience + 2s Leaderboard refresh
+    // 2s background polling for Vercel Serverless resilience
     const pollInterval = setInterval(() => {
       syncLiveState();
       fetchLeaderboard();
-    }, 1000);
+    }, 2000);
 
     // SSE Real-Time Zero-Refresh Broadcast Stream
     let sse: EventSource | null = null;
@@ -130,9 +146,16 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
             setSelectedOption(null);
             setIsSubmitted(false);
             setSubmissionResult(null);
+            setActiveQuestion(data);
+            fetchLeaderboard();
+          } else {
+            setActiveQuestion((prev) => {
+              if (!prev || prev.status !== data.status) {
+                return data;
+              }
+              return prev;
+            });
           }
-          setActiveQuestion(data);
-          fetchLeaderboard();
         } catch {
           // ignore
         }
@@ -196,7 +219,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
   };
 
   const handleSelectOption = async (optionIdx: number) => {
-    if (isSubmitted || !activeQuestion || activeQuestion.remainingSeconds <= 0) return;
+    if (isSubmitted || !activeQuestion) return;
 
     setSelectedOption(optionIdx);
     setIsSubmitted(true);
@@ -283,10 +306,13 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
     );
   }
 
-  // Timer ratio and color calculation
-  const timerRatio = activeQuestion
-    ? activeQuestion.remainingSeconds / (activeQuestion.timerDuration || 45)
-    : 1;
+  // Calculate local remaining seconds smoothly without object reference re-renders
+  const activeRemainingSeconds = activeQuestion && activeQuestion.endTime
+    ? Math.max(0, Math.ceil((activeQuestion.endTime - nowTime) / 1000))
+    : (activeQuestion?.remainingSeconds ?? 0);
+
+  const maxTimerDuration = activeQuestion?.timerDuration || 45;
+  const timerRatio = Math.max(0, Math.min(1, activeRemainingSeconds / maxTimerDuration));
 
   let timerColorClass = "bg-ochre";
   if (timerRatio < 0.25) {
@@ -355,13 +381,13 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                   <div className="flex items-center justify-between text-[11px] font-mono font-bold text-ink-soft">
                     <span>COUNTDOWN TIMER</span>
                     <span className={timerRatio < 0.25 ? "text-[#EF4444]" : timerRatio < 0.5 ? "text-[#F59E0B]" : "text-ochre"}>
-                      00:{activeQuestion.remainingSeconds < 10 ? `0${activeQuestion.remainingSeconds}` : activeQuestion.remainingSeconds}s
+                      00:{activeRemainingSeconds < 10 ? `0${activeRemainingSeconds}` : activeRemainingSeconds}s
                     </span>
                   </div>
                   <div className="w-full h-3 bg-ivory rounded-full overflow-hidden border border-zinc-200 p-0.5">
                     <div
                       style={{ width: `${Math.max(0, timerRatio * 100)}%` }}
-                      className={`h-full rounded-full transition-all duration-1000 ${timerColorClass}`}
+                      className={`h-full rounded-full transition-all duration-500 ${timerColorClass}`}
                     />
                   </div>
                 </div>
@@ -400,7 +426,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                 <div className="space-y-3 pt-2">
                   {activeQuestion.options.map((opt, idx) => {
                     const isSelected = selectedOption === idx;
-                    const isLocked = isSubmitted || activeQuestion.remainingSeconds <= 0;
+                    const isLocked = isSubmitted || activeRemainingSeconds <= 0;
 
                     return (
                       <button
@@ -495,7 +521,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
 
           {/* Locked Footer Status */}
           <footer className="w-full pt-2 text-center">
-            {isSubmitted || (activeQuestion && activeQuestion.remainingSeconds <= 0) ? (
+            {isSubmitted || (activeQuestion && activeRemainingSeconds <= 0) ? (
               <div className="w-full bg-ochre/15 border border-ochre/40 text-ochre font-mono text-xs font-extrabold py-3.5 rounded-2xl shadow-sm tracking-widest uppercase">
                 [ LOCKED AND SUBMITTED ]
               </div>
