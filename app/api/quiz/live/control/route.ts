@@ -25,7 +25,6 @@ const ControlSchema = z.object({
   allowSoloPlay: z.boolean().optional(),
   selectedTopicId: z.string().optional(),
   queue: z.array(z.any()).optional(),
-  forcePush: z.boolean().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -41,7 +40,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay, selectedTopicId, queue, forcePush } = parsed.data;
+  const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay, selectedTopicId, queue } = parsed.data;
   const currentState = await getLiveState();
 
   if (action === "RESET_SESSION") {
@@ -88,8 +87,8 @@ export async function POST(req: NextRequest) {
   }
 
   if (action === "PUSH_QUESTION") {
-    // Single Question Lock: If current question is active and countdown has NOT expired, block new push UNLESS forcePush is true
-    if (!forcePush && currentState && currentState.status === "ACTIVE" && Date.now() < currentState.endTime) {
+    // Single Question Lock: If current question is active and countdown has NOT expired, block new push
+    if (currentState && currentState.status === "ACTIVE" && Date.now() < currentState.endTime) {
       return NextResponse.json(
         { error: "Single Question Lock Active! Current question countdown is still running." },
         { status: 423 }
