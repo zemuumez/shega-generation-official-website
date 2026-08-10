@@ -120,6 +120,8 @@ export async function POST(req: NextRequest) {
       questionType: targetQuestion.questionType || "MULTIPLE_CHOICE",
       codeSnippet: targetQuestion.codeSnippet || undefined,
       options: targetQuestion.options || [],
+      correctOptionIndex: targetQuestion.correctOptionIndex ?? 0,
+      explanation: targetQuestion.explanation || undefined,
       difficulty: targetQuestion.difficulty || "MEDIUM",
       points,
       orderIndex: targetQuestion.orderIndex || (orderIndex || 1),

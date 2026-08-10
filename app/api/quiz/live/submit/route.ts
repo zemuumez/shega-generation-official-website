@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
   }
 
   const targetQuestion = questions?.find((q: any) => q._key === questionId || q._id === questionId);
-  const correctOptionIndex = targetQuestion?.correctOptionIndex ?? 0;
+  const correctOptionIndex = liveState.correctOptionIndex ?? targetQuestion?.correctOptionIndex ?? 0;
   const isCorrect = chosenOptionIndex === correctOptionIndex;
 
   let pointsEarned = 0;

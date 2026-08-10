@@ -107,6 +107,8 @@ export interface LiveQuestionPayload {
   questionType: "MULTIPLE_CHOICE" | "TRUE_FALSE";
   codeSnippet?: string;
   options: string[];
+  correctOptionIndex?: number;
+  explanation?: string;
   difficulty: "EASY" | "MEDIUM" | "HARD";
   points: number;
   orderIndex: number;

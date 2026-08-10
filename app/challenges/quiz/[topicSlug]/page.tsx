@@ -497,7 +497,9 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
                   >
                     {submissionResult.isCorrect
                       ? `Correct Answer! +${submissionResult.pointsEarned} Pts`
-                      : "Submitted. Processing live leaderboard..."}
+                      : submissionResult.pointsEarned > 0
+                      ? `Answer Submitted! +${submissionResult.pointsEarned} Pts`
+                      : "Answer Submitted & Recorded!"}
                   </div>
                 )}
               </motion.div>
