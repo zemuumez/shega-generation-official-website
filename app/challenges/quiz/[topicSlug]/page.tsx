@@ -124,7 +124,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
               return prev;
             });
           }
-        } else if (data.status === "IDLE") {
+        } else if (data.status === "IDLE" && data.isReset) {
           currentQIdRef.current = null;
           setActiveQuestion(null);
         }
@@ -171,13 +171,20 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
         }
       });
 
-      sse.addEventListener("IDLE_STATE", () => {
-        currentQIdRef.current = null;
-        setActiveQuestion(null);
-        setSelectedOption(null);
-        setIsSubmitted(false);
-        setSubmissionResult(null);
-        fetchLeaderboard();
+      sse.addEventListener("IDLE_STATE", (e) => {
+        try {
+          const payload = JSON.parse(e.data || "{}");
+          if (payload.isReset) {
+            currentQIdRef.current = null;
+            setActiveQuestion(null);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setSubmissionResult(null);
+            fetchLeaderboard();
+          }
+        } catch {
+          // ignore
+        }
       });
 
       sse.addEventListener("QUESTION_EXPIRED", () => {
@@ -379,7 +386,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       <main className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left Column: Live Question Player */}
         <div className="lg:col-span-2 space-y-4">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {activeQuestion && (activeQuestion.status === "ACTIVE" || activeQuestion.status === "EXPIRED") && (
               <motion.div
                 key={activeQuestion.questionId}

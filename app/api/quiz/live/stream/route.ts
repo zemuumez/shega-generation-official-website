@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
 
           if (!liveState) {
             const allowSoloPlay = await getAllowSoloPlay();
-            sendEvent("IDLE_STATE", { status: "IDLE", allowSoloPlay });
+            sendEvent("IDLE_STATE", { status: "IDLE", allowSoloPlay, isReset: true });
             return;
           }
 
