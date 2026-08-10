@@ -11,6 +11,8 @@ import {
   getAllowSoloPlay,
   setLiveAdminConfig,
   setLiveQuestionQueue,
+  triggerSessionReset,
+  parseBool,
 } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
@@ -46,6 +48,7 @@ export async function POST(req: NextRequest) {
   if (action === "RESET_SESSION") {
     await setLiveState(null);
     await setLiveQuestionQueue([]);
+    await triggerSessionReset();
     return NextResponse.json({ ok: true, message: "Live quiz session and queue reset." });
   }
 

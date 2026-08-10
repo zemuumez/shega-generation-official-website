@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Topic {
   _id: string;
@@ -74,6 +74,9 @@ export default function AdminQuizControlDeck({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showResetConfirmModal, setShowResetConfirmModal] = useState<boolean>(false);
+
+  // Ref to prevent polling from overriding recent manual user toggles
+  const lastUserToggleRef = useRef<number>(0);
 
   // Restore configurations and question queue from localStorage on mount
   useEffect(() => {
@@ -180,16 +183,21 @@ export default function AdminQuizControlDeck({
         const res = await fetch("/api/quiz/live/state");
         const data = await res.json();
 
-        if (data.allowSoloPlay !== undefined) {
-          setAllowSoloPlay((prev) => (prev !== data.allowSoloPlay ? data.allowSoloPlay : prev));
+        // Only sync toggle state if user didn't manually click a toggle in the last 4 seconds
+        const isRecentlyToggled = Date.now() - lastUserToggleRef.current < 4000;
+
+        if (!isRecentlyToggled && data.allowSoloPlay !== undefined) {
+          const parsedSolo = typeof data.allowSoloPlay === "string" ? data.allowSoloPlay === "true" : Boolean(data.allowSoloPlay);
+          setAllowSoloPlay((prev) => (prev !== parsedSolo ? parsedSolo : prev));
         }
 
         if (data.adminConfig) {
           if (data.adminConfig.timerDuration) {
             setTimerDuration((prev) => (prev !== data.adminConfig.timerDuration ? data.adminConfig.timerDuration : prev));
           }
-          if (data.adminConfig.autoPush !== undefined) {
-            setAutoPush((prev) => (prev !== data.adminConfig.autoPush ? data.adminConfig.autoPush : prev));
+          if (!isRecentlyToggled && data.adminConfig.autoPush !== undefined) {
+            const parsedAuto = typeof data.adminConfig.autoPush === "string" ? data.adminConfig.autoPush === "true" : Boolean(data.adminConfig.autoPush);
+            setAutoPush((prev) => (prev !== parsedAuto ? parsedAuto : prev));
           }
         }
 
@@ -327,12 +335,14 @@ export default function AdminQuizControlDeck({
   };
 
   const handleToggleAutoPush = async () => {
+    lastUserToggleRef.current = Date.now();
     const nextVal = !autoPush;
     setAutoPush(nextVal);
     await updateServerConfig({ autoPush: nextVal });
   };
 
   const handleToggleSoloPlay = async () => {
+    lastUserToggleRef.current = Date.now();
     const nextVal = !allowSoloPlay;
     setAllowSoloPlay(nextVal);
     await updateServerConfig({ allowSoloPlay: nextVal });

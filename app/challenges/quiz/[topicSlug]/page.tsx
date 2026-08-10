@@ -96,14 +96,14 @@ export default function MobileLiveQuizPage({
           return prev;
         });
 
-        // Auto-sync my live score from the real-time leaderboard
+        // Auto-sync my live score from the real-time leaderboard (never decrease score)
         const myEntry = data.leaderboard.find(
           (item: any) =>
             (playerHandle && item.participantHandle && item.participantHandle.toLowerCase() === playerHandle.toLowerCase()) ||
             (playerName && item.participantName && item.participantName.toLowerCase() === playerName.toLowerCase())
         );
         if (myEntry && typeof myEntry.score === "number") {
-          setUserScore((prev) => (prev !== myEntry.score ? myEntry.score : prev));
+          setUserScore((prev) => Math.max(prev, myEntry.score));
         }
       }
     } catch {
@@ -137,7 +137,7 @@ export default function MobileLiveQuizPage({
               return prev;
             });
           }
-        } else if (data.status === "IDLE" && data.isReset) {
+        } else if (data.status === "IDLE" && data.isReset === true) {
           currentQIdRef.current = null;
           setActiveQuestion(null);
         }
@@ -187,7 +187,7 @@ export default function MobileLiveQuizPage({
       sse.addEventListener("IDLE_STATE", (e) => {
         try {
           const payload = JSON.parse(e.data || "{}");
-          if (payload.isReset) {
+          if (payload.isReset === true) {
             currentQIdRef.current = null;
             setActiveQuestion(null);
             setSelectedOption(null);

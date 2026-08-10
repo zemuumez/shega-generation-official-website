@@ -5,6 +5,8 @@ import {
   getLiveAdminConfig,
   getLiveQuestionQueue,
   generateQuestionToken,
+  getLastSessionResetTime,
+  parseBool,
 } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
@@ -15,9 +17,12 @@ export async function GET(req: NextRequest) {
   const userId = url.searchParams.get("userId") || `anon_${Math.random().toString(36).substring(2, 9)}`;
 
   const liveState = await getLiveState();
-  const allowSoloPlay = await getAllowSoloPlay();
+  const allowSoloPlayRaw = await getAllowSoloPlay();
+  const allowSoloPlay = parseBool(allowSoloPlayRaw, true);
   const adminConfig = await getLiveAdminConfig();
   const questionQueue = await getLiveQuestionQueue();
+  const lastReset = await getLastSessionResetTime();
+  const isReset = Date.now() - lastReset < 10000;
 
   if (!liveState) {
     return NextResponse.json({
@@ -26,6 +31,7 @@ export async function GET(req: NextRequest) {
       adminConfig,
       questionQueue,
       activeQuestion: null,
+      isReset,
     });
   }
 

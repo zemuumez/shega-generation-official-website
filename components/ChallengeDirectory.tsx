@@ -153,7 +153,8 @@ export default function ChallengeDirectory({
       const stateRes = await fetch("/api/quiz/live/state");
       const stateData = await stateRes.json();
       if (stateData.allowSoloPlay !== undefined) {
-        setAllowSoloPlay(stateData.allowSoloPlay);
+        const parsedSolo = typeof stateData.allowSoloPlay === "string" ? stateData.allowSoloPlay === "true" : Boolean(stateData.allowSoloPlay);
+        setAllowSoloPlay(parsedSolo);
       }
     } catch {
       // ignore
@@ -169,7 +170,8 @@ export default function ChallengeDirectory({
       try {
         const data = JSON.parse(e.data);
         if (data.allowSoloPlay !== undefined) {
-          setAllowSoloPlay(data.allowSoloPlay);
+          const parsedSolo = typeof data.allowSoloPlay === "string" ? data.allowSoloPlay === "true" : Boolean(data.allowSoloPlay);
+          setAllowSoloPlay(parsedSolo);
         }
       } catch {
         // ignore

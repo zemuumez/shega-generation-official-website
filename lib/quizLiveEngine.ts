@@ -23,13 +23,26 @@ const memoryStore =
   globalForQuiz._shegaQuizMemoryStore ||
   (globalForQuiz._shegaQuizMemoryStore = new Map<string, any>());
 
+// Helper: Strict boolean parser for Redis REST string values ("true", "false", 1, 0, etc.)
+export function parseBool(val: any, fallback: boolean = true): boolean {
+  if (val === undefined || val === null) return fallback;
+  if (typeof val === "boolean") return val;
+  if (typeof val === "number") return val !== 0;
+  if (typeof val === "string") {
+    const clean = val.trim().toLowerCase();
+    if (clean === "false" || clean === "0" || clean === "off" || clean === "no") return false;
+    if (clean === "true" || clean === "1" || clean === "on" || clean === "yes") return true;
+  }
+  return Boolean(val);
+}
+
 async function getCache(key: string): Promise<any> {
   if (redis) {
     try {
       const val = await redis.get(key);
       if (val !== null && val !== undefined) return val;
-    } catch {
-      // fallback
+    } catch (err) {
+      console.warn(`Upstash Redis get error for key [${key}]:`, err);
     }
   }
   return memoryStore.get(key) ?? null;
@@ -44,8 +57,8 @@ async function setCache(key: string, value: any, ttlSeconds?: number): Promise<v
       } else {
         await redis.set(key, value);
       }
-    } catch {
-      // fallback
+    } catch (err) {
+      console.warn(`Upstash Redis set error for key [${key}]:`, err);
     }
   }
 }
@@ -130,14 +143,24 @@ export async function setLiveState(state: LiveQuestionPayload | null): Promise<v
   await setCache("quiz:live:active_state", state);
 }
 
+// Session Reset Triggering
+export async function triggerSessionReset(): Promise<void> {
+  await setCache("quiz:live:session_reset_time", Date.now(), 30);
+}
+
+export async function getLastSessionResetTime(): Promise<number> {
+  const time = await getCache("quiz:live:session_reset_time");
+  return typeof time === "number" ? time : 0;
+}
+
 // 4. Solo Play Mode Toggle Cache & Admin Configurations
 export async function getAllowSoloPlay(): Promise<boolean> {
   const res = await getCache("quiz:config:allow_solo_play");
-  return res !== false; // Defaults to true unless explicitly toggled OFF
+  return parseBool(res, true); // Defaults to true unless explicitly toggled OFF
 }
 
 export async function setAllowSoloPlay(allow: boolean): Promise<void> {
-  await setCache("quiz:config:allow_solo_play", allow);
+  await setCache("quiz:config:allow_solo_play", parseBool(allow, true));
 }
 
 export interface LiveAdminConfig {
@@ -149,19 +172,31 @@ export interface LiveAdminConfig {
 
 export async function getLiveAdminConfig(): Promise<LiveAdminConfig> {
   const cached = await getCache("quiz:config:admin_settings");
-  return (
-    cached || {
+  if (!cached) {
+    return {
       timerDuration: 45,
       autoPush: false,
       allowSoloPlay: true,
       selectedTopicId: "all",
-    }
-  );
+    };
+  }
+  return {
+    timerDuration: Number(cached.timerDuration) || 45,
+    autoPush: parseBool(cached.autoPush, false),
+    allowSoloPlay: parseBool(cached.allowSoloPlay, true),
+    selectedTopicId: cached.selectedTopicId || "all",
+  };
 }
 
 export async function setLiveAdminConfig(config: Partial<LiveAdminConfig>): Promise<LiveAdminConfig> {
   const current = await getLiveAdminConfig();
-  const updated = { ...current, ...config };
+  const updated: LiveAdminConfig = {
+    ...current,
+    ...(config.timerDuration !== undefined && { timerDuration: Number(config.timerDuration) }),
+    ...(config.autoPush !== undefined && { autoPush: parseBool(config.autoPush, false) }),
+    ...(config.allowSoloPlay !== undefined && { allowSoloPlay: parseBool(config.allowSoloPlay, true) }),
+    ...(config.selectedTopicId !== undefined && { selectedTopicId: config.selectedTopicId }),
+  };
   await setCache("quiz:config:admin_settings", updated);
   if (config.allowSoloPlay !== undefined) {
     await setAllowSoloPlay(config.allowSoloPlay);

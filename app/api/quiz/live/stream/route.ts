@@ -1,5 +1,12 @@
 import { NextRequest } from "next/server";
-import { getLiveState, setLiveState, generateQuestionToken, advanceToNextQuestion, getAllowSoloPlay } from "@/lib/quizLiveEngine";
+import {
+  getLiveState,
+  setLiveState,
+  generateQuestionToken,
+  advanceToNextQuestion,
+  getAllowSoloPlay,
+  getLastSessionResetTime,
+} from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,7 +37,9 @@ export async function GET(req: NextRequest) {
 
           if (!liveState) {
             const allowSoloPlay = await getAllowSoloPlay();
-            sendEvent("IDLE_STATE", { status: "IDLE", allowSoloPlay, isReset: true });
+            const lastReset = await getLastSessionResetTime();
+            const isRecentReset = Date.now() - lastReset < 10000;
+            sendEvent("IDLE_STATE", { status: "IDLE", allowSoloPlay, isReset: isRecentReset });
             return;
           }
 
