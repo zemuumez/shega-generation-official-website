@@ -81,7 +81,12 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       const res = await fetch("/api/challenges/leaderboard");
       const data = await res.json();
       if (data.ok && Array.isArray(data.leaderboard)) {
-        setLeaderboard(data.leaderboard);
+        setLeaderboard((prev) => {
+          if (JSON.stringify(prev) !== JSON.stringify(data.leaderboard)) {
+            return data.leaderboard;
+          }
+          return prev;
+        });
 
         // Auto-sync my live score from the real-time leaderboard
         const myEntry = data.leaderboard.find(
@@ -90,7 +95,7 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
             (playerName && item.participantName && item.participantName.toLowerCase() === playerName.toLowerCase())
         );
         if (myEntry && typeof myEntry.score === "number") {
-          setUserScore(myEntry.score);
+          setUserScore((prev) => (prev !== myEntry.score ? myEntry.score : prev));
         }
       }
     } catch {

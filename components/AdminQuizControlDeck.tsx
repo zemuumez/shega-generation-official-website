@@ -155,9 +155,16 @@ export default function AdminQuizControlDeck({
       try {
         const res = await fetch("/api/quiz/live/state");
         const data = await res.json();
-        if (data.allowSoloPlay !== undefined) setAllowSoloPlay(data.allowSoloPlay);
+        if (data.allowSoloPlay !== undefined) {
+          setAllowSoloPlay((prev) => (prev !== data.allowSoloPlay ? data.allowSoloPlay : prev));
+        }
         if (data.status === "ACTIVE" && data.activeQuestion) {
-          setLiveState(data.activeQuestion);
+          setLiveState((prev: any) => {
+            if (!prev || prev.questionId !== data.activeQuestion.questionId || prev.status !== data.activeQuestion.status) {
+              return data.activeQuestion;
+            }
+            return prev;
+          });
         }
       } catch {
         // ignore
@@ -165,7 +172,7 @@ export default function AdminQuizControlDeck({
     };
 
     syncAdminState();
-    const pollInterval = setInterval(syncAdminState, 1000);
+    const pollInterval = setInterval(syncAdminState, 3000);
 
     let sse: EventSource | null = null;
     try {
@@ -174,8 +181,15 @@ export default function AdminQuizControlDeck({
       sse.addEventListener("QUESTION_BROADCAST", (e) => {
         try {
           const data = JSON.parse(e.data);
-          setLiveState(data);
-          if (data.autoPush !== undefined) setAutoPush(data.autoPush);
+          if (data.autoPush !== undefined) {
+            setAutoPush((prev) => (prev !== data.autoPush ? data.autoPush : prev));
+          }
+          setLiveState((prev: any) => {
+            if (!prev || prev.questionId !== data.questionId || prev.status !== data.status) {
+              return data;
+            }
+            return prev;
+          });
         } catch {
           // ignore
         }
