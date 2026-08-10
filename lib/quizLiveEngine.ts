@@ -71,7 +71,10 @@ export function verifyQuestionToken(
 
   const expectedToken = generateQuestionToken(userId, questionId, expiryTimestamp);
   try {
-    return crypto.timingSafeEqual(Buffer.from(token), Buffer.from(expectedToken));
+    const a = Buffer.from(token);
+    const b = Buffer.from(expectedToken);
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(new Uint8Array(a), new Uint8Array(b));
   } catch {
     return false;
   }

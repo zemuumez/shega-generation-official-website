@@ -25,23 +25,16 @@ export async function GET(req: NextRequest) {
     const liveEntries = await getLiveLeaderboardStore();
 
     // Merge Sanity CMS and live memory/Redis entries by participant handle or name
+    // liveEntries comes SECOND so active real-time updates overwrite stale CMS records
     const mergedMap = new Map<string, any>();
 
-    for (const item of [...liveEntries, ...sanityEntries]) {
+    for (const item of [...sanityEntries, ...liveEntries]) {
       const handleKey = (item.participantHandle || "").toLowerCase();
       const nameKey = (item.participantName || "").toLowerCase();
       const key = handleKey || nameKey;
       if (!key) continue;
 
-      if (!mergedMap.has(key)) {
-        mergedMap.set(key, item);
-      } else {
-        const existing = mergedMap.get(key);
-        // Retain highest score & updated stats
-        if ((item.score || 0) > (existing.score || 0)) {
-          mergedMap.set(key, item);
-        }
-      }
+      mergedMap.set(key, item);
     }
 
     let entries = Array.from(mergedMap.values());

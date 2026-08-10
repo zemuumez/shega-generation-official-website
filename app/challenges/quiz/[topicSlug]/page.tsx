@@ -82,6 +82,16 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
       const data = await res.json();
       if (data.ok && Array.isArray(data.leaderboard)) {
         setLeaderboard(data.leaderboard);
+
+        // Auto-sync my live score from the real-time leaderboard
+        const myEntry = data.leaderboard.find(
+          (item: any) =>
+            (playerHandle && item.participantHandle && item.participantHandle.toLowerCase() === playerHandle.toLowerCase()) ||
+            (playerName && item.participantName && item.participantName.toLowerCase() === playerName.toLowerCase())
+        );
+        if (myEntry && typeof myEntry.score === "number") {
+          setUserScore(myEntry.score);
+        }
       }
     } catch {
       // ignore
@@ -241,9 +251,11 @@ export default function MobileLiveQuizPage({ params }: { params: { topicSlug: st
 
       const data = await res.json();
       setSubmissionResult(data);
-      if (data.ok && data.pointsEarned) {
-        setUserScore((s) => s + data.pointsEarned);
-        fetchLeaderboard();
+      if (data.ok) {
+        if (typeof data.pointsEarned === "number" && data.pointsEarned > 0) {
+          setUserScore((s) => s + data.pointsEarned);
+        }
+        await fetchLeaderboard();
       }
     } catch (err) {
       console.error("Submission failed:", err);
