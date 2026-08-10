@@ -130,7 +130,7 @@ export async function setLiveState(state: LiveQuestionPayload | null): Promise<v
   await setCache("quiz:live:active_state", state);
 }
 
-// 4. Solo Play Mode Toggle Cache
+// 4. Solo Play Mode Toggle Cache & Admin Configurations
 export async function getAllowSoloPlay(): Promise<boolean> {
   const res = await getCache("quiz:config:allow_solo_play");
   return res !== false; // Defaults to true unless explicitly toggled OFF
@@ -138,6 +138,44 @@ export async function getAllowSoloPlay(): Promise<boolean> {
 
 export async function setAllowSoloPlay(allow: boolean): Promise<void> {
   await setCache("quiz:config:allow_solo_play", allow);
+}
+
+export interface LiveAdminConfig {
+  timerDuration: number;
+  autoPush: boolean;
+  allowSoloPlay: boolean;
+  selectedTopicId?: string;
+}
+
+export async function getLiveAdminConfig(): Promise<LiveAdminConfig> {
+  const cached = await getCache("quiz:config:admin_settings");
+  return (
+    cached || {
+      timerDuration: 45,
+      autoPush: false,
+      allowSoloPlay: true,
+      selectedTopicId: "all",
+    }
+  );
+}
+
+export async function setLiveAdminConfig(config: Partial<LiveAdminConfig>): Promise<LiveAdminConfig> {
+  const current = await getLiveAdminConfig();
+  const updated = { ...current, ...config };
+  await setCache("quiz:config:admin_settings", updated);
+  if (config.allowSoloPlay !== undefined) {
+    await setAllowSoloPlay(config.allowSoloPlay);
+  }
+  return updated;
+}
+
+export async function getLiveQuestionQueue(): Promise<any[]> {
+  const queue = await getCache("quiz:live:question_queue");
+  return Array.isArray(queue) ? queue : [];
+}
+
+export async function setLiveQuestionQueue(queue: any[]): Promise<void> {
+  await setCache("quiz:live:question_queue", queue || []);
 }
 
 // 5. Pre-Cache Topic Questions Sequence

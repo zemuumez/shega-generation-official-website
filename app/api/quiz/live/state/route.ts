@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getLiveState, getAllowSoloPlay, generateQuestionToken } from "@/lib/quizLiveEngine";
+import {
+  getLiveState,
+  getAllowSoloPlay,
+  getLiveAdminConfig,
+  getLiveQuestionQueue,
+  generateQuestionToken,
+} from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,11 +16,15 @@ export async function GET(req: NextRequest) {
 
   const liveState = await getLiveState();
   const allowSoloPlay = await getAllowSoloPlay();
+  const adminConfig = await getLiveAdminConfig();
+  const questionQueue = await getLiveQuestionQueue();
 
   if (!liveState) {
     return NextResponse.json({
       status: "IDLE",
       allowSoloPlay,
+      adminConfig,
+      questionQueue,
       activeQuestion: null,
     });
   }
@@ -28,6 +38,8 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     status: liveState.status,
     allowSoloPlay,
+    adminConfig,
+    questionQueue,
     activeQuestion: {
       questionId: liveState.questionId,
       topicId: liveState.topicId,

@@ -33,6 +33,7 @@ interface QuizDoc {
 }
 
 const STORAGE_KEYS = {
+  TOPIC: "shega_admin_selected_topic",
   TIMER: "shega_admin_timer_duration",
   AUTO_PUSH: "shega_admin_auto_push",
   SOLO_PLAY: "shega_admin_allow_solo",
@@ -77,6 +78,9 @@ export default function AdminQuizControlDeck({
   // Restore configurations and question queue from localStorage on mount
   useEffect(() => {
     try {
+      const savedTopic = localStorage.getItem(STORAGE_KEYS.TOPIC);
+      if (savedTopic) setSelectedTopicId(savedTopic);
+
       const savedTimer = localStorage.getItem(STORAGE_KEYS.TIMER);
       if (savedTimer) setTimerDuration(Number(savedTimer));
 
@@ -103,28 +107,48 @@ export default function AdminQuizControlDeck({
 
   // Persist configurations to localStorage whenever updated
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.TIMER, String(timerDuration));
-    } catch {}
+    try { localStorage.setItem(STORAGE_KEYS.TOPIC, selectedTopicId); } catch {}
+  }, [selectedTopicId]);
+
+  useEffect(() => {
+    try { localStorage.setItem(STORAGE_KEYS.TIMER, String(timerDuration)); } catch {}
   }, [timerDuration]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.AUTO_PUSH, String(autoPush));
-    } catch {}
+    try { localStorage.setItem(STORAGE_KEYS.AUTO_PUSH, String(autoPush)); } catch {}
   }, [autoPush]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.SOLO_PLAY, String(allowSoloPlay));
-    } catch {}
+    try { localStorage.setItem(STORAGE_KEYS.SOLO_PLAY, String(allowSoloPlay)); } catch {}
   }, [allowSoloPlay]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(questionQueue));
-    } catch {}
+    try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(questionQueue)); } catch {}
   }, [questionQueue]);
+
+  const updateServerQueue = async (queue: QuizQuestion[]) => {
+    try {
+      await fetch("/api/quiz/live/control", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "UPDATE_QUEUE", queue }),
+      });
+    } catch {
+      // ignore
+    }
+  };
+
+  const updateServerConfig = async (config: { timerDuration?: number; autoPush?: boolean; allowSoloPlay?: boolean; selectedTopicId?: string }) => {
+    try {
+      await fetch("/api/quiz/live/control", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "UPDATE_CONFIG", ...config }),
+      });
+    } catch {
+      // ignore
+    }
+  };
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,9 +179,24 @@ export default function AdminQuizControlDeck({
       try {
         const res = await fetch("/api/quiz/live/state");
         const data = await res.json();
+
         if (data.allowSoloPlay !== undefined) {
           setAllowSoloPlay((prev) => (prev !== data.allowSoloPlay ? data.allowSoloPlay : prev));
         }
+
+        if (data.adminConfig) {
+          if (data.adminConfig.timerDuration) {
+            setTimerDuration((prev) => (prev !== data.adminConfig.timerDuration ? data.adminConfig.timerDuration : prev));
+          }
+          if (data.adminConfig.autoPush !== undefined) {
+            setAutoPush((prev) => (prev !== data.adminConfig.autoPush ? data.adminConfig.autoPush : prev));
+          }
+        }
+
+        if (Array.isArray(data.questionQueue) && data.questionQueue.length > 0) {
+          setQuestionQueue((prev) => (JSON.stringify(prev) !== JSON.stringify(data.questionQueue) ? data.questionQueue : prev));
+        }
+
         if (data.status === "ACTIVE" && data.activeQuestion) {
           setLiveState((prev: any) => {
             if (!prev || prev.questionId !== data.activeQuestion.questionId || prev.status !== data.activeQuestion.status) {
@@ -238,11 +277,9 @@ export default function AdminQuizControlDeck({
       if (!res.ok) {
         if (res.status === 423) {
           // Single question lock active: Enqueue into right-side broadcast queue stack
-          setQuestionQueue((prev) => {
-            const nextQ = [...prev, q];
-            try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(nextQ)); } catch {}
-            return nextQ;
-          });
+          const nextQArr = [...questionQueue, q];
+          setQuestionQueue(nextQArr);
+          await updateServerQueue(nextQArr);
           setErrorMsg(`Question #${q.orderIndex || 1} added to the Live Broadcast Queue Stack!`);
         } else {
           setErrorMsg(data.error || "Failed to push question.");
@@ -259,11 +296,9 @@ export default function AdminQuizControlDeck({
 
   const handlePushOrEnqueueQuestion = async (q: QuizQuestion) => {
     if (isQuestionActive) {
-      setQuestionQueue((prev) => {
-        const nextQ = [...prev, q];
-        try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(nextQ)); } catch {}
-        return nextQ;
-      });
+      const nextQArr = [...questionQueue, q];
+      setQuestionQueue(nextQArr);
+      await updateServerQueue(nextQArr);
       setErrorMsg(`Question #${q.orderIndex || 1} enqueued to the right-side broadcast stack.`);
       return;
     }
@@ -273,61 +308,34 @@ export default function AdminQuizControlDeck({
   const handlePushNextFromQueue = async () => {
     if (questionQueue.length === 0) return;
     const nextQ = questionQueue[0];
-    setQuestionQueue((prev) => {
-      const nextQueue = prev.slice(1);
-      try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(nextQueue)); } catch {}
-      return nextQueue;
-    });
+    const nextQueue = questionQueue.slice(1);
+    setQuestionQueue(nextQueue);
+    await updateServerQueue(nextQueue);
     await pushSingleQuestion(nextQ);
   };
 
-  const handleRemoveFromQueue = (index: number) => {
-    setQuestionQueue((prev) => {
-      const nextQueue = prev.filter((_, i) => i !== index);
-      try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(nextQueue)); } catch {}
-      return nextQueue;
-    });
+  const handleRemoveFromQueue = async (index: number) => {
+    const nextQueue = questionQueue.filter((_, i) => i !== index);
+    setQuestionQueue(nextQueue);
+    await updateServerQueue(nextQueue);
   };
 
-  const handleClearQueue = () => {
+  const handleClearQueue = async () => {
     setQuestionQueue([]);
     try { localStorage.removeItem(STORAGE_KEYS.QUEUE); } catch {}
+    await updateServerQueue([]);
   };
 
   const handleToggleAutoPush = async () => {
     const nextVal = !autoPush;
     setAutoPush(nextVal);
-    try { localStorage.setItem(STORAGE_KEYS.AUTO_PUSH, String(nextVal)); } catch {}
-    try {
-      await fetch("/api/quiz/live/control", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "TOGGLE_AUTO_PUSH",
-          autoPush: nextVal,
-        }),
-      });
-    } catch {
-      // ignore
-    }
+    await updateServerConfig({ autoPush: nextVal });
   };
 
   const handleToggleSoloPlay = async () => {
     const nextVal = !allowSoloPlay;
     setAllowSoloPlay(nextVal);
-    try { localStorage.setItem(STORAGE_KEYS.SOLO_PLAY, String(nextVal)); } catch {}
-    try {
-      await fetch("/api/quiz/live/control", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "TOGGLE_SOLO_PLAY",
-          allowSoloPlay: nextVal,
-        }),
-      });
-    } catch {
-      // ignore
-    }
+    await updateServerConfig({ allowSoloPlay: nextVal });
   };
 
   const handleExportCSV = () => {
@@ -340,7 +348,7 @@ export default function AdminQuizControlDeck({
       const res = await fetch("/api/challenges/leaderboard/admin", { method: "DELETE" });
       const data = await res.json();
       if (data.ok) {
-        alert("Leaderboard scores cleared for post-event reset!");
+        alert("Leaderboard scores cleared across Redis, memory, and Sanity CMS!");
       }
     } catch {
       alert("Error clearing leaderboard.");
@@ -357,6 +365,7 @@ export default function AdminQuizControlDeck({
       setLiveState(null);
       setQuestionQueue([]);
       try { localStorage.removeItem(STORAGE_KEYS.QUEUE); } catch {}
+      await updateServerQueue([]);
       setErrorMsg(null);
     } catch {
       // ignore
@@ -464,7 +473,10 @@ export default function AdminQuizControlDeck({
             </h3>
             <div className="space-y-2 font-mono text-xs">
               <button
-                onClick={() => setSelectedTopicId("all")}
+                onClick={() => {
+                  setSelectedTopicId("all");
+                  updateServerConfig({ selectedTopicId: "all" });
+                }}
                 className={`w-full text-left p-3 rounded-xl font-bold transition-all ${
                   selectedTopicId === "all"
                     ? "bg-ochre text-white shadow-sm"
@@ -478,7 +490,10 @@ export default function AdminQuizControlDeck({
                 return (
                   <button
                     key={topic._id}
-                    onClick={() => setSelectedTopicId(topic._id)}
+                    onClick={() => {
+                      setSelectedTopicId(topic._id);
+                      updateServerConfig({ selectedTopicId: topic._id });
+                    }}
                     className={`w-full text-left p-3 rounded-xl font-bold transition-all ${
                       isSelected
                         ? "bg-ochre text-white shadow-sm"
@@ -511,15 +526,14 @@ export default function AdminQuizControlDeck({
                   onChange={(e) => {
                     const val = Number(e.target.value);
                     setTimerDuration(val);
-                    try { localStorage.setItem(STORAGE_KEYS.TIMER, String(val)); } catch {}
                     setTimerSavedFeedback(false);
                   }}
                   className="w-full bg-ivory border border-zinc-300 rounded-xl px-4 py-2.5 font-mono text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ochre"
                 />
                 <button
                   type="button"
-                  onClick={() => {
-                    try { localStorage.setItem(STORAGE_KEYS.TIMER, String(timerDuration)); } catch {}
+                  onClick={async () => {
+                    await updateServerConfig({ timerDuration });
                     setTimerSavedFeedback(true);
                     setTimeout(() => setTimerSavedFeedback(false), 3000);
                   }}
@@ -822,7 +836,7 @@ export default function AdminQuizControlDeck({
           <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-red-500/50 shadow-2xl text-center space-y-4 text-ink">
             <h3 className="text-xl font-bold text-ink">Reset Event Leaderboard?</h3>
             <p className="text-xs font-mono text-ink-soft">
-              This will permanently clear all submitted participant scores for post-event reset. (Be sure to download CSV export first!)
+              This will permanently clear all submitted participant scores across Redis, memory, and Sanity CMS for post-event reset.
             </p>
             <div className="flex gap-3 pt-2">
               <button

@@ -9,19 +9,22 @@ import {
   getDifficultyPoints,
   setAllowSoloPlay,
   getAllowSoloPlay,
-  advanceToNextQuestion,
+  setLiveAdminConfig,
+  setLiveQuestionQueue,
 } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 
 const ControlSchema = z.object({
-  action: z.enum(["PUSH_QUESTION", "TOGGLE_AUTO_PUSH", "TOGGLE_SOLO_PLAY", "AUTO_ADVANCE_NEXT", "RESET_SESSION"]),
+  action: z.enum(["PUSH_QUESTION", "TOGGLE_AUTO_PUSH", "TOGGLE_SOLO_PLAY", "UPDATE_CONFIG", "UPDATE_QUEUE", "RESET_SESSION"]),
   topicId: z.string().optional(),
   questionId: z.string().optional(),
   orderIndex: z.number().optional(),
   timerDuration: z.number().min(5).max(300).optional(),
   autoPush: z.boolean().optional(),
   allowSoloPlay: z.boolean().optional(),
+  selectedTopicId: z.string().optional(),
+  queue: z.array(z.any()).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -37,26 +40,45 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay } = parsed.data;
+  const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay, selectedTopicId, queue } = parsed.data;
   const currentState = await getLiveState();
 
   if (action === "RESET_SESSION") {
     await setLiveState(null);
-    return NextResponse.json({ ok: true, message: "Live quiz session reset." });
+    await setLiveQuestionQueue([]);
+    return NextResponse.json({ ok: true, message: "Live quiz session and queue reset." });
+  }
+
+  if (action === "UPDATE_CONFIG") {
+    const updated = await setLiveAdminConfig({
+      ...(timerDuration !== undefined && { timerDuration }),
+      ...(autoPush !== undefined && { autoPush }),
+      ...(allowSoloPlay !== undefined && { allowSoloPlay }),
+      ...(selectedTopicId !== undefined && { selectedTopicId }),
+    });
+    return NextResponse.json({ ok: true, adminConfig: updated });
+  }
+
+  if (action === "UPDATE_QUEUE") {
+    await setLiveQuestionQueue(queue || []);
+    return NextResponse.json({ ok: true, queue: queue || [] });
   }
 
   if (action === "TOGGLE_AUTO_PUSH") {
+    const nextVal = autoPush !== undefined ? autoPush : !(currentState?.autoPush ?? false);
     if (currentState) {
-      currentState.autoPush = autoPush !== undefined ? autoPush : !currentState.autoPush;
+      currentState.autoPush = nextVal;
       await setLiveState(currentState);
     }
-    return NextResponse.json({ ok: true, autoPush: currentState?.autoPush ?? false });
+    await setLiveAdminConfig({ autoPush: nextVal });
+    return NextResponse.json({ ok: true, autoPush: nextVal });
   }
 
   if (action === "TOGGLE_SOLO_PLAY") {
     const currentVal = await getAllowSoloPlay();
     const nextVal = allowSoloPlay !== undefined ? allowSoloPlay : !currentVal;
     await setAllowSoloPlay(nextVal);
+    await setLiveAdminConfig({ allowSoloPlay: nextVal });
     if (currentState) {
       currentState.allowSoloPlay = nextVal;
       await setLiveState(currentState);
@@ -89,8 +111,8 @@ export async function POST(req: NextRequest) {
         if (questions.length > 0) {
           await cacheTopicSequence(topicId, questions);
         }
-      } catch (err) {
-        console.error("Sanity fetch for topic questions failed:", err);
+      } catch {
+        questions = [];
       }
     }
 
@@ -139,14 +161,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, state: newLiveState }, { status: 200 });
   }
 
-  if (action === "AUTO_ADVANCE_NEXT") {
-    if (!currentState) {
-      return NextResponse.json({ error: "No active session to advance." }, { status: 400 });
-    }
-
-    await advanceToNextQuestion(currentState);
-    return NextResponse.json({ ok: true, status: "INTERMISSION", intermissionDurationSeconds: 5 });
-  }
-
-  return NextResponse.json({ error: "Unknown control action." }, { status: 400 });
+  return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 }
