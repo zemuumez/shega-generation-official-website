@@ -256,7 +256,7 @@ export default function AdminQuizControlDeck({
   const maxTimerSeconds = liveState?.timerDuration || timerDuration || 45;
   const progressRatio = Math.max(0, Math.min(1, activeRemainingSeconds / maxTimerSeconds));
 
-  const pushSingleQuestion = async (q: QuizQuestion) => {
+  const pushSingleQuestion = async (q: QuizQuestion, forcePush: boolean = false) => {
     setErrorMsg(null);
     setIsSubmitting(true);
     try {
@@ -270,6 +270,7 @@ export default function AdminQuizControlDeck({
           orderIndex: q.orderIndex || 1,
           timerDuration,
           autoPush,
+          forcePush,
         }),
       });
 
@@ -311,7 +312,7 @@ export default function AdminQuizControlDeck({
     const nextQueue = questionQueue.slice(1);
     setQuestionQueue(nextQueue);
     await updateServerQueue(nextQueue);
-    await pushSingleQuestion(nextQ);
+    await pushSingleQuestion(nextQ, true);
   };
 
   const handleRemoveFromQueue = async (index: number) => {
