@@ -123,12 +123,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No questions found for this topic." }, { status: 404 });
     }
 
-    // Find target question by questionId or orderIndex
-    let targetQuestion = questions[0];
+    // Find target question by questionId or orderIndex with robust fallback lookup
+    let targetQuestion: any = null;
     if (questionId) {
-      targetQuestion = questions.find((q: any) => q._key === questionId || q._id === questionId) || questions[0];
+      targetQuestion = questions.find((q: any) => q._key === questionId || q._id === questionId);
+      if (!targetQuestion) {
+        try {
+          const doc = await sanityClient.fetch(
+            `*[_type == "challengeQuiz" && (questions[]._key == $qId || questions[]._id == $qId)][0]`,
+            { qId: questionId }
+          );
+          if (doc?.questions) {
+            targetQuestion = doc.questions.find((q: any) => q._key === questionId || q._id === questionId);
+          }
+        } catch {
+          // ignore
+        }
+      }
     } else if (orderIndex !== undefined) {
-      targetQuestion = questions.find((q: any) => q.orderIndex === orderIndex) || questions[orderIndex - 1] || questions[0];
+      targetQuestion = questions.find((q: any) => q.orderIndex === orderIndex) || questions[orderIndex - 1];
+    }
+
+    if (!targetQuestion) {
+      targetQuestion = questions[0];
     }
 
     // Explicit timer priority: timerDuration passed by Admin Deck > targetQuestion.timerDuration > 45s fallback

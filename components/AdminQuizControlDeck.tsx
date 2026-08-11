@@ -264,16 +264,25 @@ export default function AdminQuizControlDeck({
   const maxTimerSeconds = liveState?.timerDuration || timerDuration || 45;
   const progressRatio = Math.max(0, Math.min(1, activeRemainingSeconds / maxTimerSeconds));
 
+  const getQuestionTopicId = (q: QuizQuestion): string => {
+    const parentQuiz = quizzes.find((quizDoc) =>
+      quizDoc.questions?.some((item) => (item._key || item._id) === (q._key || q._id))
+    );
+    return parentQuiz?.topic?._ref || parentQuiz?._id || (selectedTopicId !== "all" ? selectedTopicId : quizzes[0]?._id || "");
+  };
+
   const pushSingleQuestion = async (q: QuizQuestion) => {
     setErrorMsg(null);
     setIsSubmitting(true);
+    const resolvedTopicId = getQuestionTopicId(q);
+
     try {
       const res = await fetch("/api/quiz/live/control", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "PUSH_QUESTION",
-          topicId: selectedTopicId !== "all" ? selectedTopicId : quizzes[0]?._id,
+          topicId: resolvedTopicId,
           questionId: q._key || q._id,
           orderIndex: q.orderIndex || 1,
           timerDuration,

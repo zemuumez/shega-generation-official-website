@@ -58,6 +58,8 @@ export async function GET(req: NextRequest) {
       orderIndex: liveState.orderIndex,
       timerDuration: liveState.timerDuration,
       remainingSeconds,
+      startTime: liveState.startTime,
+      endTime: liveState.endTime,
       token,
       tokenExpiry,
       status: liveState.status,

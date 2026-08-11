@@ -49,7 +49,20 @@ async function getCache(key: string): Promise<any> {
   if (redis) {
     try {
       const val = await redis.get(fullKey);
-      if (val !== null && val !== undefined) return val;
+      if (val !== null && val !== undefined) {
+        if (typeof val === "string") {
+          const trimmed = val.trim();
+          if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+            try {
+              return JSON.parse(trimmed);
+            } catch {
+              // ignore parse failure and return raw string
+            }
+          }
+        }
+        return val;
+      }
+      return null;
     } catch (err) {
       console.warn(`Upstash Redis get error for key [${fullKey}]:`, err);
     }
@@ -59,10 +72,16 @@ async function getCache(key: string): Promise<any> {
 
 async function setCache(key: string, value: any, ttlSeconds?: number): Promise<void> {
   const fullKey = formatKey(key);
-  memoryStore.set(fullKey, value);
+  if (value === null || value === undefined) {
+    memoryStore.delete(fullKey);
+  } else {
+    memoryStore.set(fullKey, value);
+  }
   if (redis) {
     try {
-      if (ttlSeconds) {
+      if (value === null || value === undefined) {
+        await redis.del(fullKey);
+      } else if (ttlSeconds) {
         await redis.set(fullKey, value, { ex: ttlSeconds });
       } else {
         await redis.set(fullKey, value);

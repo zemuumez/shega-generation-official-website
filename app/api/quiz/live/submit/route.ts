@@ -101,7 +101,21 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const targetQuestion = questions?.find((q: any) => q._key === questionId || q._id === questionId);
+  let targetQuestion = questions?.find((q: any) => q._key === questionId || q._id === questionId);
+  if (!targetQuestion && questionId) {
+    try {
+      const doc = await sanityClient.fetch(
+        `*[_type == "challengeQuiz" && (questions[]._key == $qId || questions[]._id == $qId)][0]`,
+        { qId: questionId }
+      );
+      if (doc?.questions) {
+        targetQuestion = doc.questions.find((q: any) => q._key === questionId || q._id === questionId);
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   const correctOptionIndex = liveState.correctOptionIndex ?? targetQuestion?.correctOptionIndex ?? 0;
   const isCorrect = chosenOptionIndex === correctOptionIndex;
 
