@@ -361,7 +361,7 @@ export default function AdminQuizControlDeck({
       const res = await fetch("/api/challenges/leaderboard/admin", { method: "DELETE" });
       const data = await res.json();
       if (data.ok) {
-        alert("Leaderboard scores cleared across Redis, memory, and Sanity CMS!");
+        alert("Leaderboard scores cleared across Redis and Sanity CMS!");
       }
     } catch {
       alert("Error clearing leaderboard.");
@@ -378,7 +378,6 @@ export default function AdminQuizControlDeck({
       setLiveState(null);
       setQuestionQueue([]);
       try { localStorage.removeItem(STORAGE_KEYS.QUEUE); } catch {}
-      await updateServerQueue([]);
       setErrorMsg(null);
     } catch {
       // ignore

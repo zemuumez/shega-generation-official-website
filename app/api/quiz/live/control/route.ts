@@ -19,22 +19,6 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// ---------------------------------------------------------------------------
-// Server-side passcode guard — only gates destructive RESET actions.
-// Regular operational actions (PUSH_QUESTION, UPDATE_CONFIG, etc.) are
-// protected by the admin UI login barrier + sessionStorage. Applying a server
-// passcode to every action broke PUSH_QUESTION because the admin panel doesn't
-// send the header, turning every question push into a silent 401.
-// ---------------------------------------------------------------------------
-const ADMIN_PASSCODE = process.env.QUIZ_ADMIN_PASSCODE_SERVER || "";
-
-function requirePasscode(req: NextRequest): boolean {
-  if (!ADMIN_PASSCODE) return true; // not configured → open in dev
-  const header = req.headers.get("x-admin-passcode") || "";
-  return header === ADMIN_PASSCODE;
-}
-
-const DESTRUCTIVE_ACTIONS = new Set(["RESET_SESSION", "RESET_LEADERBOARD"]);
 
 const ControlSchema = z.object({
   action: z.enum([
@@ -69,11 +53,6 @@ export async function POST(req: NextRequest) {
 
   const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay, selectedTopicId } =
     parsed.data;
-
-  // Only check passcode for destructive actions
-  if (DESTRUCTIVE_ACTIONS.has(action) && !requirePasscode(req)) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
-  }
 
   const currentState = await getLiveState();
 
