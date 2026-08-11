@@ -91,13 +91,16 @@ async function getCache(key: string): Promise<any> {
         shortTermCache.set(fk, { val, expiry: now + 1500 });
         return val;
       }
-      return null; // key absent in Redis → don't fall through to stale memory
     } catch (err) {
       console.warn(`Redis get error [${fk}]:`, err);
-      // fall through to memory on quota/network error
     }
   }
-  return memoryStore.get(fk) ?? null;
+
+  const memVal = memoryStore.get(fk) ?? null;
+  if (memVal !== null) {
+    shortTermCache.set(fk, { val: memVal, expiry: now + 1500 });
+  }
+  return memVal;
 }
 
 async function setCache(key: string, value: any, ttlSeconds?: number): Promise<void> {

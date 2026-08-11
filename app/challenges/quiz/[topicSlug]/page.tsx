@@ -116,27 +116,14 @@ export default function MobileLiveQuizPage({
     }
   };
 
-  // Helper: arm client-authoritative expiry so question disappears exactly at endTime
-  const armExpiryTimer = (endTime: number) => {
-    if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
-    const msLeft = Math.max(0, endTime - Date.now());
-    expiryTimerRef.current = setTimeout(() => {
-      setActiveQuestion(null);
-      currentQIdRef.current = null;
-      fetchLeaderboard();
-    }, msLeft);
-  };
-
   // Helper: wholesale replace question state on new questionId
   const applyNewQuestion = (q: BroadcastQuestion) => {
-    if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
     currentQIdRef.current = q.questionId;
     currentEpochRef.current = q.epoch;
     setSelectedOption(null);
     setIsSubmitted(false);
     setSubmissionResult(null);
     setActiveQuestion(q);
-    if (q.endTime) armExpiryTimer(q.endTime);
   };
 
   // 2. Real-Time Zero-Refresh Stream & Background Sync
@@ -152,19 +139,25 @@ export default function MobileLiveQuizPage({
         );
         const data = await res.json();
 
-        if (data.status === "ACTIVE" && data.activeQuestion) {
+        if (data.activeQuestion) {
           const aq = data.activeQuestion as BroadcastQuestion;
           if (currentQIdRef.current !== aq.questionId) {
             applyNewQuestion(aq);
-          } else if (aq.status !== "ACTIVE") {
-            setActiveQuestion((prev) => (prev ? { ...prev, status: aq.status } : prev));
+          } else {
+            setActiveQuestion((prev) => {
+              if (!prev || prev.status !== aq.status) {
+                return aq;
+              }
+              return prev;
+            });
           }
-        } else {
-          // IDLE — no active question
+        } else if (data.status === "IDLE" || data.activeQuestion === null) {
           if (currentQIdRef.current !== null) {
-            if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
             currentQIdRef.current = null;
             setActiveQuestion(null);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setSubmissionResult(null);
           }
         }
       } catch {
@@ -194,26 +187,32 @@ export default function MobileLiveQuizPage({
           if (currentQIdRef.current !== data.questionId) {
             applyNewQuestion(data);
             fetchLeaderboard();
-          } else if (data.status !== "ACTIVE") {
-            setActiveQuestion((prev) => (prev ? { ...prev, status: data.status } : prev));
+          } else {
+            setActiveQuestion((prev) => {
+              if (!prev || prev.status !== data.status) {
+                return data;
+              }
+              return prev;
+            });
           }
         } catch { /* ignore */ }
       });
 
-      sse.addEventListener("IDLE_STATE", () => {
-        if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
-        currentQIdRef.current = null;
-        setActiveQuestion(null);
-        setSelectedOption(null);
-        setIsSubmitted(false);
-        setSubmissionResult(null);
-        fetchLeaderboard();
+      sse.addEventListener("IDLE_STATE", (e) => {
+        try {
+          const payload = JSON.parse(e.data || "{}");
+          if (payload.isReset === true) {
+            currentQIdRef.current = null;
+            setActiveQuestion(null);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setSubmissionResult(null);
+            fetchLeaderboard();
+          }
+        } catch { /* ignore */ }
       });
 
       sse.addEventListener("QUESTION_EXPIRED", () => {
-        if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
-        currentQIdRef.current = null;
-        setActiveQuestion(null);
         fetchLeaderboard();
       });
     } catch { /* ignore */ }
@@ -221,7 +220,6 @@ export default function MobileLiveQuizPage({
     return () => {
       clearInterval(pollInterval);
       if (sse) sse.close();
-      if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
     };
   }, [isRegistered, userId, playerHandle, playerName]);
 
