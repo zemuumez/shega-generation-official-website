@@ -14,11 +14,11 @@ import {
   resetLeaderboard,
   getCurrentEpoch,
   parseBool,
+  verifyAdminSessionToken,
 } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
 
 const ControlSchema = z.object({
   action: z.enum([
@@ -39,6 +39,12 @@ const ControlSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const authToken = req.headers.get("x-admin-token") || req.headers.get("authorization") || "";
+  const isAuthorized = await verifyAdminSessionToken(authToken);
+  if (!isAuthorized) {
+    return NextResponse.json({ error: "Unauthorized: Admin authentication required." }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await req.json();

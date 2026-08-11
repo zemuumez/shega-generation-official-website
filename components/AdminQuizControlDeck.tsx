@@ -58,12 +58,21 @@ export default function AdminQuizControlDeck({
     return () => clearInterval(timer);
   }, []);
 
-  // 2. Admin Authentication State
+  // 2. Admin Authentication & Token State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [authToken, setAuthToken] = useState<string>("");
   const [passcode, setPasscode] = useState<string>("");
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  // 3. Deck Controls & Queue Stack State
+  // 3. Admin Settings & Passcode Change State
+  const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
+  const [currentPasswordInput, setCurrentPasswordInput] = useState<string>("");
+  const [newPasswordInput, setNewPasswordInput] = useState<string>("");
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState<string>("");
+  const [settingsError, setSettingsError] = useState<string | null>(null);
+  const [settingsSuccess, setSettingsSuccess] = useState<string | null>(null);
+
+  // 4. Deck Controls & Queue Stack State
   const [selectedTopicId, setSelectedTopicId] = useState<string>(topics[0]?._id || "all");
   const [timerDuration, setTimerDuration] = useState<number>(45);
   const [timerSavedFeedback, setTimerSavedFeedback] = useState<boolean>(false);
@@ -78,7 +87,28 @@ export default function AdminQuizControlDeck({
   // Ref to prevent polling from overriding recent manual user toggles
   const lastUserToggleRef = useRef<number>(0);
 
-  // Restore configurations and question queue from localStorage on mount
+  // Helper: Authenticated fetch wrapper for admin control endpoints
+  const adminControlFetch = async (body: any) => {
+    const token = authToken || (typeof window !== "undefined" ? sessionStorage.getItem("shega_admin_token") : "") || "";
+    const res = await fetch("/api/quiz/live/control", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-token": token,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (res.status === 401) {
+      setIsAuthenticated(false);
+      setAuthToken("");
+      sessionStorage.removeItem("shega_admin_token");
+      setLoginError("Session expired or invalid. Please authenticate again.");
+    }
+    return res;
+  };
+
+  // Restore configurations and verify token on mount
   useEffect(() => {
     try {
       const savedTopic = localStorage.getItem(STORAGE_KEYS.TOPIC);
@@ -99,9 +129,28 @@ export default function AdminQuizControlDeck({
         if (Array.isArray(parsed)) setQuestionQueue(parsed);
       }
 
-      const storedAuth = sessionStorage.getItem("shega_admin_auth");
-      if (storedAuth === "true") {
-        setIsAuthenticated(true);
+      const storedToken = sessionStorage.getItem("shega_admin_token");
+      if (storedToken) {
+        setAuthToken(storedToken);
+        // Verify token with backend
+        fetch("/api/quiz/live/auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "VERIFY", token: storedToken }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.ok) {
+              setIsAuthenticated(true);
+            } else {
+              sessionStorage.removeItem("shega_admin_token");
+              setIsAuthenticated(false);
+            }
+          })
+          .catch(() => {
+            // Fallback: trust session token if network check fails
+            setIsAuthenticated(true);
+          });
       }
     } catch {
       // ignore
@@ -131,31 +180,89 @@ export default function AdminQuizControlDeck({
 
   const updateServerQueue = async (_queue: QuizQuestion[]) => {
     // Admin queue is managed in React state + localStorage.
-    // The server does not maintain the admin's staging queue — it only needs
-    // the questionId when the admin actually presses "Push". No server call needed here.
   };
 
   const updateServerConfig = async (config: { timerDuration?: number; autoPush?: boolean; allowSoloPlay?: boolean; selectedTopicId?: string }) => {
     try {
-      await fetch("/api/quiz/live/control", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "UPDATE_CONFIG", ...config }),
-      });
+      await adminControlFetch({ action: "UPDATE_CONFIG", ...config });
     } catch {
       // ignore
     }
   };
 
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const correctPasscode = process.env.NEXT_PUBLIC_QUIZ_ADMIN_PASSCODE || "shega-admin-2026";
-    if (passcode.trim() === correctPasscode || passcode.trim() === "admin") {
-      setIsAuthenticated(true);
-      sessionStorage.setItem("shega_admin_auth", "true");
-      setLoginError(null);
-    } else {
-      setLoginError("Invalid admin passcode. (Default: shega-admin-2026)");
+    if (!passcode.trim()) return;
+
+    setLoginError(null);
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch("/api/quiz/live/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "LOGIN", password: passcode.trim() }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.ok && data.token) {
+        setAuthToken(data.token);
+        setIsAuthenticated(true);
+        sessionStorage.setItem("shega_admin_token", data.token);
+        setPasscode("");
+      } else {
+        setLoginError(data.error || "Invalid admin passcode.");
+      }
+    } catch {
+      setLoginError("Connection error while authenticating.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSettingsError(null);
+    setSettingsSuccess(null);
+
+    if (newPasswordInput !== confirmPasswordInput) {
+      setSettingsError("New password and confirmation do not match.");
+      return;
+    }
+    if (newPasswordInput.trim().length < 4) {
+      setSettingsError("New password must be at least 4 characters.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/quiz/live/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "CHANGE_PASSWORD",
+          currentPassword: currentPasswordInput,
+          newPassword: newPasswordInput.trim(),
+        }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.ok) {
+        setSettingsSuccess("Admin passcode updated successfully!");
+        if (data.token) {
+          setAuthToken(data.token);
+          sessionStorage.setItem("shega_admin_token", data.token);
+        }
+        setCurrentPasswordInput("");
+        setNewPasswordInput("");
+        setConfirmPasswordInput("");
+      } else {
+        setSettingsError(data.error || "Failed to change password.");
+      }
+    } catch {
+      setSettingsError("Network error changing passcode.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -271,17 +378,13 @@ export default function AdminQuizControlDeck({
     const resolvedTopicId = getQuestionTopicId(q);
 
     try {
-      const res = await fetch("/api/quiz/live/control", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "PUSH_QUESTION",
-          topicId: resolvedTopicId,
-          questionId: q._key || q._id,
-          orderIndex: q.orderIndex || 1,
-          timerDuration,
-          autoPush,
-        }),
+      const res = await adminControlFetch({
+        action: "PUSH_QUESTION",
+        topicId: resolvedTopicId,
+        questionId: q._key || q._id,
+        orderIndex: q.orderIndex || 1,
+        timerDuration,
+        autoPush,
       });
 
       const data = await res.json();
@@ -370,11 +473,7 @@ export default function AdminQuizControlDeck({
 
   const handleResetSession = async () => {
     try {
-      await fetch("/api/quiz/live/control", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "RESET_SESSION" }),
-      });
+      await adminControlFetch({ action: "RESET_SESSION" });
       setLiveState(null);
       setQuestionQueue([]);
       try { localStorage.removeItem(STORAGE_KEYS.QUEUE); } catch {}
@@ -443,8 +542,19 @@ export default function AdminQuizControlDeck({
             </span>
             <button
               onClick={() => {
-                sessionStorage.removeItem("shega_admin_auth");
+                setShowSettingsModal(true);
+                setSettingsError(null);
+                setSettingsSuccess(null);
+              }}
+              className="text-xs font-mono bg-ivory hover:bg-zinc-200 text-ink border border-zinc-300 px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1"
+            >
+              ⚙️ Settings
+            </button>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem("shega_admin_token");
                 setIsAuthenticated(false);
+                setAuthToken("");
               }}
               className="text-xs font-mono text-ink-soft hover:text-ink underline"
             >
@@ -867,6 +977,103 @@ export default function AdminQuizControlDeck({
           </div>
         </div>
       )}
+
+      {/* Admin Settings & Passcode Change Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs font-sans">
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-zinc-200 shadow-2xl space-y-4 text-ink">
+            <div className="flex items-center justify-between border-b border-zinc-200 pb-3">
+              <h3 className="text-xl font-bold font-display text-ink flex items-center gap-2">
+                <span>⚙️</span> Admin Security Settings
+              </h3>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="text-zinc-400 hover:text-ink text-sm font-mono font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs font-mono text-ink-soft">
+              Change the admin operator passcode. Updated passcode will take effect immediately.
+            </p>
+
+            <form onSubmit={handleChangePassword} className="space-y-3 font-mono text-xs text-left">
+              <div>
+                <label className="block text-[11px] font-bold text-ink uppercase mb-1">
+                  Current Passcode *
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={currentPasswordInput}
+                  onChange={(e) => setCurrentPasswordInput(e.target.value)}
+                  placeholder="Enter current passcode..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-ivory border border-zinc-300 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-ink uppercase mb-1">
+                  New Passcode *
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={newPasswordInput}
+                  onChange={(e) => setNewPasswordInput(e.target.value)}
+                  placeholder="Enter new passcode..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-ivory border border-zinc-300 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-ink uppercase mb-1">
+                  Confirm New Passcode *
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={confirmPasswordInput}
+                  onChange={(e) => setConfirmPasswordInput(e.target.value)}
+                  placeholder="Re-enter new passcode..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-ivory border border-zinc-300 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-ochre"
+                />
+              </div>
+
+              {settingsError && (
+                <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/40 text-red-700 text-xs font-mono">
+                  {settingsError}
+                </div>
+              )}
+
+              {settingsSuccess && (
+                <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-800 text-xs font-mono">
+                  {settingsSuccess}
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowSettingsModal(false)}
+                  className="w-1/2 bg-zinc-200 hover:bg-zinc-300 text-ink font-mono text-xs font-bold py-3 rounded-xl"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-1/2 bg-ochre hover:bg-ochre-dark text-white font-mono text-xs font-bold py-3 rounded-xl shadow-md disabled:opacity-50"
+                >
+                  {isSubmitting ? "Updating..." : "Update Passcode"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

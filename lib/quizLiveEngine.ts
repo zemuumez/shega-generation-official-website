@@ -566,6 +566,85 @@ export async function setAllowSoloPlay(allow: boolean): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
+// 10b. Admin Password & Session Authentication Management
+// ---------------------------------------------------------------------------
+export function hashAdminPassword(password: string): string {
+  return crypto.createHmac("sha256", SECRET_KEY).update(`admin_pwd:${password}`).digest("hex");
+}
+
+export async function getAdminPasswordHash(): Promise<string> {
+  const stored = await getCache("config:admin_password_hash");
+  if (stored && typeof stored === "string") return stored;
+  const defaultPassword = process.env.QUIZ_ADMIN_PASSCODE_SERVER || "shega-admin-2026";
+  return hashAdminPassword(defaultPassword);
+}
+
+export async function verifyAdminPassword(password: string): Promise<boolean> {
+  if (!password) return false;
+  const expectedHash = await getAdminPasswordHash();
+  const actualHash = hashAdminPassword(password);
+  try {
+    const a = Buffer.from(actualHash);
+    const b = Buffer.from(expectedHash);
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(new Uint8Array(a), new Uint8Array(b));
+  } catch {
+    return false;
+  }
+}
+
+export async function changeAdminPassword(
+  currentPassword: string,
+  newPassword: string
+): Promise<{ ok: boolean; error?: string }> {
+  const isValid = await verifyAdminPassword(currentPassword);
+  if (!isValid) {
+    return { ok: false, error: "Current password is incorrect." };
+  }
+  if (!newPassword || newPassword.trim().length < 4) {
+    return { ok: false, error: "New password must be at least 4 characters." };
+  }
+  const newHash = hashAdminPassword(newPassword.trim());
+  await setCache("config:admin_password_hash", newHash);
+  return { ok: true };
+}
+
+export function generateAdminSessionToken(passwordHash: string, timestamp: number): string {
+  const payload = `admin_session:${passwordHash}:${timestamp}`;
+  const sig = crypto.createHmac("sha256", SECRET_KEY).update(payload).digest("hex");
+  return `${sig}:${timestamp}`;
+}
+
+export async function verifyAdminSessionToken(token: string): Promise<boolean> {
+  if (!token) return false;
+  const clean = token.replace(/^Bearer\s+/, "").trim();
+  if (!clean) return false;
+
+  // 1. Direct password match fallback
+  if (await verifyAdminPassword(clean)) return true;
+
+  // 2. Session token match: sig:timestamp
+  const parts = clean.split(":");
+  if (parts.length === 2) {
+    const [sig, tsStr] = parts;
+    const ts = Number(tsStr);
+    if (isNaN(ts) || Date.now() > ts + 7 * 86400 * 1000) return false; // 7 days expiry
+    const pwdHash = await getAdminPasswordHash();
+    const expectedSig = crypto.createHmac("sha256", SECRET_KEY).update(`admin_session:${pwdHash}:${ts}`).digest("hex");
+    try {
+      const a = Buffer.from(sig);
+      const b = Buffer.from(expectedSig);
+      if (a.length !== b.length) return false;
+      return crypto.timingSafeEqual(new Uint8Array(a), new Uint8Array(b));
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
+}
+
+// ---------------------------------------------------------------------------
 // 11. Topic question sequence cache (24 h TTL)
 // ---------------------------------------------------------------------------
 export async function cacheTopicSequence(topicId: string, questions: any[]): Promise<void> {
