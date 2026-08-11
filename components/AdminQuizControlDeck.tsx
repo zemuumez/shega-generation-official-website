@@ -372,16 +372,27 @@ export default function AdminQuizControlDeck({
     return parentQuiz?.topic?._ref || parentQuiz?._id || (selectedTopicId !== "all" ? selectedTopicId : quizzes[0]?._id || "");
   };
 
+  const enqueueQuestionToState = (q: QuizQuestion) => {
+    const qId = q._key || q._id;
+    setQuestionQueue((prev) => {
+      // Bug 2 Fix: Deduplicate queue additions by raw questionId
+      const exists = prev.some((item) => (item._key || item._id) === qId);
+      if (exists) return prev;
+      return [...prev, q];
+    });
+  };
+
   const pushSingleQuestion = async (q: QuizQuestion) => {
     setErrorMsg(null);
     setIsSubmitting(true);
     const resolvedTopicId = getQuestionTopicId(q);
+    const qId = q._key || q._id;
 
     try {
       const res = await adminControlFetch({
         action: "PUSH_QUESTION",
         topicId: resolvedTopicId,
-        questionId: q._key || q._id,
+        questionId: qId,
         orderIndex: q.orderIndex || 1,
         timerDuration,
         autoPush,
@@ -389,15 +400,11 @@ export default function AdminQuizControlDeck({
 
       const data = await res.json();
       if (!res.ok) {
-        if (res.status === 423) {
-          // Single question lock active: Enqueue into right-side broadcast queue stack
-          const nextQArr = [...questionQueue, q];
-          setQuestionQueue(nextQArr);
-          await updateServerQueue(nextQArr);
-          setErrorMsg(`Question #${q.orderIndex || 1} added to the Live Broadcast Queue Stack!`);
-        } else {
-          setErrorMsg(data.error || "Failed to push question.");
-        }
+        setErrorMsg(data.error || "Failed to push question.");
+      } else if (data.queued) {
+        // Bug 4 Fix: Single question lock collision returns 200 OK with queued: true
+        enqueueQuestionToState(q);
+        setErrorMsg(`Question #${q.orderIndex || 1} added to Live Broadcast Queue Stack!`);
       } else {
         setLiveState(data.state);
       }
@@ -409,11 +416,14 @@ export default function AdminQuizControlDeck({
   };
 
   const handlePushOrEnqueueQuestion = async (q: QuizQuestion) => {
+    const qId = q._key || q._id;
+    if (questionQueue.some((item) => (item._key || item._id) === qId)) {
+      setErrorMsg(`Question #${q.orderIndex || 1} is already staged in the queue stack.`);
+      return;
+    }
     if (isQuestionActive) {
-      const nextQArr = [...questionQueue, q];
-      setQuestionQueue(nextQArr);
-      await updateServerQueue(nextQArr);
-      setErrorMsg(`Question #${q.orderIndex || 1} enqueued to the right-side broadcast stack.`);
+      enqueueQuestionToState(q);
+      setErrorMsg(`Question #${q.orderIndex || 1} enqueued to broadcast stack.`);
       return;
     }
     await pushSingleQuestion(q);

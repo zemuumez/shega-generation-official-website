@@ -168,11 +168,18 @@ export default function MobileLiveQuizPage({
     syncLiveState();
     fetchLeaderboard();
 
-    // 2 s background polling for Vercel Serverless resilience
-    const pollInterval = setInterval(() => {
-      syncLiveState();
-      fetchLeaderboard();
-    }, 2000);
+    let isSseActive = false;
+    let pollInterval: ReturnType<typeof setInterval> | null = null;
+
+    const startPolling = () => {
+      if (pollInterval) return;
+      pollInterval = setInterval(() => {
+        if (!isSseActive) {
+          syncLiveState();
+        }
+        fetchLeaderboard();
+      }, 3000);
+    };
 
     // SSE Real-Time Zero-Refresh Broadcast Stream
     let sse: EventSource | null = null;
@@ -181,7 +188,17 @@ export default function MobileLiveQuizPage({
         `/api/quiz/live/stream?userId=${userId}&topicId=${encodeURIComponent(params.topicSlug)}`
       );
 
+      sse.addEventListener("open", () => {
+        isSseActive = true;
+      });
+
+      sse.addEventListener("error", () => {
+        isSseActive = false;
+        startPolling();
+      });
+
       sse.addEventListener("QUESTION_BROADCAST", (e) => {
+        isSseActive = true;
         try {
           const data: BroadcastQuestion = JSON.parse(e.data);
           if (currentQIdRef.current !== data.questionId) {
@@ -215,10 +232,12 @@ export default function MobileLiveQuizPage({
       sse.addEventListener("QUESTION_EXPIRED", () => {
         fetchLeaderboard();
       });
-    } catch { /* ignore */ }
+    } catch {
+      startPolling();
+    }
 
     return () => {
-      clearInterval(pollInterval);
+      if (pollInterval) clearInterval(pollInterval);
       if (sse) sse.close();
     };
   }, [isRegistered, userId, playerHandle, playerName]);

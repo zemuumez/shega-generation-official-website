@@ -188,6 +188,7 @@ export async function incrementEpoch(): Promise<number> {
 export interface LiveQuestionPayload {
   questionId: string;
   topicId: string;
+  topicSlug?: string;
   questionText: string;
   questionType: "MULTIPLE_CHOICE" | "TRUE_FALSE";
   codeSnippet?: string;

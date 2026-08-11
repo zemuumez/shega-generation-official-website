@@ -13,6 +13,7 @@ import {
   resetSession,
   resetLeaderboard,
   getCurrentEpoch,
+  enqueueQuestion,
   parseBool,
   verifyAdminSessionToken,
 } from "@/lib/quizLiveEngine";
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
 
   // ── RESET_SESSION ────────────────────────────────────────────────────────
   if (action === "RESET_SESSION") {
-    const newEpoch = await resetSession(); // active_state deleted first, then epoch, then queue
+    const newEpoch = await resetSession();
     return NextResponse.json({ ok: true, epoch: newEpoch, message: "Session reset." });
   }
 
@@ -118,15 +119,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "topicId is required for PUSH_QUESTION." }, { status: 400 });
     }
 
-    // Single Question Lock: block while a question is actively ticking
-    if (currentState && currentState.status === "ACTIVE" && Date.now() < currentState.endTime) {
-      return NextResponse.json(
-        { error: "Single Question Lock Active — current countdown still running.", queued: false },
-        { status: 423 }
-      );
-    }
-
-    // Resolve question from Sanity / cache
+    // Resolve question sequence
     let questions: any[] = (await getTopicSequence(topicId)) || [];
     if (questions.length === 0) {
       try {
@@ -149,7 +142,6 @@ export async function POST(req: NextRequest) {
     if (questionId) {
       targetQuestion = questions.find((q: any) => q._key === questionId || q._id === questionId);
       if (!targetQuestion) {
-        // Global Sanity fallback
         try {
           const doc = await sanityClient.fetch(
             `*[_type == "challengeQuiz" && (questions[]._key == $qId || questions[]._id == $qId)][0]`,
@@ -166,6 +158,31 @@ export async function POST(req: NextRequest) {
 
     if (!targetQuestion) targetQuestion = questions[0];
 
+    const targetQId = targetQuestion._key || targetQuestion._id || `q_${Date.now()}`;
+
+    // Bug 4 Fix: Handle Lock Collision gracefully without red 423 error
+    if (currentState && currentState.status === "ACTIVE" && Date.now() < currentState.endTime) {
+      await enqueueQuestion(topicId, targetQId);
+      return NextResponse.json(
+        {
+          ok: true,
+          queued: true,
+          message: `Question #${targetQuestion.orderIndex || 1} enqueued to broadcast stack.`,
+        },
+        { status: 200 }
+      );
+    }
+
+    // Bug 1 & 3 Fix: Resolve topicSlug from Sanity for exact topic isolation & scoring
+    let topicSlug = topicId;
+    try {
+      const topicDoc = await sanityClient.fetch(
+        `*[_type == "challengeTopic" && (_id == $topicId || slug.current == $topicId)][0]{ "slug": slug.current, _id }`,
+        { topicId }
+      );
+      if (topicDoc?.slug) topicSlug = topicDoc.slug;
+    } catch { /* ignore */ }
+
     const durationSeconds = timerDuration && timerDuration >= 5 ? timerDuration : (targetQuestion.timerDuration || 45);
     const now = Date.now();
     const endTime = now + durationSeconds * 1000;
@@ -174,8 +191,9 @@ export async function POST(req: NextRequest) {
     const epoch = await getCurrentEpoch();
 
     const newLiveState = {
-      questionId: targetQuestion._key || targetQuestion._id || `q_${Date.now()}`,
+      questionId: targetQId,
       topicId,
+      topicSlug,
       questionText: targetQuestion.questionText,
       questionType: (targetQuestion.questionType || "MULTIPLE_CHOICE") as "MULTIPLE_CHOICE" | "TRUE_FALSE",
       codeSnippet: targetQuestion.codeSnippet || undefined,

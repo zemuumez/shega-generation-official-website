@@ -147,10 +147,11 @@ export async function POST(req: NextRequest) {
 
   const timeSpentSeconds = Math.max(1, Math.round((nowServer - liveState.startTime) / 1000));
 
-  // 8. Persist to ZSET leaderboard & accuracy hash
-  await addScoreToLeaderboard(liveState.topicId, participantId, pointsEarned);
-  const accuracy = await updateAccuracy(liveState.topicId, participantId, isCorrect);
-  const newTotalScore = await getParticipantScore(liveState.topicId, participantId);
+  // 8. Persist to ZSET leaderboard & accuracy hash (Bug 3 Fix: use topicSlug as canonical key)
+  const targetTopicKey = liveState.topicSlug || liveState.topicId;
+  await addScoreToLeaderboard(targetTopicKey, participantId, pointsEarned);
+  const accuracy = await updateAccuracy(targetTopicKey, participantId, isCorrect);
+  const newTotalScore = await getParticipantScore(targetTopicKey, participantId);
 
   // 9. Upsert participant metadata (name/handle lookup for leaderboard display)
   await upsertParticipantMeta({

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTopicLeaderboard, getParticipantMeta, getAccuracy } from "@/lib/quizLiveEngine";
+import { sanityClient } from "@/sanity/lib/client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -7,11 +8,21 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    const topicId = url.searchParams.get("quizId") || url.searchParams.get("topicId");
+    const rawTopicParam = url.searchParams.get("quizId") || url.searchParams.get("topicId");
 
-    if (!topicId || topicId === "all") {
+    if (!rawTopicParam || rawTopicParam === "all") {
       return NextResponse.json({ ok: true, leaderboard: [] }, { status: 200 });
     }
+
+    // Bug 3 Fix: Resolve topicSlug as canonical leaderboard key
+    let topicId = rawTopicParam;
+    try {
+      const doc = await sanityClient.fetch(
+        `*[_type == "challengeTopic" && (_id == $tId || slug.current == $tId)][0]{ "slug": slug.current }`,
+        { tId: rawTopicParam }
+      );
+      if (doc?.slug) topicId = doc.slug;
+    } catch { /* ignore */ }
 
     // ZSET gives us ranked order for free — no manual sorting needed
     const ranked = await getTopicLeaderboard(topicId);
