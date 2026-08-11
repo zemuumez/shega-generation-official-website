@@ -23,6 +23,14 @@ const memoryStore =
   globalForQuiz._shegaQuizMemoryStore ||
   (globalForQuiz._shegaQuizMemoryStore = new Map<string, any>());
 
+// Project Key Prefix for Upstash Redis namespace isolation
+const KEY_PREFIX = process.env.UPSTASH_REDIS_KEY_PREFIX || "shega:quiz:";
+
+function formatKey(key: string): string {
+  if (key.startsWith("shega:")) return key;
+  return `${KEY_PREFIX}${key}`;
+}
+
 // Helper: Strict boolean parser for Redis REST string values ("true", "false", 1, 0, etc.)
 export function parseBool(val: any, fallback: boolean = true): boolean {
   if (val === undefined || val === null) return fallback;
@@ -37,28 +45,30 @@ export function parseBool(val: any, fallback: boolean = true): boolean {
 }
 
 async function getCache(key: string): Promise<any> {
+  const fullKey = formatKey(key);
   if (redis) {
     try {
-      const val = await redis.get(key);
+      const val = await redis.get(fullKey);
       if (val !== null && val !== undefined) return val;
     } catch (err) {
-      console.warn(`Upstash Redis get error for key [${key}]:`, err);
+      console.warn(`Upstash Redis get error for key [${fullKey}]:`, err);
     }
   }
-  return memoryStore.get(key) ?? null;
+  return memoryStore.get(fullKey) ?? null;
 }
 
 async function setCache(key: string, value: any, ttlSeconds?: number): Promise<void> {
-  memoryStore.set(key, value);
+  const fullKey = formatKey(key);
+  memoryStore.set(fullKey, value);
   if (redis) {
     try {
       if (ttlSeconds) {
-        await redis.set(key, value, { ex: ttlSeconds });
+        await redis.set(fullKey, value, { ex: ttlSeconds });
       } else {
-        await redis.set(key, value);
+        await redis.set(fullKey, value);
       }
     } catch (err) {
-      console.warn(`Upstash Redis set error for key [${key}]:`, err);
+      console.warn(`Upstash Redis set error for key [${fullKey}]:`, err);
     }
   }
 }
@@ -95,7 +105,7 @@ export function verifyQuestionToken(
 
 // 2. Single-Submission Idempotency Lock (Upstash Redis SET NX)
 export async function tryAcquireSubmissionLock(userId: string, questionId: string): Promise<boolean> {
-  const lockKey = `quiz:live:lock:${userId}:${questionId}`;
+  const lockKey = formatKey(`quiz:live:lock:${userId}:${questionId}`);
   if (redis) {
     try {
       const res = await redis.set(lockKey, "LOCKED", { nx: true, ex: 60 });
