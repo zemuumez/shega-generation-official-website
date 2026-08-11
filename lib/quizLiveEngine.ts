@@ -394,3 +394,23 @@ export async function getLiveLeaderboardStore(): Promise<LiveLeaderboardEntry[]>
 export async function clearLiveLeaderboardStore(): Promise<void> {
   await setCache("quiz:live:leaderboard_entries", []);
 }
+
+// 8. Participant Redis Session Management with 24-Hour TTL
+export interface ParticipantSession {
+  userId: string;
+  playerName: string;
+  playerHandle: string;
+  lastActive: string;
+}
+
+export async function registerParticipantSession(session: ParticipantSession): Promise<void> {
+  if (!session.userId) return;
+  const sessionKey = `quiz:session:${session.userId}`;
+  await setCache(sessionKey, session, 86400); // 24-hour TTL in Redis
+}
+
+export async function getParticipantSession(userId: string): Promise<ParticipantSession | null> {
+  if (!userId) return null;
+  const sessionKey = `quiz:session:${userId}`;
+  return await getCache(sessionKey);
+}

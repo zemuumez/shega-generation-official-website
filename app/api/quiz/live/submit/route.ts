@@ -7,6 +7,7 @@ import {
   getTopicSequence,
   getDifficultyPoints,
   recordSubmission,
+  registerParticipantSession,
 } from "@/lib/quizLiveEngine";
 import { sanityClient } from "@/sanity/lib/client";
 import { sanityWriteClient } from "@/sanity/lib/writeClient";
@@ -121,7 +122,7 @@ export async function POST(req: NextRequest) {
 
   const timeSpentSeconds = Math.max(1, Math.round((nowServer - liveState.startTime) / 1000));
 
-  // 5. Persist submission to real-time memory/Redis store
+  // 5. Persist submission to real-time memory/Redis store & refresh 24h Redis Session
   await recordSubmission({
     participantName,
     participantHandle: handleTag,
@@ -130,6 +131,13 @@ export async function POST(req: NextRequest) {
     correctCount: isCorrect ? 1 : 0,
     timeSpentSeconds,
     quizId: liveState.topicId,
+  });
+
+  await registerParticipantSession({
+    userId,
+    playerName: participantName,
+    playerHandle: handleTag,
+    lastActive: new Date().toISOString(),
   });
 
   // 6. Optional async sync to Sanity CMS if write token is configured
