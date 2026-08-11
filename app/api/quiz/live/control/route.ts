@@ -10,16 +10,38 @@ import {
   setAllowSoloPlay,
   getAllowSoloPlay,
   setLiveAdminConfig,
-  setLiveQuestionQueue,
-  triggerSessionReset,
+  resetSession,
+  resetLeaderboard,
+  enqueueQuestion,
+  getCurrentEpoch,
   parseBool,
 } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// ---------------------------------------------------------------------------
+// Server-only admin passcode — NO NEXT_PUBLIC_ prefix.
+// A NEXT_PUBLIC_ var is embedded in the browser bundle and visible to anyone
+// who opens DevTools in the room. This var never leaves the server process.
+// ---------------------------------------------------------------------------
+const ADMIN_PASSCODE = process.env.QUIZ_ADMIN_PASSCODE_SERVER || "";
+
+function checkAdminAuth(req: NextRequest): boolean {
+  if (!ADMIN_PASSCODE) return true; // no passcode configured → open (dev fallback)
+  const header = req.headers.get("x-admin-passcode") || "";
+  return header === ADMIN_PASSCODE;
+}
+
 const ControlSchema = z.object({
-  action: z.enum(["PUSH_QUESTION", "TOGGLE_AUTO_PUSH", "TOGGLE_SOLO_PLAY", "UPDATE_CONFIG", "UPDATE_QUEUE", "RESET_SESSION"]),
+  action: z.enum([
+    "PUSH_QUESTION",
+    "TOGGLE_AUTO_PUSH",
+    "TOGGLE_SOLO_PLAY",
+    "UPDATE_CONFIG",
+    "RESET_SESSION",
+    "RESET_LEADERBOARD",
+  ]),
   topicId: z.string().optional(),
   questionId: z.string().optional(),
   orderIndex: z.number().optional(),
@@ -27,10 +49,14 @@ const ControlSchema = z.object({
   autoPush: z.boolean().optional(),
   allowSoloPlay: z.boolean().optional(),
   selectedTopicId: z.string().optional(),
-  queue: z.array(z.any()).optional(),
 });
 
 export async function POST(req: NextRequest) {
+  // Admin passcode guard — gates ALL actions
+  if (!checkAdminAuth(req)) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await req.json();
@@ -43,16 +69,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay, selectedTopicId, queue } = parsed.data;
+  const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay, selectedTopicId } =
+    parsed.data;
   const currentState = await getLiveState();
 
+  // ── RESET_SESSION ────────────────────────────────────────────────────────
   if (action === "RESET_SESSION") {
-    await setLiveState(null);
-    await setLiveQuestionQueue([]);
-    await triggerSessionReset();
-    return NextResponse.json({ ok: true, message: "Live quiz session and queue reset." });
+    const newEpoch = await resetSession(); // active_state deleted first, then epoch, then queue
+    return NextResponse.json({ ok: true, epoch: newEpoch, message: "Session reset." });
   }
 
+  // ── RESET_LEADERBOARD ────────────────────────────────────────────────────
+  if (action === "RESET_LEADERBOARD") {
+    if (!topicId) {
+      return NextResponse.json({ error: "topicId required for RESET_LEADERBOARD." }, { status: 400 });
+    }
+    await resetLeaderboard(topicId);
+    return NextResponse.json({ ok: true, message: `Leaderboard for topic ${topicId} cleared.` });
+  }
+
+  // ── UPDATE_CONFIG ────────────────────────────────────────────────────────
   if (action === "UPDATE_CONFIG") {
     const updated = await setLiveAdminConfig({
       ...(timerDuration !== undefined && { timerDuration }),
@@ -63,11 +99,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, adminConfig: updated });
   }
 
-  if (action === "UPDATE_QUEUE") {
-    await setLiveQuestionQueue(queue || []);
-    return NextResponse.json({ ok: true, queue: queue || [] });
-  }
-
+  // ── TOGGLE_AUTO_PUSH ─────────────────────────────────────────────────────
   if (action === "TOGGLE_AUTO_PUSH") {
     const nextVal = autoPush !== undefined ? autoPush : !(currentState?.autoPush ?? false);
     if (currentState) {
@@ -78,6 +110,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, autoPush: nextVal });
   }
 
+  // ── TOGGLE_SOLO_PLAY ─────────────────────────────────────────────────────
   if (action === "TOGGLE_SOLO_PLAY") {
     const currentVal = await getAllowSoloPlay();
     const nextVal = allowSoloPlay !== undefined ? allowSoloPlay : !currentVal;
@@ -90,20 +123,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, allowSoloPlay: nextVal });
   }
 
+  // ── PUSH_QUESTION ────────────────────────────────────────────────────────
   if (action === "PUSH_QUESTION") {
-    // Single Question Lock: If current question is active and countdown has NOT expired, block new push
-    if (currentState && currentState.status === "ACTIVE" && Date.now() < currentState.endTime) {
-      return NextResponse.json(
-        { error: "Single Question Lock Active! Current question countdown is still running." },
-        { status: 423 }
-      );
-    }
-
     if (!topicId) {
       return NextResponse.json({ error: "topicId is required for PUSH_QUESTION." }, { status: 400 });
     }
 
-    // Fetch quiz from Sanity if not pre-cached
+    // If a question is already live and not expired, enqueue instead of overwriting
+    if (currentState && currentState.status === "ACTIVE" && Date.now() < currentState.endTime) {
+      if (questionId) {
+        const wasNew = await enqueueQuestion(topicId, questionId);
+        if (!wasNew) {
+          return NextResponse.json(
+            { error: "Question already staged in queue." },
+            { status: 409 }
+          );
+        }
+        return NextResponse.json({ ok: true, queued: true, questionId });
+      }
+      return NextResponse.json(
+        { error: "Single Question Lock Active — current countdown still running." },
+        { status: 423 }
+      );
+    }
+
+    // Resolve question from Sanity / cache
     let questions: any[] = (await getTopicSequence(topicId)) || [];
     if (questions.length === 0) {
       try {
@@ -112,23 +156,21 @@ export async function POST(req: NextRequest) {
           { topicId }
         );
         questions = doc?.questions || [];
-        if (questions.length > 0) {
-          await cacheTopicSequence(topicId, questions);
-        }
+        if (questions.length > 0) await cacheTopicSequence(topicId, questions);
       } catch {
         questions = [];
       }
     }
 
-    if (!questions || questions.length === 0) {
+    if (!questions.length) {
       return NextResponse.json({ error: "No questions found for this topic." }, { status: 404 });
     }
 
-    // Find target question by questionId or orderIndex with robust fallback lookup
     let targetQuestion: any = null;
     if (questionId) {
       targetQuestion = questions.find((q: any) => q._key === questionId || q._id === questionId);
       if (!targetQuestion) {
+        // Global Sanity fallback by questionId
         try {
           const doc = await sanityClient.fetch(
             `*[_type == "challengeQuiz" && (questions[]._key == $qId || questions[]._id == $qId)][0]`,
@@ -137,48 +179,44 @@ export async function POST(req: NextRequest) {
           if (doc?.questions) {
             targetQuestion = doc.questions.find((q: any) => q._key === questionId || q._id === questionId);
           }
-        } catch {
-          // ignore
-        }
+        } catch { /* ignore */ }
       }
     } else if (orderIndex !== undefined) {
       targetQuestion = questions.find((q: any) => q.orderIndex === orderIndex) || questions[orderIndex - 1];
     }
 
-    if (!targetQuestion) {
-      targetQuestion = questions[0];
-    }
+    if (!targetQuestion) targetQuestion = questions[0];
 
-    // Explicit timer priority: timerDuration passed by Admin Deck > targetQuestion.timerDuration > 45s fallback
     const durationSeconds = timerDuration && timerDuration >= 5 ? timerDuration : (targetQuestion.timerDuration || 45);
     const now = Date.now();
     const endTime = now + durationSeconds * 1000;
     const points = targetQuestion.points || getDifficultyPoints(targetQuestion.difficulty || "MEDIUM");
     const currentSoloState = await getAllowSoloPlay();
+    const epoch = await getCurrentEpoch();
 
     const newLiveState = {
       questionId: targetQuestion._key || targetQuestion._id || `q_${Date.now()}`,
       topicId,
       questionText: targetQuestion.questionText,
-      questionType: targetQuestion.questionType || "MULTIPLE_CHOICE",
+      questionType: (targetQuestion.questionType || "MULTIPLE_CHOICE") as "MULTIPLE_CHOICE" | "TRUE_FALSE",
       codeSnippet: targetQuestion.codeSnippet || undefined,
       options: targetQuestion.options || [],
       correctOptionIndex: targetQuestion.correctOptionIndex ?? 0,
       explanation: targetQuestion.explanation || undefined,
-      difficulty: targetQuestion.difficulty || "MEDIUM",
+      difficulty: (targetQuestion.difficulty || "MEDIUM") as "EASY" | "MEDIUM" | "HARD",
       points,
       orderIndex: targetQuestion.orderIndex || (orderIndex || 1),
       timerDuration: durationSeconds,
       startTime: now,
       endTime,
-      isLocked: true, // Single question lock activated
-      autoPush: autoPush !== undefined ? autoPush : (currentState?.autoPush ?? false),
+      epoch,
+      isLocked: true,
+      autoPush: autoPush !== undefined ? parseBool(autoPush) : (currentState?.autoPush ?? false),
       allowSoloPlay: currentSoloState,
       status: "ACTIVE" as const,
     };
 
     await setLiveState(newLiveState);
-
     return NextResponse.json({ ok: true, state: newLiveState }, { status: 200 });
   }
 

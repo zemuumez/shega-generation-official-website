@@ -16,7 +16,9 @@ interface BroadcastQuestion {
   orderIndex: number;
   timerDuration: number;
   remainingSeconds: number;
-  endTime?: number;
+  startTime: number;
+  endTime: number;
+  epoch: number;
   token: string;
   tokenExpiry: number;
   status: "IDLE" | "ACTIVE" | "INTERMISSION" | "EXPIRED" | "COMPLETED";
@@ -63,6 +65,9 @@ export default function MobileLiveQuizPage({
 
   // Ref to track question transitions safely
   const currentQIdRef = useRef<string | null>(null);
+  // Client-authoritative expiry timer — cleared on every new question
+  const expiryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentEpochRef = useRef<number>(0);
 
   // 1. Restore persistent registration from localStorage on mount
   useEffect(() => {
@@ -111,6 +116,29 @@ export default function MobileLiveQuizPage({
     }
   };
 
+  // Helper: arm client-authoritative expiry so question disappears exactly at endTime
+  const armExpiryTimer = (endTime: number) => {
+    if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
+    const msLeft = Math.max(0, endTime - Date.now());
+    expiryTimerRef.current = setTimeout(() => {
+      setActiveQuestion(null);
+      currentQIdRef.current = null;
+      fetchLeaderboard();
+    }, msLeft);
+  };
+
+  // Helper: wholesale replace question state on new questionId
+  const applyNewQuestion = (q: BroadcastQuestion) => {
+    if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
+    currentQIdRef.current = q.questionId;
+    currentEpochRef.current = q.epoch;
+    setSelectedOption(null);
+    setIsSubmitted(false);
+    setSubmissionResult(null);
+    setActiveQuestion(q);
+    if (q.endTime) armExpiryTimer(q.endTime);
+  };
+
   // 2. Real-Time Zero-Refresh Stream & Background Sync
   useEffect(() => {
     if (!isRegistered) return;
@@ -119,38 +147,44 @@ export default function MobileLiveQuizPage({
 
     const syncLiveState = async () => {
       try {
-        const res = await fetch(`/api/quiz/live/state?userId=${userId}`);
+        const res = await fetch(
+          `/api/quiz/live/state?userId=${userId}&topicId=${encodeURIComponent(params.topicSlug)}`
+        );
         const data = await res.json();
+
         if (data.status === "ACTIVE" && data.activeQuestion) {
-          if (currentQIdRef.current !== data.activeQuestion.questionId) {
-            currentQIdRef.current = data.activeQuestion.questionId;
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setSubmissionResult(null);
-            setActiveQuestion(data.activeQuestion);
-          } else {
-            // Same question: Only update if status changed
-            setActiveQuestion((prev) => {
-              if (!prev || prev.status !== data.activeQuestion.status) {
-                return data.activeQuestion;
-              }
-              return prev;
-            });
+          const aq = data.activeQuestion as BroadcastQuestion;
+          // Topic isolation: if server returns a different topic → clear
+          if (aq.topicId !== params.topicSlug && aq.topicId !== undefined) {
+            if (currentQIdRef.current !== null) {
+              currentQIdRef.current = null;
+              setActiveQuestion(null);
+            }
+            return;
           }
-        } else if (data.status === "IDLE" && data.isReset === true) {
-          currentQIdRef.current = null;
-          setActiveQuestion(null);
+          if (currentQIdRef.current !== aq.questionId) {
+            applyNewQuestion(aq);
+          } else if (aq.status !== "ACTIVE") {
+            // status changed on same question (e.g. EXPIRED) — update only status
+            setActiveQuestion((prev) => (prev ? { ...prev, status: aq.status } : prev));
+          }
+        } else {
+          // IDLE or no active question
+          if (currentQIdRef.current !== null) {
+            if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
+            currentQIdRef.current = null;
+            setActiveQuestion(null);
+          }
         }
       } catch {
         // ignore
       }
     };
 
-    // Initial sync
     syncLiveState();
     fetchLeaderboard();
 
-    // 2s background polling for Vercel Serverless resilience
+    // 2 s background polling for Vercel Serverless resilience
     const pollInterval = setInterval(() => {
       syncLiveState();
       fetchLeaderboard();
@@ -159,57 +193,52 @@ export default function MobileLiveQuizPage({
     // SSE Real-Time Zero-Refresh Broadcast Stream
     let sse: EventSource | null = null;
     try {
-      sse = new EventSource(`/api/quiz/live/stream?userId=${userId}`);
+      sse = new EventSource(
+        `/api/quiz/live/stream?userId=${userId}&topicId=${encodeURIComponent(params.topicSlug)}`
+      );
 
       sse.addEventListener("QUESTION_BROADCAST", (e) => {
         try {
           const data: BroadcastQuestion = JSON.parse(e.data);
-          if (currentQIdRef.current !== data.questionId) {
-            currentQIdRef.current = data.questionId;
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setSubmissionResult(null);
-            setActiveQuestion(data);
-            fetchLeaderboard();
-          } else {
-            setActiveQuestion((prev) => {
-              if (!prev || prev.status !== data.status) {
-                return data;
-              }
-              return prev;
-            });
+          // Topic isolation: only accept broadcasts for this topic
+          if (data.topicId !== params.topicSlug && data.topicId !== undefined) {
+            if (currentQIdRef.current !== null) {
+              currentQIdRef.current = null;
+              setActiveQuestion(null);
+            }
+            return;
           }
-        } catch {
-          // ignore
-        }
+          if (currentQIdRef.current !== data.questionId) {
+            applyNewQuestion(data);
+            fetchLeaderboard();
+          } else if (data.status !== "ACTIVE") {
+            setActiveQuestion((prev) => (prev ? { ...prev, status: data.status } : prev));
+          }
+        } catch { /* ignore */ }
       });
 
-      sse.addEventListener("IDLE_STATE", (e) => {
-        try {
-          const payload = JSON.parse(e.data || "{}");
-          if (payload.isReset === true) {
-            currentQIdRef.current = null;
-            setActiveQuestion(null);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setSubmissionResult(null);
-            fetchLeaderboard();
-          }
-        } catch {
-          // ignore
-        }
+      sse.addEventListener("IDLE_STATE", () => {
+        if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
+        currentQIdRef.current = null;
+        setActiveQuestion(null);
+        setSelectedOption(null);
+        setIsSubmitted(false);
+        setSubmissionResult(null);
+        fetchLeaderboard();
       });
 
       sse.addEventListener("QUESTION_EXPIRED", () => {
+        if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
+        currentQIdRef.current = null;
+        setActiveQuestion(null);
         fetchLeaderboard();
       });
-    } catch {
-      // ignore
-    }
+    } catch { /* ignore */ }
 
     return () => {
       clearInterval(pollInterval);
       if (sse) sse.close();
+      if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
     };
   }, [isRegistered, userId, playerHandle, playerName]);
 
@@ -274,16 +303,20 @@ export default function MobileLiveQuizPage({
           chosenOptionIndex: optionIdx,
           token: activeQuestion.token,
           tokenExpiry: activeQuestion.tokenExpiry,
+          epoch: currentEpochRef.current, // server rejects if epoch mismatch (STALE_SESSION)
         }),
       });
 
       const data = await res.json();
-      setSubmissionResult(data);
+      setSubmissionResult({ ...data, chosenOptionIndex: optionIdx });
       if (data.ok) {
-        if (typeof data.pointsEarned === "number" && data.pointsEarned > 0) {
-          setUserScore((s) => s + data.pointsEarned);
+        // Sync score directly from server response — no need to wait for leaderboard poll
+        if (typeof data.newTotalScore === "number") {
+          setUserScore(data.newTotalScore);
+        } else if (typeof data.pointsAwarded === "number" && data.pointsAwarded > 0) {
+          setUserScore((s) => s + data.pointsAwarded);
         }
-        await fetchLeaderboard();
+        fetchLeaderboard();
       }
     } catch (err) {
       console.error("Submission failed:", err);
@@ -537,17 +570,22 @@ export default function MobileLiveQuizPage({
                 {/* Submission Feedback Banner */}
                 {submissionResult && (
                   <div
-                    className={`p-4 rounded-2xl font-mono text-xs font-bold border text-center shadow-sm ${
-                      submissionResult.isCorrect
+                    className={`p-4 rounded-2xl font-mono text-xs font-bold border text-center shadow-sm space-y-1 ${
+                      submissionResult.correct
                         ? "bg-ochre/15 border-ochre/40 text-ochre"
-                        : "bg-[#F59E0B]/15 border-[#F59E0B]/40 text-[#F59E0B]"
+                        : "bg-[#EF4444]/15 border-[#EF4444]/40 text-[#EF4444]"
                     }`}
                   >
-                    {submissionResult.isCorrect
-                      ? `🎉 Correct Answer! +${submissionResult.pointsEarned} Pts`
-                      : submissionResult.pointsEarned > 0
-                      ? `Answer Submitted! +${submissionResult.pointsEarned} Pts`
-                      : "Answer Submitted & Recorded!"}
+                    <div className="text-base">
+                      {submissionResult.correct ? "🎉 Correct!" : "❌ Incorrect"}
+                    </div>
+                    <div>
+                      {submissionResult.correct
+                        ? `+${submissionResult.pointsAwarded ?? 0} pts — Total: ${userScore} pts`
+                        : submissionResult.explanation
+                        ? submissionResult.explanation
+                        : "Better luck on the next question!"}
+                    </div>
                   </div>
                 )}
               </motion.div>

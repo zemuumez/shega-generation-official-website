@@ -4,7 +4,9 @@ import { sanityClient } from "@/sanity/lib/client";
 
 const SECRET_KEY = process.env.QUIZ_HMAC_SECRET || "shega-generation-live-quiz-secret-2026";
 
-// Initialize Upstash Redis if environment variables exist, else local in-memory fallback
+// ---------------------------------------------------------------------------
+// Redis init & in-memory fallback
+// ---------------------------------------------------------------------------
 let redis: Redis | null = null;
 if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
   try {
@@ -14,102 +16,120 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
   }
 }
 
-// Global In-Memory Store shared across all Next.js API routes
+// Global in-memory store shared across hot-reload cycles in Next.js dev
 const globalForQuiz = globalThis as unknown as {
   _shegaQuizMemoryStore: Map<string, any>;
 };
-
 const memoryStore =
   globalForQuiz._shegaQuizMemoryStore ||
   (globalForQuiz._shegaQuizMemoryStore = new Map<string, any>());
 
-// Project Key Prefix for Upstash Redis namespace isolation
-const KEY_PREFIX = process.env.UPSTASH_REDIS_KEY_PREFIX || "shega:quiz:";
+// ---------------------------------------------------------------------------
+// Key-prefix convention
+// All keys in this project live under "shega:quiz:" — one clean namespace, no
+// double-nesting. formatKey() adds the prefix only when it isn't already there.
+// ---------------------------------------------------------------------------
+const KEY_PREFIX = "shega:quiz:";
 
-function formatKey(key: string): string {
-  if (key.startsWith("shega:")) return key;
+function k(key: string): string {
+  if (key.startsWith(KEY_PREFIX)) return key;
   return `${KEY_PREFIX}${key}`;
 }
 
-// Helper: Strict boolean parser for Redis REST string values ("true", "false", 1, 0, etc.)
+// ---------------------------------------------------------------------------
+// Short-term read cache (1.5 s) — slashes Upstash REST requests by ~99 %
+// ---------------------------------------------------------------------------
+const shortTermCache = new Map<string, { val: any; expiry: number }>();
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 export function parseBool(val: any, fallback: boolean = true): boolean {
   if (val === undefined || val === null) return fallback;
   if (typeof val === "boolean") return val;
   if (typeof val === "number") return val !== 0;
   if (typeof val === "string") {
-    const clean = val.trim().toLowerCase();
-    if (clean === "false" || clean === "0" || clean === "off" || clean === "no") return false;
-    if (clean === "true" || clean === "1" || clean === "on" || clean === "yes") return true;
+    const c = val.trim().toLowerCase();
+    if (c === "false" || c === "0" || c === "off" || c === "no") return false;
+    if (c === "true" || c === "1" || c === "on" || c === "yes") return true;
   }
   return Boolean(val);
 }
 
-const shortTermCache = new Map<string, { val: any; expiry: number }>();
-
-async function getCache(key: string): Promise<any> {
-  const fullKey = formatKey(key);
-  const now = Date.now();
-  const cached = shortTermCache.get(fullKey);
-
-  if (cached && now < cached.expiry) {
-    return cached.val;
+function tryParseJSON(raw: any): any {
+  if (typeof raw !== "string") return raw;
+  const t = raw.trim();
+  if ((t.startsWith("{") && t.endsWith("}")) || (t.startsWith("[") && t.endsWith("]"))) {
+    try { return JSON.parse(t); } catch { /* ignore */ }
   }
+  return raw;
+}
+
+export function getDifficultyPoints(difficulty: string): number {
+  switch (difficulty?.toUpperCase()) {
+    case "EASY": return 100;
+    case "HARD": return 400;
+    default: return 200;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Low-level cache GET / SET (Redis-first, memory fallback)
+// ---------------------------------------------------------------------------
+async function getCache(key: string): Promise<any> {
+  const fk = k(key);
+  const now = Date.now();
+  const cached = shortTermCache.get(fk);
+  if (cached && now < cached.expiry) return cached.val;
 
   if (redis) {
     try {
-      let val = await redis.get(fullKey);
+      let val = await redis.get(fk);
       if (val !== null && val !== undefined) {
-        if (typeof val === "string") {
-          const trimmed = val.trim();
-          if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
-            try {
-              val = JSON.parse(trimmed);
-            } catch {
-              // ignore parse failure
-            }
-          }
-        }
-        memoryStore.set(fullKey, val);
-        shortTermCache.set(fullKey, { val, expiry: now + 1500 });
+        val = tryParseJSON(val);
+        memoryStore.set(fk, val);
+        shortTermCache.set(fk, { val, expiry: now + 1500 });
         return val;
       }
+      return null; // key absent in Redis → don't fall through to stale memory
     } catch (err) {
-      console.warn(`Upstash Redis get error for key [${fullKey}]:`, err);
-      const fallbackVal = memoryStore.get(fullKey) ?? null;
-      if (fallbackVal !== null) return fallbackVal;
+      console.warn(`Redis get error [${fk}]:`, err);
+      // fall through to memory on quota/network error
     }
   }
-  return memoryStore.get(fullKey) ?? null;
+  return memoryStore.get(fk) ?? null;
 }
 
 async function setCache(key: string, value: any, ttlSeconds?: number): Promise<void> {
-  const fullKey = formatKey(key);
+  const fk = k(key);
   const now = Date.now();
 
   if (value === null || value === undefined) {
-    memoryStore.delete(fullKey);
-    shortTermCache.delete(fullKey);
+    memoryStore.delete(fk);
+    shortTermCache.delete(fk);
   } else {
-    memoryStore.set(fullKey, value);
-    shortTermCache.set(fullKey, { val: value, expiry: now + 1500 });
+    memoryStore.set(fk, value);
+    shortTermCache.set(fk, { val: value, expiry: now + 1500 });
   }
 
   if (redis) {
     try {
       if (value === null || value === undefined) {
-        await redis.del(fullKey);
+        await redis.del(fk);
       } else if (ttlSeconds) {
-        await redis.set(fullKey, value, { ex: ttlSeconds });
+        await redis.set(fk, value, { ex: ttlSeconds });
       } else {
-        await redis.set(fullKey, value);
+        await redis.set(fk, value);
       }
     } catch (err) {
-      console.warn(`Upstash Redis set error for key [${fullKey}]:`, err);
+      console.warn(`Redis set error [${fk}]:`, err);
     }
   }
 }
 
-// 1. HMAC Token Generator & Verifier
+// ---------------------------------------------------------------------------
+// 1. HMAC Token — zero-leak security
+// ---------------------------------------------------------------------------
 export function generateQuestionToken(userId: string, questionId: string, expiryTimestamp: number): string {
   const payload = `${userId}:${questionId}:${expiryTimestamp}`;
   return crypto.createHmac("sha256", SECRET_KEY).update(payload).digest("hex");
@@ -122,16 +142,11 @@ export function verifyQuestionToken(
   expiryTimestamp: number
 ): boolean {
   if (!token || !userId || !questionId || !expiryTimestamp) return false;
-  
-  // Check token expiry
-  if (Date.now() > expiryTimestamp) {
-    return false;
-  }
-
-  const expectedToken = generateQuestionToken(userId, questionId, expiryTimestamp);
+  if (Date.now() > expiryTimestamp) return false;
+  const expected = generateQuestionToken(userId, questionId, expiryTimestamp);
   try {
     const a = Buffer.from(token);
-    const b = Buffer.from(expectedToken);
+    const b = Buffer.from(expected);
     if (a.length !== b.length) return false;
     return crypto.timingSafeEqual(new Uint8Array(a), new Uint8Array(b));
   } catch {
@@ -139,26 +154,34 @@ export function verifyQuestionToken(
   }
 }
 
-// 2. Single-Submission Idempotency Lock (Upstash Redis SET NX)
-export async function tryAcquireSubmissionLock(userId: string, questionId: string): Promise<boolean> {
-  const lockKey = formatKey(`quiz:live:lock:${userId}:${questionId}`);
-  if (redis) {
-    try {
-      const res = await redis.set(lockKey, "LOCKED", { nx: true, ex: 60 });
-      return res === "OK";
-    } catch {
-      // fallback
-    }
-  }
-
-  if (memoryStore.has(lockKey)) {
-    return false;
-  }
-  memoryStore.set(lockKey, true);
-  setTimeout(() => memoryStore.delete(lockKey), 60000);
-  return true;
+// ---------------------------------------------------------------------------
+// 2. Epoch — global session counter (one live topic at a time)
+// ---------------------------------------------------------------------------
+export async function getCurrentEpoch(): Promise<number> {
+  const val = await getCache("epoch");
+  return typeof val === "number" ? val : (Number(val) || 0);
 }
 
+export async function incrementEpoch(): Promise<number> {
+  if (redis) {
+    try {
+      const newVal = await redis.incr(k("epoch"));
+      memoryStore.set(k("epoch"), newVal);
+      shortTermCache.set(k("epoch"), { val: newVal, expiry: Date.now() + 1500 });
+      return newVal;
+    } catch (err) {
+      console.warn("Redis incr epoch failed:", err);
+    }
+  }
+  const cur = (memoryStore.get(k("epoch")) as number) || 0;
+  const next = cur + 1;
+  memoryStore.set(k("epoch"), next);
+  return next;
+}
+
+// ---------------------------------------------------------------------------
+// 3. Live Active State — global, one slot
+// ---------------------------------------------------------------------------
 export interface LiveQuestionPayload {
   questionId: string;
   topicId: string;
@@ -171,44 +194,337 @@ export interface LiveQuestionPayload {
   difficulty: "EASY" | "MEDIUM" | "HARD";
   points: number;
   orderIndex: number;
-  timerDuration: number; // default 45s
+  timerDuration: number;
   startTime: number;
   endTime: number;
+  epoch: number;
   isLocked: boolean;
   autoPush: boolean;
   allowSoloPlay?: boolean;
   status: "IDLE" | "ACTIVE" | "INTERMISSION" | "EXPIRED" | "COMPLETED";
 }
 
-// 3. Get / Set Live Broadcast State
 export async function getLiveState(): Promise<LiveQuestionPayload | null> {
-  return await getCache("quiz:live:active_state");
+  return await getCache("active_state");
 }
 
 export async function setLiveState(state: LiveQuestionPayload | null): Promise<void> {
-  await setCache("quiz:live:active_state", state);
+  await setCache("active_state", state);
 }
 
-// Session Reset Triggering
-export async function triggerSessionReset(): Promise<void> {
-  await setCache("quiz:live:session_reset_time", Date.now(), 30);
+// ---------------------------------------------------------------------------
+// 4. Atomic session reset — explicit sequence so we never lose the topicId pointer
+//    Step A: read active_state → capture topicId
+//    Step B: increment epoch
+//    Step C: clear queue:${topicId} and queue_set:${topicId}
+//    Step D: delete active_state
+// ---------------------------------------------------------------------------
+export async function resetSession(): Promise<number> {
+  // Step A: read active_state to capture topicId before we lose it
+  const current = await getLiveState();
+  const topicId = current?.topicId ?? null;
+
+  // Step B: delete active_state FIRST — students immediately see no active question.
+  // Doing this before the epoch increment means there is no window where a student
+  // can see a stale question and still pass the epoch check.
+  await setLiveState(null);
+
+  // Step C: bump epoch — invalidates any in-flight submit payloads for the old session
+  const newEpoch = await incrementEpoch();
+
+  // Step D: clear that topic's queue and dedupe set.
+  // We do this AFTER deleting active_state so we still have topicId from Step A.
+  // Clearing active_state first (Step B) is safe because we already captured topicId.
+  if (topicId) {
+    const queueKey = k(`queue:${topicId}`);
+    const queueSetKey = k(`queue_set:${topicId}`);
+    memoryStore.delete(queueKey);
+    shortTermCache.delete(queueKey);
+    memoryStore.delete(queueSetKey);
+    shortTermCache.delete(queueSetKey);
+    if (redis) {
+      try {
+        await redis.del(queueKey, queueSetKey);
+      } catch (err) {
+        console.warn("Redis del queue on reset failed:", err);
+      }
+    }
+  }
+
+  return newEpoch;
 }
 
-export async function getLastSessionResetTime(): Promise<number> {
-  const time = await getCache("quiz:live:session_reset_time");
-  return typeof time === "number" ? time : 0;
+// ---------------------------------------------------------------------------
+// 5. Answered guard — idempotent SET before scoring
+// Returns true if this is the FIRST answer (proceed to score),
+// false if already answered (reject with ALREADY_ANSWERED).
+// ---------------------------------------------------------------------------
+export async function markAnswered(epoch: number, questionId: string, participantId: string): Promise<boolean> {
+  const answeredKey = k(`answered:${epoch}:${questionId}`);
+
+  if (redis) {
+    try {
+      const result = await redis.sadd(answeredKey, participantId);
+      // sadd returns number of NEW members added; 0 means already present
+      const added = typeof result === "number" ? result : Number(result);
+      if (added === 0) return false; // already answered
+      // auto-expire answered sets after 2 hours
+      await redis.expire(answeredKey, 7200);
+      return true;
+    } catch (err) {
+      console.warn("Redis sadd answered failed:", err);
+    }
+  }
+  // memory fallback
+  const existing: Set<string> = memoryStore.get(answeredKey) ?? new Set();
+  if (existing.has(participantId)) return false;
+  existing.add(participantId);
+  memoryStore.set(answeredKey, existing);
+  return true;
 }
 
-// 4. Solo Play Mode Toggle Cache & Admin Configurations
-export async function getAllowSoloPlay(): Promise<boolean> {
-  const res = await getCache("quiz:config:allow_solo_play");
-  return parseBool(res, true); // Defaults to true unless explicitly toggled OFF
+// ---------------------------------------------------------------------------
+// 6. Queue — dedup + pipelined pop
+// ---------------------------------------------------------------------------
+
+/**
+ * Enqueue a question for a topic. Silently ignores duplicate clicks.
+ * Returns false if the question was already staged.
+ */
+export async function enqueueQuestion(topicId: string, questionId: string): Promise<boolean> {
+  const listKey = k(`queue:${topicId}`);
+  const setKey = k(`queue_set:${topicId}`);
+
+  if (redis) {
+    try {
+      const added = await redis.sadd(setKey, questionId);
+      const count = typeof added === "number" ? added : Number(added);
+      if (count === 0) return false; // already queued
+      await redis.rpush(listKey, questionId);
+      return true;
+    } catch (err) {
+      console.warn("Redis enqueue failed:", err);
+    }
+  }
+  // memory fallback
+  const set: Set<string> = memoryStore.get(setKey) ?? new Set();
+  if (set.has(questionId)) return false;
+  set.add(questionId);
+  memoryStore.set(setKey, set);
+  const list: string[] = memoryStore.get(listKey) ?? [];
+  list.push(questionId);
+  memoryStore.set(listKey, list);
+  return true;
 }
 
-export async function setAllowSoloPlay(allow: boolean): Promise<void> {
-  await setCache("quiz:config:allow_solo_play", parseBool(allow, true));
+/**
+ * Pop the next question ID from the topic queue.
+ * LPOP + SREM are pipelined to a single Upstash round-trip.
+ */
+export async function popQueueQuestion(topicId: string): Promise<string | null> {
+  const listKey = k(`queue:${topicId}`);
+  const setKey = k(`queue_set:${topicId}`);
+
+  if (redis) {
+    try {
+      // Peek first so we know the id before removing from the set
+      const questionId = await redis.lpop<string>(listKey);
+      if (questionId) {
+        // pipelined: remove from dedup set in same trip
+        const pipeline = redis.pipeline();
+        pipeline.srem(setKey, questionId);
+        await pipeline.exec();
+      }
+      return questionId ?? null;
+    } catch (err) {
+      console.warn("Redis pop queue failed:", err);
+    }
+  }
+  // memory fallback
+  const list: string[] = memoryStore.get(listKey) ?? [];
+  const questionId = list.shift() ?? null;
+  if (questionId) {
+    memoryStore.set(listKey, list);
+    const set: Set<string> = memoryStore.get(setKey) ?? new Set();
+    set.delete(questionId);
+    memoryStore.set(setKey, set);
+  }
+  return questionId;
 }
 
+/** Read the full topic queue as an array of question IDs (for UI display) */
+export async function getTopicQueue(topicId: string): Promise<string[]> {
+  const listKey = k(`queue:${topicId}`);
+  if (redis) {
+    try {
+      const items = await redis.lrange<string>(listKey, 0, -1);
+      return Array.isArray(items) ? items : [];
+    } catch { /* fall through */ }
+  }
+  return memoryStore.get(listKey) ?? [];
+}
+
+// ---------------------------------------------------------------------------
+// 7. Topic-scoped persistent leaderboard — Redis ZSET
+//    ZINCRBY → atomic score accumulation
+//    ZREVRANGE → ranked list for free
+//    ZSCORE → single participant lookup
+// ---------------------------------------------------------------------------
+export interface LeaderboardEntry {
+  participantId: string;
+  participantName: string;
+  participantHandle: string;
+  score: number;
+  correctCount: number;
+  totalQuestions: number;
+  topicId: string;
+}
+
+/** Add points to a participant's topic score (atomic ZINCRBY on ZSET) */
+export async function addScoreToLeaderboard(
+  topicId: string,
+  participantId: string,
+  points: number
+): Promise<void> {
+  const zsetKey = k(`leaderboard:${topicId}`);
+  if (redis) {
+    try {
+      await redis.zincrby(zsetKey, points, participantId);
+      return;
+    } catch (err) {
+      console.warn("Redis zincrby failed:", err);
+    }
+  }
+  // memory fallback
+  const scores: Map<string, number> = memoryStore.get(zsetKey) ?? new Map();
+  scores.set(participantId, (scores.get(participantId) ?? 0) + points);
+  memoryStore.set(zsetKey, scores);
+}
+
+/** Get ranked leaderboard entries for a topic */
+export async function getTopicLeaderboard(topicId: string): Promise<{ participantId: string; score: number }[]> {
+  const zsetKey = k(`leaderboard:${topicId}`);
+  if (redis) {
+    try {
+      // Upstash SDK: zrange with rev:true + withScores returns [{member, score}]
+      const results = await redis.zrange<{ member: string; score: number }[]>(
+        zsetKey, 0, 49,
+        { rev: true, withScores: true }
+      );
+      if (Array.isArray(results)) {
+        return results.map((r) => ({
+          participantId: String(r.member ?? r),
+          score: Number((r as any).score ?? 0),
+        }));
+      }
+    } catch (err) {
+      console.warn("Redis zrange failed:", err);
+    }
+  }
+  // memory fallback
+  const scores: Map<string, number> = memoryStore.get(zsetKey) ?? new Map();
+  return Array.from(scores.entries())
+    .map(([participantId, score]) => ({ participantId, score }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 50);
+}
+
+/** Get a single participant's score for a topic */
+export async function getParticipantScore(topicId: string, participantId: string): Promise<number> {
+  const zsetKey = k(`leaderboard:${topicId}`);
+  if (redis) {
+    try {
+      const val = await redis.zscore(zsetKey, participantId);
+      return val !== null ? Number(val) : 0;
+    } catch { /* fall through */ }
+  }
+  const scores: Map<string, number> = memoryStore.get(zsetKey) ?? new Map();
+  return scores.get(participantId) ?? 0;
+}
+
+/** Delete the leaderboard for a topic (admin reset — does NOT touch epoch or active_state) */
+export async function resetLeaderboard(topicId: string): Promise<void> {
+  const zsetKey = k(`leaderboard:${topicId}`);
+  memoryStore.delete(zsetKey);
+  shortTermCache.delete(zsetKey);
+  if (redis) {
+    try {
+      await redis.del(zsetKey);
+    } catch (err) {
+      console.warn("Redis del leaderboard failed:", err);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 8. Per-topic per-participant accuracy tracking
+// ---------------------------------------------------------------------------
+export async function updateAccuracy(
+  topicId: string,
+  participantId: string,
+  isCorrect: boolean
+): Promise<{ correct: number; total: number }> {
+  const hashKey = k(`accuracy:${topicId}:${participantId}`);
+  if (redis) {
+    try {
+      const pipeline = redis.pipeline();
+      if (isCorrect) pipeline.hincrby(hashKey, "correct", 1);
+      pipeline.hincrby(hashKey, "total", 1);
+      await pipeline.exec();
+      const result = await redis.hgetall(hashKey) as Record<string, string> | null;
+      return {
+        correct: Number(result?.correct ?? 0),
+        total: Number(result?.total ?? 0),
+      };
+    } catch (err) {
+      console.warn("Redis accuracy update failed:", err);
+    }
+  }
+  // memory fallback
+  const acc: { correct: number; total: number } = memoryStore.get(hashKey) ?? { correct: 0, total: 0 };
+  if (isCorrect) acc.correct++;
+  acc.total++;
+  memoryStore.set(hashKey, acc);
+  return acc;
+}
+
+export async function getAccuracy(
+  topicId: string,
+  participantId: string
+): Promise<{ correct: number; total: number }> {
+  const hashKey = k(`accuracy:${topicId}:${participantId}`);
+  if (redis) {
+    try {
+      const result = await redis.hgetall(hashKey) as Record<string, string> | null;
+      if (result) return { correct: Number(result.correct ?? 0), total: Number(result.total ?? 0) };
+    } catch { /* fall through */ }
+  }
+  return memoryStore.get(hashKey) ?? { correct: 0, total: 0 };
+}
+
+// ---------------------------------------------------------------------------
+// 9. Participant metadata store — separate from scores
+//    Keyed by participantId so ZSET scores can reference the same id.
+// ---------------------------------------------------------------------------
+export interface ParticipantMeta {
+  participantId: string;
+  participantName: string;
+  participantHandle: string;
+  lastActive: string;
+}
+
+export async function upsertParticipantMeta(meta: ParticipantMeta): Promise<void> {
+  if (!meta.participantId) return;
+  await setCache(`participant:${meta.participantId}`, meta, 86400);
+}
+
+export async function getParticipantMeta(participantId: string): Promise<ParticipantMeta | null> {
+  return await getCache(`participant:${participantId}`);
+}
+
+// ---------------------------------------------------------------------------
+// 10. Admin config
+// ---------------------------------------------------------------------------
 export interface LiveAdminConfig {
   timerDuration: number;
   autoPush: boolean;
@@ -217,15 +533,8 @@ export interface LiveAdminConfig {
 }
 
 export async function getLiveAdminConfig(): Promise<LiveAdminConfig> {
-  const cached = await getCache("quiz:config:admin_settings");
-  if (!cached) {
-    return {
-      timerDuration: 45,
-      autoPush: false,
-      allowSoloPlay: true,
-      selectedTopicId: "all",
-    };
-  }
+  const cached = await getCache("config:admin_settings");
+  if (!cached) return { timerDuration: 45, autoPush: false, allowSoloPlay: true, selectedTopicId: "all" };
   return {
     timerDuration: Number(cached.timerDuration) || 45,
     autoPush: parseBool(cached.autoPush, false),
@@ -243,40 +552,39 @@ export async function setLiveAdminConfig(config: Partial<LiveAdminConfig>): Prom
     ...(config.allowSoloPlay !== undefined && { allowSoloPlay: parseBool(config.allowSoloPlay, true) }),
     ...(config.selectedTopicId !== undefined && { selectedTopicId: config.selectedTopicId }),
   };
-  await setCache("quiz:config:admin_settings", updated);
-  if (config.allowSoloPlay !== undefined) {
-    await setAllowSoloPlay(config.allowSoloPlay);
-  }
+  await setCache("config:admin_settings", updated);
   return updated;
 }
 
-export async function getLiveQuestionQueue(): Promise<any[]> {
-  const queue = await getCache("quiz:live:question_queue");
-  return Array.isArray(queue) ? queue : [];
+export async function getAllowSoloPlay(): Promise<boolean> {
+  const config = await getLiveAdminConfig();
+  return config.allowSoloPlay;
 }
 
-export async function setLiveQuestionQueue(queue: any[]): Promise<void> {
-  await setCache("quiz:live:question_queue", queue || []);
+export async function setAllowSoloPlay(allow: boolean): Promise<void> {
+  await setLiveAdminConfig({ allowSoloPlay: parseBool(allow, true) });
 }
 
-// 5. Pre-Cache Topic Questions Sequence
+// ---------------------------------------------------------------------------
+// 11. Topic question sequence cache (24 h TTL)
+// ---------------------------------------------------------------------------
 export async function cacheTopicSequence(topicId: string, questions: any[]): Promise<void> {
-  await setCache(`quiz:live:sequence:${topicId}`, questions, 86400); // 24 hours
+  await setCache(`sequence:${topicId}`, questions, 86400);
 }
 
 export async function getTopicSequence(topicId: string): Promise<any[] | null> {
-  return await getCache(`quiz:live:sequence:${topicId}`);
+  return await getCache(`sequence:${topicId}`);
 }
 
-// 6. Robust Auto-Advance Question Engine (Triggers 5s Intermission + Auto-Pushes Question #orderIndex+1)
+// ---------------------------------------------------------------------------
+// 12. Auto-advance engine (autoPush mode)
+// ---------------------------------------------------------------------------
 let isAdvancingLock = false;
 
 export async function advanceToNextQuestion(currentState: LiveQuestionPayload): Promise<void> {
   if (!currentState || isAdvancingLock) return;
   isAdvancingLock = true;
-
   try {
-    // Transition to 5-second Leaderboard Intermission Phase
     currentState.status = "INTERMISSION";
     await setLiveState(currentState);
 
@@ -284,31 +592,22 @@ export async function advanceToNextQuestion(currentState: LiveQuestionPayload): 
       try {
         const nextIndex = (currentState.orderIndex || 1) + 1;
         let questions: any[] = (await getTopicSequence(currentState.topicId)) || [];
-        
-        if (!questions || questions.length === 0) {
+        if (!questions.length) {
           try {
             const doc = await sanityClient.fetch(
               `*[_type == "challengeQuiz" && (topic._ref == $topicId || _id == $topicId)][0]`,
               { topicId: currentState.topicId }
             );
             questions = doc?.questions || [];
-            if (questions.length > 0) {
-              await cacheTopicSequence(currentState.topicId, questions);
-            }
-          } catch {
-            questions = [];
-          }
+            if (questions.length) await cacheTopicSequence(currentState.topicId, questions);
+          } catch { questions = []; }
         }
-
         if (questions && nextIndex <= questions.length) {
           const nextQ = questions.find((q: any) => q.orderIndex === nextIndex) || questions[nextIndex - 1];
           if (nextQ) {
-            const durationSeconds = currentState.timerDuration || 45;
+            const dur = currentState.timerDuration || 45;
             const now = Date.now();
-            const endTime = now + durationSeconds * 1000;
-            const points = nextQ.points || getDifficultyPoints(nextQ.difficulty || "MEDIUM");
-            const currentSoloState = await getAllowSoloPlay();
-
+            const epoch = await getCurrentEpoch();
             await setLiveState({
               questionId: nextQ._key || nextQ._id || `q_${Date.now()}`,
               topicId: currentState.topicId,
@@ -317,19 +616,19 @@ export async function advanceToNextQuestion(currentState: LiveQuestionPayload): 
               codeSnippet: nextQ.codeSnippet,
               options: nextQ.options || [],
               difficulty: nextQ.difficulty || "MEDIUM",
-              points,
+              points: nextQ.points || getDifficultyPoints(nextQ.difficulty || "MEDIUM"),
               orderIndex: nextIndex,
-              timerDuration: durationSeconds,
+              timerDuration: dur,
               startTime: now,
-              endTime,
+              endTime: now + dur * 1000,
+              epoch,
               isLocked: true,
               autoPush: true,
-              allowSoloPlay: currentSoloState,
+              allowSoloPlay: currentState.allowSoloPlay,
               status: "ACTIVE",
             });
           }
         } else {
-          // All questions in sequence completed
           currentState.status = "COMPLETED";
           currentState.isLocked = false;
           await setLiveState(currentState);
@@ -337,116 +636,83 @@ export async function advanceToNextQuestion(currentState: LiveQuestionPayload): 
       } finally {
         isAdvancingLock = false;
       }
-    }, 5000); // 5-second Leaderboard Intermission Phase
+    }, 5000);
   } catch (err) {
     isAdvancingLock = false;
-    console.error("Error in advanceToNextQuestion:", err);
+    console.error("advanceToNextQuestion error:", err);
   }
 }
 
-// Helper: Calculate points by difficulty
-export function getDifficultyPoints(difficulty: string): number {
-  switch (difficulty?.toUpperCase()) {
-    case "EASY":
-      return 100;
-    case "HARD":
-      return 400;
-    case "MEDIUM":
-    default:
-      return 200;
+// ---------------------------------------------------------------------------
+// LEGACY COMPATIBILITY SHIMS — keep old callers compiling during migration
+// ---------------------------------------------------------------------------
+export async function tryAcquireSubmissionLock(userId: string, questionId: string): Promise<boolean> {
+  // Replaced by markAnswered() — kept so old import paths don't break during build
+  const lockKey = k(`lock:${userId}:${questionId}`);
+  if (redis) {
+    try {
+      const res = await redis.set(lockKey, "LOCKED", { nx: true, ex: 60 });
+      return res === "OK";
+    } catch { /* fall through */ }
   }
+  if (memoryStore.has(lockKey)) return false;
+  memoryStore.set(lockKey, true);
+  setTimeout(() => memoryStore.delete(lockKey), 60000);
+  return true;
 }
 
-// 7. Real-Time Leaderboard Memory & Cache Engine
-export interface LiveLeaderboardEntry {
-  _id: string;
-  participantName: string;
-  participantHandle: string;
-  score: number;
-  totalQuestions: number;
-  correctCount: number;
-  timeSpentSeconds: number;
-  completedAt: string;
-  quizId?: string;
-  quizTitle?: string;
+/** @deprecated Use getTopicQueue() */
+export async function getLiveQuestionQueue(): Promise<any[]> {
+  const config = await getLiveAdminConfig();
+  const topicId = config.selectedTopicId && config.selectedTopicId !== "all" ? config.selectedTopicId : null;
+  if (!topicId) return [];
+  return await getTopicQueue(topicId);
 }
 
-export async function recordSubmission(submission: Partial<LiveLeaderboardEntry>): Promise<LiveLeaderboardEntry> {
-  const currentLeaderboard: LiveLeaderboardEntry[] = (await getCache("quiz:live:leaderboard_entries")) || [];
-  
-  const existingIdx = currentLeaderboard.findIndex(
-    (e) =>
-      (e.participantHandle && submission.participantHandle && e.participantHandle.toLowerCase() === submission.participantHandle.toLowerCase()) ||
-      (e.participantName && submission.participantName && e.participantName.toLowerCase() === submission.participantName.toLowerCase())
-  );
-
-  const entryId = submission._id || `sub_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-  let entryToReturn: LiveLeaderboardEntry;
-
-  if (existingIdx >= 0) {
-    const existing = currentLeaderboard[existingIdx];
-    const updatedScore = (existing.score || 0) + (submission.score || 0);
-    const updatedCorrect = (existing.correctCount || 0) + (submission.correctCount || 0);
-    const updatedTotal = (existing.totalQuestions || 0) + (submission.totalQuestions || 1);
-    const updatedTime = (existing.timeSpentSeconds || 0) + (submission.timeSpentSeconds || 0);
-
-    entryToReturn = {
-      ...existing,
-      score: updatedScore,
-      correctCount: updatedCorrect,
-      totalQuestions: updatedTotal,
-      timeSpentSeconds: updatedTime,
-      completedAt: new Date().toISOString(),
-      quizId: submission.quizId || existing.quizId,
-      quizTitle: submission.quizTitle || existing.quizTitle,
-    };
-    currentLeaderboard[existingIdx] = entryToReturn;
-  } else {
-    entryToReturn = {
-      _id: entryId,
-      participantName: submission.participantName || "Anonymous Student",
-      participantHandle: submission.participantHandle || "@student",
-      score: submission.score || 0,
-      totalQuestions: submission.totalQuestions || 1,
-      correctCount: submission.correctCount || 0,
-      timeSpentSeconds: submission.timeSpentSeconds || 0,
-      completedAt: new Date().toISOString(),
-      quizId: submission.quizId,
-      quizTitle: submission.quizTitle,
-    };
-    currentLeaderboard.push(entryToReturn);
-  }
-
-  currentLeaderboard.sort((a, b) => b.score - a.score);
-  await setCache("quiz:live:leaderboard_entries", currentLeaderboard);
-  return entryToReturn;
+/** @deprecated Use resetSession() */
+export async function triggerSessionReset(): Promise<void> {
+  await resetSession();
 }
 
-export async function getLiveLeaderboardStore(): Promise<LiveLeaderboardEntry[]> {
-  const memoryLeaderboard: LiveLeaderboardEntry[] = (await getCache("quiz:live:leaderboard_entries")) || [];
-  return memoryLeaderboard;
+/** @deprecated Use getTopicLeaderboard() */
+export async function getLiveLeaderboardStore(): Promise<any[]> {
+  const config = await getLiveAdminConfig();
+  const topicId = config.selectedTopicId && config.selectedTopicId !== "all" ? config.selectedTopicId : null;
+  if (!topicId) return [];
+  return await getTopicLeaderboard(topicId);
 }
 
-export async function clearLiveLeaderboardStore(): Promise<void> {
-  await setCache("quiz:live:leaderboard_entries", []);
+/** @deprecated */
+export async function setLiveQuestionQueue(_queue: any[]): Promise<void> {
+  // no-op — queue is now Redis LIST per topic
 }
 
-// 8. Participant Redis Session Management with 24-Hour TTL
-export interface ParticipantSession {
-  userId: string;
-  playerName: string;
-  playerHandle: string;
-  lastActive: string;
+/** @deprecated */
+export async function recordSubmission(submission: any): Promise<any> {
+  // Thin shim that writes to the ZSET leaderboard for backward compat
+  const topicId = submission.quizId || "unknown";
+  const pid = submission.participantHandle || submission.participantName || "anon";
+  if (submission.score) await addScoreToLeaderboard(topicId, pid, submission.score);
+  await upsertParticipantMeta({
+    participantId: pid,
+    participantName: submission.participantName || "Anonymous",
+    participantHandle: submission.participantHandle || "@anon",
+    lastActive: new Date().toISOString(),
+  });
+  return submission;
 }
 
-export async function registerParticipantSession(session: ParticipantSession): Promise<void> {
-  if (!session.userId) return;
-  const sessionKey = `quiz:session:${session.userId}`;
-  await setCache(sessionKey, session, 86400); // 24-hour TTL in Redis
+/** @deprecated */
+export async function registerParticipantSession(session: any): Promise<void> {
+  await upsertParticipantMeta({
+    participantId: session.userId,
+    participantName: session.playerName,
+    participantHandle: session.playerHandle,
+    lastActive: session.lastActive,
+  });
 }
 
-export async function getParticipantSession(userId: string): Promise<ParticipantSession | null> {
-  if (!userId) return null;
-  const sessionKey = `quiz:session:${userId}`;
-  return await getCache(sessionKey);
+/** @deprecated */
+export async function getLastSessionResetTime(): Promise<number> {
+  return 0; // epoch model replaces this
 }

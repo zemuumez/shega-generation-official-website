@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import {
   verifyQuestionToken,
-  tryAcquireSubmissionLock,
   getLiveState,
   getTopicSequence,
+  cacheTopicSequence,
   getDifficultyPoints,
-  recordSubmission,
-  registerParticipantSession,
+  markAnswered,
+  addScoreToLeaderboard,
+  updateAccuracy,
+  getParticipantScore,
+  getAccuracy,
+  upsertParticipantMeta,
 } from "@/lib/quizLiveEngine";
 import { sanityClient } from "@/sanity/lib/client";
 import { sanityWriteClient } from "@/sanity/lib/writeClient";
@@ -18,12 +22,13 @@ export const dynamic = "force-dynamic";
 
 const SubmitSchema = z.object({
   userId: z.string().min(1, "userId required"),
-  participantName: z.string().trim().min(2, "Name required").max(100),
+  participantName: z.string().trim().min(2).max(100),
   participantHandle: z.string().trim().max(50).optional().default(""),
   questionId: z.string().min(1, "questionId required"),
   chosenOptionIndex: z.number().min(0).max(5),
   token: z.string().min(1, "HMAC token required"),
   tokenExpiry: z.number().min(1, "tokenExpiry required"),
+  epoch: z.number().optional(), // client echoes the epoch it received
 });
 
 function getClientIp(req: NextRequest): string {
@@ -33,7 +38,6 @@ function getClientIp(req: NextRequest): string {
 }
 
 export async function POST(req: NextRequest) {
-  // Rate limiting check
   const ip = getClientIp(req);
   const { allowed } = await checkRateLimit(ip);
   if (!allowed) {
@@ -52,58 +56,66 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { userId, participantName, participantHandle, questionId, chosenOptionIndex, token, tokenExpiry } =
-    parsed.data;
+  const { userId, participantName, participantHandle, questionId, chosenOptionIndex, token, tokenExpiry, epoch: clientEpoch } = parsed.data;
 
-  // 1. Verify HMAC Token Signature & Expiry
+  // 1. Verify HMAC token signature & expiry
   const isTokenValid = verifyQuestionToken(token, userId, questionId, tokenExpiry);
   if (!isTokenValid) {
     return NextResponse.json(
-      { error: "Security Exception: Invalid or expired HMAC payload token signature." },
+      { error: "Security Exception: Invalid or expired HMAC token." },
       { status: 403 }
     );
   }
 
-  // 2. Single-Submission Idempotency Lock
-  const lockAcquired = await tryAcquireSubmissionLock(userId, questionId);
-  if (!lockAcquired) {
-    return NextResponse.json(
-      { error: "Idempotency Lock: Duplicate submission detected for this question." },
-      { status: 409 }
-    );
-  }
-
-  // 3. Server-Side Timestamp Calculation & 1.5s Network Latency Grace Period
+  // 2. Load current live state
   const liveState = await getLiveState();
   if (!liveState || liveState.questionId !== questionId) {
-    return NextResponse.json({ error: "This question is no longer active for submission." }, { status: 410 });
+    return NextResponse.json({ error: "This question is no longer active." }, { status: 410 });
   }
 
+  // 3. Epoch guard — reject stale in-flight submissions from reset sessions
+  if (clientEpoch !== undefined && liveState.epoch !== clientEpoch) {
+    return NextResponse.json({ error: "STALE_SESSION: session was reset, submission rejected." }, { status: 409 });
+  }
+
+  // 4. Grace period check (1.5 s server-side tolerance for network latency)
   const nowServer = Date.now();
-  const GRACE_PERIOD_MS = 1500; // 1.5 seconds network latency grace period
-  if (nowServer > liveState.endTime + GRACE_PERIOD_MS) {
+  const GRACE_MS = 1500;
+  if (nowServer > liveState.endTime + GRACE_MS) {
     return NextResponse.json(
-      { error: "Submission Rejected: Question timer expired beyond the 1.5s server grace period." },
+      { error: "Submission Rejected: question timer expired." },
       { status: 408 }
     );
   }
 
-  // 4. Secure Backend Evaluation (Zero-Leak Security)
+  // 5. Idempotent answered guard — BEFORE scoring
+  //    SADD returns 0 if participantId already in the set → already answered
+  const participantId = (participantHandle || participantName).toLowerCase().replace(/\s+/g, "_").replace(/^@/, "");
+  const isFirstAnswer = await markAnswered(liveState.epoch, questionId, participantId);
+  if (!isFirstAnswer) {
+    return NextResponse.json(
+      { error: "ALREADY_ANSWERED: duplicate submission for this question." },
+      { status: 409 }
+    );
+  }
+
+  // 6. Secure backend evaluation (correct answer never sent to client)
   let questions = await getTopicSequence(liveState.topicId);
-  if (!questions || questions.length === 0) {
+  if (!questions?.length) {
     try {
       const doc = await sanityClient.fetch(
         `*[_type == "challengeQuiz" && (topic._ref == $topicId || _id == $topicId)][0]`,
         { topicId: liveState.topicId }
       );
       questions = doc?.questions || [];
+      if (questions && questions.length) await cacheTopicSequence(liveState.topicId, questions);
     } catch {
       questions = [];
     }
   }
 
   let targetQuestion = questions?.find((q: any) => q._key === questionId || q._id === questionId);
-  if (!targetQuestion && questionId) {
+  if (!targetQuestion) {
     try {
       const doc = await sanityClient.fetch(
         `*[_type == "challengeQuiz" && (questions[]._key == $qId || questions[]._id == $qId)][0]`,
@@ -112,21 +124,19 @@ export async function POST(req: NextRequest) {
       if (doc?.questions) {
         targetQuestion = doc.questions.find((q: any) => q._key === questionId || q._id === questionId);
       }
-    } catch {
-      // ignore
-    }
+    } catch { /* ignore */ }
   }
 
   const correctOptionIndex = liveState.correctOptionIndex ?? targetQuestion?.correctOptionIndex ?? 0;
   const isCorrect = chosenOptionIndex === correctOptionIndex;
 
+  // 7. Calculate points (speed bonus: 5 pts/second remaining)
   let pointsEarned = 0;
   if (isCorrect) {
     const difficulty = targetQuestion?.difficulty || liveState.difficulty || "MEDIUM";
     const basePoints = targetQuestion?.points || getDifficultyPoints(difficulty);
     const remainingSeconds = Math.max(0, Math.ceil((liveState.endTime - nowServer) / 1000));
-    const speedBonus = remainingSeconds * 5; // 5 bonus pts per second remaining
-    pointsEarned = basePoints + speedBonus;
+    pointsEarned = basePoints + remainingSeconds * 5;
   }
 
   const handleTag = participantHandle?.startsWith("@")
@@ -137,25 +147,20 @@ export async function POST(req: NextRequest) {
 
   const timeSpentSeconds = Math.max(1, Math.round((nowServer - liveState.startTime) / 1000));
 
-  // 5. Persist submission to real-time memory/Redis store & refresh 24h Redis Session
-  await recordSubmission({
+  // 8. Persist to ZSET leaderboard & accuracy hash
+  await addScoreToLeaderboard(liveState.topicId, participantId, pointsEarned);
+  const accuracy = await updateAccuracy(liveState.topicId, participantId, isCorrect);
+  const newTotalScore = await getParticipantScore(liveState.topicId, participantId);
+
+  // 9. Upsert participant metadata (name/handle lookup for leaderboard display)
+  await upsertParticipantMeta({
+    participantId,
     participantName,
     participantHandle: handleTag,
-    score: pointsEarned,
-    totalQuestions: 1,
-    correctCount: isCorrect ? 1 : 0,
-    timeSpentSeconds,
-    quizId: liveState.topicId,
-  });
-
-  await registerParticipantSession({
-    userId,
-    playerName: participantName,
-    playerHandle: handleTag,
     lastActive: new Date().toISOString(),
   });
 
-  // 6. Optional async sync to Sanity CMS if write token is configured
+  // 10. Optional async Sanity CMS write
   try {
     if (process.env.SANITY_WRITE_TOKEN) {
       await sanityWriteClient.create({
@@ -173,13 +178,20 @@ export async function POST(req: NextRequest) {
     console.error("Sanity write for live submission failed:", err);
   }
 
+  // 11. Return synchronous result — client updates score immediately from this response
   return NextResponse.json(
     {
       ok: true,
-      isCorrect,
-      pointsEarned,
-      message: isCorrect ? "Correct answer!" : "Incorrect answer.",
-      explanation: isCorrect ? targetQuestion?.explanation || undefined : undefined,
+      correct: isCorrect,
+      pointsAwarded: pointsEarned,
+      correctOptionIndex,
+      explanation: targetQuestion?.explanation || null,
+      newTotalScore,
+      accuracy: {
+        correct: accuracy.correct,
+        total: accuracy.total,
+        pct: accuracy.total > 0 ? Math.round((accuracy.correct / accuracy.total) * 100) : 0,
+      },
     },
     { status: 200 }
   );

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanityClient } from "@/sanity/lib/client";
 import { sanityWriteClient } from "@/sanity/lib/writeClient";
-import { clearLiveLeaderboardStore } from "@/lib/quizLiveEngine";
+import { resetLeaderboard } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -62,12 +62,15 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ error: "Invalid action parameter." }, { status: 400 });
 }
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
   try {
-    await clearLiveLeaderboardStore();
-
+    const url = new URL(req.url);
+    const topicId = url.searchParams.get("topicId");
+    if (topicId) {
+      await resetLeaderboard(topicId);
+    }
+    // Also wipe Sanity submission records if write token available
     if (process.env.SANITY_WRITE_TOKEN) {
-      // Query all submission document IDs
       const submissions = await sanityClient.fetch(`*[_type == "challengeSubmission"]._id`);
       if (submissions && submissions.length > 0) {
         const tx = sanityWriteClient.transaction();

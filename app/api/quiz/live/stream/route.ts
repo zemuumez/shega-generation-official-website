@@ -5,7 +5,7 @@ import {
   generateQuestionToken,
   advanceToNextQuestion,
   getAllowSoloPlay,
-  getLastSessionResetTime,
+  getCurrentEpoch,
 } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
@@ -14,6 +14,7 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const userId = url.searchParams.get("userId") || `anon_${Math.random().toString(36).substring(2, 9)}`;
+  const requestedTopicId = url.searchParams.get("topicId") || null;
 
   const encoder = new TextEncoder();
 
@@ -23,23 +24,20 @@ export async function GET(req: NextRequest) {
         try {
           controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
         } catch {
-          // Controller might be closed
+          // controller may be closed if client disconnected
         }
       };
 
-      // Send immediate connection ACK
       sendEvent("CONNECTED", { userId, timestamp: Date.now() });
 
-      // Interval listener for SSE stream
       const interval = setInterval(async () => {
         try {
           const liveState = await getLiveState();
+          const epoch = await getCurrentEpoch();
 
           if (!liveState) {
             const allowSoloPlay = await getAllowSoloPlay();
-            const lastReset = await getLastSessionResetTime();
-            const isRecentReset = Date.now() - lastReset < 10000;
-            sendEvent("IDLE_STATE", { status: "IDLE", allowSoloPlay, isReset: isRecentReset });
+            sendEvent("IDLE_STATE", { status: "IDLE", allowSoloPlay, epoch, isReset: false });
             return;
           }
 
@@ -47,11 +45,20 @@ export async function GET(req: NextRequest) {
           const remainingMs = Math.max(0, liveState.endTime - now);
           const remainingSeconds = Math.ceil(remainingMs / 1000);
 
-          // Expiry timestamp for HMAC token
-          const tokenExpiry = liveState.endTime + 5000; // 5s beyond end time
+          // Topic isolation — only broadcast to matching topic subscribers
+          const isTopicMatch =
+            !requestedTopicId || requestedTopicId === "all" || liveState.topicId === requestedTopicId;
+
+          if (!isTopicMatch) {
+            // This client is subscribed to a different topic than what's live
+            sendEvent("IDLE_STATE", { status: "IDLE", allowSoloPlay: liveState.allowSoloPlay, epoch, isReset: false });
+            return;
+          }
+
+          const tokenExpiry = liveState.endTime + 5000;
           const hmacToken = generateQuestionToken(userId, liveState.questionId, tokenExpiry);
 
-          // Zero-Leak Payload for participant stream (omit correctOptionIndex & explanation)
+          // Zero-Leak Payload — correctOptionIndex and explanation never sent to client
           const participantPayload = {
             questionId: liveState.questionId,
             topicId: liveState.topicId,
@@ -69,6 +76,7 @@ export async function GET(req: NextRequest) {
             status: liveState.status,
             startTime: liveState.startTime,
             endTime: liveState.endTime,
+            epoch: liveState.epoch,
             isLocked: liveState.isLocked,
             autoPush: liveState.autoPush,
             allowSoloPlay: liveState.allowSoloPlay,
@@ -76,14 +84,14 @@ export async function GET(req: NextRequest) {
 
           sendEvent("QUESTION_BROADCAST", participantPayload);
 
-          // Auto-Push Trigger: When countdown hits 00:00, trigger 5s Intermission & Auto-Push Question #orderIndex+1
+          // Server-side expiry handling (client setTimeout is authoritative — this is a sync signal)
           if (remainingSeconds <= 0 && liveState.status === "ACTIVE") {
             if (liveState.autoPush) {
               await advanceToNextQuestion(liveState);
             } else {
               liveState.status = "EXPIRED";
               await setLiveState(liveState);
-              sendEvent("QUESTION_EXPIRED", { questionId: liveState.questionId });
+              sendEvent("QUESTION_EXPIRED", { questionId: liveState.questionId, topicId: liveState.topicId, epoch });
             }
           }
         } catch (err) {
@@ -93,11 +101,7 @@ export async function GET(req: NextRequest) {
 
       req.signal.addEventListener("abort", () => {
         clearInterval(interval);
-        try {
-          controller.close();
-        } catch {
-          // ignore
-        }
+        try { controller.close(); } catch { /* ignore */ }
       });
     },
   });
