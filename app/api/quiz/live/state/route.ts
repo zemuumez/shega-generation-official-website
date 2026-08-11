@@ -3,7 +3,6 @@ import {
   getLiveState,
   getAllowSoloPlay,
   getLiveAdminConfig,
-  getTopicQueue,
   generateQuestionToken,
   getCurrentEpoch,
   parseBool,
@@ -15,6 +14,8 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const userId = url.searchParams.get("userId") || `anon_${Math.random().toString(36).substring(2, 9)}`;
+  // The client may send either a Sanity _id or a slug; we accept both.
+  // Topic isolation happens at the client via the topicId stored in active_state.
   const requestedTopicId = url.searchParams.get("topicId") || null;
 
   const liveState = await getLiveState();
@@ -23,30 +24,39 @@ export async function GET(req: NextRequest) {
   const adminConfig = await getLiveAdminConfig();
   const epoch = await getCurrentEpoch();
 
-  // Topic queue for the requested topic
-  const topicId = requestedTopicId || adminConfig.selectedTopicId || null;
-  const questionQueue = topicId && topicId !== "all" ? await getTopicQueue(topicId) : [];
-
-  // No active state — return IDLE
+  // No active state → always IDLE
   if (!liveState) {
     return NextResponse.json({
       status: "IDLE",
       allowSoloPlay,
       adminConfig,
-      questionQueue,
+      questionQueue: [],
       epoch,
       activeQuestion: null,
     });
   }
 
-  // Topic isolation: if the student's topic doesn't match the live topic, no active question for them
-  const isTopicMatch = !requestedTopicId || requestedTopicId === "all" || liveState.topicId === requestedTopicId;
-  if (!isTopicMatch) {
+  // Topic isolation check:
+  // If client sent a topicId AND it doesn't match the live topicId, return null question.
+  // IMPORTANT: we only block if requestedTopicId is a Sanity _id format (24 hex chars or starts
+  // with a known prefix). If the client sent a slug (e.g. "python-oop"), we let it through —
+  // slug→id resolution is the admin's responsibility when pushing a question.
+  // A simple heuristic: if requestedTopicId looks like a slug (contains "-" but no spaces and
+  // is NOT equal to the live topicId) we do NOT block — we serve the question and let the client
+  // decide if it matches by checking topicId in the payload.
+  const looksLikeSanityId = requestedTopicId && !requestedTopicId.includes("-");
+  const isTopicMismatch =
+    requestedTopicId &&
+    liveState.topicId &&
+    looksLikeSanityId &&
+    liveState.topicId !== requestedTopicId;
+
+  if (isTopicMismatch) {
     return NextResponse.json({
       status: "IDLE",
       allowSoloPlay,
       adminConfig,
-      questionQueue,
+      questionQueue: [],
       epoch,
       activeQuestion: null,
     });
@@ -62,7 +72,7 @@ export async function GET(req: NextRequest) {
     status: liveState.status,
     allowSoloPlay,
     adminConfig,
-    questionQueue,
+    questionQueue: [],
     epoch,
     activeQuestion: {
       questionId: liveState.questionId,

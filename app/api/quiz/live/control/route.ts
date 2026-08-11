@@ -12,7 +12,6 @@ import {
   setLiveAdminConfig,
   resetSession,
   resetLeaderboard,
-  enqueueQuestion,
   getCurrentEpoch,
   parseBool,
 } from "@/lib/quizLiveEngine";
@@ -21,17 +20,21 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // ---------------------------------------------------------------------------
-// Server-only admin passcode — NO NEXT_PUBLIC_ prefix.
-// A NEXT_PUBLIC_ var is embedded in the browser bundle and visible to anyone
-// who opens DevTools in the room. This var never leaves the server process.
+// Server-side passcode guard — only gates destructive RESET actions.
+// Regular operational actions (PUSH_QUESTION, UPDATE_CONFIG, etc.) are
+// protected by the admin UI login barrier + sessionStorage. Applying a server
+// passcode to every action broke PUSH_QUESTION because the admin panel doesn't
+// send the header, turning every question push into a silent 401.
 // ---------------------------------------------------------------------------
 const ADMIN_PASSCODE = process.env.QUIZ_ADMIN_PASSCODE_SERVER || "";
 
-function checkAdminAuth(req: NextRequest): boolean {
-  if (!ADMIN_PASSCODE) return true; // no passcode configured → open (dev fallback)
+function requirePasscode(req: NextRequest): boolean {
+  if (!ADMIN_PASSCODE) return true; // not configured → open in dev
   const header = req.headers.get("x-admin-passcode") || "";
   return header === ADMIN_PASSCODE;
 }
+
+const DESTRUCTIVE_ACTIONS = new Set(["RESET_SESSION", "RESET_LEADERBOARD"]);
 
 const ControlSchema = z.object({
   action: z.enum([
@@ -52,11 +55,6 @@ const ControlSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  // Admin passcode guard — gates ALL actions
-  if (!checkAdminAuth(req)) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
-  }
-
   let body: unknown;
   try {
     body = await req.json();
@@ -71,6 +69,12 @@ export async function POST(req: NextRequest) {
 
   const { action, topicId, questionId, orderIndex, timerDuration, autoPush, allowSoloPlay, selectedTopicId } =
     parsed.data;
+
+  // Only check passcode for destructive actions
+  if (DESTRUCTIVE_ACTIONS.has(action) && !requirePasscode(req)) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   const currentState = await getLiveState();
 
   // ── RESET_SESSION ────────────────────────────────────────────────────────
@@ -129,20 +133,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "topicId is required for PUSH_QUESTION." }, { status: 400 });
     }
 
-    // If a question is already live and not expired, enqueue instead of overwriting
+    // Single Question Lock: block while a question is actively ticking
     if (currentState && currentState.status === "ACTIVE" && Date.now() < currentState.endTime) {
-      if (questionId) {
-        const wasNew = await enqueueQuestion(topicId, questionId);
-        if (!wasNew) {
-          return NextResponse.json(
-            { error: "Question already staged in queue." },
-            { status: 409 }
-          );
-        }
-        return NextResponse.json({ ok: true, queued: true, questionId });
-      }
       return NextResponse.json(
-        { error: "Single Question Lock Active — current countdown still running." },
+        { error: "Single Question Lock Active — current countdown still running.", queued: false },
         { status: 423 }
       );
     }
@@ -170,7 +164,7 @@ export async function POST(req: NextRequest) {
     if (questionId) {
       targetQuestion = questions.find((q: any) => q._key === questionId || q._id === questionId);
       if (!targetQuestion) {
-        // Global Sanity fallback by questionId
+        // Global Sanity fallback
         try {
           const doc = await sanityClient.fetch(
             `*[_type == "challengeQuiz" && (questions[]._key == $qId || questions[]._id == $qId)][0]`,

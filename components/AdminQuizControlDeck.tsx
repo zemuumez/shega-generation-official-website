@@ -129,16 +129,10 @@ export default function AdminQuizControlDeck({
     try { localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(questionQueue)); } catch {}
   }, [questionQueue]);
 
-  const updateServerQueue = async (queue: QuizQuestion[]) => {
-    try {
-      await fetch("/api/quiz/live/control", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "UPDATE_QUEUE", queue }),
-      });
-    } catch {
-      // ignore
-    }
+  const updateServerQueue = async (_queue: QuizQuestion[]) => {
+    // Admin queue is managed in React state + localStorage.
+    // The server does not maintain the admin's staging queue — it only needs
+    // the questionId when the admin actually presses "Push". No server call needed here.
   };
 
   const updateServerConfig = async (config: { timerDuration?: number; autoPush?: boolean; allowSoloPlay?: boolean; selectedTopicId?: string }) => {

@@ -154,22 +154,13 @@ export default function MobileLiveQuizPage({
 
         if (data.status === "ACTIVE" && data.activeQuestion) {
           const aq = data.activeQuestion as BroadcastQuestion;
-          // Topic isolation: if server returns a different topic → clear
-          if (aq.topicId !== params.topicSlug && aq.topicId !== undefined) {
-            if (currentQIdRef.current !== null) {
-              currentQIdRef.current = null;
-              setActiveQuestion(null);
-            }
-            return;
-          }
           if (currentQIdRef.current !== aq.questionId) {
             applyNewQuestion(aq);
           } else if (aq.status !== "ACTIVE") {
-            // status changed on same question (e.g. EXPIRED) — update only status
             setActiveQuestion((prev) => (prev ? { ...prev, status: aq.status } : prev));
           }
         } else {
-          // IDLE or no active question
+          // IDLE — no active question
           if (currentQIdRef.current !== null) {
             if (expiryTimerRef.current) clearTimeout(expiryTimerRef.current);
             currentQIdRef.current = null;
@@ -200,14 +191,6 @@ export default function MobileLiveQuizPage({
       sse.addEventListener("QUESTION_BROADCAST", (e) => {
         try {
           const data: BroadcastQuestion = JSON.parse(e.data);
-          // Topic isolation: only accept broadcasts for this topic
-          if (data.topicId !== params.topicSlug && data.topicId !== undefined) {
-            if (currentQIdRef.current !== null) {
-              currentQIdRef.current = null;
-              setActiveQuestion(null);
-            }
-            return;
-          }
           if (currentQIdRef.current !== data.questionId) {
             applyNewQuestion(data);
             fetchLeaderboard();
