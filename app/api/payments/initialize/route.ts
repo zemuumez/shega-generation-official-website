@@ -6,6 +6,7 @@ import { isChapaConfigured, initializeChapaTransaction } from "@/lib/chapa";
 import { isStripeConfigured, initializeStripeCheckout } from "@/lib/stripe";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get("x-forwarded-for");

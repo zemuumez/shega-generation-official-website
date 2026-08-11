@@ -40,7 +40,13 @@ export async function GET(req: NextRequest) {
     let entries = Array.from(mergedMap.values());
 
     if (quizId && quizId !== "all") {
-      entries = entries.filter((item) => item.quizId === quizId || item.quizTitle === quizId);
+      const target = quizId.toLowerCase().replace(/-/g, " ").trim();
+      entries = entries.filter((item) => {
+        if (!item.quizId && !item.quizTitle) return true;
+        const qId = (item.quizId || "").toLowerCase().replace(/-/g, " ").trim();
+        const qTitle = (item.quizTitle || "").toLowerCase().replace(/-/g, " ").trim();
+        return qId === target || qTitle === target || qId.includes(target) || target.includes(qId) || qTitle.includes(target) || target.includes(qTitle);
+      });
     }
 
     // Sort by score DESC, then timeSpentSeconds ASC

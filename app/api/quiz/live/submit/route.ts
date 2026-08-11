@@ -14,6 +14,7 @@ import { sanityWriteClient } from "@/sanity/lib/writeClient";
 import { checkRateLimit } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const SubmitSchema = z.object({
   userId: z.string().min(1, "userId required"),

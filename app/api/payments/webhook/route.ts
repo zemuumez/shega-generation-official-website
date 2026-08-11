@@ -4,6 +4,7 @@ import { sendDonationReceiptEmail } from "@/lib/email";
 import crypto from "crypto";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   const chapaSignature = req.headers.get("x-chapa-signature");

@@ -16,6 +16,7 @@ import {
 } from "@/lib/quizLiveEngine";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const ControlSchema = z.object({
   action: z.enum(["PUSH_QUESTION", "TOGGLE_AUTO_PUSH", "TOGGLE_SOLO_PLAY", "UPDATE_CONFIG", "UPDATE_QUEUE", "RESET_SESSION"]),

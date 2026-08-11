@@ -5,6 +5,7 @@ import { verifyStripeSession } from "@/lib/stripe";
 import { sendDonationReceiptEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 interface SanityDonationRecord {
   _id: string;

@@ -44,27 +44,39 @@ export function parseBool(val: any, fallback: boolean = true): boolean {
   return Boolean(val);
 }
 
+const shortTermCache = new Map<string, { val: any; expiry: number }>();
+
 async function getCache(key: string): Promise<any> {
   const fullKey = formatKey(key);
+  const now = Date.now();
+  const cached = shortTermCache.get(fullKey);
+
+  if (cached && now < cached.expiry) {
+    return cached.val;
+  }
+
   if (redis) {
     try {
-      const val = await redis.get(fullKey);
+      let val = await redis.get(fullKey);
       if (val !== null && val !== undefined) {
         if (typeof val === "string") {
           const trimmed = val.trim();
           if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
             try {
-              return JSON.parse(trimmed);
+              val = JSON.parse(trimmed);
             } catch {
-              // ignore parse failure and return raw string
+              // ignore parse failure
             }
           }
         }
+        memoryStore.set(fullKey, val);
+        shortTermCache.set(fullKey, { val, expiry: now + 1500 });
         return val;
       }
-      return null;
     } catch (err) {
       console.warn(`Upstash Redis get error for key [${fullKey}]:`, err);
+      const fallbackVal = memoryStore.get(fullKey) ?? null;
+      if (fallbackVal !== null) return fallbackVal;
     }
   }
   return memoryStore.get(fullKey) ?? null;
@@ -72,11 +84,16 @@ async function getCache(key: string): Promise<any> {
 
 async function setCache(key: string, value: any, ttlSeconds?: number): Promise<void> {
   const fullKey = formatKey(key);
+  const now = Date.now();
+
   if (value === null || value === undefined) {
     memoryStore.delete(fullKey);
+    shortTermCache.delete(fullKey);
   } else {
     memoryStore.set(fullKey, value);
+    shortTermCache.set(fullKey, { val: value, expiry: now + 1500 });
   }
+
   if (redis) {
     try {
       if (value === null || value === undefined) {

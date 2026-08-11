@@ -86,7 +86,7 @@ export default function MobileLiveQuizPage({
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await fetch("/api/challenges/leaderboard");
+      const res = await fetch(`/api/challenges/leaderboard?quizId=${params.topicSlug}`);
       const data = await res.json();
       if (data.ok && Array.isArray(data.leaderboard)) {
         setLeaderboard((prev) => {
